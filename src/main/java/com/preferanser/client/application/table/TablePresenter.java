@@ -17,31 +17,34 @@
  *     along with this program.  If not, see [http://www.gnu.org/licenses/].
  */
 
-package com.preferanser.client.application;
+package com.preferanser.client.application.table;
 
-import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
+import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.Presenter;
 import com.gwtplatform.mvp.client.View;
-import com.gwtplatform.mvp.client.annotations.ContentSlot;
+import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.ProxyStandard;
-import com.gwtplatform.mvp.client.proxy.Proxy;
-import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
+import com.gwtplatform.mvp.client.proxy.ProxyPlace;
+import com.preferanser.client.application.ApplicationPresenter;
+import com.preferanser.client.place.NameTokens;
 
-public class ApplicationPresenter
-        extends Presenter<ApplicationPresenter.ApplicationView, ApplicationPresenter.ApplicationPresenterProxy> {
+/**
+ * Table presenter
+ */
+public class TablePresenter extends Presenter<TablePresenter.TableView, TablePresenter.Proxy> implements TableUiHandlers {
 
-    public interface ApplicationView extends View {}
-
-    @ContentSlot
-    public static final Type<RevealContentHandler<?>> TYPE_SetMainContent = new Type<RevealContentHandler<?>>();
+    public interface TableView extends View, HasUiHandlers<TableUiHandlers> {}
 
     @ProxyStandard
-    public interface ApplicationPresenterProxy extends Proxy<ApplicationPresenter> {}
+    @NameToken(NameTokens.TABLE)
+    public interface Proxy extends ProxyPlace<TablePresenter> {}
 
     @Inject
-    public ApplicationPresenter(EventBus eventBus, ApplicationView view, ApplicationPresenterProxy proxy) {
-        super(eventBus, view, proxy, RevealType.Root);
+    public TablePresenter(EventBus eventBus, TableView view, Proxy proxy) {
+        super(eventBus, view, proxy, ApplicationPresenter.TYPE_SetMainContent);
+        getView().setUiHandlers(this);
     }
+
 }

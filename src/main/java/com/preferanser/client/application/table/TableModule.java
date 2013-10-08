@@ -17,11 +17,18 @@
  *     along with this program.  If not, see [http://www.gnu.org/licenses/].
  */
 
-package com.preferanser.client.application.home;
+package com.preferanser.client.application.table;
 
-import com.gwtplatform.mvp.client.UiHandlers;
-import com.preferanser.client.request.proxy.UserProxy;
+import com.gwtplatform.mvp.client.gin.AbstractPresenterModule;
 
-public interface HomeUiHandlers extends UiHandlers {
-    void saveEntity(UserProxy myEntity);
+/**
+ * Gin module for the table page
+ */
+public class TableModule extends AbstractPresenterModule {
+
+    @Override
+    protected void configure() {
+        bindPresenter(TablePresenter.class, TablePresenter.TableView.class, TableView.class, TablePresenter.Proxy.class);
+    }
+
 }

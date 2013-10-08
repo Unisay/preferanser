@@ -20,14 +20,19 @@
 package com.preferanser.client.application;
 
 import com.gwtplatform.mvp.client.gin.AbstractPresenterModule;
-import com.preferanser.client.application.home.HomeModule;
+import com.preferanser.client.application.table.TableModule;
 
 public class ApplicationModule extends AbstractPresenterModule {
+
     @Override
     protected void configure() {
-        install(new HomeModule());
-
-        bindPresenter(ApplicationPresenter.class, ApplicationPresenter.MyView.class, ApplicationView.class,
-                ApplicationPresenter.MyProxy.class);
+        install(new TableModule());
+        bindPresenter(
+                ApplicationPresenter.class,
+                ApplicationPresenter.ApplicationView.class,
+                ApplicationView.class,
+                ApplicationPresenter.ApplicationPresenterProxy.class
+        );
     }
+
 }

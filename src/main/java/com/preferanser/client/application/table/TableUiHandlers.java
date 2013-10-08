@@ -17,18 +17,12 @@
  *     along with this program.  If not, see [http://www.gnu.org/licenses/].
  */
 
-package com.preferanser.client.application.home;
+package com.preferanser.client.application.table;
 
-import com.gwtplatform.mvp.client.gin.AbstractPresenterModule;
+import com.gwtplatform.mvp.client.UiHandlers;
 
-public class HomeModule extends AbstractPresenterModule {
-    @Override
-    protected void configure() {
-        bindPresenter(
-                HomePagePresenter.class,
-                HomePagePresenter.MyView.class,
-                HomePageView.class,
-                HomePagePresenter.MyProxy.class
-        );
-    }
+/**
+ * Table UI handlers
+ */
+public interface TableUiHandlers extends UiHandlers {
 }

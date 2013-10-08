@@ -17,10 +17,12 @@
   ~     along with this program.  If not, see [http://www.gnu.org/licenses/].
   -->
 
-<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
-             xmlns:g='urn:import:com.google.gwt.user.client.ui'
-        >
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder' xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+    <ui:with field="resources" type="com.preferanser.client.application.PreferanserResources"/>
     <g:HTMLPanel>
-        <g:Button ui:field="submit" text="Submit"/>
+        <g:Image ui:field="c7" resource="{resources.c7}" addStyleNames="{resources.css.card}"/>
+        <g:Image ui:field="s7" resource="{resources.s7}" addStyleNames="{resources.css.card}"/>
+        <g:Image ui:field="d7" resource="{resources.d7}" addStyleNames="{resources.css.card}"/>
+        <g:Image ui:field="h7" resource="{resources.h7}" addStyleNames="{resources.css.card}"/>
     </g:HTMLPanel>
 </ui:UiBinder>

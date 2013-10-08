@@ -17,29 +17,19 @@
  *     along with this program.  If not, see [http://www.gnu.org/licenses/].
  */
 
-package com.preferanser.client.application.table;
+package com.preferanser.client.application;
 
-import com.google.gwt.uibinder.client.UiBinder;
-import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
-import com.gwtplatform.mvp.client.ViewWithUiHandlers;
-import com.preferanser.client.application.PreferanserResources;
 
 /**
- * Table view
+ * Loads various resources
  */
-public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements TablePresenter.TableView {
-
-    public interface Binder extends UiBinder<Widget, TableView> {}
-
-    @UiField(provided = true)
-    final PreferanserResources resources;
+public class ResourceLoader {
 
     @Inject
-    public TableView(Binder uiBinder, PreferanserResources resources) {
-        this.resources = resources;
-        initWidget(uiBinder.createAndBindUi(this));
+    public ResourceLoader(PreferanserResources resources) {
+        // Load and inject CSS resources
+        resources.css().ensureInjected();
     }
 
 }

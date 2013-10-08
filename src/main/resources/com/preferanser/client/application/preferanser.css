@@ -1,0 +1,7 @@
+body {
+    background-image: url("img/table_background_classic.jpg");
+}
+
+img.card {
+    border: 1px solid red;
+}

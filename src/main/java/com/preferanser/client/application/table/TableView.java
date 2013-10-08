@@ -19,14 +19,16 @@
 
 package com.preferanser.client.application.table;
 
+import com.google.gwt.dom.client.Style;
+import com.google.gwt.event.dom.client.*;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
-import com.preferanser.client.application.PreferanserResources;
-import com.preferanser.server.business.Card;
+import com.preferanser.shared.Card;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -38,15 +40,61 @@ public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements Ta
 
     public interface Binder extends UiBinder<Widget, TableView> {}
 
-    @UiField(provided = true) final PreferanserResources resources;
+    private final Map<Card, Image> cards = new HashMap<Card, Image>(32);
 
-    private Map<Card, Image> cards = new HashMap<Card, Image>(32);
+    private Image draggedImage;
 
     @Inject
-    public TableView(Binder uiBinder, PreferanserResources resources) {
-        this.resources = resources;
+    public TableView(Binder uiBinder) {
         initWidget(uiBinder.createAndBindUi(this));
+        populateCardImagesMap();
+        RootPanel rootPanel = RootPanel.get();
+        handleMouseUp(rootPanel);
+        handleMouseMove(rootPanel);
+        for (final Image image : cards.values()) {
+            handleMouseDown(image);
+            handleDragStart(image);
+        }
+    }
 
+    private void handleMouseUp(RootPanel rootPanel) {
+        rootPanel.addDomHandler(new MouseUpHandler() {
+            @Override public void onMouseUp(MouseUpEvent event) {
+                draggedImage = null;
+            }
+        }, MouseUpEvent.getType());
+    }
+
+    private void handleMouseMove(RootPanel rootPanel) {
+        rootPanel.addDomHandler(new MouseMoveHandler() {
+            @Override public void onMouseMove(MouseMoveEvent event) {
+                if (draggedImage != null) {
+                    Style style = draggedImage.getElement().getStyle();
+                    style.setLeft(event.getClientX(), Style.Unit.PX);
+                    style.setTop(event.getClientY(), Style.Unit.PX);
+                }
+            }
+        }, MouseMoveEvent.getType());
+    }
+
+    private void handleDragStart(Image image) {
+        image.addDragStartHandler(new DragStartHandler() {
+            @Override public void onDragStart(DragStartEvent event) {
+                event.stopPropagation();
+                event.preventDefault();
+            }
+        });
+    }
+
+    private void handleMouseDown(final Image image) {
+        image.addMouseDownHandler(new MouseDownHandler() {
+            @Override public void onMouseDown(MouseDownEvent event) {
+                draggedImage = image;
+            }
+        });
+    }
+
+    private void populateCardImagesMap() {
         cards.put(Card.CLUB_SEVEN, c7);
         cards.put(Card.SPADE_SEVEN, s7);
         cards.put(Card.DIAMOND_SEVEN, d7);

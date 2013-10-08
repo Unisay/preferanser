@@ -26,8 +26,8 @@
     <artifactId>preferanser</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>war</packaging>
-    <name>GWTP Requestfactory Spring</name>
-    <description>Basic GWTP application using Requestfactory and Spring using a servlet container</description>
+    <name>Preferanser</name>
+    <description>Preferanser - GWTP application using Requestfactory and Spring using a servlet container</description>
 
     <properties>
         <!-- client -->

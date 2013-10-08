@@ -28,7 +28,7 @@ public class TableModule extends AbstractPresenterModule {
 
     @Override
     protected void configure() {
-        bindPresenter(TablePresenter.class, TablePresenter.TableView.class, TableView.class, TablePresenter.Proxy.class);
+       bindPresenter(TablePresenter.class, TablePresenter.TableView.class, TableView.class, TablePresenter.Proxy.class);
     }
 
 }

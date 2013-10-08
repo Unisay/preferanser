@@ -28,6 +28,7 @@
     <inherits name='com.google.gwt.resources.Resources'/>
     <inherits name='com.google.gwt.editor.Editor'/>
     <inherits name='com.google.gwt.text.Text'/>
+    <inherits name="com.google.gwt.user.Debug"/>
 
     <!-- Default css -->
     <inherits name='com.google.gwt.user.theme.standard.Standard'/>

@@ -16,41 +16,65 @@
   ~     You should have received a copy of the GNU General Public License
   ~     along with this program.  If not, see [http://www.gnu.org/licenses/].
   -->
-
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder' xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+    <ui:style src="table.css"/>
     <ui:with field="resources" type="com.preferanser.client.application.PreferanserResources"/>
-    <g:HTMLPanel>
-        <g:Image ui:field="c7" resource="{resources.c7}" addStyleNames="{resources.css.card}"/>
-        <g:Image ui:field="s7" resource="{resources.s7}" addStyleNames="{resources.css.card}"/>
-        <g:Image ui:field="d7" resource="{resources.d7}" addStyleNames="{resources.css.card}"/>
-        <g:Image ui:field="h7" resource="{resources.h7}" addStyleNames="{resources.css.card}"/>
-        <g:Image ui:field="c8" resource="{resources.c8}" addStyleNames="{resources.css.card}"/>
-        <g:Image ui:field="s8" resource="{resources.s8}" addStyleNames="{resources.css.card}"/>
-        <g:Image ui:field="d8" resource="{resources.d8}" addStyleNames="{resources.css.card}"/>
-        <g:Image ui:field="h8" resource="{resources.h8}" addStyleNames="{resources.css.card}"/>
-        <g:Image ui:field="c9" resource="{resources.c9}" addStyleNames="{resources.css.card}"/>
-        <g:Image ui:field="s9" resource="{resources.s9}" addStyleNames="{resources.css.card}"/>
-        <g:Image ui:field="d9" resource="{resources.d9}" addStyleNames="{resources.css.card}"/>
-        <g:Image ui:field="h9" resource="{resources.h9}" addStyleNames="{resources.css.card}"/>
-        <g:Image ui:field="c10" resource="{resources.c10}" addStyleNames="{resources.css.card}"/>
-        <g:Image ui:field="s10" resource="{resources.s10}" addStyleNames="{resources.css.card}"/>
-        <g:Image ui:field="d10" resource="{resources.d10}" addStyleNames="{resources.css.card}"/>
-        <g:Image ui:field="h10" resource="{resources.h10}" addStyleNames="{resources.css.card}"/>
-        <g:Image ui:field="cj" resource="{resources.cj}" addStyleNames="{resources.css.card}"/>
-        <g:Image ui:field="sj" resource="{resources.sj}" addStyleNames="{resources.css.card}"/>
-        <g:Image ui:field="dj" resource="{resources.dj}" addStyleNames="{resources.css.card}"/>
-        <g:Image ui:field="hj" resource="{resources.hj}" addStyleNames="{resources.css.card}"/>
-        <g:Image ui:field="cq" resource="{resources.cq}" addStyleNames="{resources.css.card}"/>
-        <g:Image ui:field="sq" resource="{resources.sq}" addStyleNames="{resources.css.card}"/>
-        <g:Image ui:field="dq" resource="{resources.dq}" addStyleNames="{resources.css.card}"/>
-        <g:Image ui:field="hq" resource="{resources.hq}" addStyleNames="{resources.css.card}"/>
-        <g:Image ui:field="ck" resource="{resources.ck}" addStyleNames="{resources.css.card}"/>
-        <g:Image ui:field="sk" resource="{resources.sk}" addStyleNames="{resources.css.card}"/>
-        <g:Image ui:field="dk" resource="{resources.dk}" addStyleNames="{resources.css.card}"/>
-        <g:Image ui:field="hk" resource="{resources.hk}" addStyleNames="{resources.css.card}"/>
-        <g:Image ui:field="ca" resource="{resources.ca}" addStyleNames="{resources.css.card}"/>
-        <g:Image ui:field="sa" resource="{resources.sa}" addStyleNames="{resources.css.card}"/>
-        <g:Image ui:field="da" resource="{resources.da}" addStyleNames="{resources.css.card}"/>
-        <g:Image ui:field="ha" resource="{resources.ha}" addStyleNames="{resources.css.card}"/>
-    </g:HTMLPanel>
+    <g:DockPanel debugId="dlp" addStyleNames="{style.dockPanel}" spacing="10">
+        <g:Dock direction="NORTH">
+            <g:FlowPanel addStyleNames="{style.handPanel} {style.northHand}">
+                <g:Image ui:field="c7" resource="{resources.c7}" addStyleNames="{resources.css.card}"/>
+                <g:Image ui:field="s7" resource="{resources.s7}" addStyleNames="{resources.css.card}"/>
+                <g:Image ui:field="d7" resource="{resources.d7}" addStyleNames="{resources.css.card}"/>
+                <g:Image ui:field="h7" resource="{resources.h7}" addStyleNames="{resources.css.card}"/>
+                <g:Image ui:field="c8" resource="{resources.c8}" addStyleNames="{resources.css.card}"/>
+                <g:Image ui:field="s8" resource="{resources.s8}" addStyleNames="{resources.css.card}"/>
+                <g:Image ui:field="d8" resource="{resources.d8}" addStyleNames="{resources.css.card}"/>
+                <g:Image ui:field="h8" resource="{resources.h8}" addStyleNames="{resources.css.card}"/>
+                <g:Image ui:field="c9" resource="{resources.c9}" addStyleNames="{resources.css.card}"/>
+                <g:Image ui:field="s9" resource="{resources.s9}" addStyleNames="{resources.css.card}"/>
+                <g:Image ui:field="d9" resource="{resources.d9}" addStyleNames="{resources.css.card}"/>
+                <g:Image ui:field="h9" resource="{resources.h9}" addStyleNames="{resources.css.card}"/>
+                <g:Image ui:field="c10" resource="{resources.c10}" addStyleNames="{resources.css.card}"/>
+                <g:Image ui:field="s10" resource="{resources.s10}" addStyleNames="{resources.css.card}"/>
+                <g:Image ui:field="d10" resource="{resources.d10}" addStyleNames="{resources.css.card}"/>
+                <g:Image ui:field="h10" resource="{resources.h10}" addStyleNames="{resources.css.card}"/>
+                <g:Image ui:field="cj" resource="{resources.cj}" addStyleNames="{resources.css.card}"/>
+                <g:Image ui:field="sj" resource="{resources.sj}" addStyleNames="{resources.css.card}"/>
+                <g:Image ui:field="dj" resource="{resources.dj}" addStyleNames="{resources.css.card}"/>
+                <g:Image ui:field="hj" resource="{resources.hj}" addStyleNames="{resources.css.card}"/>
+                <g:Image ui:field="cq" resource="{resources.cq}" addStyleNames="{resources.css.card}"/>
+                <g:Image ui:field="sq" resource="{resources.sq}" addStyleNames="{resources.css.card}"/>
+                <g:Image ui:field="dq" resource="{resources.dq}" addStyleNames="{resources.css.card}"/>
+                <g:Image ui:field="hq" resource="{resources.hq}" addStyleNames="{resources.css.card}"/>
+                <g:Image ui:field="ck" resource="{resources.ck}" addStyleNames="{resources.css.card}"/>
+                <g:Image ui:field="sk" resource="{resources.sk}" addStyleNames="{resources.css.card}"/>
+                <g:Image ui:field="dk" resource="{resources.dk}" addStyleNames="{resources.css.card}"/>
+                <g:Image ui:field="hk" resource="{resources.hk}" addStyleNames="{resources.css.card}"/>
+                <g:Image ui:field="ca" resource="{resources.ca}" addStyleNames="{resources.css.card}"/>
+                <g:Image ui:field="sa" resource="{resources.sa}" addStyleNames="{resources.css.card}"/>
+                <g:Image ui:field="da" resource="{resources.da}" addStyleNames="{resources.css.card}"/>
+                <g:Image ui:field="ha" resource="{resources.ha}" addStyleNames="{resources.css.card}"/>
+            </g:FlowPanel>
+        </g:Dock>
+        <g:Dock direction="SOUTH">
+            <g:FlowPanel addStyleNames="{style.handPanel} {style.southHand}">
+                <g:Label>South</g:Label>
+            </g:FlowPanel>
+        </g:Dock>
+        <g:Dock direction="EAST">
+            <g:FlowPanel addStyleNames="{style.handPanel} {style.eastHand}">
+                <g:Label>East</g:Label>
+            </g:FlowPanel>
+        </g:Dock>
+        <g:Dock direction="WEST">
+            <g:FlowPanel addStyleNames="{style.handPanel} {style.westHand}">
+                <g:Label>West</g:Label>
+            </g:FlowPanel>
+        </g:Dock>
+        <g:Dock direction="CENTER">
+            <g:FlowPanel addStyleNames="{style.handPanel} {style.centerHand}">
+                <g:Label>Center</g:Label>
+            </g:FlowPanel>
+        </g:Dock>
+    </g:DockPanel>
 </ui:UiBinder>

@@ -1,7 +1,21 @@
+html, body {
+    height: 100%;
+    width: 100%;
+    min-height: 100%;
+    margin: 0 !important
+}
+
 body {
     background-image: url("img/table_background_classic.jpg");
 }
 
 img.card {
-    border: 1px solid red;
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 1;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }

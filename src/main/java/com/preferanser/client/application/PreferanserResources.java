@@ -38,10 +38,10 @@ public interface PreferanserResources extends ClientBundle {
     @Source("preferanser.css")
     public Style css();
 
-    @Source("img/cursor/open-hand.cur")
+    @Source("../../../../../webapp/img/cursor/open-hand.cur")
     DataResource openHandCursor();
 
-    @Source("img/cursor/closed-hand.cur")
+    @Source("../../../../../webapp/img/cursor/closed-hand.cur")
     DataResource closedHandCursor();
 
     @Source("img/cards/classic/c7.png")

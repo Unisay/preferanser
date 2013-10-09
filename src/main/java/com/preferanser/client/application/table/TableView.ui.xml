@@ -67,22 +67,22 @@
             </g:Dock>
             <g:Dock direction="SOUTH">
                 <g:FlowPanel ui:field="southPanel" addStyleNames="{style.handPanel} {style.southHand}">
-                    <g:Label>South</g:Label>
+                    <!--<g:Label>South</g:Label>-->
                 </g:FlowPanel>
             </g:Dock>
             <g:Dock direction="EAST">
                 <g:FlowPanel ui:field="eastPanel" addStyleNames="{style.handPanel} {style.eastHand}">
-                    <g:Label>East</g:Label>
+                    <!--<g:Label>East</g:Label>-->
                 </g:FlowPanel>
             </g:Dock>
             <g:Dock direction="WEST">
                 <g:FlowPanel ui:field="westPanel" addStyleNames="{style.handPanel} {style.westHand}">
-                    <g:Label>West</g:Label>
+                    <!--<g:Label>West</g:Label>-->
                 </g:FlowPanel>
             </g:Dock>
             <g:Dock direction="CENTER">
                 <g:FlowPanel ui:field="centerPanel" addStyleNames="{style.handPanel} {style.centerHand}">
-                    <g:Label>Center</g:Label>
+                    <!--<g:Label>Center</g:Label>-->
                 </g:FlowPanel>
             </g:Dock>
         </g:DockPanel>

@@ -53,7 +53,7 @@ public class TablePresenter extends Presenter<TablePresenter.TableView, TablePre
 
     @Override
     public void dealCards() {
-        getView().displayCards(TableLocation.NORTH, Card.values());
+        getView().displayCards(TableLocation.SOUTH, Card.values());
     }
 
 }

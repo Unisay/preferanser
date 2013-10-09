@@ -1,3 +1,5 @@
+@external .not-displayed, .not-visible;
+
 .not-displayed {
     display: none;
 }
@@ -33,7 +35,7 @@ img.card {
 .handPanel {
     background-color: rgba(0, 0, 0, 0.1);
     border-radius: 7px;
-    cursor: url("img/cursor/openhand.cur") 4 4, move;
+    cursor: url("img/cursor/open-hand.cur") 4 4, move;
 }
 
 .northHand, .southHand {

@@ -18,7 +18,7 @@
   ~     along with this program.  If not, see [http://www.gnu.org/licenses/].
   -->
 
-<module rename-to='project'>
+<module rename-to='Preferanser'>
     <!-- Inherit the core Web Toolkit stuff.                        -->
     <inherits name='com.google.gwt.user.User'/>
     <inherits name='com.google.gwt.inject.Inject'/>

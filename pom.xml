@@ -60,7 +60,8 @@
 
         <!-- testing -->
         <junit.version>4.11</junit.version>
-        <jukito.version>1.1</jukito.version>
+        <unitils-core.version>3.3</unitils-core.version>
+        <gwt-test-utils.version>0.46-SNAPSHOT</gwt-test-utils.version>
 
         <!-- maven -->
         <target.jdk>1.6</target.jdk>
@@ -76,6 +77,19 @@
 
         <webappDirectory>${project.build.directory}/${project.build.finalName}</webappDirectory>
     </properties>
+
+    <repositories>
+        <repository>
+            <id>sonatype-snapshots</id>
+            <url>http://oss.sonatype.org/content/repositories/snapshots</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+        </repository>
+    </repositories>
 
     <build>
         <outputDirectory>${webappDirectory}/WEB-INF/classes</outputDirectory>
@@ -355,9 +369,15 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.jukito</groupId>
-            <artifactId>jukito</artifactId>
-            <version>${jukito.version}</version>
+            <groupId>com.googlecode.gwt-test-utils</groupId>
+            <artifactId>gwt-test-utils</artifactId>
+            <version>${gwt-test-utils.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.unitils</groupId>
+            <artifactId>unitils-core</artifactId>
+            <version>${unitils-core.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

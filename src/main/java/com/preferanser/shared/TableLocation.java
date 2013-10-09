@@ -17,13 +17,11 @@
  *     along with this program.  If not, see [http://www.gnu.org/licenses/].
  */
 
-package com.preferanser.client.application.table;
-
-import com.gwtplatform.mvp.client.UiHandlers;
+package com.preferanser.shared;
 
 /**
- * Table UI handlers
+ * Table locations
  */
-public interface TableUiHandlers extends UiHandlers {
-    void dealCards();
+public enum TableLocation {
+    NORTH, EAST, SOUTH, WEST, CENTER
 }

@@ -23,15 +23,16 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.*;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.ui.*;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
 import com.preferanser.shared.Card;
+import com.preferanser.shared.TableLocation;
 
-import java.util.HashMap;
 import java.util.Map;
+
+import static com.google.common.collect.Maps.newHashMapWithExpectedSize;
 
 /**
  * Table view
@@ -40,7 +41,8 @@ public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements Ta
 
     public interface Binder extends UiBinder<Widget, TableView> {}
 
-    private final Map<Card, Image> cards = new HashMap<Card, Image>(32);
+    private final Map<Card, Image> cardImageMap = newHashMapWithExpectedSize(32);
+    private final Map<TableLocation, FlowPanel> tableLocationPanelMap = newHashMapWithExpectedSize(5);
 
     private Image draggedImage;
 
@@ -48,12 +50,31 @@ public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements Ta
     public TableView(Binder uiBinder) {
         initWidget(uiBinder.createAndBindUi(this));
         populateCardImagesMap();
+        populateTableLocationMap();
         RootPanel rootPanel = RootPanel.get();
         handleMouseUp(rootPanel);
         handleMouseMove(rootPanel);
-        for (final Image image : cards.values()) {
+        for (final Image image : cardImageMap.values()) {
             handleMouseDown(image);
             handleDragStart(image);
+        }
+    }
+
+    @Override
+    public void displayCards(TableLocation location, Card... cards) {
+        for (Card card : cards) {
+            HasWidgets panel = tableLocationPanelMap.get(location);
+            displayCard(panel, card);
+        }
+    }
+
+    @SuppressWarnings("GWTStyleCheck")
+    private void displayCard(HasWidgets panel, Card card) {
+        Image image = cardImageMap.get(card);
+        image.removeStyleName("not-visible");
+        if (!image.getParent().equals(panel)) {
+            image.removeFromParent();
+            panel.add(image);
         }
     }
 
@@ -94,40 +115,59 @@ public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements Ta
         });
     }
 
-    private void populateCardImagesMap() {
-        cards.put(Card.CLUB_SEVEN, c7);
-        cards.put(Card.SPADE_SEVEN, s7);
-        cards.put(Card.DIAMOND_SEVEN, d7);
-        cards.put(Card.HEART_SEVEN, h7);
-        cards.put(Card.CLUB_EIGHT, c8);
-        cards.put(Card.SPADE_EIGHT, s8);
-        cards.put(Card.DIAMOND_EIGHT, d8);
-        cards.put(Card.HEART_EIGHT, h8);
-        cards.put(Card.CLUB_NINE, c9);
-        cards.put(Card.SPADE_NINE, s9);
-        cards.put(Card.DIAMOND_NINE, d9);
-        cards.put(Card.HEART_NINE, h9);
-        cards.put(Card.CLUB_TEN, c10);
-        cards.put(Card.SPADE_TEN, s10);
-        cards.put(Card.DIAMOND_TEN, d10);
-        cards.put(Card.HEART_TEN, h10);
-        cards.put(Card.CLUB_JACK, cj);
-        cards.put(Card.SPADE_JACK, sj);
-        cards.put(Card.DIAMOND_JACK, dj);
-        cards.put(Card.HEART_JACK, hj);
-        cards.put(Card.CLUB_QUEEN, cq);
-        cards.put(Card.SPADE_QUEEN, sq);
-        cards.put(Card.DIAMOND_QUEEN, dq);
-        cards.put(Card.HEART_QUEEN, hq);
-        cards.put(Card.CLUB_KING, ck);
-        cards.put(Card.SPADE_KING, sk);
-        cards.put(Card.DIAMOND_KING, dk);
-        cards.put(Card.HEART_KING, hk);
-        cards.put(Card.CLUB_ACE, ca);
-        cards.put(Card.SPADE_ACE, sa);
-        cards.put(Card.DIAMOND_ACE, da);
-        cards.put(Card.HEART_ACE, ha);
+    @UiHandler("dealButton") void onDealButtonClicked(@SuppressWarnings("unused") ClickEvent event) {
+        getUiHandlers().dealCards();
     }
+
+    private void populateCardImagesMap() {
+        cardImageMap.put(Card.CLUB_SEVEN, c7);
+        cardImageMap.put(Card.SPADE_SEVEN, s7);
+        cardImageMap.put(Card.DIAMOND_SEVEN, d7);
+        cardImageMap.put(Card.HEART_SEVEN, h7);
+        cardImageMap.put(Card.CLUB_EIGHT, c8);
+        cardImageMap.put(Card.SPADE_EIGHT, s8);
+        cardImageMap.put(Card.DIAMOND_EIGHT, d8);
+        cardImageMap.put(Card.HEART_EIGHT, h8);
+        cardImageMap.put(Card.CLUB_NINE, c9);
+        cardImageMap.put(Card.SPADE_NINE, s9);
+        cardImageMap.put(Card.DIAMOND_NINE, d9);
+        cardImageMap.put(Card.HEART_NINE, h9);
+        cardImageMap.put(Card.CLUB_TEN, c10);
+        cardImageMap.put(Card.SPADE_TEN, s10);
+        cardImageMap.put(Card.DIAMOND_TEN, d10);
+        cardImageMap.put(Card.HEART_TEN, h10);
+        cardImageMap.put(Card.CLUB_JACK, cj);
+        cardImageMap.put(Card.SPADE_JACK, sj);
+        cardImageMap.put(Card.DIAMOND_JACK, dj);
+        cardImageMap.put(Card.HEART_JACK, hj);
+        cardImageMap.put(Card.CLUB_QUEEN, cq);
+        cardImageMap.put(Card.SPADE_QUEEN, sq);
+        cardImageMap.put(Card.DIAMOND_QUEEN, dq);
+        cardImageMap.put(Card.HEART_QUEEN, hq);
+        cardImageMap.put(Card.CLUB_KING, ck);
+        cardImageMap.put(Card.SPADE_KING, sk);
+        cardImageMap.put(Card.DIAMOND_KING, dk);
+        cardImageMap.put(Card.HEART_KING, hk);
+        cardImageMap.put(Card.CLUB_ACE, ca);
+        cardImageMap.put(Card.SPADE_ACE, sa);
+        cardImageMap.put(Card.DIAMOND_ACE, da);
+        cardImageMap.put(Card.HEART_ACE, ha);
+    }
+
+    private void populateTableLocationMap() {
+        tableLocationPanelMap.put(TableLocation.NORTH, northPanel);
+        tableLocationPanelMap.put(TableLocation.EAST, eastPanel);
+        tableLocationPanelMap.put(TableLocation.SOUTH, southPanel);
+        tableLocationPanelMap.put(TableLocation.WEST, westPanel);
+        tableLocationPanelMap.put(TableLocation.CENTER, centerPanel);
+    }
+
+    @UiField Button dealButton;
+    @UiField FlowPanel northPanel;
+    @UiField FlowPanel eastPanel;
+    @UiField FlowPanel southPanel;
+    @UiField FlowPanel westPanel;
+    @UiField FlowPanel centerPanel;
 
     @UiField Image c7;
     @UiField Image s7;

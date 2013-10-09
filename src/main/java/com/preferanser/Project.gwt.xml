@@ -29,11 +29,12 @@
     <inherits name='com.google.gwt.editor.Editor'/>
     <inherits name='com.google.gwt.text.Text'/>
     <inherits name="com.google.gwt.user.Debug"/>
+    <inherits name="com.google.common.collect.Collect"/>
 
     <!-- Default css -->
-    <inherits name='com.google.gwt.user.theme.standard.Standard'/>
+    <!--<inherits name='com.google.gwt.user.theme.standard.Standard'/>-->
     <!-- <inherits name='com.google.gwt.user.theme.chrome.Chrome'/> -->
-    <!-- <inherits name='com.google.gwt.user.theme.dark.Dark'/>     -->
+    <inherits name='com.google.gwt.user.theme.dark.Dark'/>
 
     <!-- Other module inherits                                      -->
     <inherits name='com.gwtplatform.mvp.MvpWithEntryPoint'/>

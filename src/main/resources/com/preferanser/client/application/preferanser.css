@@ -8,14 +8,3 @@ html, body {
 body {
     background-image: url("img/table_background_classic.jpg");
 }
-
-img.card {
-    position: absolute;
-    top: 0;
-    left: 0;
-    opacity: 1;
-    -moz-user-select: none;
-    -webkit-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-}

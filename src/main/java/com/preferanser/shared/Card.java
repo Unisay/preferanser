@@ -19,6 +19,9 @@
 
 package com.preferanser.shared;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * Playing Card
  */
@@ -70,6 +73,10 @@ public enum Card {
     private Card(Suit suit, Rank rank) {
         this.suit = suit;
         this.rank = rank;
+    }
+
+    public static List<Card> list32() {
+        return Arrays.asList(values());
     }
 
     public Suit getSuit() {

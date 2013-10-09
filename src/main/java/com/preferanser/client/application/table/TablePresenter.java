@@ -29,13 +29,17 @@ import com.gwtplatform.mvp.client.annotations.ProxyStandard;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.preferanser.client.application.ApplicationPresenter;
 import com.preferanser.client.place.NameTokens;
+import com.preferanser.shared.Card;
+import com.preferanser.shared.TableLocation;
 
 /**
  * Table presenter
  */
 public class TablePresenter extends Presenter<TablePresenter.TableView, TablePresenter.Proxy> implements TableUiHandlers {
 
-    public interface TableView extends View, HasUiHandlers<TableUiHandlers> {}
+    public interface TableView extends View, HasUiHandlers<TableUiHandlers> {
+        void displayCards(TableLocation tableLocation, Card... cards);
+    }
 
     @ProxyStandard
     @NameToken(NameTokens.TABLE)
@@ -45,6 +49,11 @@ public class TablePresenter extends Presenter<TablePresenter.TableView, TablePre
     public TablePresenter(EventBus eventBus, TableView view, Proxy proxy) {
         super(eventBus, view, proxy, ApplicationPresenter.TYPE_SetMainContent);
         getView().setUiHandlers(this);
+    }
+
+    @Override
+    public void dealCards() {
+        getView().displayCards(TableLocation.NORTH, Card.values());
     }
 
 }

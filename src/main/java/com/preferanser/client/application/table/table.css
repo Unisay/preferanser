@@ -1,0 +1,64 @@
+.not-displayed {
+    display: none;
+}
+
+.not-visible {
+    visibility: hidden;
+}
+
+img.card {
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 1;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.verticalPanel {
+    width: 1164px;
+    margin: 0 auto;
+}
+
+.buttonsPanel {
+    padding: 20px;
+}
+
+.dockPanel {
+    width: 100%;
+}
+
+.handPanel {
+    background-color: rgba(0, 0, 0, 0.1);
+    border-radius: 7px;
+    cursor: url("img/cursor/openhand.cur") 4 4, move;
+}
+
+.northHand, .southHand {
+    width: 100%;
+}
+
+.northHand {
+    height: 164px;
+}
+
+.southHand {
+    height: 164px;
+}
+
+.eastHand, .westHand, .centerHand {
+    height: 420px;
+}
+
+.eastHand {
+
+}
+
+.westHand {
+
+}
+
+.centerHand {
+}

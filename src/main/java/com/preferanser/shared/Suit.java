@@ -19,9 +19,22 @@
 
 package com.preferanser.shared;
 
+import java.util.Comparator;
+
 /**
  * Concept of playing card Suit
  */
 public enum Suit {
-    CLUB, SPADE, DIAMOND, HEART
+
+    // Order matters!
+    CLUB, SPADE, DIAMOND, HEART;
+
+    public static Comparator<Suit> comparator() {
+        return new Comparator<Suit>() {
+            @Override public int compare(Suit suit1, Suit suit2) {
+                return suit1.compareTo(suit2);
+            }
+        };
+    }
+
 }

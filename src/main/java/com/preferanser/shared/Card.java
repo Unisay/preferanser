@@ -20,6 +20,7 @@
 package com.preferanser.shared;
 
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -85,6 +86,14 @@ public enum Card {
 
     public Rank getRank() {
         return rank;
+    }
+
+    public static Comparator<Card> comparator() {
+        return new Comparator<Card>() {
+            @Override public int compare(Card card1, Card card2) {
+                return card1.compareTo(card2);
+            }
+        };
     }
 
 }

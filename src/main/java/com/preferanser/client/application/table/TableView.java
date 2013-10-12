@@ -20,7 +20,6 @@
 package com.preferanser.client.application.table;
 
 import com.google.common.base.Function;
-import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.*;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -54,7 +53,7 @@ public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements Ta
     private final Map<TableLocation, FlowPanel> locationPanelMap = newHashMapWithExpectedSize(5);
     private final Map<TableLocation, CardLayout> locationLayoutMap = newHashMapWithExpectedSize(5);
 
-    private Image draggedImage;
+    private ImageDragController imageDragController;
 
     @Inject
     public TableView(Binder uiBinder) {
@@ -97,7 +96,7 @@ public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements Ta
     private void handleMouseUp(RootPanel rootPanel) {
         rootPanel.addDomHandler(new MouseUpHandler() {
             @Override public void onMouseUp(MouseUpEvent event) {
-                draggedImage = null;
+                imageDragController = null;
             }
         }, MouseUpEvent.getType());
     }
@@ -105,10 +104,8 @@ public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements Ta
     private void handleMouseMove(RootPanel rootPanel) {
         rootPanel.addDomHandler(new MouseMoveHandler() {
             @Override public void onMouseMove(MouseMoveEvent event) {
-                if (draggedImage != null) {
-                    Style style = draggedImage.getElement().getStyle();
-                    style.setLeft(event.getClientX(), Style.Unit.PX);
-                    style.setTop(event.getClientY(), Style.Unit.PX);
+                if (imageDragController != null) {
+                    imageDragController.updateImagePosition(event);
                 }
             }
         }, MouseMoveEvent.getType());
@@ -126,7 +123,7 @@ public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements Ta
     private void handleMouseDown(final Image image) {
         image.addMouseDownHandler(new MouseDownHandler() {
             @Override public void onMouseDown(MouseDownEvent event) {
-                draggedImage = image;
+                imageDragController = new ImageDragController(image, event);
             }
         });
     }
@@ -157,7 +154,7 @@ public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements Ta
         cardViewMap.put(Card.DIAMOND_JACK, new CardView(Card.DIAMOND_JACK, dj));
         cardViewMap.put(Card.HEART_JACK, new CardView(Card.HEART_JACK, hj));
         cardViewMap.put(Card.CLUB_QUEEN, new CardView(Card.CLUB_QUEEN, cq));
-        cardViewMap.put(Card.SPADE_QUEEN,new CardView(Card.SPADE_QUEEN, sq) );
+        cardViewMap.put(Card.SPADE_QUEEN, new CardView(Card.SPADE_QUEEN, sq));
         cardViewMap.put(Card.DIAMOND_QUEEN, new CardView(Card.DIAMOND_QUEEN, dq));
         cardViewMap.put(Card.HEART_QUEEN, new CardView(Card.HEART_QUEEN, hq));
         cardViewMap.put(Card.CLUB_KING, new CardView(Card.CLUB_KING, ck));

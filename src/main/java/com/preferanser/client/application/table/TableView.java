@@ -95,8 +95,12 @@ public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements Ta
 
     private void handleMouseUp(RootPanel rootPanel) {
         rootPanel.addDomHandler(new MouseUpHandler() {
+            @SuppressWarnings("GWTStyleCheck")
             @Override public void onMouseUp(MouseUpEvent event) {
-                imageDragController = null;
+                if (imageDragController != null) {
+                    imageDragController.image.removeStyleName("dragging");
+                    imageDragController = null;
+                }
             }
         }, MouseUpEvent.getType());
     }
@@ -122,7 +126,9 @@ public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements Ta
 
     private void handleMouseDown(final Image image) {
         image.addMouseDownHandler(new MouseDownHandler() {
+            @SuppressWarnings("GWTStyleCheck")
             @Override public void onMouseDown(MouseDownEvent event) {
+                image.addStyleName("dragging");
                 imageDragController = new ImageDragController(image, event);
                 putCardImageOnTop(image);
             }

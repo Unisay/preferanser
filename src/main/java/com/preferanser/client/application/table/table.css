@@ -1,4 +1,4 @@
-@external .not-displayed, .not-visible;
+@external .not-displayed, .not-visible, .dragging;
 
 .not-displayed {
     display: none;
@@ -17,6 +17,10 @@ img.card {
     -webkit-user-select: none;
     -ms-user-select: none;
     user-select: none;
+}
+
+img.dragging {
+    cursor: url("img/cursor/closed-hand.cur") 4 4, move;
 }
 
 .verticalPanel {

@@ -8,16 +8,31 @@ import com.google.gwt.user.client.ui.Image;
 
 public class ImageDragController {
 
-    public Image image;
-    public Point offsetPoint;
+    private static final String STYLE_DRAGGING = "dragging";
+    private Image image;
+    private Point offsetPoint;
+    private boolean drag = false;
+    private final Document doc;
 
-    public ImageDragController(Image image, MouseEvent event) {
+    public ImageDragController(Document doc) {
+        this.doc = doc;
+    }
+
+    public void startDrag(Image image, MouseEvent event) {
         this.image = image;
         this.offsetPoint = new Point(event.getX(), event.getY());
+        // noinspection GWTStyleCheck
+        image.addStyleName(STYLE_DRAGGING);
+        drag = true;
+    }
+
+    public void stopDrag() {
+        // noinspection GWTStyleCheck
+        image.removeStyleName(STYLE_DRAGGING);
+        drag = false;
     }
 
     public void updateImagePosition(MouseEvent event) {
-        Document doc = Document.get();
         Point scrollPoint = new Point(doc.getScrollLeft(), doc.getScrollTop());
         Point eventPoint = new Point(event.getClientX(), event.getClientY());
         updateImagePosition(eventPoint.plus(scrollPoint).minus(offsetPoint));
@@ -27,5 +42,9 @@ public class ImageDragController {
         Style style = image.getElement().getStyle();
         style.setLeft(point.getX(), Style.Unit.PX);
         style.setTop(point.getY(), Style.Unit.PX);
+    }
+
+    public boolean isDrag() {
+        return drag;
     }
 }

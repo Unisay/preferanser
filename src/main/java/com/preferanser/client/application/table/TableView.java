@@ -20,6 +20,7 @@
 package com.preferanser.client.application.table;
 
 import com.google.common.base.Function;
+import com.google.gwt.dom.client.Document;
 import com.google.gwt.event.dom.client.*;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -53,7 +54,7 @@ public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements Ta
     private final Map<TableLocation, FlowPanel> locationPanelMap = newHashMapWithExpectedSize(5);
     private final Map<TableLocation, CardLayout> locationLayoutMap = newHashMapWithExpectedSize(5);
 
-    private ImageDragController imageDragController;
+    private ImageDragController imageDragController = new ImageDragController(Document.get());
 
     @Inject
     public TableView(Binder uiBinder) {
@@ -84,9 +85,9 @@ public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements Ta
         }));
     }
 
-    @SuppressWarnings("GWTStyleCheck")
     private void displayCard(HasWidgets panel, Card card) {
         CardView cardView = cardViewMap.get(card);
+        // noinspection GWTStyleCheck
         cardView.image.removeStyleName("not-visible");
         if (!cardView.image.getParent().equals(panel)) {
             panel.add(cardView.image);
@@ -95,12 +96,9 @@ public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements Ta
 
     private void handleMouseUp(RootPanel rootPanel) {
         rootPanel.addDomHandler(new MouseUpHandler() {
-            @SuppressWarnings("GWTStyleCheck")
             @Override public void onMouseUp(MouseUpEvent event) {
-                if (imageDragController != null) {
-                    imageDragController.image.removeStyleName("dragging");
-                    imageDragController = null;
-                }
+                if (imageDragController.isDrag())
+                    imageDragController.stopDrag();
             }
         }, MouseUpEvent.getType());
     }
@@ -108,9 +106,8 @@ public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements Ta
     private void handleMouseMove(RootPanel rootPanel) {
         rootPanel.addDomHandler(new MouseMoveHandler() {
             @Override public void onMouseMove(MouseMoveEvent event) {
-                if (imageDragController != null) {
+                if (imageDragController.isDrag())
                     imageDragController.updateImagePosition(event);
-                }
             }
         }, MouseMoveEvent.getType());
     }
@@ -126,10 +123,8 @@ public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements Ta
 
     private void handleMouseDown(final Image image) {
         image.addMouseDownHandler(new MouseDownHandler() {
-            @SuppressWarnings("GWTStyleCheck")
             @Override public void onMouseDown(MouseDownEvent event) {
-                image.addStyleName("dragging");
-                imageDragController = new ImageDragController(image, event);
+                imageDragController.startDrag(image, event);
                 putCardImageOnTop(image);
             }
         });

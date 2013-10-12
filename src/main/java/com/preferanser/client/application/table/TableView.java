@@ -124,8 +124,29 @@ public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements Ta
         image.addMouseDownHandler(new MouseDownHandler() {
             @Override public void onMouseDown(MouseDownEvent event) {
                 imageDragController = new ImageDragController(image, event);
+                putCardImageOnTop(image);
             }
         });
+    }
+
+    private void putCardImageOnTop(Image image) {
+        image.getElement().getStyle().setZIndex(getMaxCardZIndex() + 1);
+    }
+
+    private int getMaxCardZIndex() {
+        int maxZIndex = 0;
+        for (CardView cardView : cardViewMap.values()) {
+            int zIndex;
+            try {
+                zIndex = Integer.parseInt(cardView.image.getElement().getStyle().getZIndex());
+            } catch (NumberFormatException e) {
+                zIndex = 0;
+            }
+            if (maxZIndex < zIndex) {
+                maxZIndex = zIndex;
+            }
+        }
+        return maxZIndex;
     }
 
     @UiHandler("dealButton") void onDealButtonClicked(@SuppressWarnings("unused") ClickEvent event) {

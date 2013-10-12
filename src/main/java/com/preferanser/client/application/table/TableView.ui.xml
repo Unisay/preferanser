@@ -27,7 +27,7 @@
         <g:DockPanel debugId="dlp" addStyleNames="{style.dockPanel}" spacing="10">
             <g:Dock direction="NORTH">
                 <g:FlowPanel ui:field="northPanel" addStyleNames="{style.handPanel} {style.northHand}">
-                    <g:Image ui:field="c7" resource="{resources.c7}" addStyleNames="{style.card} {style.not-visible}"/>
+                    <g:Image ui:field="c7" resource="{resources.c7}" addStyleNames="{style.card} {style.not-visible}" />
                     <g:Image ui:field="s7" resource="{resources.s7}" addStyleNames="{style.card} {style.not-visible}"/>
                     <g:Image ui:field="d7" resource="{resources.d7}" addStyleNames="{style.card} {style.not-visible}"/>
                     <g:Image ui:field="h7" resource="{resources.h7}" addStyleNames="{style.card} {style.not-visible}"/>

@@ -20,7 +20,10 @@
 package com.preferanser.client.application.table;
 
 import com.google.common.base.Function;
+import com.google.common.collect.BiMap;
+import com.google.common.collect.EnumHashBiMap;
 import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.*;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -37,10 +40,10 @@ import com.preferanser.shared.TableLocation;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
-import java.util.Map;
+import java.util.Collection;
+import java.util.logging.Logger;
 
 import static com.google.common.collect.Collections2.transform;
-import static com.google.common.collect.Maps.newHashMapWithExpectedSize;
 import static com.preferanser.shared.TableLocation.*;
 
 /**
@@ -48,25 +51,29 @@ import static com.preferanser.shared.TableLocation.*;
  */
 public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements TablePresenter.TableView {
 
+    private static Logger log = Logger.getLogger("TableView");
+
     public interface Binder extends UiBinder<Widget, TableView> {}
 
-    private final Map<Card, CardView> cardViewMap = newHashMapWithExpectedSize(32);
-    private final Map<TableLocation, FlowPanel> locationPanelMap = newHashMapWithExpectedSize(5);
-    private final Map<TableLocation, CardLayout> locationLayoutMap = newHashMapWithExpectedSize(5);
+    private final BiMap<Card, CardView> cardViewMap = EnumHashBiMap.create(Card.class);
+    private final BiMap<TableLocation, FlowPanel> locationPanelMap = EnumHashBiMap.create(TableLocation.class);
+    private final BiMap<TableLocation, CardLayout> locationLayoutMap = EnumHashBiMap.create(TableLocation.class);
 
     private ImageDragController imageDragController = new ImageDragController(Document.get());
 
     @Inject
-    public TableView(Binder uiBinder) {
+    public TableView(Binder uiBinder, GQuerySelectors selectors) {
         initWidget(uiBinder.createAndBindUi(this));
+        disableStandardDragging(selectors.getAllDivsAndImages().elements());
         populateCardImagesMap();
         populateLocationPanelMap();
         populateLocationLayoutMap();
         RootPanel rootPanel = RootPanel.get();
-        handleMouseUp(rootPanel);
-        handleMouseMove(rootPanel);
+        installMouseUpHandler(rootPanel);
+        installMouseUpHandler(locationPanelMap.values());
+        installMouseMoveHandler(rootPanel);
         for (CardView cardView : cardViewMap.values()) {
-            handleMouseDown(cardView.image);
+            installMouseDownHandler(cardView.image);
             handleDragStart(cardView.image);
         }
     }
@@ -79,8 +86,8 @@ public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements Ta
         }
         CardLayout cardLayout = locationLayoutMap.get(location);
         cardLayout.apply(transform(Arrays.asList(cards), new Function<Card, CardView>() {
-            @Nullable @Override public CardView apply(@Nullable Card input) {
-                return input == null ? null : cardViewMap.get(input);
+            @Nullable @Override public CardView apply(@Nullable Card card) {
+                return card == null ? null : cardViewMap.get(card);
             }
         }));
     }
@@ -94,16 +101,22 @@ public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements Ta
         }
     }
 
-    private void handleMouseUp(RootPanel rootPanel) {
-        rootPanel.addDomHandler(new MouseUpHandler() {
-            @Override public void onMouseUp(MouseUpEvent event) {
-                if (imageDragController.isDrag())
-                    imageDragController.stopDrag();
-            }
-        }, MouseUpEvent.getType());
+    private void disableStandardDragging(Element[] elements) {
+        for (Element element : elements) {
+            element.setDraggable(Element.DRAGGABLE_FALSE);
+        }
     }
 
-    private void handleMouseMove(RootPanel rootPanel) {
+    private void installMouseDownHandler(final Image image) {
+        image.addMouseDownHandler(new MouseDownHandler() {
+            @Override public void onMouseDown(MouseDownEvent event) {
+                imageDragController.startDrag(image, event);
+                putCardImageOnTop(image);
+            }
+        });
+    }
+
+    private void installMouseMoveHandler(RootPanel rootPanel) {
         rootPanel.addDomHandler(new MouseMoveHandler() {
             @Override public void onMouseMove(MouseMoveEvent event) {
                 if (imageDragController.isDrag())
@@ -112,20 +125,37 @@ public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements Ta
         }, MouseMoveEvent.getType());
     }
 
+    private void installMouseUpHandler(RootPanel rootPanel) {
+        rootPanel.addDomHandler(new MouseUpHandler() {
+            @Override public void onMouseUp(MouseUpEvent event) {
+                if (imageDragController.isDrag()) {
+                    imageDragController.stopDrag();
+                }
+            }
+        }, MouseUpEvent.getType());
+    }
+
+    private void installMouseUpHandler(Collection<FlowPanel> panels) {
+        for (final FlowPanel panel : panels) {
+            panel.addDomHandler(new MouseUpHandler() {
+                @Override public void onMouseUp(MouseUpEvent event) {
+                    if (imageDragController.isDrag()) {
+                        for (FlowPanel flowPanel : locationPanelMap.values()) {
+                        }
+
+
+                        log.info("Panel drag end: " + locationPanelMap.inverse().get(panel));
+                    }
+                }
+            }, MouseUpEvent.getType());
+        }
+    }
+
     private void handleDragStart(Image image) {
         image.addDragStartHandler(new DragStartHandler() {
             @Override public void onDragStart(DragStartEvent event) {
                 event.stopPropagation();
                 event.preventDefault();
-            }
-        });
-    }
-
-    private void handleMouseDown(final Image image) {
-        image.addMouseDownHandler(new MouseDownHandler() {
-            @Override public void onMouseDown(MouseDownEvent event) {
-                imageDragController.startDrag(image, event);
-                putCardImageOnTop(image);
             }
         });
     }

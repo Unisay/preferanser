@@ -51,7 +51,7 @@ public class TablePresenter extends Presenter<TablePresenter.TableView, TablePre
     }
 
     @Override public void onDealCards() {
-        getView().displayCards(TableLocation.NORTH, Card.values());
+        getView().displayCards(TableLocation.WEST, Card.values());
     }
 
     @Override public void onCardLocationChange(Card card, TableLocation oldLocation, TableLocation newLocation) {

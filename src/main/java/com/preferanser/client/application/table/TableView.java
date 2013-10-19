@@ -31,10 +31,7 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.*;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
-import com.preferanser.client.application.table.layout.CardLayout;
-import com.preferanser.client.application.table.layout.CenterCardLayout;
-import com.preferanser.client.application.table.layout.EastCardLayout;
-import com.preferanser.client.application.table.layout.HorizontalCardLayout;
+import com.preferanser.client.application.table.layout.*;
 import com.preferanser.client.geom.Point;
 import com.preferanser.client.geom.Rect;
 import com.preferanser.shared.Card;
@@ -252,7 +249,7 @@ public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements Ta
         locationLayoutMap.put(NORTH, new HorizontalCardLayout(northPanel, c7.getWidth()));
         locationLayoutMap.put(EAST, new EastCardLayout(eastPanel));
         locationLayoutMap.put(SOUTH, new HorizontalCardLayout(southPanel, c7.getWidth()));
-        locationLayoutMap.put(WEST, new WestCardLayout(westPanel));
+        locationLayoutMap.put(WEST, new WestCardLayout(westPanel, c7.getWidth(), c7.getHeight()));
         locationLayoutMap.put(CENTER, new CenterCardLayout(centerPanel));
     }
 

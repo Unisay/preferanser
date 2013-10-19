@@ -4,7 +4,7 @@ import com.google.gwt.user.client.ui.Panel;
 
 public abstract class PanelCardLayout extends CardLayoutBase {
 
-    private static final int PADDING = 10;
+    protected static final int PADDING = 10;
     private final Panel panel;
 
     protected PanelCardLayout(Panel panel) {
@@ -31,5 +31,7 @@ public abstract class PanelCardLayout extends CardLayoutBase {
         return panel.getOffsetHeight();
     }
 
-
+    protected int getDisposableHeight() {
+        return getHeight() - PADDING - PADDING;
+    }
 }

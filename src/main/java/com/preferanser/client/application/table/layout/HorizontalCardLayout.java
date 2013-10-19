@@ -1,11 +1,9 @@
 package com.preferanser.client.application.table.layout;
 
-import com.google.common.base.Function;
 import com.google.gwt.user.client.ui.Panel;
 import com.preferanser.client.application.table.CardView;
 import com.preferanser.shared.Card;
 
-import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.List;
 
@@ -27,9 +25,9 @@ public class HorizontalCardLayout extends PanelCardLayout {
         super(panel);
         this.imageWidth = imageWidth;
         this.minOffsetSameSuit = 24;
-        this.maxOffsetSameSuit = minOffsetSameSuit * 2;
+        this.maxOffsetSameSuit = imageWidth - minOffsetSameSuit;
         this.minOffsetDiffSuit = imageWidth;
-        this.maxOffsetDiffSuit = imageWidth + minOffsetSameSuit;
+        this.maxOffsetDiffSuit = imageWidth + imageWidth / 2;
     }
 
     @Override
@@ -48,13 +46,15 @@ public class HorizontalCardLayout extends PanelCardLayout {
     }
 
     @Override
-    protected int getOffsetX(CardView prev, CardView next) {
+    protected int getOffsetX(CardView prev, CardView next, Integer prevX) {
         if (prev == null)
-            return 0;
+            return getStartX();
 
-        return prev.card.getSuit() == next.card.getSuit()
+        int dx = prev.card.getSuit() == next.card.getSuit()
                 ? sameSuitOffsetX
                 : diffSuitOffsetX;
+
+        return prevX + dx;
     }
 
     private int getCardsWidth() {
@@ -126,13 +126,6 @@ public class HorizontalCardLayout extends PanelCardLayout {
             prev = card;
         }
         return count;
-    }
-
-    private static class CardViewCardTransformer implements Function<CardView, Card> {
-        @Nullable @Override public Card apply(@Nullable CardView input) {
-            assert input != null;
-            return input.card;
-        }
     }
 
 }

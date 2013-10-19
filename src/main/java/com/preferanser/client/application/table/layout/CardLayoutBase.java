@@ -1,10 +1,13 @@
 package com.preferanser.client.application.table.layout;
 
+import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.ui.Widget;
 import com.preferanser.client.application.table.CardView;
+import com.preferanser.shared.Card;
 
+import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
@@ -15,6 +18,9 @@ public abstract class CardLayoutBase implements CardLayout {
 
     @Override
     public void apply(Collection<CardView> cardViews) {
+        if (cardViews == null || cardViews.isEmpty())
+            return;
+
         List<CardView> views = Lists.newArrayList(cardViews);
         sortCards(views);
         positionWidgets(views);
@@ -30,12 +36,12 @@ public abstract class CardLayoutBase implements CardLayout {
     }
 
     protected void positionWidgets(List<CardView> views) {
-        int x = getStartX(), y = getStartY(), z = getStartZ();
+        Integer x = null, y = null, z = null;
         CardView prev = null;
         for (CardView next : views) {
-            x += getOffsetX(prev, next);
-            y += getOffsetY(prev, next);
-            z += calculateOffsetZ(prev, next);
+            x = getOffsetX(prev, next, x);
+            y = getOffsetY(prev, next, y);
+            z = getOffsetZ(prev, next, z);
             positionWidget(next.image, x, y, z);
             prev = next;
         }
@@ -53,17 +59,19 @@ public abstract class CardLayoutBase implements CardLayout {
         return 0;
     }
 
-    protected int getOffsetX(CardView prev, CardView next) {
-        return 0;
-    }
-
-    protected int getOffsetY(CardView prev, CardView next) {
-        return 0;
+    @SuppressWarnings("unused")
+    protected int getOffsetX(CardView prev, CardView next, Integer prevX) {
+        return prev == null ? getStartX() : prevX;
     }
 
     @SuppressWarnings("unused")
-    protected int calculateOffsetZ(CardView prev, CardView next) {
-        return 1;
+    protected int getOffsetY(CardView prev, CardView next, Integer prevY) {
+        return prev == null ? getStartY() : prevY;
+    }
+
+    @SuppressWarnings("unused")
+    protected int getOffsetZ(CardView prev, CardView next, Integer prevZ) {
+        return prev == null ? getStartZ() : prevZ + 1;
     }
 
     private void positionWidget(Widget image, int x, int y, int z) {
@@ -73,4 +81,10 @@ public abstract class CardLayoutBase implements CardLayout {
         style.setZIndex(z);
     }
 
+    protected static class CardViewCardTransformer implements Function<CardView, Card> {
+        @Nullable @Override public Card apply(@Nullable CardView input) {
+            assert input != null;
+            return input.card;
+        }
+    }
 }

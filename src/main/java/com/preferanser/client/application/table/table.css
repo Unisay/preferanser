@@ -55,13 +55,17 @@ img.dragging {
     height: 420px;
 }
 
+.eastHand, .westHand {
+    width: 297px;
+}
+
 .eastHand {
 
 }
 
 .westHand {
-
 }
 
 .centerHand {
+    width: 550px;
 }

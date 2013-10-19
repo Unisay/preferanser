@@ -31,14 +31,14 @@ public class HorizontalCardLayoutTest {
 
     @Test
     public void testCalculateOffsetX() throws Exception {
-        assertThat(layout.getOffsetX(clubAce, spadeAce), equalTo(0));
-        assertThat(layout.getOffsetX(clubAce, clubTen), equalTo(0));
+        assertThat(layout.getOffsetX(clubAce, spadeAce, 10), equalTo(10));
+        assertThat(layout.getOffsetX(clubAce, clubTen, 10), equalTo(10));
     }
 
     @Test
     public void testCalculateOffsetY() throws Exception {
-        assertThat(layout.getOffsetY(clubAce, spadeAce), equalTo(0));
-        assertThat(layout.getOffsetY(clubAce, clubTen), equalTo(0));
+        assertThat(layout.getOffsetY(clubAce, spadeAce, 10), equalTo(10));
+        assertThat(layout.getOffsetY(clubAce, clubTen, 10), equalTo(10));
     }
 
     @Test

@@ -8,3 +8,11 @@ html, body {
 body {
     background-image: url("img/table_background_classic.jpg");
 }
+
+* {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}

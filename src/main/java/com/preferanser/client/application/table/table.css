@@ -13,10 +13,6 @@ img.card {
     top: 0;
     left: 0;
     opacity: 1;
-    -moz-user-select: none;
-    -webkit-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
 }
 
 img.dragging {

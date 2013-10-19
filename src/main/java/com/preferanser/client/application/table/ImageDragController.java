@@ -3,8 +3,8 @@ package com.preferanser.client.application.table;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.MouseEvent;
-import com.google.gwt.touch.client.Point;
 import com.google.gwt.user.client.ui.Image;
+import com.preferanser.client.geom.Point;
 
 public class ImageDragController {
 
@@ -33,9 +33,7 @@ public class ImageDragController {
     }
 
     public void updateImagePosition(MouseEvent event) {
-        Point scrollPoint = new Point(doc.getScrollLeft(), doc.getScrollTop());
-        Point eventPoint = new Point(event.getClientX(), event.getClientY());
-        updateImagePosition(eventPoint.plus(scrollPoint).minus(offsetPoint));
+        updateImagePosition(Point.FromMouseEvent(event, doc).minus(offsetPoint));
     }
 
     private void updateImagePosition(Point point) {
@@ -46,5 +44,9 @@ public class ImageDragController {
 
     public boolean isDrag() {
         return drag;
+    }
+
+    public Image getImage() {
+        return image;
     }
 }

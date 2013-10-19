@@ -45,15 +45,16 @@ public class TablePresenter extends Presenter<TablePresenter.TableView, TablePre
     @NameToken(NameTokens.TABLE)
     public interface Proxy extends ProxyPlace<TablePresenter> {}
 
-    @Inject
-    public TablePresenter(EventBus eventBus, TableView view, Proxy proxy) {
+    @Inject public TablePresenter(EventBus eventBus, TableView view, Proxy proxy) {
         super(eventBus, view, proxy, ApplicationPresenter.TYPE_SetMainContent);
         getView().setUiHandlers(this);
     }
 
-    @Override
-    public void dealCards() {
-        getView().displayCards(TableLocation.SOUTH, Card.values());
+    @Override public void onDealCards() {
+        getView().displayCards(TableLocation.NORTH, Card.values());
     }
 
+    @Override public void onCardLocationChange(Card card, TableLocation oldLocation, TableLocation newLocation) {
+        // getView().displayCards(newLocation, card);
+    }
 }

@@ -35,15 +35,17 @@ import com.preferanser.client.application.table.layout.CardLayout;
 import com.preferanser.client.application.table.layout.CenterCardLayout;
 import com.preferanser.client.application.table.layout.EastCardLayout;
 import com.preferanser.client.application.table.layout.HorizontalCardLayout;
+import com.preferanser.client.geom.Point;
+import com.preferanser.client.geom.Rect;
 import com.preferanser.shared.Card;
 import com.preferanser.shared.TableLocation;
 
 import javax.annotation.Nullable;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.logging.Logger;
 
-import static com.google.common.collect.Collections2.transform;
+import static com.google.common.collect.Iterables.transform;
+import static com.google.common.collect.Lists.newArrayList;
 import static com.preferanser.shared.TableLocation.*;
 
 /**
@@ -55,7 +57,7 @@ public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements Ta
 
     public interface Binder extends UiBinder<Widget, TableView> {}
 
-    private final BiMap<Card, CardView> cardViewMap = EnumHashBiMap.create(Card.class);
+    private final BiMap<Card, Image> cardViewMap = EnumHashBiMap.create(Card.class);
     private final BiMap<TableLocation, FlowPanel> locationPanelMap = EnumHashBiMap.create(TableLocation.class);
     private final BiMap<TableLocation, CardLayout> locationLayoutMap = EnumHashBiMap.create(TableLocation.class);
 
@@ -72,9 +74,9 @@ public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements Ta
         installMouseUpHandler(rootPanel);
         installMouseUpHandler(locationPanelMap.values());
         installMouseMoveHandler(rootPanel);
-        for (CardView cardView : cardViewMap.values()) {
-            installMouseDownHandler(cardView.image);
-            handleDragStart(cardView.image);
+        for (Image image : cardViewMap.values()) {
+            installMouseDownHandler(image);
+            handleDragStart(image);
         }
     }
 
@@ -84,20 +86,31 @@ public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements Ta
         for (Card card : cards) {
             displayCard(panel, card);
         }
+        layoutLocation(location);
+    }
+
+    private void layoutLocation(TableLocation location) {
+        FlowPanel panel = locationPanelMap.get(location);
         CardLayout cardLayout = locationLayoutMap.get(location);
-        cardLayout.apply(transform(Arrays.asList(cards), new Function<Card, CardView>() {
-            @Nullable @Override public CardView apply(@Nullable Card card) {
-                return card == null ? null : cardViewMap.get(card);
+        cardLayout.apply(newArrayList(transform(panel, new Function<Widget, CardView>() {
+            @Nullable @Override public CardView apply(@Nullable Widget widget) {
+                if (widget instanceof Image) {
+                    Image image = (Image) widget;
+                    Card card = cardViewMap.inverse().get(image);
+                    assert card != null : "Image is not card. Can't apply layout: " + image;
+                    return new CardView(card, image);
+                }
+                return null;
             }
-        }));
+        })));
     }
 
     private void displayCard(HasWidgets panel, Card card) {
-        CardView cardView = cardViewMap.get(card);
+        Image image = cardViewMap.get(card);
         // noinspection GWTStyleCheck
-        cardView.image.removeStyleName("not-visible");
-        if (!cardView.image.getParent().equals(panel)) {
-            panel.add(cardView.image);
+        image.removeStyleName("not-visible");
+        if (!image.getParent().equals(panel)) {
+            panel.add(image);
         }
     }
 
@@ -135,16 +148,24 @@ public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements Ta
         }, MouseUpEvent.getType());
     }
 
-    private void installMouseUpHandler(Collection<FlowPanel> panels) {
-        for (final FlowPanel panel : panels) {
-            panel.addDomHandler(new MouseUpHandler() {
+    private void installMouseUpHandler(final Collection<FlowPanel> panels) {
+        for (final FlowPanel sourcePanel : panels) {
+            sourcePanel.addDomHandler(new MouseUpHandler() {
                 @Override public void onMouseUp(MouseUpEvent event) {
                     if (imageDragController.isDrag()) {
-                        for (FlowPanel flowPanel : locationPanelMap.values()) {
+                        Point eventPoint = Point.FromMouseEvent(event, Document.get());
+                        for (final FlowPanel targetPanel : panels) {
+                            if (Rect.FromWidget(targetPanel).contains(eventPoint)) {
+                                Card card = cardViewMap.inverse().get(imageDragController.getImage());
+                                TableLocation oldLocation = locationPanelMap.inverse().get(sourcePanel);
+                                TableLocation newLocation = locationPanelMap.inverse().get(targetPanel);
+                                log.finer("Card newLocation change: " + card + ": " + oldLocation + " -> " + newLocation);
+                                getUiHandlers().onCardLocationChange(card, oldLocation, newLocation);
+                                displayCards(newLocation, card);
+                                layoutLocation(oldLocation);
+                                return;
+                            }
                         }
-
-
-                        log.info("Panel drag end: " + locationPanelMap.inverse().get(panel));
                     }
                 }
             }, MouseUpEvent.getType());
@@ -166,10 +187,10 @@ public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements Ta
 
     private int getMaxCardZIndex() {
         int maxZIndex = 0;
-        for (CardView cardView : cardViewMap.values()) {
+        for (Image image : cardViewMap.values()) {
             int zIndex;
             try {
-                zIndex = Integer.parseInt(cardView.image.getElement().getStyle().getZIndex());
+                zIndex = Integer.parseInt(image.getElement().getStyle().getZIndex());
             } catch (NumberFormatException e) {
                 zIndex = 0;
             }
@@ -181,42 +202,42 @@ public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements Ta
     }
 
     @UiHandler("dealButton") void onDealButtonClicked(@SuppressWarnings("unused") ClickEvent event) {
-        getUiHandlers().dealCards();
+        getUiHandlers().onDealCards();
     }
 
     private void populateCardImagesMap() {
-        cardViewMap.put(Card.CLUB_SEVEN, new CardView(Card.CLUB_SEVEN, c7));
-        cardViewMap.put(Card.SPADE_SEVEN, new CardView(Card.SPADE_SEVEN, s7));
-        cardViewMap.put(Card.DIAMOND_SEVEN, new CardView(Card.DIAMOND_SEVEN, d7));
-        cardViewMap.put(Card.HEART_SEVEN, new CardView(Card.HEART_SEVEN, h7));
-        cardViewMap.put(Card.CLUB_EIGHT, new CardView(Card.CLUB_EIGHT, c8));
-        cardViewMap.put(Card.SPADE_EIGHT, new CardView(Card.SPADE_EIGHT, s8));
-        cardViewMap.put(Card.DIAMOND_EIGHT, new CardView(Card.DIAMOND_EIGHT, d8));
-        cardViewMap.put(Card.HEART_EIGHT, new CardView(Card.HEART_EIGHT, h8));
-        cardViewMap.put(Card.CLUB_NINE, new CardView(Card.CLUB_NINE, c9));
-        cardViewMap.put(Card.SPADE_NINE, new CardView(Card.SPADE_NINE, s9));
-        cardViewMap.put(Card.DIAMOND_NINE, new CardView(Card.DIAMOND_NINE, d9));
-        cardViewMap.put(Card.HEART_NINE, new CardView(Card.HEART_NINE, h9));
-        cardViewMap.put(Card.CLUB_TEN, new CardView(Card.CLUB_TEN, c10));
-        cardViewMap.put(Card.SPADE_TEN, new CardView(Card.SPADE_TEN, s10));
-        cardViewMap.put(Card.DIAMOND_TEN, new CardView(Card.DIAMOND_TEN, d10));
-        cardViewMap.put(Card.HEART_TEN, new CardView(Card.HEART_TEN, h10));
-        cardViewMap.put(Card.CLUB_JACK, new CardView(Card.CLUB_JACK, cj));
-        cardViewMap.put(Card.SPADE_JACK, new CardView(Card.SPADE_JACK, sj));
-        cardViewMap.put(Card.DIAMOND_JACK, new CardView(Card.DIAMOND_JACK, dj));
-        cardViewMap.put(Card.HEART_JACK, new CardView(Card.HEART_JACK, hj));
-        cardViewMap.put(Card.CLUB_QUEEN, new CardView(Card.CLUB_QUEEN, cq));
-        cardViewMap.put(Card.SPADE_QUEEN, new CardView(Card.SPADE_QUEEN, sq));
-        cardViewMap.put(Card.DIAMOND_QUEEN, new CardView(Card.DIAMOND_QUEEN, dq));
-        cardViewMap.put(Card.HEART_QUEEN, new CardView(Card.HEART_QUEEN, hq));
-        cardViewMap.put(Card.CLUB_KING, new CardView(Card.CLUB_KING, ck));
-        cardViewMap.put(Card.SPADE_KING, new CardView(Card.SPADE_KING, sk));
-        cardViewMap.put(Card.DIAMOND_KING, new CardView(Card.DIAMOND_KING, dk));
-        cardViewMap.put(Card.HEART_KING, new CardView(Card.HEART_KING, hk));
-        cardViewMap.put(Card.CLUB_ACE, new CardView(Card.CLUB_ACE, ca));
-        cardViewMap.put(Card.SPADE_ACE, new CardView(Card.SPADE_ACE, sa));
-        cardViewMap.put(Card.DIAMOND_ACE, new CardView(Card.DIAMOND_ACE, da));
-        cardViewMap.put(Card.HEART_ACE, new CardView(Card.HEART_ACE, ha));
+        cardViewMap.put(Card.CLUB_SEVEN, c7);
+        cardViewMap.put(Card.SPADE_SEVEN, s7);
+        cardViewMap.put(Card.DIAMOND_SEVEN, d7);
+        cardViewMap.put(Card.HEART_SEVEN, h7);
+        cardViewMap.put(Card.CLUB_EIGHT, c8);
+        cardViewMap.put(Card.SPADE_EIGHT, s8);
+        cardViewMap.put(Card.DIAMOND_EIGHT, d8);
+        cardViewMap.put(Card.HEART_EIGHT, h8);
+        cardViewMap.put(Card.CLUB_NINE, c9);
+        cardViewMap.put(Card.SPADE_NINE, s9);
+        cardViewMap.put(Card.DIAMOND_NINE, d9);
+        cardViewMap.put(Card.HEART_NINE, h9);
+        cardViewMap.put(Card.CLUB_TEN, c10);
+        cardViewMap.put(Card.SPADE_TEN, s10);
+        cardViewMap.put(Card.DIAMOND_TEN, d10);
+        cardViewMap.put(Card.HEART_TEN, h10);
+        cardViewMap.put(Card.CLUB_JACK, cj);
+        cardViewMap.put(Card.SPADE_JACK, sj);
+        cardViewMap.put(Card.DIAMOND_JACK, dj);
+        cardViewMap.put(Card.HEART_JACK, hj);
+        cardViewMap.put(Card.CLUB_QUEEN, cq);
+        cardViewMap.put(Card.SPADE_QUEEN, sq);
+        cardViewMap.put(Card.DIAMOND_QUEEN, dq);
+        cardViewMap.put(Card.HEART_QUEEN, hq);
+        cardViewMap.put(Card.CLUB_KING, ck);
+        cardViewMap.put(Card.SPADE_KING, sk);
+        cardViewMap.put(Card.DIAMOND_KING, dk);
+        cardViewMap.put(Card.HEART_KING, hk);
+        cardViewMap.put(Card.CLUB_ACE, ca);
+        cardViewMap.put(Card.SPADE_ACE, sa);
+        cardViewMap.put(Card.DIAMOND_ACE, da);
+        cardViewMap.put(Card.HEART_ACE, ha);
     }
 
     private void populateLocationPanelMap() {

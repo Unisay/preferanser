@@ -20,28 +20,34 @@
 
 <module rename-to='Preferanser'>
     <!-- Inherit the core Web Toolkit stuff.                        -->
-    <inherits name='com.google.gwt.user.User'/>
-    <inherits name='com.google.gwt.inject.Inject'/>
-    <inherits name='com.google.gwt.user.cellview.CellView'/>
-    <inherits name='com.google.web.bindery.requestfactory.RequestFactory'/>
-    <inherits name='com.google.gwt.logging.Logging'/>
-    <inherits name='com.google.gwt.resources.Resources'/>
-    <inherits name='com.google.gwt.editor.Editor'/>
-    <inherits name='com.google.gwt.text.Text'/>
+    <inherits name="com.google.gwt.user.User"/>
+    <inherits name="com.google.gwt.inject.Inject"/>
+    <inherits name="com.google.gwt.user.cellview.CellView"/>
+    <inherits name="com.google.web.bindery.requestfactory.RequestFactory"/>
+    <inherits name="com.google.gwt.logging.Logging"/>
+    <inherits name="com.google.gwt.resources.Resources"/>
+    <inherits name="com.google.gwt.editor.Editor"/>
+    <inherits name="com.google.gwt.text.Text"/>
     <inherits name="com.google.gwt.user.Debug"/>
     <inherits name="com.google.common.collect.Collect"/>
     <inherits name="com.google.gwt.query.Query"/>
 
+    <set-property name="gwt.logging.logLevel" value="FINEST"/>
+    <set-property name="gwt.logging.enabled" value="TRUE"/>
+    <set-property name="gwt.logging.consoleHandler" value="ENABLED"/>
+    <set-property name="gwt.logging.firebugHandler" value="ENABLED"/>
+    <set-property name="gwt.logging.popupHandler" value="DISABLED"/>
+
     <!-- Default css -->
-    <!--<inherits name='com.google.gwt.user.theme.standard.Standard'/>-->
-    <!-- <inherits name='com.google.gwt.user.theme.chrome.Chrome'/> -->
-    <inherits name='com.google.gwt.user.theme.dark.Dark'/>
+    <!--<inherits name="com.google.gwt.user.theme.standard.Standard"/>-->
+    <!-- <inherits name="com.google.gwt.user.theme.chrome.Chrome"/> -->
+    <inherits name="com.google.gwt.user.theme.dark.Dark"/>
 
     <!-- Other module inherits                                      -->
-    <inherits name='com.gwtplatform.mvp.MvpWithEntryPoint'/>
+    <inherits name="com.gwtplatform.mvp.MvpWithEntryPoint"/>
 
-    <source path='client'/>
-    <source path='shared'/>
+    <source path="client"/>
+    <source path="shared"/>
 
     <set-configuration-property name="gin.ginjector.modules" value="com.preferanser.client.gin.ClientModule"/>
 </module>

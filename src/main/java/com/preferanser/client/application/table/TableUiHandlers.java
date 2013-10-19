@@ -20,10 +20,16 @@
 package com.preferanser.client.application.table;
 
 import com.gwtplatform.mvp.client.UiHandlers;
+import com.preferanser.shared.Card;
+import com.preferanser.shared.TableLocation;
 
 /**
  * Table UI handlers
  */
 public interface TableUiHandlers extends UiHandlers {
-    void dealCards();
+
+    void onDealCards();
+
+    void onCardLocationChange(Card card, TableLocation oldLocation, TableLocation newLocation);
+
 }

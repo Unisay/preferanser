@@ -44,6 +44,13 @@ public class Point {
         return new Point(this.x - that.x, this.y - that.y);
     }
 
+    public Point divide(int scalar) {
+        return new Point(this.getX() / scalar, this.getY() / scalar);
+    }
+
+    public Point multiply(int scalar) {
+        return new Point(this.getX() * scalar, this.getY() * scalar);
+    }
 
     public int getX() {
         return x;
@@ -52,4 +59,5 @@ public class Point {
     public int getY() {
         return y;
     }
+
 }

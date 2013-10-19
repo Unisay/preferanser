@@ -24,4 +24,7 @@ public class Rect {
                 rightBottom.getX() >= point.getX() && rightBottom.getY() >= point.getY();
     }
 
+    public Point center() {
+        return leftTop.plus(rightBottom.minus(leftTop).divide(2));
+    }
 }

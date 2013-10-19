@@ -153,9 +153,9 @@ public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements Ta
             sourcePanel.addDomHandler(new MouseUpHandler() {
                 @Override public void onMouseUp(MouseUpEvent event) {
                     if (imageDragController.isDrag()) {
-                        Point eventPoint = Point.FromMouseEvent(event, Document.get());
+                        Point cardCenter = Rect.FromWidget(imageDragController.getImage()).center();
                         for (final FlowPanel targetPanel : panels) {
-                            if (Rect.FromWidget(targetPanel).contains(eventPoint)) {
+                            if (Rect.FromWidget(targetPanel).contains(cardCenter)) {
                                 Card card = cardViewMap.inverse().get(imageDragController.getImage());
                                 TableLocation oldLocation = locationPanelMap.inverse().get(sourcePanel);
                                 TableLocation newLocation = locationPanelMap.inverse().get(targetPanel);

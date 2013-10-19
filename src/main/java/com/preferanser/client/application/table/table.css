@@ -37,6 +37,7 @@ img.dragging {
 }
 
 .handPanel {
+    position: relative;
     background-color: rgba(0, 0, 0, 0.1);
     border-radius: 7px;
     cursor: url("img/cursor/open-hand.cur") 4 4, move;

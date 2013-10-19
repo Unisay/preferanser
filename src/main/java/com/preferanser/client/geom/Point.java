@@ -2,6 +2,7 @@ package com.preferanser.client.geom;
 
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.event.dom.client.MouseEvent;
+import com.google.gwt.user.client.ui.Widget;
 
 public class Point {
 
@@ -21,6 +22,20 @@ public class Point {
         return FromMouseEvent(event).plus(new Point(doc.getScrollLeft(), doc.getScrollTop()));
     }
 
+    public static Point FromMouseEventRelative(MouseEvent event) {
+        return new Point(event.getX(), event.getY());
+    }
+
+    public static Point FromWidgetLeftTop(Widget widget) {
+        return new Point(widget.getAbsoluteLeft(), widget.getAbsoluteTop());
+    }
+
+    public static Point FromWidgetRightBottom(Widget widget) {
+        return new Point(
+                widget.getAbsoluteLeft() + widget.getOffsetWidth(),
+                widget.getAbsoluteTop() + widget.getOffsetHeight());
+    }
+
     public Point plus(Point that) {
         return new Point(this.x + that.x, this.y + that.y);
     }
@@ -29,6 +44,7 @@ public class Point {
         return new Point(this.x - that.x, this.y - that.y);
     }
 
+
     public int getX() {
         return x;
     }
@@ -36,6 +52,4 @@ public class Point {
     public int getY() {
         return y;
     }
-
-
 }

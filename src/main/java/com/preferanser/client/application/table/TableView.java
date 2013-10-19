@@ -249,9 +249,9 @@ public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements Ta
     }
 
     private void populateLocationLayoutMap() {
-        locationLayoutMap.put(NORTH, new HorizontalCardLayout(northPanel));
+        locationLayoutMap.put(NORTH, new HorizontalCardLayout(northPanel, c7.getWidth()));
         locationLayoutMap.put(EAST, new EastCardLayout(eastPanel));
-        locationLayoutMap.put(SOUTH, new HorizontalCardLayout(southPanel));
+        locationLayoutMap.put(SOUTH, new HorizontalCardLayout(southPanel, c7.getWidth()));
         locationLayoutMap.put(WEST, new WestCardLayout(westPanel));
         locationLayoutMap.put(CENTER, new CenterCardLayout(centerPanel));
     }

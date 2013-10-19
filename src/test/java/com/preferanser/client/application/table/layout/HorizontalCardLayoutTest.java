@@ -1,57 +1,54 @@
 package com.preferanser.client.application.table.layout;
 
-import com.google.gwt.dom.client.Style;
-import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.Image;
-import com.googlecode.gwt.test.GwtModule;
-import com.googlecode.gwt.test.GwtTest;
 import com.preferanser.client.application.table.CardView;
+import com.preferanser.shared.Card;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.Collection;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static com.preferanser.shared.Card.*;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 
-@GwtModule("com.preferanser.Preferanser")
-public class HorizontalCardLayoutTest extends GwtTest {
+public class HorizontalCardLayoutTest {
 
     private HorizontalCardLayout layout;
+    private Collection<Card> cards;
+    private CardView clubAce;
+    private CardView spadeAce;
+    private CardView clubTen;
 
     @Before
     public void setUp() throws Exception {
-        FlowPanel panel = new FlowPanel();
-        layout = new HorizontalCardLayout(panel);
+        layout = new HorizontalCardLayout(null, 30);
+        cards = newArrayList(CLUB_ACE, CLUB_TEN, SPADE_ACE, HEART_TEN, HEART_ACE);
+        clubAce = new CardView(CLUB_ACE, null);
+        spadeAce = new CardView(SPADE_ACE, null);
+        clubTen = new CardView(CLUB_TEN, null);
     }
 
     @Test
-    public void testApply() throws Exception {
-        List<CardView> cardViews = Arrays.asList(
-                new CardView(CLUB_ACE, positionImage(new Image(), 0, 0, 0)),
-                new CardView(SPADE_KING, positionImage(new Image(), 0, 0, 0)),
-                new CardView(SPADE_ACE, positionImage(new Image(), 0, 0, 0))
-        );
-
-        layout.apply(cardViews);
-
-        List<CardView> expectedCardViews = Arrays.asList(
-                new CardView(CLUB_ACE, positionImage(new Image(), 0, 0, 0)),
-                new CardView(SPADE_KING, positionImage(new Image(), 10, 0, 1)),
-                new CardView(SPADE_ACE, positionImage(new Image(), 20, 0, 2))
-        );
-
-        assertThat(cardViews, equalTo(expectedCardViews));
+    public void testCalculateOffsetX() throws Exception {
+        assertThat(layout.getOffsetX(clubAce, spadeAce), equalTo(0));
+        assertThat(layout.getOffsetX(clubAce, clubTen), equalTo(0));
     }
 
-    private Image positionImage(Image image, int left, int top, int z) {
-        Style style = image.getElement().getStyle();
-        style.setLeft(left, Style.Unit.PX);
-        style.setTop(top, Style.Unit.PX);
-        style.setZIndex(z);
-        return image;
+    @Test
+    public void testCalculateOffsetY() throws Exception {
+        assertThat(layout.getOffsetY(clubAce, spadeAce), equalTo(0));
+        assertThat(layout.getOffsetY(clubAce, clubTen), equalTo(0));
+    }
+
+    @Test
+    public void testCountSameSuitOffsets() throws Exception {
+        assertThat(HorizontalCardLayout.countSameSuitOffsets(cards), equalTo(2));
+    }
+
+    @Test
+    public void testCountDiffSuitOffsets() throws Exception {
+        assertThat(HorizontalCardLayout.countDiffSuitOffsets(cards), equalTo(2));
     }
 
 }

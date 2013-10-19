@@ -12,14 +12,8 @@ public class Rect {
         this.rightBottom = rightBottom;
     }
 
-    public Rect(int x1, int y1, int x2, int y2) {
-        this(new Point(x1, y1), new Point(x2, y2));
-    }
-
     public static Rect FromWidget(Widget widget) {
-        int left = widget.getAbsoluteLeft();
-        int top = widget.getAbsoluteTop();
-        return new Rect(left, top, left + widget.getOffsetWidth(), top + widget.getOffsetHeight());
+        return new Rect(Point.FromWidgetLeftTop(widget), Point.FromWidgetRightBottom(widget));
     }
 
     /**

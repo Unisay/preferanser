@@ -10,7 +10,8 @@ public class ImageDragController {
 
     private static final String STYLE_DRAGGING = "dragging";
     private Image image;
-    private Point offsetPoint;
+    private Point clickOffset;
+    private Point parentOffset;
     private boolean drag = false;
     private final Document doc;
 
@@ -20,7 +21,8 @@ public class ImageDragController {
 
     public void startDrag(Image image, MouseEvent event) {
         this.image = image;
-        this.offsetPoint = new Point(event.getX(), event.getY());
+        this.parentOffset = Point.FromWidgetLeftTop(image.getParent());
+        this.clickOffset = Point.FromMouseEventRelative(event);
         // noinspection GWTStyleCheck
         image.addStyleName(STYLE_DRAGGING);
         drag = true;
@@ -33,7 +35,7 @@ public class ImageDragController {
     }
 
     public void updateImagePosition(MouseEvent event) {
-        updateImagePosition(Point.FromMouseEvent(event, doc).minus(offsetPoint));
+        updateImagePosition(Point.FromMouseEvent(event, doc).minus(clickOffset).minus(parentOffset));
     }
 
     private void updateImagePosition(Point point) {

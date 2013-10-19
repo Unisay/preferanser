@@ -9,11 +9,4 @@ public class WestCardLayout extends PanelCardLayout {
         super(panel);
     }
 
-    @Override protected int calculateOffsetX(CardView prev, CardView next) {
-        return 0;  //Todo
-    }
-
-    @Override protected int calculateOffsetY(CardView prev, CardView next) {
-        return 0;  //Todo
-    }
 }

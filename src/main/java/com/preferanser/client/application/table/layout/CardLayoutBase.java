@@ -6,6 +6,8 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.ui.Widget;
 import com.preferanser.client.application.table.CardView;
 import com.preferanser.shared.Card;
+import com.preferanser.shared.Rank;
+import com.preferanser.shared.Suit;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
@@ -29,10 +31,26 @@ public abstract class CardLayoutBase implements CardLayout {
     protected void sortCards(List<CardView> views) {
         sort(views, new Comparator<CardView>() {
             @Override public int compare(CardView view1, CardView view2) {
-                int suitResult = view1.card.getSuit().compareTo(view2.card.getSuit());
-                return 0 == suitResult ? view2.card.getRank().compareTo(view1.card.getRank()) : suitResult;
+                return compareCards(view1.card, view2.card);
             }
         });
+    }
+
+    protected int compareCards(Card card1, Card card2) {
+        int suitResult = compareSuits(card1.getSuit(), card2.getSuit());
+        if (0 == suitResult) {
+            return compareRanks(card2.getRank(), card1.getRank());
+        } else {
+            return suitResult;
+        }
+    }
+
+    protected int compareRanks(Rank rank1, Rank rank2) {
+        return rank1.compareTo(rank2);
+    }
+
+    protected int compareSuits(Suit suit1, Suit suit2) {
+        return suit1.compareTo(suit2);
     }
 
     protected void positionWidgets(List<CardView> views) {
@@ -61,17 +79,32 @@ public abstract class CardLayoutBase implements CardLayout {
 
     @SuppressWarnings("unused")
     protected int getOffsetX(CardView prev, CardView next, Integer prevX) {
-        return prev == null ? getStartX() : prevX;
+        return prev == null ? getStartX() : prevX + getDeltaX(prev, next);
+    }
+
+    @SuppressWarnings("unused")
+    protected int getDeltaX(CardView prev, CardView next) {
+        return 0;
     }
 
     @SuppressWarnings("unused")
     protected int getOffsetY(CardView prev, CardView next, Integer prevY) {
-        return prev == null ? getStartY() : prevY;
+        return prev == null ? getStartY() : prevY + getDeltaY(prev, next);
+    }
+
+    @SuppressWarnings("unused")
+    protected int getDeltaY(CardView prev, CardView next) {
+        return 0;
     }
 
     @SuppressWarnings("unused")
     protected int getOffsetZ(CardView prev, CardView next, Integer prevZ) {
-        return prev == null ? getStartZ() : prevZ + 1;
+        return prev == null ? getStartZ() : prevZ + getDeltaZ(prev, next);
+    }
+
+    @SuppressWarnings("unused")
+    protected int getDeltaZ(CardView prev, CardView next) {
+        return 1;
     }
 
     private void positionWidget(Widget image, int x, int y, int z) {

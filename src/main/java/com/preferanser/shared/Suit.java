@@ -27,7 +27,7 @@ import java.util.Comparator;
 public enum Suit {
 
     // Order matters!
-    CLUB, SPADE, DIAMOND, HEART;
+    SPADE, CLUB, DIAMOND, HEART;
 
     public static Comparator<Suit> comparator() {
         return new Comparator<Suit>() {

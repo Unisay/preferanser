@@ -1,3 +1,4 @@
+@external .gwt-Label, .gwt-Hyperlink;
 @external .not-displayed, .not-visible, .dragging;
 @external .verticalPanel, .buttonsPanel, .dockPanel;
 @external .northDock, .eastDock, .southDock, .westDock, .centerDock;
@@ -49,10 +50,10 @@ img.dragging {
     width: 100%;
 }
 
-.northHPanel, .southHPanel, .eastHPanel, .westHPanel, .centerHPanel  {
+.northHPanel, .southHPanel, .eastHPanel, .westHPanel, .centerHPanel {
     width: 100%;
     line-height: 20px;
-    padding:0 10px 0 10px;
+    padding: 0 10px 0 10px;
     position: absolute;
     top: 0;
     left: 0;
@@ -64,9 +65,9 @@ img.dragging {
     border-top-right-radius: 7px;
     background-color: rgba(0, 0, 0, 0.1);
     height: 20px;
-    text-shadow: -1px -1px 0 #333333;
     font-weight: bold;
     cursor: pointer;
+    white-space: nowrap;
 }
 
 .northFlowPanel, .eastFlowPanel, .southFlowPanel, .westFlowPanel, .centerFlowPanel {
@@ -100,10 +101,35 @@ img.dragging {
     width: 550px;
 }
 
-.titleNorth, .titleEast, .titleSouth, .titleWest {
+.titleNorth, .titleEast, .titleSouth, .titleWest, .handHeaderLeftPanel {
     float: left;
 }
 
 .trickCountNorth, .trickCountEast, .trickCountSouth, .trickCountWest {
     float: right;
+}
+
+.handTitle {
+    font-size: small;
+    color: #c2ffaa;
+    text-shadow: -1px -1px 0 #222;
+}
+
+.handTitle .gwt-Hyperlink {
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 3px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+}
+
+.handTitle a:before {
+    content: " ";
+}
+
+.gwt-Label {
+    color: white;
+}
+
+.gwt-Hyperlink {
+    color: white;
 }

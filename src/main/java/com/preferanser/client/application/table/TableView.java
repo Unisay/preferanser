@@ -30,7 +30,6 @@ import com.google.gwt.event.dom.client.*;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
@@ -82,6 +81,7 @@ public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements Ta
         populateCardinalTrickCounts();
         populateCardinalTitles();
         RootPanel rootPanel = RootPanel.get();
+        installCenterPanelClickHandler();
         installMouseUpHandler(rootPanel);
         installMouseUpHandler(locationPanelMap.values());
         installMouseMoveHandler(rootPanel);
@@ -143,6 +143,14 @@ public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements Ta
         for (Element element : elements) {
             element.setDraggable(Element.DRAGGABLE_FALSE);
         }
+    }
+
+    private void installCenterPanelClickHandler() {
+        centerPanel.addDomHandler(new ClickHandler() {
+            @Override public void onClick(ClickEvent event) {
+                getUiHandlers().sluff();
+            }
+        }, ClickEvent.getType());
     }
 
     private void installMouseDownHandler(final Image image) {
@@ -229,7 +237,7 @@ public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements Ta
     }
 
     @UiHandler("sluffLink") void onSluffLinkClicked(@SuppressWarnings("unused") ClickEvent event) {
-        Window.alert("Sluff!");
+        getUiHandlers().sluff();
     }
 
     private void populateCardImagesMap() {
@@ -356,4 +364,6 @@ public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements Ta
     @UiField Label titleWest;
 
     @UiField Hyperlink sluffLink;
+
+    @UiField Hyperlink northContractLink;
 }

@@ -82,6 +82,14 @@ public class TablePresenter extends Presenter<TablePresenter.TableView, TablePre
     }
 
     @Override
+    public void sluff() {
+        if (tableCards.get(CENTER).size() > 2) {
+            tableCards.get(CENTER).clear();
+            refreshView();
+        }
+    }
+
+    @Override
     public boolean changeCardLocation(Card card, TableLocation oldLocation, TableLocation newLocation) {
         if (CENTER == newLocation && tableCards.get(CENTER).size() == 4) {
             refreshView();

@@ -40,4 +40,5 @@ public interface TableUiHandlers extends UiHandlers {
      */
     boolean changeCardLocation(Card card, TableLocation oldLocation, TableLocation newLocation);
 
+    void sluff();
 }

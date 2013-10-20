@@ -62,8 +62,13 @@
             <g:Dock direction="NORTH" addStyleNames="{style.northDock}">
                 <g:VerticalPanel addStyleNames="{style.northVPanel}">
                     <g:FlowPanel ui:field="northPanel" addStyleNames="{style.northFlowPanel}"/>
-                    <g:HorizontalPanel addStyleNames="{style.northHPanel}">
-                        <g:Label ui:field="titleNorth" addStyleNames="{style.titleNorth}">Север</g:Label>
+                    <g:HorizontalPanel addStyleNames="{style.handTitle} {style.northHPanel}">
+                        <g:FlowPanel addStyleNames="{style.handHeaderLeftPanel}">
+                            <g:Label ui:field="titleNorth" addStyleNames="{style.titleNorth}">
+                                <ui:msg>Север</ui:msg>:
+                            </g:Label>
+                            <g:Hyperlink ui:field="northContractLink">выбрать контракт</g:Hyperlink>
+                        </g:FlowPanel>
                         <g:Label ui:field="trickCountNorth" addStyleNames="{style.trickCountNorth}"/>
                     </g:HorizontalPanel>
                 </g:VerticalPanel>
@@ -71,7 +76,7 @@
             <g:Dock direction="SOUTH" addStyleNames="{style.southDock}">
                 <g:VerticalPanel addStyleNames="{style.southVPanel}">
                     <g:FlowPanel ui:field="southPanel" addStyleNames="{style.southFlowPanel}"/>
-                    <g:HorizontalPanel addStyleNames="{style.southHPanel}">
+                    <g:HorizontalPanel addStyleNames="{style.handTitle} {style.southHPanel}">
                         <g:Label ui:field="titleSouth" addStyleNames="{style.titleSouth}">Юг</g:Label>
                         <g:Label ui:field="trickCountSouth" addStyleNames="{style.trickCountSouth}"/>
                     </g:HorizontalPanel>
@@ -80,7 +85,7 @@
             <g:Dock direction="EAST" addStyleNames="{style.eastDock}">
                 <g:VerticalPanel addStyleNames="{style.eastVPanel}">
                     <g:FlowPanel ui:field="eastPanel" addStyleNames="{style.eastFlowPanel}"/>
-                    <g:HorizontalPanel addStyleNames="{style.eastHPanel}">
+                    <g:HorizontalPanel addStyleNames="{style.handTitle} {style.eastHPanel}">
                         <g:Label ui:field="titleEast" addStyleNames="{style.titleEast}">Восток</g:Label>
                         <g:Label ui:field="trickCountEast" addStyleNames="{style.trickCountEast}"/>
                     </g:HorizontalPanel>
@@ -89,7 +94,7 @@
             <g:Dock direction="WEST" addStyleNames="{style.westDock}">
                 <g:VerticalPanel addStyleNames="{style.westVPanel}">
                     <g:FlowPanel ui:field="westPanel" addStyleNames="{style.westFlowPanel}"/>
-                    <g:HorizontalPanel addStyleNames="{style.westHPanel}">
+                    <g:HorizontalPanel addStyleNames="{style.handTitle} {style.westHPanel}">
                         <g:Label ui:field="titleWest" addStyleNames="{style.titleWest}">Запад</g:Label>
                         <g:Label ui:field="trickCountWest" addStyleNames="{style.trickCountWest}"/>
                     </g:HorizontalPanel>
@@ -98,7 +103,7 @@
             <g:Dock direction="CENTER" addStyleNames="{style.centerDock}">
                 <g:VerticalPanel addStyleNames="{style.centerVPanel}">
                     <g:FlowPanel ui:field="centerPanel" addStyleNames="{style.centerFlowPanel}"/>
-                    <g:HorizontalPanel addStyleNames="{style.centerHPanel}">
+                    <g:HorizontalPanel addStyleNames="{style.handTitle} {style.centerHPanel}">
                         <g:Hyperlink ui:field="sluffLink">В отбой</g:Hyperlink>
                     </g:HorizontalPanel>
                 </g:VerticalPanel>

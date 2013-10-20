@@ -1,5 +1,5 @@
 package com.preferanser.shared;
 
-public enum Turn {
+public enum Cardinal {
     NORTH, EAST, SOUTH, WEST
 }

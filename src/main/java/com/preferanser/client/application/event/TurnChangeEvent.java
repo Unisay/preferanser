@@ -4,11 +4,11 @@ import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HasHandlers;
 import com.google.web.bindery.event.shared.HandlerRegistration;
-import com.preferanser.shared.Turn;
+import com.preferanser.shared.Cardinal;
 
 public class TurnChangeEvent extends GwtEvent<TurnChangeEvent.TurnChangeEventHandler> {
 
-    private Turn turn;
+    private Cardinal cardinal;
 
     protected TurnChangeEvent() {
         // Possibly for serialization.
@@ -47,7 +47,7 @@ public class TurnChangeEvent extends GwtEvent<TurnChangeEvent.TurnChangeEventHan
         handler.onTurnChange(this);
     }
 
-    public Turn getTurn() {
-        return turn;
+    public Cardinal getCardinal() {
+        return cardinal;
     }
 }

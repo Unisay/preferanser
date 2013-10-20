@@ -22,6 +22,7 @@ package com.preferanser.client.application.table;
 import com.google.common.base.Function;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.EnumHashBiMap;
+import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
@@ -38,8 +39,8 @@ import com.preferanser.client.application.table.layout.*;
 import com.preferanser.client.geom.Point;
 import com.preferanser.client.geom.Rect;
 import com.preferanser.shared.Card;
+import com.preferanser.shared.Cardinal;
 import com.preferanser.shared.TableLocation;
-import com.preferanser.shared.Turn;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
@@ -65,6 +66,8 @@ public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements Ta
 
     private final BiMap<TableLocation, FlowPanel> locationPanelMap = EnumHashBiMap.create(TableLocation.class);
     private final BiMap<TableLocation, CardLayout> locationLayoutMap = EnumHashBiMap.create(TableLocation.class);
+    private final Map<Cardinal, Label> cardinalTrickCount = Maps.newHashMapWithExpectedSize(Cardinal.values().length);
+    private final Map<Cardinal, Label> cardinalTitle = Maps.newHashMapWithExpectedSize(Cardinal.values().length);
     private ImageDragController imageDragController = new ImageDragController(Document.get());
 
     @Inject
@@ -75,6 +78,8 @@ public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements Ta
         populateCardImagesMap();
         populateLocationPanelMap();
         populateLocationLayoutMap();
+        populateCardinalTrickCounts();
+        populateCardinalTitles();
         RootPanel rootPanel = RootPanel.get();
         installMouseUpHandler(rootPanel);
         installMouseUpHandler(locationPanelMap.values());
@@ -92,6 +97,13 @@ public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements Ta
         }
         for (Map.Entry<TableLocation, Collection<Card>> entry : tableCards.asMap().entrySet()) {
             displayCards(entry.getKey(), entry.getValue());
+        }
+    }
+
+    @Override
+    public void setTrickCounts(Map<Cardinal, Integer> trickCounts) {
+        for (Map.Entry<Cardinal, Integer> entry : trickCounts.entrySet()) {
+            cardinalTrickCount.get(entry.getKey()).setText("" + entry.getValue());
         }
     }
 
@@ -260,10 +272,10 @@ public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements Ta
 
     private void populateLocationLayoutMap() {
         final CenterCardLayout centerCardLayout = new CenterCardLayout(centerPanel, c7.getWidth(), c7.getHeight());
-        centerCardLayout.setFirstTurn(Turn.NORTH);
+        centerCardLayout.setFirstTurn(Cardinal.NORTH);
         eventBus.addHandler(TurnChangeEvent.getType(), new TurnChangeEvent.TurnChangeEventHandler() {
             @Override public void onTurnChange(TurnChangeEvent event) {
-                centerCardLayout.setFirstTurn(event.getTurn());
+                centerCardLayout.setFirstTurn(event.getCardinal());
             }
         });
 
@@ -272,6 +284,20 @@ public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements Ta
         locationLayoutMap.put(SOUTH, new HorizontalCardLayout(southPanel, c7.getWidth()));
         locationLayoutMap.put(WEST, new WestCardLayout(westPanel, c7.getWidth(), c7.getHeight()));
         locationLayoutMap.put(CENTER, centerCardLayout);
+    }
+
+    private void populateCardinalTrickCounts() {
+        cardinalTrickCount.put(Cardinal.NORTH, trickCountNorth);
+        cardinalTrickCount.put(Cardinal.EAST, trickCountEast);
+        cardinalTrickCount.put(Cardinal.SOUTH, trickCountSouth);
+        cardinalTrickCount.put(Cardinal.WEST, trickCountWest);
+    }
+
+    private void populateCardinalTitles() {
+        cardinalTitle.put(Cardinal.NORTH, titleNorth);
+        cardinalTitle.put(Cardinal.EAST, titleEast);
+        cardinalTitle.put(Cardinal.SOUTH, titleSouth);
+        cardinalTitle.put(Cardinal.WEST, titleWest);
     }
 
     @UiField Button dealButton;
@@ -313,4 +339,14 @@ public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements Ta
     @UiField Image sa;
     @UiField Image da;
     @UiField Image ha;
+
+    @UiField Label trickCountNorth;
+    @UiField Label trickCountEast;
+    @UiField Label trickCountSouth;
+    @UiField Label trickCountWest;
+
+    @UiField Label titleNorth;
+    @UiField Label titleEast;
+    @UiField Label titleSouth;
+    @UiField Label titleWest;
 }

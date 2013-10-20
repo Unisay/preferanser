@@ -36,6 +36,11 @@ public class VerticalPanelCardLayout extends PanelCardLayout {
     }
 
     @Override
+    protected int getStartY() {
+        return 3 * PADDING;
+    }
+
+    @Override
     protected int getOffsetX(CardView prev, CardView next, Integer prevX) {
         if (prev == null || prev.card.getSuit() != next.card.getSuit()) {
             return getStartX();

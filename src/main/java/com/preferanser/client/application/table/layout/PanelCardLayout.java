@@ -11,11 +11,13 @@ public abstract class PanelCardLayout extends CardLayoutBase {
         this.panel = panel;
     }
 
-    @Override protected int getStartX() {
+    @Override
+    protected int getStartX() {
         return PADDING;
     }
 
-    @Override protected int getStartY() {
+    @Override
+    protected int getStartY() {
         return PADDING;
     }
 
@@ -32,6 +34,6 @@ public abstract class PanelCardLayout extends CardLayoutBase {
     }
 
     protected int getDisposableHeight() {
-        return getHeight() - PADDING - PADDING;
+        return getHeight() - 4 * PADDING;
     }
 }

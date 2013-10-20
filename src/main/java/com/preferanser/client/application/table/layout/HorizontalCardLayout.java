@@ -46,6 +46,11 @@ public class HorizontalCardLayout extends PanelCardLayout {
     }
 
     @Override
+    protected int getStartY() {
+        return 3 * PADDING;
+    }
+
+    @Override
     protected int getDeltaX(CardView prev, CardView next) {
         return prev.card.getSuit() == next.card.getSuit()
                 ? sameSuitOffsetX

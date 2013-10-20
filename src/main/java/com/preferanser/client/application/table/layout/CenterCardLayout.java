@@ -4,7 +4,7 @@ import com.google.common.base.Preconditions;
 import com.google.gwt.user.client.ui.Panel;
 import com.preferanser.client.application.table.CardView;
 import com.preferanser.client.util.EnumRotator;
-import com.preferanser.shared.Turn;
+import com.preferanser.shared.Cardinal;
 
 import java.util.Collection;
 
@@ -12,7 +12,7 @@ public class CenterCardLayout extends PanelCardLayout {
 
     private final int imageWidth;
     private final int imageHeight;
-    private Turn firstTurn;
+    private Cardinal firstTurn;
 
     public CenterCardLayout(Panel panel, int imageWidth, int imageHeight) {
         super(panel);
@@ -23,15 +23,15 @@ public class CenterCardLayout extends PanelCardLayout {
     @Override
     public void apply(Collection<CardView> cardViews) {
         Preconditions.checkArgument(cardViews.size() < 5, "Not more than 4 cards can be placed in center!");
-        EnumRotator<Turn> rotator = new EnumRotator<Turn>(Turn.values(), firstTurn);
+        EnumRotator<Cardinal> rotator = new EnumRotator<Cardinal>(Cardinal.values(), firstTurn);
         for (CardView cardView : cardViews) {
             positionCardView(cardView, rotator.next());
         }
     }
 
-    private void positionCardView(CardView cardView, Turn turn) {
+    private void positionCardView(CardView cardView, Cardinal cardinal) {
         int x, y;
-        switch (turn) {
+        switch (cardinal) {
             case NORTH:
                 x = (getDisposableWidth() - imageWidth) / 2;
                 y = (getDisposableHeight() - imageHeight - imageHeight) / 2;
@@ -53,11 +53,11 @@ public class CenterCardLayout extends PanelCardLayout {
                 positionWidget(cardView.image, x, y, 2);
                 break;
             default:
-                throw new IllegalStateException("Unknown Turn constant: " + turn);
+                throw new IllegalStateException("Unknown Cardinal constant: " + cardinal);
         }
     }
 
-    public void setFirstTurn(Turn firstTurn) {
+    public void setFirstTurn(Cardinal firstTurn) {
         this.firstTurn = firstTurn;
     }
 

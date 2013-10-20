@@ -20,6 +20,7 @@
 package com.preferanser.client.application.table;
 
 import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
@@ -32,7 +33,10 @@ import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.preferanser.client.application.ApplicationPresenter;
 import com.preferanser.client.place.NameTokens;
 import com.preferanser.shared.Card;
+import com.preferanser.shared.Cardinal;
 import com.preferanser.shared.TableLocation;
+
+import java.util.Map;
 
 import static com.preferanser.shared.TableLocation.CENTER;
 import static com.preferanser.shared.TableLocation.NORTH;
@@ -43,10 +47,14 @@ import static com.preferanser.shared.TableLocation.NORTH;
 public class TablePresenter extends Presenter<TablePresenter.TableView, TablePresenter.Proxy> implements TableUiHandlers {
 
     public interface TableView extends View, HasUiHandlers<TableUiHandlers> {
+
         void displayTableCards(Multimap<TableLocation, Card> tableCards);
+
+        void setTrickCounts(Map<Cardinal, Integer> trickCounts);
     }
 
     private Multimap<TableLocation, Card> tableCards = HashMultimap.create(5, 28);
+    private Map<Cardinal, Integer> trickCounts = Maps.newHashMapWithExpectedSize(Cardinal.values().length);
 
     @ProxyStandard
     @NameToken(NameTokens.TABLE)
@@ -56,6 +64,14 @@ public class TablePresenter extends Presenter<TablePresenter.TableView, TablePre
     public TablePresenter(EventBus eventBus, TableView view, Proxy proxy) {
         super(eventBus, view, proxy, ApplicationPresenter.TYPE_SetMainContent);
         getView().setUiHandlers(this);
+    }
+
+    @Override
+    protected void onBind() {
+        super.onBind();
+        for (Cardinal cardinal : Cardinal.values()) {
+            trickCounts.put(cardinal, 0);
+        }
     }
 
     @Override
@@ -80,5 +96,6 @@ public class TablePresenter extends Presenter<TablePresenter.TableView, TablePre
 
     private void refreshView() {
         getView().displayTableCards(tableCards);
+        getView().setTrickCounts(trickCounts);
     }
 }

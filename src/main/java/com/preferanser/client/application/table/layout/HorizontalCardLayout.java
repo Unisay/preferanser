@@ -25,7 +25,7 @@ public class HorizontalCardLayout extends PanelCardLayout {
         super(panel);
         this.imageWidth = imageWidth;
         this.minOffsetSameSuit = 24;
-        this.maxOffsetSameSuit = imageWidth - minOffsetSameSuit;
+        this.maxOffsetSameSuit = 2 * minOffsetSameSuit;
         this.minOffsetDiffSuit = imageWidth;
         this.maxOffsetDiffSuit = imageWidth + imageWidth / 2;
     }

@@ -22,6 +22,7 @@ package com.preferanser.client.application.table;
 import com.google.common.base.Function;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.EnumHashBiMap;
+import com.google.common.collect.Multimap;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.*;
@@ -30,15 +31,19 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.*;
 import com.google.inject.Inject;
+import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
+import com.preferanser.client.application.event.TurnChangeEvent;
 import com.preferanser.client.application.table.layout.*;
 import com.preferanser.client.geom.Point;
 import com.preferanser.client.geom.Rect;
 import com.preferanser.shared.Card;
 import com.preferanser.shared.TableLocation;
+import com.preferanser.shared.Turn;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import static com.google.common.collect.Iterables.transform;
@@ -50,18 +55,21 @@ import static com.preferanser.shared.TableLocation.*;
  */
 public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements TablePresenter.TableView {
 
-    private static Logger log = Logger.getLogger("TableView");
+    private static final Logger log = Logger.getLogger("TableView");
 
     public interface Binder extends UiBinder<Widget, TableView> {}
 
+    private final EventBus eventBus;
+
     private final BiMap<Card, Image> cardViewMap = EnumHashBiMap.create(Card.class);
+
     private final BiMap<TableLocation, FlowPanel> locationPanelMap = EnumHashBiMap.create(TableLocation.class);
     private final BiMap<TableLocation, CardLayout> locationLayoutMap = EnumHashBiMap.create(TableLocation.class);
-
     private ImageDragController imageDragController = new ImageDragController(Document.get());
 
     @Inject
-    public TableView(Binder uiBinder, GQuerySelectors selectors) {
+    public TableView(Binder uiBinder, GQuerySelectors selectors, EventBus eventBus) {
+        this.eventBus = eventBus;
         initWidget(uiBinder.createAndBindUi(this));
         disableStandardDragging(selectors.getAllDivsAndImages().elements());
         populateCardImagesMap();
@@ -78,7 +86,16 @@ public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements Ta
     }
 
     @Override
-    public void displayCards(TableLocation location, Card... cards) {
+    public void displayTableCards(Multimap<TableLocation, Card> tableCards) {
+        for (Image image : cardViewMap.values()) {
+            image.removeFromParent();
+        }
+        for (Map.Entry<TableLocation, Collection<Card>> entry : tableCards.asMap().entrySet()) {
+            displayCards(entry.getKey(), entry.getValue());
+        }
+    }
+
+    private void displayCards(TableLocation location, Iterable<Card> cards) {
         HasWidgets panel = locationPanelMap.get(location);
         for (Card card : cards) {
             displayCard(panel, card);
@@ -106,9 +123,7 @@ public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements Ta
         Image image = cardViewMap.get(card);
         // noinspection GWTStyleCheck
         image.removeStyleName("not-visible");
-        if (!image.getParent().equals(panel)) {
-            panel.add(image);
-        }
+        panel.add(image);
     }
 
     private void disableStandardDragging(Element[] elements) {
@@ -157,9 +172,7 @@ public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements Ta
                                 TableLocation oldLocation = locationPanelMap.inverse().get(sourcePanel);
                                 TableLocation newLocation = locationPanelMap.inverse().get(targetPanel);
                                 log.finer("Card newLocation change: " + card + ": " + oldLocation + " -> " + newLocation);
-                                getUiHandlers().onCardLocationChange(card, oldLocation, newLocation);
-                                displayCards(newLocation, card);
-                                layoutLocation(oldLocation);
+                                getUiHandlers().changeCardLocation(card, oldLocation, newLocation);
                                 return;
                             }
                         }
@@ -199,7 +212,7 @@ public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements Ta
     }
 
     @UiHandler("dealButton") void onDealButtonClicked(@SuppressWarnings("unused") ClickEvent event) {
-        getUiHandlers().onDealCards();
+        getUiHandlers().dealCards();
     }
 
     private void populateCardImagesMap() {
@@ -246,11 +259,19 @@ public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements Ta
     }
 
     private void populateLocationLayoutMap() {
+        final CenterCardLayout centerCardLayout = new CenterCardLayout(centerPanel, c7.getWidth(), c7.getHeight());
+        centerCardLayout.setFirstTurn(Turn.NORTH);
+        eventBus.addHandler(TurnChangeEvent.getType(), new TurnChangeEvent.TurnChangeEventHandler() {
+            @Override public void onTurnChange(TurnChangeEvent event) {
+                centerCardLayout.setFirstTurn(event.getTurn());
+            }
+        });
+
         locationLayoutMap.put(NORTH, new HorizontalCardLayout(northPanel, c7.getWidth()));
         locationLayoutMap.put(EAST, new EastCardLayout(eastPanel, c7.getWidth(), c7.getHeight()));
         locationLayoutMap.put(SOUTH, new HorizontalCardLayout(southPanel, c7.getWidth()));
         locationLayoutMap.put(WEST, new WestCardLayout(westPanel, c7.getWidth(), c7.getHeight()));
-        locationLayoutMap.put(CENTER, new CenterCardLayout(centerPanel));
+        locationLayoutMap.put(CENTER, centerCardLayout);
     }
 
     @UiField Button dealButton;

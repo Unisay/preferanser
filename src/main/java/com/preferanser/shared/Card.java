@@ -19,9 +19,11 @@
 
 package com.preferanser.shared;
 
-import java.util.Arrays;
-import java.util.Comparator;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
+
 import java.util.List;
+import java.util.Set;
 
 /**
  * Playing Card
@@ -76,8 +78,12 @@ public enum Card {
         this.rank = rank;
     }
 
-    public static List<Card> list32() {
-        return Arrays.asList(values());
+    public static List<Card> valuesAsList() {
+        return Lists.newArrayList(values());
+    }
+
+    public static Set<Card> valuesAsSet() {
+        return Sets.newHashSet(values());
     }
 
     public Suit getSuit() {
@@ -86,14 +92,6 @@ public enum Card {
 
     public Rank getRank() {
         return rank;
-    }
-
-    public static Comparator<Card> comparator() {
-        return new Comparator<Card>() {
-            @Override public int compare(Card card1, Card card2) {
-                return card1.compareTo(card2);
-            }
-        };
     }
 
 }

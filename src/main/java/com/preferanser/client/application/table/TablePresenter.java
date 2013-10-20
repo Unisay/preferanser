@@ -19,6 +19,8 @@
 
 package com.preferanser.client.application.table;
 
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.HasUiHandlers;
@@ -32,29 +34,51 @@ import com.preferanser.client.place.NameTokens;
 import com.preferanser.shared.Card;
 import com.preferanser.shared.TableLocation;
 
+import static com.preferanser.shared.TableLocation.CENTER;
+import static com.preferanser.shared.TableLocation.NORTH;
+
 /**
  * Table presenter
  */
 public class TablePresenter extends Presenter<TablePresenter.TableView, TablePresenter.Proxy> implements TableUiHandlers {
 
     public interface TableView extends View, HasUiHandlers<TableUiHandlers> {
-        void displayCards(TableLocation tableLocation, Card... cards);
+        void displayTableCards(Multimap<TableLocation, Card> tableCards);
     }
+
+    private Multimap<TableLocation, Card> tableCards = HashMultimap.create(5, 28);
 
     @ProxyStandard
     @NameToken(NameTokens.TABLE)
     public interface Proxy extends ProxyPlace<TablePresenter> {}
 
-    @Inject public TablePresenter(EventBus eventBus, TableView view, Proxy proxy) {
+    @Inject
+    public TablePresenter(EventBus eventBus, TableView view, Proxy proxy) {
         super(eventBus, view, proxy, ApplicationPresenter.TYPE_SetMainContent);
         getView().setUiHandlers(this);
     }
 
-    @Override public void onDealCards() {
-        getView().displayCards(TableLocation.EAST, Card.values());
+    @Override
+    public void dealCards() {
+        tableCards.clear();
+        tableCards.putAll(NORTH, Card.valuesAsSet());
+        refreshView();
     }
 
-    @Override public void onCardLocationChange(Card card, TableLocation oldLocation, TableLocation newLocation) {
-        // getView().displayCards(newLocation, card);
+    @Override
+    public boolean changeCardLocation(Card card, TableLocation oldLocation, TableLocation newLocation) {
+        if (CENTER == newLocation && tableCards.get(CENTER).size() == 4) {
+            refreshView();
+            return false;
+        }
+
+        tableCards.remove(oldLocation, card);
+        tableCards.put(newLocation, card);
+        refreshView();
+        return true;
+    }
+
+    private void refreshView() {
+        getView().displayTableCards(tableCards);
     }
 }

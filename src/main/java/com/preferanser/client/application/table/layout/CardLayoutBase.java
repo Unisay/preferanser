@@ -107,7 +107,7 @@ public abstract class CardLayoutBase implements CardLayout {
         return 1;
     }
 
-    private void positionWidget(Widget image, int x, int y, int z) {
+    protected void positionWidget(Widget image, int x, int y, int z) {
         Style style = image.getElement().getStyle();
         style.setLeft(x, Style.Unit.PX);
         style.setTop(y, Style.Unit.PX);

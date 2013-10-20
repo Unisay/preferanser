@@ -28,8 +28,16 @@ import com.preferanser.shared.TableLocation;
  */
 public interface TableUiHandlers extends UiHandlers {
 
-    void onDealCards();
+    void dealCards();
 
-    void onCardLocationChange(Card card, TableLocation oldLocation, TableLocation newLocation);
+    /**
+     * Change card location
+     *
+     * @param card card
+     * @param oldLocation old location
+     * @param newLocation new location
+     * @return true if location change is allowed, false otherwise
+     */
+    boolean changeCardLocation(Card card, TableLocation oldLocation, TableLocation newLocation);
 
 }

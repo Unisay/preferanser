@@ -20,114 +20,88 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder' xmlns:g='urn:import:com.google.gwt.user.client.ui'>
     <ui:style src="table.css"/>
     <ui:with field="resources" type="com.preferanser.client.application.PreferanserResources"/>
-    <g:VerticalPanel addStyleNames="{style.verticalPanel}">
+    <g:VerticalPanel addStyleNames="{style.verticalPanel}" spacing="0">
+        <g:FlowPanel addStyleNames="{style.not-displayed}">
+            <g:Image ui:field="c7" resource="{resources.c7}" addStyleNames="{style.card} {style.not-visible}"/>
+            <g:Image ui:field="s7" resource="{resources.s7}" addStyleNames="{style.card} {style.not-visible}"/>
+            <g:Image ui:field="d7" resource="{resources.d7}" addStyleNames="{style.card} {style.not-visible}"/>
+            <g:Image ui:field="h7" resource="{resources.h7}" addStyleNames="{style.card} {style.not-visible}"/>
+            <g:Image ui:field="c8" resource="{resources.c8}" addStyleNames="{style.card} {style.not-visible}"/>
+            <g:Image ui:field="s8" resource="{resources.s8}" addStyleNames="{style.card} {style.not-visible}"/>
+            <g:Image ui:field="d8" resource="{resources.d8}" addStyleNames="{style.card} {style.not-visible}"/>
+            <g:Image ui:field="h8" resource="{resources.h8}" addStyleNames="{style.card} {style.not-visible}"/>
+            <g:Image ui:field="c9" resource="{resources.c9}" addStyleNames="{style.card} {style.not-visible}"/>
+            <g:Image ui:field="s9" resource="{resources.s9}" addStyleNames="{style.card} {style.not-visible}"/>
+            <g:Image ui:field="d9" resource="{resources.d9}" addStyleNames="{style.card} {style.not-visible}"/>
+            <g:Image ui:field="h9" resource="{resources.h9}" addStyleNames="{style.card} {style.not-visible}"/>
+            <g:Image ui:field="c10" resource="{resources.c10}" addStyleNames="{style.card} {style.not-visible}"/>
+            <g:Image ui:field="s10" resource="{resources.s10}" addStyleNames="{style.card} {style.not-visible}"/>
+            <g:Image ui:field="d10" resource="{resources.d10}" addStyleNames="{style.card} {style.not-visible}"/>
+            <g:Image ui:field="h10" resource="{resources.h10}" addStyleNames="{style.card} {style.not-visible}"/>
+            <g:Image ui:field="cj" resource="{resources.cj}" addStyleNames="{style.card} {style.not-visible}"/>
+            <g:Image ui:field="sj" resource="{resources.sj}" addStyleNames="{style.card} {style.not-visible}"/>
+            <g:Image ui:field="dj" resource="{resources.dj}" addStyleNames="{style.card} {style.not-visible}"/>
+            <g:Image ui:field="hj" resource="{resources.hj}" addStyleNames="{style.card} {style.not-visible}"/>
+            <g:Image ui:field="cq" resource="{resources.cq}" addStyleNames="{style.card} {style.not-visible}"/>
+            <g:Image ui:field="sq" resource="{resources.sq}" addStyleNames="{style.card} {style.not-visible}"/>
+            <g:Image ui:field="dq" resource="{resources.dq}" addStyleNames="{style.card} {style.not-visible}"/>
+            <g:Image ui:field="hq" resource="{resources.hq}" addStyleNames="{style.card} {style.not-visible}"/>
+            <g:Image ui:field="ck" resource="{resources.ck}" addStyleNames="{style.card} {style.not-visible}"/>
+            <g:Image ui:field="sk" resource="{resources.sk}" addStyleNames="{style.card} {style.not-visible}"/>
+            <g:Image ui:field="dk" resource="{resources.dk}" addStyleNames="{style.card} {style.not-visible}"/>
+            <g:Image ui:field="hk" resource="{resources.hk}" addStyleNames="{style.card} {style.not-visible}"/>
+            <g:Image ui:field="ca" resource="{resources.ca}" addStyleNames="{style.card} {style.not-visible}"/>
+            <g:Image ui:field="sa" resource="{resources.sa}" addStyleNames="{style.card} {style.not-visible}"/>
+            <g:Image ui:field="da" resource="{resources.da}" addStyleNames="{style.card} {style.not-visible}"/>
+            <g:Image ui:field="ha" resource="{resources.ha}" addStyleNames="{style.card} {style.not-visible}"/>
+        </g:FlowPanel>
         <g:HorizontalPanel addStyleNames="{style.buttonsPanel}">
             <g:Button ui:field="dealButton" text="Deal"/>
         </g:HorizontalPanel>
         <g:DockPanel debugId="dlp" addStyleNames="{style.dockPanel}" spacing="10">
-            <g:Dock direction="NORTH">
-                <g:VerticalPanel width="100%" height="100%">
-                    <g:HorizontalPanel addStyleNames="{style.northHandInfo}">
+            <g:Dock direction="NORTH" addStyleNames="{style.northDock}">
+                <g:VerticalPanel addStyleNames="{style.northVPanel}">
+                    <g:FlowPanel ui:field="northPanel" addStyleNames="{style.northFlowPanel}"/>
+                    <g:HorizontalPanel addStyleNames="{style.northHPanel}">
                         <g:Label ui:field="titleNorth" addStyleNames="{style.titleNorth}">Север</g:Label>
                         <g:Label ui:field="trickCountNorth" addStyleNames="{style.trickCountNorth}"/>
                     </g:HorizontalPanel>
-                    <g:FlowPanel ui:field="northPanel" addStyleNames="{style.handPanel} {style.northHand}">
-                        <g:Image ui:field="c7" resource="{resources.c7}"
-                                 addStyleNames="{style.card} {style.not-visible}"/>
-                        <g:Image ui:field="s7" resource="{resources.s7}"
-                                 addStyleNames="{style.card} {style.not-visible}"/>
-                        <g:Image ui:field="d7" resource="{resources.d7}"
-                                 addStyleNames="{style.card} {style.not-visible}"/>
-                        <g:Image ui:field="h7" resource="{resources.h7}"
-                                 addStyleNames="{style.card} {style.not-visible}"/>
-                        <g:Image ui:field="c8" resource="{resources.c8}"
-                                 addStyleNames="{style.card} {style.not-visible}"/>
-                        <g:Image ui:field="s8" resource="{resources.s8}"
-                                 addStyleNames="{style.card} {style.not-visible}"/>
-                        <g:Image ui:field="d8" resource="{resources.d8}"
-                                 addStyleNames="{style.card} {style.not-visible}"/>
-                        <g:Image ui:field="h8" resource="{resources.h8}"
-                                 addStyleNames="{style.card} {style.not-visible}"/>
-                        <g:Image ui:field="c9" resource="{resources.c9}"
-                                 addStyleNames="{style.card} {style.not-visible}"/>
-                        <g:Image ui:field="s9" resource="{resources.s9}"
-                                 addStyleNames="{style.card} {style.not-visible}"/>
-                        <g:Image ui:field="d9" resource="{resources.d9}"
-                                 addStyleNames="{style.card} {style.not-visible}"/>
-                        <g:Image ui:field="h9" resource="{resources.h9}"
-                                 addStyleNames="{style.card} {style.not-visible}"/>
-                        <g:Image ui:field="c10" resource="{resources.c10}"
-                                 addStyleNames="{style.card} {style.not-visible}"/>
-                        <g:Image ui:field="s10" resource="{resources.s10}"
-                                 addStyleNames="{style.card} {style.not-visible}"/>
-                        <g:Image ui:field="d10" resource="{resources.d10}"
-                                 addStyleNames="{style.card} {style.not-visible}"/>
-                        <g:Image ui:field="h10" resource="{resources.h10}"
-                                 addStyleNames="{style.card} {style.not-visible}"/>
-                        <g:Image ui:field="cj" resource="{resources.cj}"
-                                 addStyleNames="{style.card} {style.not-visible}"/>
-                        <g:Image ui:field="sj" resource="{resources.sj}"
-                                 addStyleNames="{style.card} {style.not-visible}"/>
-                        <g:Image ui:field="dj" resource="{resources.dj}"
-                                 addStyleNames="{style.card} {style.not-visible}"/>
-                        <g:Image ui:field="hj" resource="{resources.hj}"
-                                 addStyleNames="{style.card} {style.not-visible}"/>
-                        <g:Image ui:field="cq" resource="{resources.cq}"
-                                 addStyleNames="{style.card} {style.not-visible}"/>
-                        <g:Image ui:field="sq" resource="{resources.sq}"
-                                 addStyleNames="{style.card} {style.not-visible}"/>
-                        <g:Image ui:field="dq" resource="{resources.dq}"
-                                 addStyleNames="{style.card} {style.not-visible}"/>
-                        <g:Image ui:field="hq" resource="{resources.hq}"
-                                 addStyleNames="{style.card} {style.not-visible}"/>
-                        <g:Image ui:field="ck" resource="{resources.ck}"
-                                 addStyleNames="{style.card} {style.not-visible}"/>
-                        <g:Image ui:field="sk" resource="{resources.sk}"
-                                 addStyleNames="{style.card} {style.not-visible}"/>
-                        <g:Image ui:field="dk" resource="{resources.dk}"
-                                 addStyleNames="{style.card} {style.not-visible}"/>
-                        <g:Image ui:field="hk" resource="{resources.hk}"
-                                 addStyleNames="{style.card} {style.not-visible}"/>
-                        <g:Image ui:field="ca" resource="{resources.ca}"
-                                 addStyleNames="{style.card} {style.not-visible}"/>
-                        <g:Image ui:field="sa" resource="{resources.sa}"
-                                 addStyleNames="{style.card} {style.not-visible}"/>
-                        <g:Image ui:field="da" resource="{resources.da}"
-                                 addStyleNames="{style.card} {style.not-visible}"/>
-                        <g:Image ui:field="ha" resource="{resources.ha}"
-                                 addStyleNames="{style.card} {style.not-visible}"/>
-                    </g:FlowPanel>
                 </g:VerticalPanel>
             </g:Dock>
-            <g:Dock direction="SOUTH">
-                <g:VerticalPanel width="100%" height="100%">
-                    <g:HorizontalPanel addStyleNames="{style.southHandInfo}">
+            <g:Dock direction="SOUTH" addStyleNames="{style.southDock}">
+                <g:VerticalPanel addStyleNames="{style.southVPanel}">
+                    <g:FlowPanel ui:field="southPanel" addStyleNames="{style.southFlowPanel}"/>
+                    <g:HorizontalPanel addStyleNames="{style.southHPanel}">
                         <g:Label ui:field="titleSouth" addStyleNames="{style.titleSouth}">Юг</g:Label>
                         <g:Label ui:field="trickCountSouth" addStyleNames="{style.trickCountSouth}"/>
                     </g:HorizontalPanel>
-                    <g:FlowPanel ui:field="southPanel" addStyleNames="{style.handPanel} {style.southHand}"/>
                 </g:VerticalPanel>
             </g:Dock>
-            <g:Dock direction="EAST">
-                <g:VerticalPanel width="100%" height="100%">
-                    <g:HorizontalPanel addStyleNames="{style.eastHandInfo}">
+            <g:Dock direction="EAST" addStyleNames="{style.eastDock}">
+                <g:VerticalPanel addStyleNames="{style.eastVPanel}">
+                    <g:FlowPanel ui:field="eastPanel" addStyleNames="{style.eastFlowPanel}"/>
+                    <g:HorizontalPanel addStyleNames="{style.eastHPanel}">
                         <g:Label ui:field="titleEast" addStyleNames="{style.titleEast}">Восток</g:Label>
                         <g:Label ui:field="trickCountEast" addStyleNames="{style.trickCountEast}"/>
                     </g:HorizontalPanel>
-                    <g:FlowPanel ui:field="eastPanel" addStyleNames="{style.handPanel} {style.eastHand}"/>
                 </g:VerticalPanel>
             </g:Dock>
-            <g:Dock direction="WEST">
-                <g:VerticalPanel width="100%" height="100%">
-                    <g:HorizontalPanel addStyleNames="{style.westHandInfo}">
+            <g:Dock direction="WEST" addStyleNames="{style.westDock}">
+                <g:VerticalPanel addStyleNames="{style.westVPanel}">
+                    <g:FlowPanel ui:field="westPanel" addStyleNames="{style.westFlowPanel}"/>
+                    <g:HorizontalPanel addStyleNames="{style.westHPanel}">
                         <g:Label ui:field="titleWest" addStyleNames="{style.titleWest}">Запад</g:Label>
                         <g:Label ui:field="trickCountWest" addStyleNames="{style.trickCountWest}"/>
                     </g:HorizontalPanel>
-                    <g:FlowPanel ui:field="westPanel" addStyleNames="{style.handPanel} {style.westHand}"/>
                 </g:VerticalPanel>
             </g:Dock>
-            <g:Dock direction="CENTER">
-                <g:FlowPanel ui:field="centerPanel" addStyleNames="{style.handPanel} {style.centerHand}"/>
+            <g:Dock direction="CENTER" addStyleNames="{style.centerDock}">
+                <g:VerticalPanel addStyleNames="{style.centerVPanel}">
+                    <g:FlowPanel ui:field="centerPanel" addStyleNames="{style.centerFlowPanel}"/>
+                    <g:HorizontalPanel addStyleNames="{style.centerHPanel}">
+                        <g:Hyperlink ui:field="sluffLink">В отбой</g:Hyperlink>
+                    </g:HorizontalPanel>
+                </g:VerticalPanel>
             </g:Dock>
         </g:DockPanel>
     </g:VerticalPanel>

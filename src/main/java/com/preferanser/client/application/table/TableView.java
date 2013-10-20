@@ -30,6 +30,7 @@ import com.google.gwt.event.dom.client.*;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
@@ -115,6 +116,13 @@ public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements Ta
         layoutLocation(location);
     }
 
+    private void displayCard(HasWidgets panel, Card card) {
+        Image image = cardViewMap.get(card);
+        // noinspection GWTStyleCheck
+        image.removeStyleName("not-visible");
+        panel.add(image);
+    }
+
     private void layoutLocation(TableLocation location) {
         FlowPanel panel = locationPanelMap.get(location);
         CardLayout cardLayout = locationLayoutMap.get(location);
@@ -129,13 +137,6 @@ public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements Ta
                 return null;
             }
         })));
-    }
-
-    private void displayCard(HasWidgets panel, Card card) {
-        Image image = cardViewMap.get(card);
-        // noinspection GWTStyleCheck
-        image.removeStyleName("not-visible");
-        panel.add(image);
     }
 
     private void disableStandardDragging(Element[] elements) {
@@ -225,6 +226,10 @@ public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements Ta
 
     @UiHandler("dealButton") void onDealButtonClicked(@SuppressWarnings("unused") ClickEvent event) {
         getUiHandlers().dealCards();
+    }
+
+    @UiHandler("sluffLink") void onSluffLinkClicked(@SuppressWarnings("unused") ClickEvent event) {
+        Window.alert("Sluff!");
     }
 
     private void populateCardImagesMap() {
@@ -349,4 +354,6 @@ public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements Ta
     @UiField Label titleEast;
     @UiField Label titleSouth;
     @UiField Label titleWest;
+
+    @UiField Hyperlink sluffLink;
 }

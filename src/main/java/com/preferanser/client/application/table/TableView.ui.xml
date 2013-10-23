@@ -17,43 +17,45 @@
   ~     along with this program.  If not, see [http://www.gnu.org/licenses/].
   -->
 
-<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder' xmlns:g='urn:import:com.google.gwt.user.client.ui'>
-    <ui:style src="table.css"/>
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:p='urn:import:com.preferanser.client.application.widgets'>
+    <ui:style src="table.css" field="style" type="com.preferanser.client.application.table.TableView.Style"/>
     <ui:with field="resources" type="com.preferanser.client.application.PreferanserResources"/>
     <g:VerticalPanel addStyleNames="{style.verticalPanel}" spacing="0">
         <g:FlowPanel addStyleNames="{style.not-displayed}">
-            <g:Image ui:field="c7" resource="{resources.c7}" addStyleNames="{style.card} {style.not-visible}"/>
-            <g:Image ui:field="s7" resource="{resources.s7}" addStyleNames="{style.card} {style.not-visible}"/>
-            <g:Image ui:field="d7" resource="{resources.d7}" addStyleNames="{style.card} {style.not-visible}"/>
-            <g:Image ui:field="h7" resource="{resources.h7}" addStyleNames="{style.card} {style.not-visible}"/>
-            <g:Image ui:field="c8" resource="{resources.c8}" addStyleNames="{style.card} {style.not-visible}"/>
-            <g:Image ui:field="s8" resource="{resources.s8}" addStyleNames="{style.card} {style.not-visible}"/>
-            <g:Image ui:field="d8" resource="{resources.d8}" addStyleNames="{style.card} {style.not-visible}"/>
-            <g:Image ui:field="h8" resource="{resources.h8}" addStyleNames="{style.card} {style.not-visible}"/>
-            <g:Image ui:field="c9" resource="{resources.c9}" addStyleNames="{style.card} {style.not-visible}"/>
-            <g:Image ui:field="s9" resource="{resources.s9}" addStyleNames="{style.card} {style.not-visible}"/>
-            <g:Image ui:field="d9" resource="{resources.d9}" addStyleNames="{style.card} {style.not-visible}"/>
-            <g:Image ui:field="h9" resource="{resources.h9}" addStyleNames="{style.card} {style.not-visible}"/>
-            <g:Image ui:field="c10" resource="{resources.c10}" addStyleNames="{style.card} {style.not-visible}"/>
-            <g:Image ui:field="s10" resource="{resources.s10}" addStyleNames="{style.card} {style.not-visible}"/>
-            <g:Image ui:field="d10" resource="{resources.d10}" addStyleNames="{style.card} {style.not-visible}"/>
-            <g:Image ui:field="h10" resource="{resources.h10}" addStyleNames="{style.card} {style.not-visible}"/>
-            <g:Image ui:field="cj" resource="{resources.cj}" addStyleNames="{style.card} {style.not-visible}"/>
-            <g:Image ui:field="sj" resource="{resources.sj}" addStyleNames="{style.card} {style.not-visible}"/>
-            <g:Image ui:field="dj" resource="{resources.dj}" addStyleNames="{style.card} {style.not-visible}"/>
-            <g:Image ui:field="hj" resource="{resources.hj}" addStyleNames="{style.card} {style.not-visible}"/>
-            <g:Image ui:field="cq" resource="{resources.cq}" addStyleNames="{style.card} {style.not-visible}"/>
-            <g:Image ui:field="sq" resource="{resources.sq}" addStyleNames="{style.card} {style.not-visible}"/>
-            <g:Image ui:field="dq" resource="{resources.dq}" addStyleNames="{style.card} {style.not-visible}"/>
-            <g:Image ui:field="hq" resource="{resources.hq}" addStyleNames="{style.card} {style.not-visible}"/>
-            <g:Image ui:field="ck" resource="{resources.ck}" addStyleNames="{style.card} {style.not-visible}"/>
-            <g:Image ui:field="sk" resource="{resources.sk}" addStyleNames="{style.card} {style.not-visible}"/>
-            <g:Image ui:field="dk" resource="{resources.dk}" addStyleNames="{style.card} {style.not-visible}"/>
-            <g:Image ui:field="hk" resource="{resources.hk}" addStyleNames="{style.card} {style.not-visible}"/>
-            <g:Image ui:field="ca" resource="{resources.ca}" addStyleNames="{style.card} {style.not-visible}"/>
-            <g:Image ui:field="sa" resource="{resources.sa}" addStyleNames="{style.card} {style.not-visible}"/>
-            <g:Image ui:field="da" resource="{resources.da}" addStyleNames="{style.card} {style.not-visible}"/>
-            <g:Image ui:field="ha" resource="{resources.ha}" addStyleNames="{style.card} {style.not-visible}"/>
+            <p:CardWidget card="CLUB_SEVEN"/>
+            <p:CardWidget card="SPADE_SEVEN"/>
+            <p:CardWidget card="DIAMOND_SEVEN"/>
+            <p:CardWidget card="HEART_SEVEN"/>
+            <p:CardWidget card="CLUB_EIGHT"/>
+            <p:CardWidget card="SPADE_EIGHT"/>
+            <p:CardWidget card="DIAMOND_EIGHT"/>
+            <p:CardWidget card="HEART_EIGHT"/>
+            <p:CardWidget card="CLUB_NINE"/>
+            <p:CardWidget card="SPADE_NINE"/>
+            <p:CardWidget card="DIAMOND_NINE"/>
+            <p:CardWidget card="HEART_NINE"/>
+            <p:CardWidget card="CLUB_TEN"/>
+            <p:CardWidget card="SPADE_TEN"/>
+            <p:CardWidget card="DIAMOND_TEN"/>
+            <p:CardWidget card="HEART_TEN"/>
+            <p:CardWidget card="CLUB_JACK"/>
+            <p:CardWidget card="SPADE_JACK"/>
+            <p:CardWidget card="DIAMOND_JACK"/>
+            <p:CardWidget card="HEART_JACK"/>
+            <p:CardWidget card="CLUB_QUEEN"/>
+            <p:CardWidget card="SPADE_QUEEN"/>
+            <p:CardWidget card="DIAMOND_QUEEN"/>
+            <p:CardWidget card="HEART_QUEEN"/>
+            <p:CardWidget card="CLUB_KING"/>
+            <p:CardWidget card="SPADE_KING"/>
+            <p:CardWidget card="DIAMOND_KING"/>
+            <p:CardWidget card="HEART_KING"/>
+            <p:CardWidget card="CLUB_ACE"/>
+            <p:CardWidget card="SPADE_ACE"/>
+            <p:CardWidget card="DIAMOND_ACE"/>
+            <p:CardWidget card="HEART_ACE"/>
         </g:FlowPanel>
         <g:HorizontalPanel addStyleNames="{style.buttonsPanel}">
             <g:Button ui:field="dealButton" text="Deal"/>
@@ -65,9 +67,11 @@
                     <g:HorizontalPanel addStyleNames="{style.handTitle} {style.northHPanel}">
                         <g:FlowPanel addStyleNames="{style.handHeaderLeftPanel}">
                             <g:Label ui:field="titleNorth" addStyleNames="{style.titleNorth}">
-                                <ui:msg>Север</ui:msg>:
+                                <ui:msg>Север</ui:msg>
                             </g:Label>
-                            <g:Hyperlink ui:field="northContractLink">выбрать контракт</g:Hyperlink>
+                            <g:Hyperlink ui:field="northContractLink">
+                                <ui:msg>выбрать контракт</ui:msg>
+                            </g:Hyperlink>
                         </g:FlowPanel>
                         <g:Label ui:field="trickCountNorth" addStyleNames="{style.trickCountNorth}"/>
                     </g:HorizontalPanel>
@@ -77,7 +81,14 @@
                 <g:VerticalPanel addStyleNames="{style.southVPanel}">
                     <g:FlowPanel ui:field="southPanel" addStyleNames="{style.southFlowPanel}"/>
                     <g:HorizontalPanel addStyleNames="{style.handTitle} {style.southHPanel}">
-                        <g:Label ui:field="titleSouth" addStyleNames="{style.titleSouth}">Юг</g:Label>
+                        <g:FlowPanel addStyleNames="{style.handHeaderLeftPanel}">
+                            <g:Label ui:field="titleSouth" addStyleNames="{style.titleSouth}">
+                                <ui:msg>Юг</ui:msg>
+                            </g:Label>
+                            <g:Hyperlink ui:field="southContractLink">
+                                <ui:msg>выбрать контракт</ui:msg>
+                            </g:Hyperlink>
+                        </g:FlowPanel>
                         <g:Label ui:field="trickCountSouth" addStyleNames="{style.trickCountSouth}"/>
                     </g:HorizontalPanel>
                 </g:VerticalPanel>
@@ -86,7 +97,14 @@
                 <g:VerticalPanel addStyleNames="{style.eastVPanel}">
                     <g:FlowPanel ui:field="eastPanel" addStyleNames="{style.eastFlowPanel}"/>
                     <g:HorizontalPanel addStyleNames="{style.handTitle} {style.eastHPanel}">
-                        <g:Label ui:field="titleEast" addStyleNames="{style.titleEast}">Восток</g:Label>
+                        <g:FlowPanel addStyleNames="{style.handHeaderLeftPanel}">
+                            <g:Label ui:field="titleEast" addStyleNames="{style.titleEast}">
+                                <ui:msg>Восток</ui:msg>
+                            </g:Label>
+                            <g:Hyperlink ui:field="eastContractLink">
+                                <ui:msg>выбрать контракт</ui:msg>
+                            </g:Hyperlink>
+                        </g:FlowPanel>
                         <g:Label ui:field="trickCountEast" addStyleNames="{style.trickCountEast}"/>
                     </g:HorizontalPanel>
                 </g:VerticalPanel>
@@ -95,7 +113,14 @@
                 <g:VerticalPanel addStyleNames="{style.westVPanel}">
                     <g:FlowPanel ui:field="westPanel" addStyleNames="{style.westFlowPanel}"/>
                     <g:HorizontalPanel addStyleNames="{style.handTitle} {style.westHPanel}">
-                        <g:Label ui:field="titleWest" addStyleNames="{style.titleWest}">Запад</g:Label>
+                        <g:FlowPanel addStyleNames="{style.handHeaderLeftPanel}">
+                            <g:Label ui:field="titleWest" addStyleNames="{style.titleWest}">
+                                <ui:msg>Запад</ui:msg>
+                            </g:Label>
+                            <g:Hyperlink ui:field="westContractLink">
+                                <ui:msg>выбрать контракт</ui:msg>
+                            </g:Hyperlink>
+                        </g:FlowPanel>
                         <g:Label ui:field="trickCountWest" addStyleNames="{style.trickCountWest}"/>
                     </g:HorizontalPanel>
                 </g:VerticalPanel>

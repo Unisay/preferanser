@@ -1,6 +1,6 @@
 package com.preferanser.client.application.table.layout;
 
-import com.preferanser.client.application.table.CardView;
+import com.preferanser.client.application.widgets.CardWidget;
 import com.preferanser.shared.Card;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,17 +16,17 @@ public class HorizontalCardLayoutTest {
 
     private HorizontalCardLayout layout;
     private Collection<Card> cards;
-    private CardView clubAce;
-    private CardView spadeAce;
-    private CardView clubTen;
+    private CardWidget clubAce;
+    private CardWidget spadeAce;
+    private CardWidget clubTen;
 
     @Before
     public void setUp() throws Exception {
         layout = new HorizontalCardLayout(null, 30);
         cards = newArrayList(CLUB_ACE, CLUB_TEN, SPADE_ACE, HEART_TEN, HEART_ACE);
-        clubAce = new CardView(CLUB_ACE, null);
-        spadeAce = new CardView(SPADE_ACE, null);
-        clubTen = new CardView(CLUB_TEN, null);
+        clubAce = new CardWidget(CLUB_ACE);
+        spadeAce = new CardWidget(SPADE_ACE);
+        clubTen = new CardWidget(CLUB_TEN);
     }
 
     @Test

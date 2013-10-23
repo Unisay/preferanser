@@ -4,7 +4,7 @@ import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.ui.Widget;
-import com.preferanser.client.application.table.CardView;
+import com.preferanser.client.application.widgets.CardWidget;
 import com.preferanser.shared.Card;
 import com.preferanser.shared.Rank;
 import com.preferanser.shared.Suit;
@@ -19,19 +19,19 @@ import static java.util.Collections.sort;
 public abstract class CardLayoutBase implements CardLayout {
 
     @Override
-    public void apply(Collection<CardView> cardViews) {
-        if (cardViews == null || cardViews.isEmpty())
+    public void apply(Collection<CardWidget> cardWidgets) {
+        if (cardWidgets == null || cardWidgets.isEmpty())
             return;
 
-        List<CardView> views = Lists.newArrayList(cardViews);
+        List<CardWidget> views = Lists.newArrayList(cardWidgets);
         sortCards(views);
         positionWidgets(views);
     }
 
-    protected void sortCards(List<CardView> views) {
-        sort(views, new Comparator<CardView>() {
-            @Override public int compare(CardView view1, CardView view2) {
-                return compareCards(view1.card, view2.card);
+    protected void sortCards(List<CardWidget> views) {
+        sort(views, new Comparator<CardWidget>() {
+            @Override public int compare(CardWidget view1, CardWidget view2) {
+                return compareCards(view1.getCard(), view2.getCard());
             }
         });
     }
@@ -53,14 +53,14 @@ public abstract class CardLayoutBase implements CardLayout {
         return suit1.compareTo(suit2);
     }
 
-    protected void positionWidgets(List<CardView> views) {
+    protected void positionWidgets(List<CardWidget> cardWidgets) {
         Integer x = null, y = null, z = null;
-        CardView prev = null;
-        for (CardView next : views) {
+        CardWidget prev = null;
+        for (CardWidget next : cardWidgets) {
             x = getOffsetX(prev, next, x);
             y = getOffsetY(prev, next, y);
             z = getOffsetZ(prev, next, z);
-            positionWidget(next.image, x, y, z);
+            positionWidget(next, x, y, z);
             prev = next;
         }
     }
@@ -78,32 +78,32 @@ public abstract class CardLayoutBase implements CardLayout {
     }
 
     @SuppressWarnings("unused")
-    protected int getOffsetX(CardView prev, CardView next, Integer prevX) {
+    protected int getOffsetX(CardWidget prev, CardWidget next, Integer prevX) {
         return prev == null ? getStartX() : prevX + getDeltaX(prev, next);
     }
 
     @SuppressWarnings("unused")
-    protected int getDeltaX(CardView prev, CardView next) {
+    protected int getDeltaX(CardWidget prev, CardWidget next) {
         return 0;
     }
 
     @SuppressWarnings("unused")
-    protected int getOffsetY(CardView prev, CardView next, Integer prevY) {
+    protected int getOffsetY(CardWidget prev, CardWidget next, Integer prevY) {
         return prev == null ? getStartY() : prevY + getDeltaY(prev, next);
     }
 
     @SuppressWarnings("unused")
-    protected int getDeltaY(CardView prev, CardView next) {
+    protected int getDeltaY(CardWidget prev, CardWidget next) {
         return 0;
     }
 
     @SuppressWarnings("unused")
-    protected int getOffsetZ(CardView prev, CardView next, Integer prevZ) {
+    protected int getOffsetZ(CardWidget prev, CardWidget next, Integer prevZ) {
         return prev == null ? getStartZ() : prevZ + getDeltaZ(prev, next);
     }
 
     @SuppressWarnings("unused")
-    protected int getDeltaZ(CardView prev, CardView next) {
+    protected int getDeltaZ(CardWidget prev, CardWidget next) {
         return 1;
     }
 
@@ -114,10 +114,10 @@ public abstract class CardLayoutBase implements CardLayout {
         style.setZIndex(z);
     }
 
-    protected static class CardViewCardTransformer implements Function<CardView, Card> {
-        @Nullable @Override public Card apply(@Nullable CardView input) {
+    protected class CardWidgetCardTransformer implements Function<CardWidget, Card> {
+        @Nullable @Override public Card apply(@Nullable CardWidget input) {
             assert input != null;
-            return input.card;
+            return input.getCard();
         }
     }
 }

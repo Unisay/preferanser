@@ -1,7 +1,7 @@
 package com.preferanser.client.application.table.layout;
 
 import com.google.gwt.user.client.ui.Panel;
-import com.preferanser.client.application.table.CardView;
+import com.preferanser.client.application.widgets.CardWidget;
 import com.preferanser.shared.Card;
 
 import java.util.Collection;
@@ -31,13 +31,13 @@ public class HorizontalCardLayout extends PanelCardLayout {
     }
 
     @Override
-    protected void positionWidgets(List<CardView> cardViews) {
-        Collection<Card> cards = transform(cardViews, new CardViewCardTransformer());
+    protected void positionWidgets(List<CardWidget> cardWidgets) {
+        Collection<Card> cards = transform(cardWidgets, new CardWidgetCardTransformer());
         diffSuitOffsetCount = countDiffSuitOffsets(cards);
         sameSuitOffsetCount = countSameSuitOffsets(cards);
         diffSuitOffsetX = calculateDiffSuitOffsetX();
         sameSuitOffsetX = calculateSameSuitOffsetX();
-        super.positionWidgets(cardViews);
+        super.positionWidgets(cardWidgets);
     }
 
     @Override
@@ -51,8 +51,8 @@ public class HorizontalCardLayout extends PanelCardLayout {
     }
 
     @Override
-    protected int getDeltaX(CardView prev, CardView next) {
-        return prev.card.getSuit() == next.card.getSuit()
+    protected int getDeltaX(CardWidget prev, CardWidget next) {
+        return prev.getCard().getSuit() == next.getCard().getSuit()
                 ? sameSuitOffsetX
                 : diffSuitOffsetX;
     }

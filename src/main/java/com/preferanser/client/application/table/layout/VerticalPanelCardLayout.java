@@ -1,7 +1,7 @@
 package com.preferanser.client.application.table.layout;
 
 import com.google.gwt.user.client.ui.Panel;
-import com.preferanser.client.application.table.CardView;
+import com.preferanser.client.application.widgets.CardWidget;
 import com.preferanser.shared.Card;
 import com.preferanser.shared.Suit;
 
@@ -28,11 +28,11 @@ public class VerticalPanelCardLayout extends PanelCardLayout {
     }
 
     @Override
-    protected void positionWidgets(List<CardView> cardViews) {
-        Collection<Card> cards = transform(cardViews, new CardViewCardTransformer());
+    protected void positionWidgets(List<CardWidget> cardWidgets) {
+        Collection<Card> cards = transform(cardWidgets, new CardWidgetCardTransformer());
         sameSuitOffsetX = calculateSameSuitOffsetX(cards);
         diffSuitOffsetY = calculateDiffSuitOffsetY(cards);
-        super.positionWidgets(cardViews);
+        super.positionWidgets(cardWidgets);
     }
 
     @Override
@@ -41,21 +41,21 @@ public class VerticalPanelCardLayout extends PanelCardLayout {
     }
 
     @Override
-    protected int getOffsetX(CardView prev, CardView next, Integer prevX) {
-        if (prev == null || prev.card.getSuit() != next.card.getSuit()) {
+    protected int getOffsetX(CardWidget prev, CardWidget next, Integer prevX) {
+        if (prev == null || prev.getCard().getSuit() != next.getCard().getSuit()) {
             return getStartX();
         }
         return super.getOffsetX(prev, next, prevX);
     }
 
     @Override
-    protected int getDeltaX(CardView prev, CardView next) {
+    protected int getDeltaX(CardWidget prev, CardWidget next) {
         return sameSuitOffsetX;
     }
 
     @Override
-    protected int getDeltaY(CardView prev, CardView next) {
-        if (prev.card.getSuit() != next.card.getSuit()) {
+    protected int getDeltaY(CardWidget prev, CardWidget next) {
+        if (prev.getCard().getSuit() != next.getCard().getSuit()) {
             return diffSuitOffsetY;
         }
         return super.getDeltaY(prev, next);

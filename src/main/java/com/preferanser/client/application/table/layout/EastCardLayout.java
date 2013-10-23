@@ -1,7 +1,7 @@
 package com.preferanser.client.application.table.layout;
 
 import com.google.gwt.user.client.ui.Panel;
-import com.preferanser.client.application.table.CardView;
+import com.preferanser.client.application.widgets.CardWidget;
 import com.preferanser.shared.Card;
 import com.preferanser.shared.Rank;
 
@@ -24,7 +24,7 @@ public class EastCardLayout extends VerticalPanelCardLayout {
     }
 
     @Override
-    protected int getDeltaX(CardView prev, CardView next) {
+    protected int getDeltaX(CardWidget prev, CardWidget next) {
         return -super.getDeltaX(prev, next);
     }
 
@@ -33,8 +33,8 @@ public class EastCardLayout extends VerticalPanelCardLayout {
     }
 
     @Override
-    protected int getDeltaZ(CardView prev, CardView next) {
-        if (prev.card.getSuit() == next.card.getSuit()) {
+    protected int getDeltaZ(CardWidget prev, CardWidget next) {
+        if (prev.getCard().getSuit() == next.getCard().getSuit()) {
             return -1;
         } else {
             return 10;

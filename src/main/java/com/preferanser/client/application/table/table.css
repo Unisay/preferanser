@@ -14,7 +14,7 @@
     visibility: hidden;
 }
 
-img.card {
+.card {
     position: absolute;
     top: 0;
     left: 0;
@@ -22,7 +22,7 @@ img.card {
     cursor: url("img/cursor/open-hand.cur") 4 4, move;
 }
 
-img.dragging {
+.dragging {
     cursor: url("img/cursor/closed-hand.cur") 4 4, move;
 }
 
@@ -111,25 +111,24 @@ img.dragging {
 
 .handTitle {
     font-size: small;
-    color: #c2ffaa;
-    text-shadow: -1px -1px 0 #222;
+    text-shadow: 1px 1px 1px #222;
 }
 
-.handTitle .gwt-Hyperlink {
-    background-color: rgba(0, 0, 0, 0.3);
-    border-radius: 3px;
-    -webkit-border-radius: 3px;
-    -moz-border-radius: 3px;
-}
-
-.handTitle a:before {
-    content: " ";
+.gwt-Hyperlink {
+    display: inline;
 }
 
 .gwt-Label {
     color: white;
 }
 
-.gwt-Hyperlink {
-    color: white;
+.handTitle .gwt-Hyperlink {
+    color: #c2ffaa;
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 3px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    padding: .1em .5em;
+    margin-left: .5em;
+    font-size: 88%;
 }

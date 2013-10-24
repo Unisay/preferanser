@@ -28,7 +28,8 @@ public class TableModule extends AbstractPresenterModule {
 
     @Override
     protected void configure() {
-       bindPresenter(TablePresenter.class, TablePresenter.TableView.class, TableView.class, TablePresenter.Proxy.class);
+        bindSingletonPresenterWidget(ContractDialogPresenterWidget.class, ContractDialogPresenterWidget.MyView.class, ContractDialogView.class);
+        bindPresenter(TablePresenter.class, TablePresenter.TableView.class, TableView.class, TablePresenter.Proxy.class);
     }
 
 }

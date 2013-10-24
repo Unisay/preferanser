@@ -20,6 +20,7 @@
 package com.preferanser.client.application;
 
 import com.google.inject.Inject;
+import com.preferanser.client.theme.greencloth.client.com.preferanser.client.application.PreferanserResources;
 
 /**
  * Loads various resources

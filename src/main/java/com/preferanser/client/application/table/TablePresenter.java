@@ -30,6 +30,7 @@ import com.gwtplatform.mvp.client.View;
 import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.ProxyStandard;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
+import com.gwtplatform.mvp.client.proxy.RevealRootPopupContentEvent;
 import com.preferanser.client.application.ApplicationPresenter;
 import com.preferanser.client.place.NameTokens;
 import com.preferanser.shared.Card;
@@ -46,6 +47,8 @@ import static com.preferanser.shared.TableLocation.NORTH;
  */
 public class TablePresenter extends Presenter<TablePresenter.TableView, TablePresenter.Proxy> implements TableUiHandlers {
 
+    private ContractDialogPresenterWidget contractDialog;
+
     public interface TableView extends View, HasUiHandlers<TableUiHandlers> {
 
         void displayTableCards(Multimap<TableLocation, Card> tableCards);
@@ -61,8 +64,9 @@ public class TablePresenter extends Presenter<TablePresenter.TableView, TablePre
     public interface Proxy extends ProxyPlace<TablePresenter> {}
 
     @Inject
-    public TablePresenter(EventBus eventBus, TableView view, Proxy proxy) {
+    public TablePresenter(EventBus eventBus, TableView view, Proxy proxy, ContractDialogPresenterWidget contractDialog) {
         super(eventBus, view, proxy, ApplicationPresenter.TYPE_SetMainContent);
+        this.contractDialog = contractDialog;
         getView().setUiHandlers(this);
     }
 
@@ -83,6 +87,8 @@ public class TablePresenter extends Presenter<TablePresenter.TableView, TablePre
 
     @Override
     public void sluff() {
+        RevealRootPopupContentEvent.fire(this, contractDialog);
+
         if (tableCards.get(CENTER).size() > 2) {
             tableCards.get(CENTER).clear();
             refreshView();

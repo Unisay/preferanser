@@ -19,7 +19,6 @@
   -->
 
 <module rename-to='Preferanser'>
-    <!-- Inherit the core Web Toolkit stuff.                        -->
     <inherits name="com.google.gwt.user.User"/>
     <inherits name="com.google.gwt.inject.Inject"/>
     <inherits name="com.google.gwt.user.cellview.CellView"/>
@@ -38,12 +37,8 @@
     <set-property name="gwt.logging.firebugHandler" value="ENABLED"/>
     <set-property name="gwt.logging.popupHandler" value="DISABLED"/>
 
-    <!-- Default css -->
-    <!--<inherits name="com.google.gwt.user.theme.standard.Standard"/>-->
-    <!-- <inherits name="com.google.gwt.user.theme.chrome.Chrome"/> -->
-    <!--<inherits name="com.google.gwt.user.theme.dark.Dark"/>-->
+    <inherits name="com.preferanser.client.theme.greencloth.GreenCloth"/>
 
-    <!-- Other module inherits                                      -->
     <inherits name="com.gwtplatform.mvp.MvpWithEntryPoint"/>
 
     <source path="client"/>

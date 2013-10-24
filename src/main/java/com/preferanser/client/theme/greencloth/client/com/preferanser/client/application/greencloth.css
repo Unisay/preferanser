@@ -1,0 +1,45 @@
+@external .gwt-*;
+
+html, body {
+    height: 100%;
+    width: 100%;
+    min-height: 100%;
+    margin: 0 !important;
+    font-family: sans-serif;
+    font-size: 90%;
+}
+
+@sprite body {
+    gwt-image: 'background';
+}
+
+body {
+    overflow: hidden;
+}
+
+* {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.gwt-DialogBox {
+    padding: 1em;
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 7px;
+    color: mintcream;
+    z-index: 100000001;
+    box-shadow: 3px 3px 13px black;
+}
+
+.gwt-DialogBoxOverlay {
+    z-index: 100000000;
+    background-color: rgba(0, 0, 0, 0.3);
+}
+
+@external .dialogTop;
+.dialogTop {
+    cursor: move;
+}

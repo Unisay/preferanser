@@ -3,7 +3,6 @@ package com.preferanser.client.application.table.layout;
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import com.google.gwt.dom.client.Style;
-import com.google.gwt.user.client.ui.Widget;
 import com.preferanser.client.application.widgets.CardWidget;
 import com.preferanser.shared.Card;
 import com.preferanser.shared.Rank;
@@ -107,8 +106,8 @@ public abstract class CardLayoutBase implements CardLayout {
         return 1;
     }
 
-    protected void positionWidget(Widget image, int x, int y, int z) {
-        Style style = image.getElement().getStyle();
+    protected void positionWidget(CardWidget cardWidget, int x, int y, int z) {
+        Style style = cardWidget.getElement().getStyle();
         style.setLeft(x, Style.Unit.PX);
         style.setTop(y, Style.Unit.PX);
         style.setZIndex(z);

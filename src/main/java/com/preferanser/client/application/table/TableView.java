@@ -19,6 +19,7 @@
 
 package com.preferanser.client.application.table;
 
+import com.google.common.base.Function;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.EnumHashBiMap;
 import com.google.common.collect.Maps;
@@ -45,10 +46,13 @@ import com.preferanser.shared.Card;
 import com.preferanser.shared.Cardinal;
 import com.preferanser.shared.TableLocation;
 
+import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import static com.google.common.collect.Iterables.transform;
+import static com.google.common.collect.Lists.newArrayList;
 import static com.preferanser.shared.TableLocation.*;
 
 /**
@@ -162,8 +166,16 @@ public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements Ta
     }
 
     private void layoutLocation(TableLocation location) {
+        FlowPanel panel = locationPanelMap.get(location);
         CardLayout cardLayout = locationLayoutMap.get(location);
-        cardLayout.apply(cardWidgetBiMap.values());
+        cardLayout.apply(newArrayList(transform(panel, new Function<Widget, CardWidget>() {
+            @Nullable @Override public CardWidget apply(@Nullable Widget widget) {
+                if (widget instanceof CardWidget) {
+                    return (CardWidget) widget;
+                }
+                return null;
+            }
+        })));
     }
 
     private void disableStandardDragging(Element[] elements) {

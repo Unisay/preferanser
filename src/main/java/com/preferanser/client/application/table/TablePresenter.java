@@ -87,12 +87,16 @@ public class TablePresenter extends Presenter<TablePresenter.TableView, TablePre
 
     @Override
     public void sluff() {
-        RevealRootPopupContentEvent.fire(this, contractDialog);
-
         if (tableCards.get(CENTER).size() > 2) {
             tableCards.get(CENTER).clear();
             refreshView();
         }
+    }
+
+    @Override
+    public void chooseContract(Cardinal cardinal) {
+        contractDialog.setCardinal(cardinal);
+        RevealRootPopupContentEvent.fire(this, contractDialog);
     }
 
     @Override

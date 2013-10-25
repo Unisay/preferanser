@@ -19,7 +19,10 @@
 
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'
-             xmlns:p='urn:import:com.preferanser.client.application.widgets'>
+             xmlns:p='urn:import:com.preferanser.client.application.widgets'
+             ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
+             ui:generateKeys="com.google.gwt.i18n.server.keygen.MD5KeyGenerator"
+             ui:generateLocales="default">
     <ui:style src="table.css" field="style" type="com.preferanser.client.application.table.TableView.Style"/>
     <g:VerticalPanel addStyleNames="{style.verticalPanel}" spacing="0">
         <g:FlowPanel addStyleNames="{style.not-displayed}">
@@ -66,10 +69,10 @@
                     <g:HorizontalPanel addStyleNames="{style.handTitle} {style.northHPanel}">
                         <g:FlowPanel addStyleNames="{style.handHeaderLeftPanel}">
                             <g:Label ui:field="titleNorth" addStyleNames="{style.titleNorth}">
-                                <ui:msg>Север</ui:msg>
+                                <ui:msg description="north">Север</ui:msg>
                             </g:Label>
                             <g:Hyperlink ui:field="northContractLink">
-                                <ui:msg>выбрать контракт</ui:msg>
+                                <ui:msg description="choose contract">выбрать контракт</ui:msg>
                             </g:Hyperlink>
                         </g:FlowPanel>
                         <g:Label ui:field="trickCountNorth" addStyleNames="{style.trickCountNorth}"/>

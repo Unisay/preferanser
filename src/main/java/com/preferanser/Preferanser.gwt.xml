@@ -44,5 +44,6 @@
     <source path="client"/>
     <source path="shared"/>
 
+    <extend-property name="locale" values="ru"/>
     <set-configuration-property name="gin.ginjector.modules" value="com.preferanser.client.gin.ClientModule"/>
 </module>

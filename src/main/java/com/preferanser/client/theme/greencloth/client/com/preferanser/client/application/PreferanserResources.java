@@ -31,15 +31,20 @@ import com.google.gwt.resources.client.ImageResource;
 public interface PreferanserResources extends ClientBundle {
 
     interface GreenClothCssResource extends CssResource {
+
         @ClassName("gwt-DialogBox") String gwtDialogBox();
+
+        @ClassName("gwt-DialogBoxOverlay") String gwtDialogBoxOverlay();
+
+        @SuppressWarnings("unused") String dialogTop();
+
+        @SuppressWarnings("unused") String Caption();
     }
 
-    @Source("greencloth.css")
-    GreenClothCssResource css();
+    @Source("greencloth.css") GreenClothCssResource css();
 
     @Source("images/table_background_classic.jpg")
-    @ImageResource.ImageOptions(repeatStyle = ImageResource.RepeatStyle.Horizontal)
-    ImageResource background();
+    @ImageResource.ImageOptions(repeatStyle = ImageResource.RepeatStyle.Horizontal) ImageResource background();
 
     @Source("images/cards/c7.png")
     @ImageResource.ImageOptions(width = 109, height = 144) ImageResource c7();

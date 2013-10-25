@@ -261,6 +261,22 @@ public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements Ta
         getUiHandlers().sluff();
     }
 
+    @UiHandler("northContractLink") void onNorthContractLinkClicked(@SuppressWarnings("unused") ClickEvent event) {
+        getUiHandlers().chooseContract(Cardinal.NORTH);
+    }
+
+    @UiHandler("eastContractLink") void onEastContractLinkClicked(@SuppressWarnings("unused") ClickEvent event) {
+        getUiHandlers().chooseContract(Cardinal.EAST);
+    }
+
+    @UiHandler("southContractLink") void onSouthContractLinkClicked(@SuppressWarnings("unused") ClickEvent event) {
+        getUiHandlers().chooseContract(Cardinal.SOUTH);
+    }
+
+    @UiHandler("westContractLink") void onWestContractLinkClicked(@SuppressWarnings("unused") ClickEvent event) {
+        getUiHandlers().chooseContract(Cardinal.WEST);
+    }
+
     @UiFactory CardWidget createCardWidget(Card card) {
         CardWidget cardWidget = new CardWidget(card);
 

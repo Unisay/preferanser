@@ -34,6 +34,12 @@ body {
     box-shadow: 3px 3px 13px black;
 }
 
+@external .Caption;
+.gwt-DialogBox .Caption {
+    font-weight: bold;
+    color: #49ff0a;
+}
+
 .gwt-DialogBoxOverlay {
     z-index: 100000000;
     background-color: rgba(0, 0, 0, 0.3);

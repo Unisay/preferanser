@@ -21,6 +21,7 @@ package com.preferanser.client.application.table;
 
 import com.gwtplatform.mvp.client.UiHandlers;
 import com.preferanser.shared.Card;
+import com.preferanser.shared.Cardinal;
 import com.preferanser.shared.TableLocation;
 
 /**
@@ -31,14 +32,24 @@ public interface TableUiHandlers extends UiHandlers {
     void dealCards();
 
     /**
-     * Change card location
+     * User changed card location
      *
-     * @param card card
+     * @param card        card
      * @param oldLocation old location
      * @param newLocation new location
      * @return true if location change is allowed, false otherwise
      */
     boolean changeCardLocation(Card card, TableLocation oldLocation, TableLocation newLocation);
 
+    /**
+     * User moved cards to sluff
+     */
     void sluff();
+
+    /**
+     * User chose contract for cardinal
+     *
+     * @param cardinal for which contract is chosen
+     */
+    void chooseContract(Cardinal cardinal);
 }

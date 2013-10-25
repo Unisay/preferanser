@@ -40,8 +40,37 @@ public class ContractDialogView extends PopupViewImpl implements ContractDialogP
 
     interface Binder extends UiBinder<PopupPanel, ContractDialogView> {}
 
-    @UiField Button okButton;
     @UiField DialogBox dialog;
+
+    @UiField Button sixSpadeButton;
+    @UiField Button sixClubButton;
+    @UiField Button sixDiamondButton;
+    @UiField Button sixHeartButton;
+    @UiField Button sixNoTrumpButton;
+    
+    @UiField Button sevenSpadeButton;
+    @UiField Button sevenClubButton;
+    @UiField Button sevenDiamondButton;
+    @UiField Button sevenHeartButton;
+    @UiField Button sevenNoTrumpButton;
+
+    @UiField Button eightSpadeButton;
+    @UiField Button eightClubButton;
+    @UiField Button eightDiamondButton;
+    @UiField Button eightHeartButton;
+    @UiField Button eightNoTrumpButton;
+
+    @UiField Button nineSpadeButton;
+    @UiField Button nineClubButton;
+    @UiField Button nineDiamondButton;
+    @UiField Button nineHeartButton;
+    @UiField Button nineNoTrumpButton;
+
+    @UiField Button tenSpadeButton;
+    @UiField Button tenClubButton;
+    @UiField Button tenDiamondButton;
+    @UiField Button tenHeartButton;
+    @UiField Button tenNoTrumpButton;
 
     @Inject
     protected ContractDialogView(Binder uiBinder, EventBus eventBus, PreferanserMessages messages, PreferanserConstants constants) {
@@ -56,7 +85,7 @@ public class ContractDialogView extends PopupViewImpl implements ContractDialogP
         dialog.setText(messages.cardinalChoosesContract(constants.getString(cardinal.name())));
     }
 
-    @UiHandler("okButton") void okButtonClicked(@SuppressWarnings("unused") ClickEvent event) {
+    @UiHandler("sixSpadeButton") void okButtonClicked(@SuppressWarnings("unused") ClickEvent event) {
         hide();
     }
 }

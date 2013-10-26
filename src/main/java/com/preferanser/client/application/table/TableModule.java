@@ -19,7 +19,10 @@
 
 package com.preferanser.client.application.table;
 
+import com.google.inject.Singleton;
 import com.gwtplatform.mvp.client.gin.AbstractPresenterModule;
+import com.preferanser.client.application.table.dialog.contract.ContractDialogPresenter;
+import com.preferanser.client.application.table.dialog.contract.ContractDialogView;
 
 /**
  * Gin module for the table page
@@ -28,7 +31,8 @@ public class TableModule extends AbstractPresenterModule {
 
     @Override
     protected void configure() {
-        bindSingletonPresenterWidget(ContractDialogPresenterWidget.class, ContractDialogPresenterWidget.MyView.class, ContractDialogView.class);
+        bind(HasCardinalContracts.class).to(TablePresenter.class).in(Singleton.class);
+        bindSingletonPresenterWidget(ContractDialogPresenter.class, ContractDialogPresenter.MyView.class, ContractDialogView.class);
         bindPresenter(TablePresenter.class, TablePresenter.TableView.class, TableView.class, TablePresenter.Proxy.class);
     }
 

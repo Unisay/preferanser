@@ -32,9 +32,11 @@ import com.gwtplatform.mvp.client.annotations.ProxyStandard;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.gwtplatform.mvp.client.proxy.RevealRootPopupContentEvent;
 import com.preferanser.client.application.ApplicationPresenter;
+import com.preferanser.client.application.table.dialog.contract.ContractDialogPresenter;
 import com.preferanser.client.place.NameTokens;
 import com.preferanser.shared.Card;
 import com.preferanser.shared.Cardinal;
+import com.preferanser.shared.Contract;
 import com.preferanser.shared.TableLocation;
 
 import java.util.Map;
@@ -45,9 +47,9 @@ import static com.preferanser.shared.TableLocation.NORTH;
 /**
  * Table presenter
  */
-public class TablePresenter extends Presenter<TablePresenter.TableView, TablePresenter.Proxy> implements TableUiHandlers {
+public class TablePresenter extends Presenter<TablePresenter.TableView, TablePresenter.Proxy> implements TableUiHandlers, HasCardinalContracts {
 
-    private ContractDialogPresenterWidget contractDialog;
+    private ContractDialogPresenter contractDialog;
 
     public interface TableView extends View, HasUiHandlers<TableUiHandlers> {
 
@@ -64,9 +66,10 @@ public class TablePresenter extends Presenter<TablePresenter.TableView, TablePre
     public interface Proxy extends ProxyPlace<TablePresenter> {}
 
     @Inject
-    public TablePresenter(EventBus eventBus, TableView view, Proxy proxy, ContractDialogPresenterWidget contractDialog) {
+    public TablePresenter(EventBus eventBus, TableView view, Proxy proxy, ContractDialogPresenter contractDialog) {
         super(eventBus, view, proxy, ApplicationPresenter.TYPE_SetMainContent);
         this.contractDialog = contractDialog;
+        this.contractDialog.setHasCardinalContracts(this);
         getView().setUiHandlers(this);
     }
 
@@ -109,6 +112,11 @@ public class TablePresenter extends Presenter<TablePresenter.TableView, TablePre
         tableCards.remove(oldLocation, card);
         tableCards.put(newLocation, card);
         refreshView();
+        return true;
+    }
+
+    @Override
+    public boolean setCardinalContract(Cardinal cardinal, Contract contract) {
         return true;
     }
 

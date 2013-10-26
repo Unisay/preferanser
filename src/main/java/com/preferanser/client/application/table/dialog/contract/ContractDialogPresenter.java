@@ -17,25 +17,30 @@
  *     along with this program.  If not, see [http://www.gnu.org/licenses/].
  */
 
-package com.preferanser.client.application.table;
+package com.preferanser.client.application.table.dialog.contract;
 
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
+import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.PopupView;
 import com.gwtplatform.mvp.client.PresenterWidget;
+import com.preferanser.client.application.table.HasCardinalContracts;
 import com.preferanser.shared.Cardinal;
+import com.preferanser.shared.Contract;
 
-public class ContractDialogPresenterWidget extends PresenterWidget<ContractDialogPresenterWidget.MyView> {
+public class ContractDialogPresenter extends PresenterWidget<ContractDialogPresenter.MyView> implements ContractDialogUiHandlers {
 
     private Cardinal cardinal;
+    private HasCardinalContracts hasCardinalContracts;
 
-    public interface MyView extends PopupView {
+    public interface MyView extends PopupView, HasUiHandlers<ContractDialogUiHandlers> {
         void setCardinal(Cardinal cardinal);
     }
 
     @Inject
-    public ContractDialogPresenterWidget(EventBus eventBus, MyView view) {
+    public ContractDialogPresenter(EventBus eventBus, MyView view) {
         super(eventBus, view);
+        getView().setUiHandlers(this);
     }
 
     @Override
@@ -44,11 +49,17 @@ public class ContractDialogPresenterWidget extends PresenterWidget<ContractDialo
         getView().setCardinal(this.cardinal);
     }
 
+    @Override
+    public boolean setContract(Contract contract) {
+        return hasCardinalContracts.setCardinalContract(cardinal, contract);
+    }
+
+    public void setHasCardinalContracts(HasCardinalContracts hasCardinalContracts) {
+        this.hasCardinalContracts = hasCardinalContracts;
+    }
+
     public void setCardinal(Cardinal cardinal) {
         this.cardinal = cardinal;
     }
 
-    public Cardinal getCardinal() {
-        return cardinal;
-    }
 }

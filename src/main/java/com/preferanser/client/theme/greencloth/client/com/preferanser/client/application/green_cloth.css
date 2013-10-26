@@ -10,7 +10,7 @@ html, body {
 }
 
 @sprite body {
-    gwt-image: 'background';
+    gwt-image: 'pageBackground';
 }
 
 body {
@@ -25,20 +25,22 @@ body {
     user-select: none;
 }
 
+@sprite .gwt-DialogBox {
+    gwt-image: 'dialogBackground';
+}
+
 .gwt-DialogBox {
     padding: 1em;
-    background-color: rgba(0, 0, 0, 0.3);
     border-radius: 7px;
-    color: mintcream;
     z-index: 100000001;
-    box-shadow: 3px 3px 23px black;
+    box-shadow: 0 0 15px black;
 }
 
 @external .Caption;
 .gwt-DialogBox .Caption {
     color: white;
     font-weight: bold;
-    font-size: small;
+    font-size: 120%;
     text-shadow: 1px 1px 1px #222;
     text-align: center;
 }
@@ -46,6 +48,10 @@ body {
 .gwt-DialogBoxOverlay {
     z-index: 100000000;
     background-color: rgba(0, 0, 0, 0.3);
+    -webkit-filter: blur(3px);
+    -moz-filter: blur(3px);
+    -o-filter: blur(3px);
+    -ms-filter: blur(3px);
 }
 
 @external .dialogTop;

@@ -41,10 +41,13 @@ public interface PreferanserResources extends ClientBundle {
         @SuppressWarnings("unused") String Caption();
     }
 
-    @Source("greencloth.css") GreenClothCssResource css();
+    @Source("green_cloth.css") GreenClothCssResource css();
 
-    @Source("images/table_background_classic.jpg")
-    @ImageResource.ImageOptions(repeatStyle = ImageResource.RepeatStyle.Horizontal) ImageResource background();
+    @Source("images/green_cloth_back.jpg")
+    @ImageResource.ImageOptions(repeatStyle = ImageResource.RepeatStyle.Horizontal) ImageResource pageBackground();
+
+    @Source("images/wood_back.png")
+    @ImageResource.ImageOptions(repeatStyle = ImageResource.RepeatStyle.Both) ImageResource dialogBackground();
 
     @Source("images/cards/c7.png")
     @ImageResource.ImageOptions(width = 109, height = 144) ImageResource c7();

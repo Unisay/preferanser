@@ -23,7 +23,6 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.inject.Inject;
@@ -42,40 +41,6 @@ public class ContractDialogView extends PopupViewWithUiHandlers<ContractDialogUi
     interface Binder extends UiBinder<PopupPanel, ContractDialogView> {}
 
     @UiField DialogBox dialog;
-
-    @UiField Button sixSpadeButton;
-    @UiField Button sixClubButton;
-    @UiField Button sixDiamondButton;
-    @UiField Button sixHeartButton;
-    @UiField Button sixNoTrumpButton;
-
-    @UiField Button sevenSpadeButton;
-    @UiField Button sevenClubButton;
-    @UiField Button sevenDiamondButton;
-    @UiField Button sevenHeartButton;
-    @UiField Button sevenNoTrumpButton;
-
-    @UiField Button eightSpadeButton;
-    @UiField Button eightClubButton;
-    @UiField Button eightDiamondButton;
-    @UiField Button eightHeartButton;
-    @UiField Button eightNoTrumpButton;
-
-    @UiField Button nineSpadeButton;
-    @UiField Button nineClubButton;
-    @UiField Button nineDiamondButton;
-    @UiField Button nineHeartButton;
-    @UiField Button nineNoTrumpButton;
-
-    @UiField Button tenSpadeButton;
-    @UiField Button tenClubButton;
-    @UiField Button tenDiamondButton;
-    @UiField Button tenHeartButton;
-    @UiField Button tenNoTrumpButton;
-
-    @UiField Button passButton;
-    @UiField Button whistButton;
-    @UiField Button miserButton;
 
     @Inject
     protected ContractDialogView(Binder uiBinder, EventBus eventBus, PreferanserMessages messages, PreferanserConstants constants) {

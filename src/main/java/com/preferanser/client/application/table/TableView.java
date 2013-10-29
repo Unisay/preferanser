@@ -27,7 +27,6 @@ import com.google.common.collect.Multimap;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.*;
-import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.uibinder.client.UiField;
@@ -37,13 +36,16 @@ import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
 import com.preferanser.client.application.event.TurnChangeEvent;
+import com.preferanser.client.application.i18n.PreferanserConstants;
 import com.preferanser.client.application.table.layout.*;
 import com.preferanser.client.application.widgets.CardWidget;
+import com.preferanser.client.application.widgets.ContractLink;
 import com.preferanser.client.geom.Point;
 import com.preferanser.client.geom.Rect;
 import com.preferanser.client.theme.greencloth.client.com.preferanser.client.application.PreferanserResources;
 import com.preferanser.shared.Card;
 import com.preferanser.shared.Cardinal;
+import com.preferanser.shared.Contract;
 import com.preferanser.shared.TableLocation;
 
 import javax.annotation.Nullable;
@@ -64,24 +66,19 @@ public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements Ta
 
     public interface Binder extends UiBinder<Widget, TableView> {}
 
-    public interface Style extends CssResource {
-        String card();
-    }
-
     private final EventBus eventBus;
-
-    private final PreferanserResources preferanserResources;
     private final BiMap<Card, CardWidget> cardWidgetBiMap = EnumHashBiMap.create(Card.class);
-
     private final BiMap<TableLocation, FlowPanel> locationPanelMap = EnumHashBiMap.create(TableLocation.class);
-
     private final BiMap<TableLocation, CardLayout> locationLayoutMap = EnumHashBiMap.create(TableLocation.class);
-    private final Map<Cardinal, Label> cardinalTrickCount = Maps.newHashMapWithExpectedSize(Cardinal.values().length);
-    private final Map<Cardinal, Label> cardinalTitle = Maps.newHashMapWithExpectedSize(Cardinal.values().length);
-    private ImageDragController imageDragController = new ImageDragController(Document.get());
+    private final Map<Cardinal, Label> cardinalTricksCountMap = Maps.newHashMapWithExpectedSize(Cardinal.values().length);
+    private final Map<Cardinal, Label> cardinalTitleMap = Maps.newHashMapWithExpectedSize(Cardinal.values().length);
+    private final Map<Cardinal, ContractLink> cardinalContractMap = Maps.newHashMapWithExpectedSize(Cardinal.values().length);
+    private final ImageDragController imageDragController = new ImageDragController(Document.get());
 
+    @UiField PreferanserConstants constants;
+    @UiField PreferanserResources resources;
 
-    @UiField Style style;
+    @UiField TableStyle style;
     @UiField Button dealButton;
     @UiField FlowPanel northPanel;
     @UiField FlowPanel eastPanel;
@@ -101,21 +98,21 @@ public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements Ta
 
     @UiField Hyperlink sluffLink;
 
-    @UiField Hyperlink northContractLink;
-    @UiField Hyperlink eastContractLink;
-    @UiField Hyperlink southContractLink;
-    @UiField Hyperlink westContractLink;
+    @UiField ContractLink northContractLink;
+    @UiField ContractLink eastContractLink;
+    @UiField ContractLink southContractLink;
+    @UiField ContractLink westContractLink;
 
     @Inject
-    public TableView(Binder uiBinder, GQuerySelectors selectors, EventBus eventBus, PreferanserResources preferanserResources) {
+    public TableView(Binder uiBinder, GQuerySelectors selectors, EventBus eventBus) {
         this.eventBus = eventBus;
-        this.preferanserResources = preferanserResources;
         initWidget(uiBinder.createAndBindUi(this));
         disableStandardDragging(selectors.getAllDivsAndImages().elements());
         populateLocationPanelMap();
         populateLocationLayoutMap();
         populateCardinalTrickCounts();
         populateCardinalTitles();
+        populateCardinalContractLinks();
         RootPanel rootPanel = RootPanel.get();
         installCenterPanelClickHandler();
         installMouseUpHandler(rootPanel);
@@ -134,9 +131,19 @@ public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements Ta
     }
 
     @Override
-    public void setTrickCounts(Map<Cardinal, Integer> trickCounts) {
-        for (Map.Entry<Cardinal, Integer> entry : trickCounts.entrySet()) {
-            cardinalTrickCount.get(entry.getKey()).setText("" + entry.getValue());
+    public void displayCardinalTricks(Map<Cardinal, Integer> cardinalTricks) {
+        for (Map.Entry<Cardinal, Integer> entry : cardinalTricks.entrySet()) {
+            cardinalTricksCountMap.get(entry.getKey()).setText("" + entry.getValue());
+        }
+    }
+
+    @Override
+    public void displayContracts(Map<Cardinal, Contract> cardinalContracts) {
+        for (Map.Entry<Cardinal, Contract> entry : cardinalContracts.entrySet()) {
+            Cardinal cardinal = entry.getKey();
+            Contract contract = entry.getValue();
+            ContractLink contractLink = cardinalContractMap.get(cardinal);
+            contractLink.setContract(contract);
         }
     }
 
@@ -282,107 +289,107 @@ public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements Ta
 
         switch (card) {
             case SPADE_SEVEN:
-                cardWidget.setResource(preferanserResources.s7());
+                cardWidget.setResource(resources.s7());
                 break;
             case CLUB_SEVEN:
-                cardWidget.setResource(preferanserResources.c7());
+                cardWidget.setResource(resources.c7());
                 break;
             case DIAMOND_SEVEN:
-                cardWidget.setResource(preferanserResources.d7());
+                cardWidget.setResource(resources.d7());
                 break;
             case HEART_SEVEN:
-                cardWidget.setResource(preferanserResources.h7());
+                cardWidget.setResource(resources.h7());
                 break;
 
             case SPADE_EIGHT:
-                cardWidget.setResource(preferanserResources.s8());
+                cardWidget.setResource(resources.s8());
                 break;
             case CLUB_EIGHT:
-                cardWidget.setResource(preferanserResources.c8());
+                cardWidget.setResource(resources.c8());
                 break;
             case DIAMOND_EIGHT:
-                cardWidget.setResource(preferanserResources.d8());
+                cardWidget.setResource(resources.d8());
                 break;
             case HEART_EIGHT:
-                cardWidget.setResource(preferanserResources.h8());
+                cardWidget.setResource(resources.h8());
                 break;
 
             case SPADE_NINE:
-                cardWidget.setResource(preferanserResources.s9());
+                cardWidget.setResource(resources.s9());
                 break;
             case CLUB_NINE:
-                cardWidget.setResource(preferanserResources.c9());
+                cardWidget.setResource(resources.c9());
                 break;
             case DIAMOND_NINE:
-                cardWidget.setResource(preferanserResources.d9());
+                cardWidget.setResource(resources.d9());
                 break;
             case HEART_NINE:
-                cardWidget.setResource(preferanserResources.h9());
+                cardWidget.setResource(resources.h9());
                 break;
 
             case SPADE_TEN:
-                cardWidget.setResource(preferanserResources.s10());
+                cardWidget.setResource(resources.s10());
                 break;
             case CLUB_TEN:
-                cardWidget.setResource(preferanserResources.c10());
+                cardWidget.setResource(resources.c10());
                 break;
             case DIAMOND_TEN:
-                cardWidget.setResource(preferanserResources.d10());
+                cardWidget.setResource(resources.d10());
                 break;
             case HEART_TEN:
-                cardWidget.setResource(preferanserResources.h10());
+                cardWidget.setResource(resources.h10());
                 break;
 
             case SPADE_JACK:
-                cardWidget.setResource(preferanserResources.sj());
+                cardWidget.setResource(resources.sj());
                 break;
             case CLUB_JACK:
-                cardWidget.setResource(preferanserResources.cj());
+                cardWidget.setResource(resources.cj());
                 break;
             case DIAMOND_JACK:
-                cardWidget.setResource(preferanserResources.dj());
+                cardWidget.setResource(resources.dj());
                 break;
             case HEART_JACK:
-                cardWidget.setResource(preferanserResources.hj());
+                cardWidget.setResource(resources.hj());
                 break;
 
             case SPADE_QUEEN:
-                cardWidget.setResource(preferanserResources.sq());
+                cardWidget.setResource(resources.sq());
                 break;
             case CLUB_QUEEN:
-                cardWidget.setResource(preferanserResources.cq());
+                cardWidget.setResource(resources.cq());
                 break;
             case DIAMOND_QUEEN:
-                cardWidget.setResource(preferanserResources.dq());
+                cardWidget.setResource(resources.dq());
                 break;
             case HEART_QUEEN:
-                cardWidget.setResource(preferanserResources.hq());
+                cardWidget.setResource(resources.hq());
                 break;
 
             case SPADE_KING:
-                cardWidget.setResource(preferanserResources.sk());
+                cardWidget.setResource(resources.sk());
                 break;
             case CLUB_KING:
-                cardWidget.setResource(preferanserResources.ck());
+                cardWidget.setResource(resources.ck());
                 break;
             case DIAMOND_KING:
-                cardWidget.setResource(preferanserResources.dk());
+                cardWidget.setResource(resources.dk());
                 break;
             case HEART_KING:
-                cardWidget.setResource(preferanserResources.hk());
+                cardWidget.setResource(resources.hk());
                 break;
 
             case SPADE_ACE:
-                cardWidget.setResource(preferanserResources.sa());
+                cardWidget.setResource(resources.sa());
                 break;
             case CLUB_ACE:
-                cardWidget.setResource(preferanserResources.ca());
+                cardWidget.setResource(resources.ca());
                 break;
             case DIAMOND_ACE:
-                cardWidget.setResource(preferanserResources.da());
+                cardWidget.setResource(resources.da());
                 break;
             case HEART_ACE:
-                cardWidget.setResource(preferanserResources.ha());
+                cardWidget.setResource(resources.ha());
                 break;
         }
 
@@ -401,8 +408,8 @@ public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements Ta
     }
 
     private void populateLocationLayoutMap() {
-        int cardWidth = preferanserResources.c7().getWidth();
-        int cardHeight = preferanserResources.c7().getHeight();
+        int cardWidth = resources.c7().getWidth();
+        int cardHeight = resources.c7().getHeight();
         final CenterCardLayout centerCardLayout = new CenterCardLayout(centerPanel, cardWidth, cardHeight);
         centerCardLayout.setFirstTurn(Cardinal.NORTH);
         eventBus.addHandler(TurnChangeEvent.getType(), new TurnChangeEvent.TurnChangeEventHandler() {
@@ -419,17 +426,24 @@ public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements Ta
     }
 
     private void populateCardinalTrickCounts() {
-        cardinalTrickCount.put(Cardinal.NORTH, trickCountNorth);
-        cardinalTrickCount.put(Cardinal.EAST, trickCountEast);
-        cardinalTrickCount.put(Cardinal.SOUTH, trickCountSouth);
-        cardinalTrickCount.put(Cardinal.WEST, trickCountWest);
+        cardinalTricksCountMap.put(Cardinal.NORTH, trickCountNorth);
+        cardinalTricksCountMap.put(Cardinal.EAST, trickCountEast);
+        cardinalTricksCountMap.put(Cardinal.SOUTH, trickCountSouth);
+        cardinalTricksCountMap.put(Cardinal.WEST, trickCountWest);
     }
 
     private void populateCardinalTitles() {
-        cardinalTitle.put(Cardinal.NORTH, titleNorth);
-        cardinalTitle.put(Cardinal.EAST, titleEast);
-        cardinalTitle.put(Cardinal.SOUTH, titleSouth);
-        cardinalTitle.put(Cardinal.WEST, titleWest);
+        cardinalTitleMap.put(Cardinal.NORTH, titleNorth);
+        cardinalTitleMap.put(Cardinal.EAST, titleEast);
+        cardinalTitleMap.put(Cardinal.SOUTH, titleSouth);
+        cardinalTitleMap.put(Cardinal.WEST, titleWest);
+    }
+
+    private void populateCardinalContractLinks() {
+        cardinalContractMap.put(Cardinal.NORTH, northContractLink);
+        cardinalContractMap.put(Cardinal.EAST, eastContractLink);
+        cardinalContractMap.put(Cardinal.SOUTH, southContractLink);
+        cardinalContractMap.put(Cardinal.WEST, westContractLink);
     }
 
 }

@@ -55,11 +55,14 @@ public class TablePresenter extends Presenter<TablePresenter.TableView, TablePre
 
         void displayTableCards(Multimap<TableLocation, Card> tableCards);
 
-        void setTrickCounts(Map<Cardinal, Integer> trickCounts);
+        void displayCardinalTricks(Map<Cardinal, Integer> cardinalTricks);
+
+        void displayContracts(Map<Cardinal, Contract> cardinalContracts);
     }
 
     private Multimap<TableLocation, Card> tableCards = HashMultimap.create(5, 28);
-    private Map<Cardinal, Integer> trickCounts = Maps.newHashMapWithExpectedSize(Cardinal.values().length);
+    private Map<Cardinal, Integer> cardinalTricks = Maps.newHashMapWithExpectedSize(Cardinal.values().length);
+    private Map<Cardinal, Contract> cardinalContracts = Maps.newHashMapWithExpectedSize(Cardinal.values().length);
 
     @ProxyStandard
     @NameToken(NameTokens.TABLE)
@@ -77,7 +80,7 @@ public class TablePresenter extends Presenter<TablePresenter.TableView, TablePre
     protected void onBind() {
         super.onBind();
         for (Cardinal cardinal : Cardinal.values()) {
-            trickCounts.put(cardinal, 0);
+            cardinalTricks.put(cardinal, 0);
         }
     }
 
@@ -117,11 +120,13 @@ public class TablePresenter extends Presenter<TablePresenter.TableView, TablePre
 
     @Override
     public boolean setCardinalContract(Cardinal cardinal, Contract contract) {
+        cardinalContracts.put(cardinal, contract);
+        getView().displayContracts(cardinalContracts);
         return true;
     }
 
     private void refreshView() {
         getView().displayTableCards(tableCards);
-        getView().setTrickCounts(trickCounts);
+        getView().displayCardinalTricks(cardinalTricks);
     }
 }

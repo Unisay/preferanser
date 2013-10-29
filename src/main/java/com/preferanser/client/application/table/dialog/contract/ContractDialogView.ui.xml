@@ -24,7 +24,8 @@
              ui:generateFormat="com.google.gwt.i18n.rebind.format.PropertiesFormat"
              ui:generateKeys="com.google.gwt.i18n.server.keygen.MD5KeyGenerator"
              ui:generateLocales="default">
-    <ui:with field="res" type="com.preferanser.client.theme.greencloth.client.com.preferanser.client.application.PreferanserResources"/>
+    <ui:with field="constants" type="com.preferanser.client.application.i18n.PreferanserConstants"/>
+    <ui:with field="messages" type="com.preferanser.client.application.i18n.PreferanserMessages"/>
     <ui:style>
         .contractButton {
             min-width: 50px;
@@ -75,7 +76,8 @@
             color: #d90000;
         }
     </ui:style>
-    <p:EscapableDialogBox ui:field="dialog" modal="true" glassEnabled="true"  autoHideEnabled="true" glassStyleName="gwt-DialogBoxOverlay">
+    <p:EscapableDialogBox ui:field="dialog" modal="true" glassEnabled="true" autoHideEnabled="true"
+                          glassStyleName="gwt-DialogBoxOverlay">
         <g:VerticalPanel addStyleNames="{style.buttonsPanel}">
             <g:HorizontalPanel>
                 <g:Button ui:field="sixSpadeButton" addStyleNames="{style.contractButton}">

@@ -35,18 +35,16 @@ import com.preferanser.shared.Contract;
 
 public class ContractDialogView extends PopupViewWithUiHandlers<ContractDialogUiHandlers> implements ContractDialogPresenter.MyView {
 
-    private final PreferanserMessages messages;
-    private final PreferanserConstants constants;
 
     interface Binder extends UiBinder<PopupPanel, ContractDialogView> {}
 
     @UiField DialogBox dialog;
+    @UiField PreferanserConstants constants;
+    @UiField PreferanserMessages messages;
 
     @Inject
-    protected ContractDialogView(Binder uiBinder, EventBus eventBus, PreferanserMessages messages, PreferanserConstants constants) {
+    protected ContractDialogView(Binder uiBinder, EventBus eventBus) {
         super(eventBus);
-        this.messages = messages;
-        this.constants = constants;
         initWidget(uiBinder.createAndBindUi(this));
     }
 

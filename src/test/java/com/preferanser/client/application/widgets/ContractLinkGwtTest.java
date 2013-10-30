@@ -62,14 +62,14 @@ public class ContractLinkGwtTest extends GwtTestWithMockito {
     }
 
     @Test
-    public void testSetContract_SuitNoRank() throws Exception {
+    public void testSetContract_RankNoSuit() throws Exception {
         when(tableStyle.noTrump()).thenReturn("n");
         when(tableStyle.contractSuit()).thenReturn("s");
         when(tableStyle.contractTricks()).thenReturn("t");
         when(constants.noTrump()).thenReturn("nt");
 
         contractLink.setContract(Contract.SIX_NO_TRUMP);
-        assertThat(contractLink.getHTML(), equalTo("<span class=\"t\">6</span> <span class=\"s n\">nt</span>"));
+        assertThat(contractLink.getHTML(), equalTo("<span class=\"t\">6</span> <span class=\"n\">nt</span>"));
     }
 
     @Test

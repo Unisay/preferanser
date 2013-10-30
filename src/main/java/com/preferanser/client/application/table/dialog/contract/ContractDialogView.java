@@ -69,6 +69,10 @@ public class ContractDialogView extends PopupViewWithUiHandlers<ContractDialogUi
         handleContractButton(Contract.SIX_HEART);
     }
 
+    @UiHandler("sixNoTrumpButton") void onSixNoTrumpClicked(@SuppressWarnings("unused") ClickEvent event) {
+        handleContractButton(Contract.SIX_NO_TRUMP);
+    }
+
     @UiHandler("sevenSpadeButton") void onSevenSpadeClicked(@SuppressWarnings("unused") ClickEvent event) {
         handleContractButton(Contract.SEVEN_SPADE);
     }
@@ -83,6 +87,10 @@ public class ContractDialogView extends PopupViewWithUiHandlers<ContractDialogUi
 
     @UiHandler("sevenHeartButton") void onSevenHeartClicked(@SuppressWarnings("unused") ClickEvent event) {
         handleContractButton(Contract.SEVEN_HEART);
+    }
+
+    @UiHandler("sevenNoTrumpButton") void onSevenNoTrumpClicked(@SuppressWarnings("unused") ClickEvent event) {
+        handleContractButton(Contract.SEVEN_NO_TRUMP);
     }
 
     @UiHandler("eightSpadeButton") void onEightSpadeClicked(@SuppressWarnings("unused") ClickEvent event) {
@@ -101,6 +109,10 @@ public class ContractDialogView extends PopupViewWithUiHandlers<ContractDialogUi
         handleContractButton(Contract.EIGHT_HEART);
     }
 
+    @UiHandler("eightNoTrumpButton") void onEightNoTrumpClicked(@SuppressWarnings("unused") ClickEvent event) {
+        handleContractButton(Contract.EIGHT_NO_TRUMP);
+    }
+
     @UiHandler("nineSpadeButton") void onNineSpadeClicked(@SuppressWarnings("unused") ClickEvent event) {
         handleContractButton(Contract.NINE_SPADE);
     }
@@ -117,6 +129,10 @@ public class ContractDialogView extends PopupViewWithUiHandlers<ContractDialogUi
         handleContractButton(Contract.NINE_HEART);
     }
 
+    @UiHandler("nineNoTrumpButton") void onNineNoTrumpClicked(@SuppressWarnings("unused") ClickEvent event) {
+        handleContractButton(Contract.NINE_NO_TRUMP);
+    }
+
     @UiHandler("tenSpadeButton") void onTenSpadeClicked(@SuppressWarnings("unused") ClickEvent event) {
         handleContractButton(Contract.TEN_SPADE);
     }
@@ -131,6 +147,10 @@ public class ContractDialogView extends PopupViewWithUiHandlers<ContractDialogUi
 
     @UiHandler("tenHeartButton") void onTenHeartClicked(@SuppressWarnings("unused") ClickEvent event) {
         handleContractButton(Contract.TEN_HEART);
+    }
+
+    @UiHandler("tenNoTrumpButton") void onTenNoTrumpClicked(@SuppressWarnings("unused") ClickEvent event) {
+        handleContractButton(Contract.TEN_NO_TRUMP);
     }
 
     @UiHandler("passButton") void onPassClicked(@SuppressWarnings("unused") ClickEvent event) {

@@ -66,12 +66,12 @@ public class ContractLink extends Composite implements HasHTML, HasClickHandlers
                 Element suitSpan = DOM.createSpan();
                 Element tricksSpan = DOM.createSpan();
 
-                suitSpan.addClassName(tableStyle.contractSuit());
                 Suit trump = contract.getTrump();
                 if (trump == null) {
                     suitSpan.addClassName(tableStyle.noTrump());
                     suitSpan.setInnerText(constants.noTrump());
                 } else {
+                    suitSpan.addClassName(tableStyle.contractSuit());
                     suitSpan.addClassName(trump.name().toLowerCase());
                     suitSpan.setInnerText(constants.getString(trump.name() + "_char"));
                 }

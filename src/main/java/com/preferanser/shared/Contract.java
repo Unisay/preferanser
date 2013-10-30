@@ -19,6 +19,8 @@
 
 package com.preferanser.shared;
 
+import com.google.common.base.Optional;
+
 import static com.preferanser.shared.Suit.*;
 
 public enum Contract {
@@ -69,7 +71,15 @@ public enum Contract {
         return tricksNumber;
     }
 
-    public Suit getTrump() {
-        return trump;
+    public Optional<Suit> getTrump() {
+        return Optional.of(trump);
+    }
+
+    public boolean isPlaying() {
+        return tricksNumber != null;
+    }
+
+    public boolean isNotPlaying() {
+        return tricksNumber == null;
     }
 }

@@ -19,9 +19,6 @@
 
 package com.preferanser.client.application.table;
 
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Multimap;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.HasUiHandlers;
@@ -34,15 +31,10 @@ import com.gwtplatform.mvp.client.proxy.RevealRootPopupContentEvent;
 import com.preferanser.client.application.ApplicationPresenter;
 import com.preferanser.client.application.table.dialog.contract.ContractDialogPresenter;
 import com.preferanser.client.place.NameTokens;
-import com.preferanser.shared.Card;
-import com.preferanser.shared.Cardinal;
-import com.preferanser.shared.Contract;
-import com.preferanser.shared.TableLocation;
+import com.preferanser.shared.*;
 
+import java.util.Collection;
 import java.util.Map;
-
-import static com.preferanser.shared.TableLocation.CENTER;
-import static com.preferanser.shared.TableLocation.NORTH;
 
 /**
  * Table presenter
@@ -53,16 +45,14 @@ public class TablePresenter extends Presenter<TablePresenter.TableView, TablePre
 
     public interface TableView extends View, HasUiHandlers<TableUiHandlers> {
 
-        void displayTableCards(Multimap<TableLocation, Card> tableCards);
+        void displayTableCards(Map<TableLocation, Collection<Card>> tableCards);
 
         void displayCardinalTricks(Map<Cardinal, Integer> cardinalTricks);
 
         void displayContracts(Map<Cardinal, Contract> cardinalContracts);
     }
 
-    private Multimap<TableLocation, Card> tableCards = HashMultimap.create(5, 28);
-    private Map<Cardinal, Integer> cardinalTricks = Maps.newHashMapWithExpectedSize(Cardinal.values().length);
-    private Map<Cardinal, Contract> cardinalContracts = Maps.newHashMapWithExpectedSize(Cardinal.values().length);
+    private Game game = new Game();
 
     @ProxyStandard
     @NameToken(NameTokens.TABLE)
@@ -77,24 +67,15 @@ public class TablePresenter extends Presenter<TablePresenter.TableView, TablePre
     }
 
     @Override
-    protected void onBind() {
-        super.onBind();
-        for (Cardinal cardinal : Cardinal.values()) {
-            cardinalTricks.put(cardinal, 0);
-        }
-    }
-
-    @Override
     public void dealCards() {
-        tableCards.clear();
-        tableCards.putAll(NORTH, Card.valuesAsSet());
+        game.clearCards();
+        game.putCards(Cardinal.NORTH, Card.values());
         refreshView();
     }
 
     @Override
     public void sluff() {
-        if (tableCards.get(CENTER).size() > 2) {
-            tableCards.get(CENTER).clear();
+        if (game.moveCenterCardsToSluff()) {
             refreshView();
         }
     }
@@ -107,26 +88,22 @@ public class TablePresenter extends Presenter<TablePresenter.TableView, TablePre
 
     @Override
     public boolean changeCardLocation(Card card, TableLocation oldLocation, TableLocation newLocation) {
-        if (CENTER == newLocation && tableCards.get(CENTER).size() == 4) {
+        if (game.moveCard(card, oldLocation, newLocation)) {
             refreshView();
-            return false;
+            return true;
         }
-
-        tableCards.remove(oldLocation, card);
-        tableCards.put(newLocation, card);
-        refreshView();
-        return true;
+        return false;
     }
 
     @Override
     public boolean setCardinalContract(Cardinal cardinal, Contract contract) {
-        cardinalContracts.put(cardinal, contract);
-        getView().displayContracts(cardinalContracts);
+        game.setCardinalContract(cardinal, contract);
+        getView().displayContracts(game.getCardinalContracts());
         return true;
     }
 
     private void refreshView() {
-        getView().displayTableCards(tableCards);
-        getView().displayCardinalTricks(cardinalTricks);
+        getView().displayTableCards(game.getTableCards());
+        getView().displayCardinalTricks(game.getCardinalTricks());
     }
 }

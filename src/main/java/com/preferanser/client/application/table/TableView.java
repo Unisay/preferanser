@@ -23,7 +23,6 @@ import com.google.common.base.Function;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.EnumHashBiMap;
 import com.google.common.collect.Maps;
-import com.google.common.collect.Multimap;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.*;
@@ -121,11 +120,11 @@ public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements Ta
     }
 
     @Override
-    public void displayTableCards(Multimap<TableLocation, Card> tableCards) {
+    public void displayTableCards(Map<TableLocation, Collection<Card>> tableCards) {
         for (CardWidget cardWidget : cardWidgetBiMap.values()) {
             cardWidget.removeFromParent();
         }
-        for (Map.Entry<TableLocation, Collection<Card>> entry : tableCards.asMap().entrySet()) {
+        for (Map.Entry<TableLocation, Collection<Card>> entry : tableCards.entrySet()) {
             displayCards(entry.getKey(), entry.getValue());
         }
     }

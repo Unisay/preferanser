@@ -19,6 +19,7 @@
 
 package com.preferanser.client.application.widgets;
 
+import com.google.common.base.Optional;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -66,11 +67,12 @@ public class ContractLink extends Composite implements HasHTML, HasClickHandlers
                 Element suitSpan = DOM.createSpan();
                 Element tricksSpan = DOM.createSpan();
 
-                Suit trump = contract.getTrump();
-                if (trump == null) {
+                Optional<Suit> maybeTrump = contract.getTrump();
+                if (!maybeTrump.isPresent()) {
                     suitSpan.addClassName(tableStyle.noTrump());
                     suitSpan.setInnerText(constants.noTrump());
                 } else {
+                    Suit trump = maybeTrump.get();
                     suitSpan.addClassName(tableStyle.contractSuit());
                     suitSpan.addClassName(trump.name().toLowerCase());
                     suitSpan.setInnerText(constants.getString(trump.name() + "_char"));

@@ -52,8 +52,6 @@ public class ContractLink extends Composite implements HasHTML, HasClickHandlers
     }
 
     public void setContract(Contract contract) {
-
-
         switch (contract) {
             case PASS:
                 setText(constants.pass());

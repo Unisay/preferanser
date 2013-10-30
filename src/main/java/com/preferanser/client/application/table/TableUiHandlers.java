@@ -37,9 +37,8 @@ public interface TableUiHandlers extends UiHandlers {
      * @param card        card
      * @param oldLocation old location
      * @param newLocation new location
-     * @return true if location change is allowed, false otherwise
      */
-    boolean changeCardLocation(Card card, TableLocation oldLocation, TableLocation newLocation);
+    void changeCardLocation(Card card, TableLocation oldLocation, TableLocation newLocation);
 
     /**
      * User moved cards to sluff

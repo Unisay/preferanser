@@ -20,6 +20,7 @@
 package com.preferanser.shared;
 
 import com.google.common.base.Optional;
+import com.google.common.base.Preconditions;
 import com.google.common.collect.*;
 
 import java.util.Collection;
@@ -36,7 +37,7 @@ import static com.preferanser.shared.TableLocation.*;
  */
 public class Game {
 
-    private enum Type {
+    public static enum Type {
         THREE_PLAYERS(3),
         FOUR_PLAYERS(4);
 
@@ -95,9 +96,8 @@ public class Game {
                 return false;
             }
             Cardinal oldCardinal = tableLocationToCardinal(oldLocation);
-            Cardinal newCardinal = tableLocationToCardinal(newLocation);
             cardinalCardMultimap.get(oldCardinal).remove(card);
-            centerCardCardinalBiMap.put(card, newCardinal);
+            centerCardCardinalBiMap.put(card, oldCardinal);
         } else {
             Cardinal oldCardinal = tableLocationToCardinal(oldLocation);
             Cardinal newCardinal = tableLocationToCardinal(newLocation);
@@ -109,6 +109,8 @@ public class Game {
     }
 
     public void setCardinalContract(Cardinal cardinal, Contract contract) {
+        Preconditions.checkNotNull(cardinal);
+        Preconditions.checkNotNull(contract);
         cardinalContracts.put(cardinal, contract);
     }
 
@@ -150,10 +152,12 @@ public class Game {
     }
 
     public boolean moveCenterCardsToSluff() {
-        Optional<Suit> maybeTrump = getTrump();
-        if (maybeTrump.isPresent() && centerCardCardinalBiMap.size() == type.numPlayers) {
-            Cardinal winner = determineTrickWinner(maybeTrump.get(), centerCardCardinalBiMap);
-            cardinalTricks.put(winner, cardinalTricks.get(winner) + 1); // Non-atomic increment!
+        if (centerCardCardinalBiMap.size() == type.numPlayers) {
+            Optional<Suit> maybeTrump = getTrump();
+            if (maybeTrump.isPresent()) {
+                Cardinal winner = determineTrickWinner(maybeTrump.get(), centerCardCardinalBiMap);
+                cardinalTricks.put(winner, cardinalTricks.get(winner) + 1); // Non-atomic increment!
+            }
             clearCards(CENTER);
             return true;
         }
@@ -169,7 +173,7 @@ public class Game {
             if (maxCard.getSuit() != trump && nextCard.getSuit() == trump) {
                 maxCard = nextCard;
             } else if (maxCard.getSuit() == nextCard.getSuit()) {
-                if (Rank.comparator().compare(maxCard.getRank(), nextCard.getRank()) == -1) {
+                if (Rank.comparator().compare(maxCard.getRank(), nextCard.getRank()) < 0) {
                     maxCard = nextCard;
                 }
             }
@@ -192,4 +196,11 @@ public class Game {
         }
     }
 
+    public Type getType() {
+        return type;
+    }
+
+    public void setType(Type type) {
+        this.type = type;
+    }
 }

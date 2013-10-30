@@ -87,12 +87,10 @@ public class TablePresenter extends Presenter<TablePresenter.TableView, TablePre
     }
 
     @Override
-    public boolean changeCardLocation(Card card, TableLocation oldLocation, TableLocation newLocation) {
-        if (game.moveCard(card, oldLocation, newLocation)) {
-            refreshView();
-            return true;
-        }
-        return false;
+    public void changeCardLocation(Card card, TableLocation oldLocation, TableLocation newLocation) {
+        if (oldLocation != newLocation)
+            game.moveCard(card, oldLocation, newLocation);
+        refreshView();
     }
 
     @Override

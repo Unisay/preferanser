@@ -44,8 +44,6 @@ public interface TableStyle extends CssResource {
 
     String eastDock();
 
-    @ClassName("gwt-Hyperlink") String gwtHyperlink();
-
     @ClassName("gwt-Label") String gwtLabel();
 
     String centerVPanel();
@@ -109,4 +107,9 @@ public interface TableStyle extends CssResource {
     String contractSuit();
 
     String noTrump();
+
+    String contractLabel();
+
+    String contractLink();
+
 }

@@ -27,9 +27,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiConstructor;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.HasHTML;
-import com.google.gwt.user.client.ui.Hyperlink;
+import com.google.gwt.user.client.ui.*;
 import com.preferanser.client.application.i18n.PreferanserConstants;
 import com.preferanser.client.application.table.TableStyle;
 import com.preferanser.shared.Contract;
@@ -41,18 +39,28 @@ import com.preferanser.shared.Suit;
 public class ContractLink extends Composite implements HasHTML, HasClickHandlers {
 
     private final Hyperlink hyperlink;
+    private final Label label;
     private final PreferanserConstants constants;
     private final TableStyle tableStyle;
+    private Contract contract;
 
     @UiConstructor
     public ContractLink(PreferanserConstants constants, TableStyle tableStyle) {
         this.constants = constants;
         this.tableStyle = tableStyle;
+        label = new Label();
+        label.setStylePrimaryName(tableStyle.contractLabel());
         hyperlink = new Hyperlink();
-        initWidget(hyperlink);
+        hyperlink.setStylePrimaryName(tableStyle.contractLink());
+        enable();
+        Panel widgets = new HorizontalPanel();
+        widgets.add(hyperlink);
+        widgets.add(label);
+        initWidget(widgets);
     }
 
     public void setContract(Contract contract) {
+        this.contract = contract;
         switch (contract) {
             case PASS:
                 setText(constants.pass());
@@ -83,7 +91,18 @@ public class ContractLink extends Composite implements HasHTML, HasClickHandlers
                 setHTML(tricksSpan.getString() + " " + suitSpan.getString());
                 break;
         }
+    }
 
+    public void disable() {
+        if (contract != null)
+            label.setText(" — " +  hyperlink.getText().replace(" ", ""));
+        hyperlink.setVisible(false);
+        label.setVisible(true);
+    }
+
+    public void enable() {
+        hyperlink.setVisible(true);
+        label.setVisible(false);
     }
 
     @Override public String getText() {
@@ -105,4 +124,5 @@ public class ContractLink extends Composite implements HasHTML, HasClickHandlers
     @Override public HandlerRegistration addClickHandler(ClickHandler handler) {
         return hyperlink.addHandler(handler, ClickEvent.getType());
     }
+
 }

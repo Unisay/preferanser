@@ -63,10 +63,20 @@
             <p:CardWidget card="HEART_ACE"/>
         </g:FlowPanel>
         <g:HorizontalPanel addStyleNames="{style.buttonsPanel}" spacing="10">
-            <g:Button ui:field="dealButton" text="">
+            <g:HorizontalPanel spacing="0">
+                <g:ToggleButton ui:field="playButton" caption="Play" addStyleNames="{style.play}">
+                    <ui:attribute name="caption" key="play" description="Play button caption"/>
+                </g:ToggleButton>
+                <g:ToggleButton ui:field="editButton" caption="Edit" addStyleNames="{style.edit}">
+                    <ui:attribute name="caption" key="edit" description="Edit button caption"/>
+                </g:ToggleButton>
+            </g:HorizontalPanel>
+            <g:Button ui:field="dealButton" text="Deal">
                 <ui:attribute name="text" key="deal" description="Deal button caption"/>
             </g:Button>
-            <g:ToggleButton ui:field="modeButton"/>
+            <g:Button ui:field="saveButton" text="Save">
+                <ui:attribute name="text" key="save" description="Save button caption"/>
+            </g:Button>
         </g:HorizontalPanel>
         <g:DockPanel debugId="dlp" addStyleNames="{style.dockPanel}" spacing="10">
             <g:Dock direction="NORTH" addStyleNames="{style.northDock}">
@@ -137,7 +147,7 @@
                 <g:VerticalPanel addStyleNames="{style.centerVPanel}">
                     <g:FlowPanel ui:field="centerPanel" addStyleNames="{style.centerFlowPanel}"/>
                     <g:HorizontalPanel addStyleNames="{style.handTitle} {style.centerHPanel}">
-                        <g:Hyperlink ui:field="sluffLink">
+                        <g:Hyperlink ui:field="sluffLink" addStyleNames="{style.contractLink}">
                             <ui:msg key="toSluff" description="Move to sluff">В отбой</ui:msg>
                         </g:Hyperlink>
                     </g:HorizontalPanel>

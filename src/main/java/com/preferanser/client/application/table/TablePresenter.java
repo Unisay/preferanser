@@ -50,6 +50,10 @@ public class TablePresenter extends Presenter<TablePresenter.TableView, TablePre
         void displayCardinalTricks(Map<Cardinal, Integer> cardinalTricks);
 
         void displayContracts(Map<Cardinal, Contract> cardinalContracts);
+
+        void setPlayMode();
+
+        void setEditMode();
     }
 
     private Game game = new Game();
@@ -64,6 +68,16 @@ public class TablePresenter extends Presenter<TablePresenter.TableView, TablePre
         this.contractDialog = contractDialog;
         this.contractDialog.setHasCardinalContracts(this);
         getView().setUiHandlers(this);
+    }
+
+    @Override protected void onReveal() {
+        super.onReveal();
+        if (game.getMode() == Game.Mode.PLAY) {
+            getView().setPlayMode();
+        } else if (game.getMode() == Game.Mode.EDIT) {
+            getView().setEditMode();
+        }
+        dealCards();
     }
 
     @Override
@@ -97,6 +111,18 @@ public class TablePresenter extends Presenter<TablePresenter.TableView, TablePre
     public boolean setCardinalContract(Cardinal cardinal, Contract contract) {
         game.setCardinalContract(cardinal, contract);
         getView().displayContracts(game.getCardinalContracts());
+        return true;
+    }
+
+    @Override public boolean setPlayMode() {
+        game.setMode(Game.Mode.PLAY);
+        getView().setPlayMode();
+        return true;
+    }
+
+    @Override public boolean setEditMode() {
+        game.setMode(Game.Mode.EDIT);
+        getView().setEditMode();
         return true;
     }
 

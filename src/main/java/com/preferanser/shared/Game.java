@@ -48,12 +48,17 @@ public class Game {
         }
     }
 
+    public static enum Mode {
+        PLAY, EDIT
+    }
+
     private Multimap<Cardinal, Card> cardinalCardMultimap = HashMultimap.create(TableLocation.values().length, Card.values().length);
     private Map<Cardinal, Integer> cardinalTricks = Maps.newHashMapWithExpectedSize(Cardinal.values().length);
     private Map<Cardinal, Contract> cardinalContracts = Maps.newHashMapWithExpectedSize(Cardinal.values().length);
     private BiMap<Card, Cardinal> centerCardCardinalBiMap = EnumBiMap.create(Card.class, Cardinal.class);
 
     private Type type = Type.THREE_PLAYERS; // TODO selection
+    private Mode mode = Mode.EDIT;
 
     public Game() {
         for (Cardinal cardinal : Cardinal.values()) {
@@ -202,5 +207,13 @@ public class Game {
 
     public void setType(Type type) {
         this.type = type;
+    }
+
+    public Mode getMode() {
+        return mode;
+    }
+
+    public void setMode(Mode mode) {
+        this.mode = mode;
     }
 }

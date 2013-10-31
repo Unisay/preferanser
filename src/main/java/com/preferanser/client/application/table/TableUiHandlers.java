@@ -51,4 +51,8 @@ public interface TableUiHandlers extends UiHandlers {
      * @param cardinal for which contract is chosen
      */
     void chooseContract(Cardinal cardinal);
+
+    boolean setPlayMode();
+
+    boolean setEditMode();
 }

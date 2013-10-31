@@ -1,4 +1,4 @@
-@external .gwt-Label, .gwt-Hyperlink;
+@external .gwt-Label;
 @external .not-displayed, .not-visible, .dragging;
 @external .verticalPanel, .buttonsPanel, .dockPanel;
 @external .northDock, .eastDock, .southDock, .westDock, .centerDock;
@@ -33,7 +33,10 @@
 
 .buttonsPanel {
     height: 60px;
-    padding: 20px 20px 0 20px;
+}
+
+.buttonsPanel td {
+    vertical-align: middle ! important;
 }
 
 .dockPanel {
@@ -114,15 +117,17 @@
     text-shadow: 1px 1px 1px #222;
 }
 
-.gwt-Hyperlink {
-    display: inline;
-}
-
-.gwt-Label {
+.gwt-Label, .contractLabel {
     color: white;
 }
 
-.handTitle .gwt-Hyperlink {
+.contractLabel {
+    text-transform: lowercase;
+    white-space: pre;
+}
+
+.contractLink {
+    display: inline;
     color: #c2ffaa;
     background-color: rgba(0, 0, 0, 0.3);
     border-radius: 3px;
@@ -143,4 +148,15 @@
 
 .noTrump {
 
+}
+
+.play {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    margin-right: 2px;
+}
+
+.edit {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
 }

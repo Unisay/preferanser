@@ -65,6 +65,7 @@ public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements Ta
 
     public interface Binder extends UiBinder<Widget, TableView> {}
 
+    private final GQuerySelectors selectors;
     private final EventBus eventBus;
     private final BiMap<Card, CardWidget> cardWidgetBiMap = EnumHashBiMap.create(Card.class);
     private final BiMap<TableLocation, FlowPanel> locationPanelMap = EnumHashBiMap.create(TableLocation.class);
@@ -79,7 +80,10 @@ public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements Ta
 
     @UiField TableStyle style;
     @UiField Button dealButton;
-    @UiField ToggleButton modeButton;
+    @UiField Button saveButton;
+    @UiField ToggleButton playButton;
+    @UiField ToggleButton editButton;
+
 
     @UiField FlowPanel northPanel;
     @UiField FlowPanel eastPanel;
@@ -106,6 +110,7 @@ public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements Ta
 
     @Inject
     public TableView(Binder uiBinder, GQuerySelectors selectors, EventBus eventBus) {
+        this.selectors = selectors;
         this.eventBus = eventBus;
         initWidget(uiBinder.createAndBindUi(this));
         disableStandardDragging(selectors.getAllDivsAndImages().elements());
@@ -261,6 +266,34 @@ public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements Ta
         return maxZIndex;
     }
 
+    @Override public void setPlayMode() {
+        playButton.setDown(true);
+        editButton.setDown(false);
+        dealButton.setVisible(false);
+        saveButton.setVisible(false);
+        for (ContractLink contractLink : cardinalContractMap.values()) {
+            contractLink.disable();
+        }
+    }
+
+    @Override public void setEditMode() {
+        editButton.setDown(true);
+        playButton.setDown(false);
+        dealButton.setVisible(true);
+        saveButton.setVisible(true);
+        for (ContractLink contractLink : cardinalContractMap.values()) {
+            contractLink.enable();
+        }
+    }
+
+    @UiHandler("playButton") void onPlayButtonClicked(@SuppressWarnings("unused") ClickEvent event) {
+        getUiHandlers().setPlayMode();
+    }
+
+    @UiHandler("editButton") void onEditButtonClicked(@SuppressWarnings("unused") ClickEvent event) {
+        getUiHandlers().setEditMode();
+    }
+
     @UiHandler("dealButton") void onDealButtonClicked(@SuppressWarnings("unused") ClickEvent event) {
         getUiHandlers().dealCards();
     }
@@ -285,8 +318,8 @@ public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements Ta
         getUiHandlers().chooseContract(Cardinal.WEST);
     }
 
-    @UiFactory ToggleButton createModeToggleButton() {
-        return new ToggleButton(constants.play(), constants.edit());
+    @UiFactory ToggleButton toggleButton(String caption) {
+        return new ToggleButton(caption, caption);
     }
 
     @UiFactory CardWidget createCardWidget(Card card) {

@@ -62,8 +62,11 @@
             <p:CardWidget card="DIAMOND_ACE"/>
             <p:CardWidget card="HEART_ACE"/>
         </g:FlowPanel>
-        <g:HorizontalPanel addStyleNames="{style.buttonsPanel}">
-            <g:Button ui:field="dealButton" text="Deal"/>
+        <g:HorizontalPanel addStyleNames="{style.buttonsPanel}" spacing="10">
+            <g:Button ui:field="dealButton" text="">
+                <ui:attribute name="text" key="deal" description="Deal button caption"/>
+            </g:Button>
+            <g:ToggleButton ui:field="modeButton"/>
         </g:HorizontalPanel>
         <g:DockPanel debugId="dlp" addStyleNames="{style.dockPanel}" spacing="10">
             <g:Dock direction="NORTH" addStyleNames="{style.northDock}">

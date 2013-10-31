@@ -30,4 +30,5 @@ public interface PreferanserMessages extends Messages {
 
     @DefaultMessage("{0} chooses contract") String cardinalChoosesContract(String who);
 
+    @DefaultMessage("Deal") String deal();
 }

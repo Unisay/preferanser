@@ -79,6 +79,8 @@ public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements Ta
 
     @UiField TableStyle style;
     @UiField Button dealButton;
+    @UiField ToggleButton modeButton;
+
     @UiField FlowPanel northPanel;
     @UiField FlowPanel eastPanel;
     @UiField FlowPanel southPanel;
@@ -281,6 +283,10 @@ public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements Ta
 
     @UiHandler("westContractLink") void onWestContractLinkClicked(@SuppressWarnings("unused") ClickEvent event) {
         getUiHandlers().chooseContract(Cardinal.WEST);
+    }
+
+    @UiFactory ToggleButton createModeToggleButton() {
+        return new ToggleButton(constants.play(), constants.edit());
     }
 
     @UiFactory CardWidget createCardWidget(Card card) {

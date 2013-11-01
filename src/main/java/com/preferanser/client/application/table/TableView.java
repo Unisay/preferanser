@@ -65,7 +65,6 @@ public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements Ta
 
     public interface Binder extends UiBinder<Widget, TableView> {}
 
-    private final GQuerySelectors selectors;
     private final EventBus eventBus;
     private final BiMap<Card, CardWidget> cardWidgetBiMap = EnumHashBiMap.create(Card.class);
     private final BiMap<TableLocation, FlowPanel> locationPanelMap = EnumHashBiMap.create(TableLocation.class);
@@ -79,7 +78,7 @@ public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements Ta
     @UiField PreferanserResources resources;
 
     @UiField TableStyle style;
-    @UiField Button dealButton;
+    @UiField Button resetButton;
     @UiField Button saveButton;
     @UiField ToggleButton playButton;
     @UiField ToggleButton editButton;
@@ -110,7 +109,6 @@ public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements Ta
 
     @Inject
     public TableView(Binder uiBinder, GQuerySelectors selectors, EventBus eventBus) {
-        this.selectors = selectors;
         this.eventBus = eventBus;
         initWidget(uiBinder.createAndBindUi(this));
         disableStandardDragging(selectors.getAllDivsAndImages().elements());
@@ -145,11 +143,14 @@ public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements Ta
 
     @Override
     public void displayContracts(Map<Cardinal, Contract> cardinalContracts) {
-        for (Map.Entry<Cardinal, Contract> entry : cardinalContracts.entrySet()) {
-            Cardinal cardinal = entry.getKey();
-            Contract contract = entry.getValue();
+        for (Cardinal cardinal : Cardinal.values()) {
             ContractLink contractLink = cardinalContractMap.get(cardinal);
-            contractLink.setContract(contract);
+            if (cardinalContracts.containsKey(cardinal)) {
+                Contract contract = cardinalContracts.get(cardinal);
+                contractLink.setContract(contract);
+            } else {
+                contractLink.setContract(null);
+            }
         }
     }
 
@@ -269,7 +270,7 @@ public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements Ta
     @Override public void setPlayMode() {
         playButton.setDown(true);
         editButton.setDown(false);
-        dealButton.setVisible(false);
+        resetButton.setVisible(false);
         saveButton.setVisible(false);
         for (ContractLink contractLink : cardinalContractMap.values()) {
             contractLink.disable();
@@ -279,7 +280,7 @@ public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements Ta
     @Override public void setEditMode() {
         editButton.setDown(true);
         playButton.setDown(false);
-        dealButton.setVisible(true);
+        resetButton.setVisible(true);
         saveButton.setVisible(true);
         for (ContractLink contractLink : cardinalContractMap.values()) {
             contractLink.enable();
@@ -294,8 +295,8 @@ public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements Ta
         getUiHandlers().setEditMode();
     }
 
-    @UiHandler("dealButton") void onDealButtonClicked(@SuppressWarnings("unused") ClickEvent event) {
-        getUiHandlers().dealCards();
+    @UiHandler("resetButton") void onResetButtonClicked(@SuppressWarnings("unused") ClickEvent event) {
+        getUiHandlers().reset();
     }
 
     @UiHandler("sluffLink") void onSluffLinkClicked(@SuppressWarnings("unused") ClickEvent event) {

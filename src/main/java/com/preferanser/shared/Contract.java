@@ -72,7 +72,7 @@ public enum Contract {
     }
 
     public Optional<Suit> getTrump() {
-        return Optional.of(trump);
+        return Optional.fromNullable(trump);
     }
 
     public boolean isPlaying() {

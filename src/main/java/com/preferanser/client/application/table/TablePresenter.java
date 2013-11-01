@@ -77,11 +77,13 @@ public class TablePresenter extends Presenter<TablePresenter.TableView, TablePre
         } else if (game.getMode() == Game.Mode.EDIT) {
             getView().setEditMode();
         }
-        dealCards();
+        reset();
     }
 
     @Override
-    public void dealCards() {
+    public void reset() {
+        game.clearCardinalTricks();
+        game.clearCardinalContracts();
         game.clearCards();
         game.putCards(Cardinal.NORTH, Card.values());
         refreshView();
@@ -127,7 +129,8 @@ public class TablePresenter extends Presenter<TablePresenter.TableView, TablePre
     }
 
     private void refreshView() {
-        getView().displayTableCards(game.getTableCards());
+        getView().displayContracts(game.getCardinalContracts());
+        getView().displayTableCards(game.getCardinalCards());
         getView().displayCardinalTricks(game.getCardinalTricks());
     }
 }

@@ -29,7 +29,7 @@ import com.preferanser.shared.TableLocation;
  */
 public interface TableUiHandlers extends UiHandlers {
 
-    void dealCards();
+    void reset();
 
     /**
      * User changed card location

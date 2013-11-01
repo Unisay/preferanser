@@ -43,14 +43,18 @@ public class ContractLink extends Composite implements HasHTML, HasClickHandlers
     private final PreferanserConstants constants;
     private final TableStyle tableStyle;
     private Contract contract;
+    private String defaultText;
 
     @UiConstructor
     public ContractLink(PreferanserConstants constants, TableStyle tableStyle) {
         this.constants = constants;
         this.tableStyle = tableStyle;
+        defaultText = constants.chooseContract();
         label = new Label();
-        label.setStylePrimaryName(tableStyle.contractLabel());
+        String contractLabelStyle = tableStyle.contractLabel();
+        label.setStylePrimaryName(contractLabelStyle);
         hyperlink = new Hyperlink();
+        hyperlink.setText(defaultText);
         hyperlink.setStylePrimaryName(tableStyle.contractLink());
         enable();
         Panel widgets = new HorizontalPanel();
@@ -61,7 +65,9 @@ public class ContractLink extends Composite implements HasHTML, HasClickHandlers
 
     public void setContract(Contract contract) {
         this.contract = contract;
-        switch (contract) {
+        if (contract == null) {
+            setHTML(defaultText);
+        } else switch (contract) {
             case PASS:
                 setText(constants.pass());
                 break;
@@ -95,7 +101,9 @@ public class ContractLink extends Composite implements HasHTML, HasClickHandlers
 
     public void disable() {
         if (contract != null)
-            label.setText(" — " +  hyperlink.getText().replace(" ", ""));
+            label.setText(" — " + hyperlink.getText().replace(" ", ""));
+        else
+            label.setText("");
         hyperlink.setVisible(false);
         label.setVisible(true);
     }

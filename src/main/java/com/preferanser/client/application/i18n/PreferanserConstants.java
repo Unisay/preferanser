@@ -57,4 +57,6 @@ public interface PreferanserConstants extends ConstantsWithLookup {
     @DefaultStringValue("Play") String play();
 
     @DefaultStringValue("Edit") String edit();
+
+    @DefaultStringValue("Choose contract") String chooseContract();
 }

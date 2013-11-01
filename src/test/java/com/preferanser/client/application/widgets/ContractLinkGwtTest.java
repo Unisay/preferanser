@@ -46,15 +46,29 @@ public class ContractLinkGwtTest extends GwtTestWithMockito {
     @Mock
     private TableStyle tableStyle;
 
+    private String expectedContract;
+
     @Before
     public void setUp() throws Exception {
+        expectedContract = "6 Club";
+
+        when(constants.noTrump()).thenReturn("nt");
+        when(constants.whist()).thenReturn("w");
+        when(constants.pass()).thenReturn("p");
+        when(constants.miser()).thenReturn("m");
+        when(constants.chooseContract()).thenReturn(expectedContract);
+
+        when(tableStyle.contractLabel()).thenReturn("contract-label");
+        when(tableStyle.contractLink()).thenReturn("contract-link");
+        when(tableStyle.noTrump()).thenReturn("n");
+        when(tableStyle.contractSuit()).thenReturn("s");
+        when(tableStyle.contractTricks()).thenReturn("t");
+
         contractLink = new ContractLink(constants, tableStyle);
     }
 
     @Test
     public void testSetContract_SuitAndRank() throws Exception {
-        when(tableStyle.contractSuit()).thenReturn("s");
-        when(tableStyle.contractTricks()).thenReturn("t");
         when(constants.getString("CLUB_char")).thenReturn("Club");
 
         contractLink.setContract(Contract.EIGHT_CLUB);
@@ -63,36 +77,31 @@ public class ContractLinkGwtTest extends GwtTestWithMockito {
 
     @Test
     public void testSetContract_RankNoSuit() throws Exception {
-        when(tableStyle.noTrump()).thenReturn("n");
-        when(tableStyle.contractSuit()).thenReturn("s");
-        when(tableStyle.contractTricks()).thenReturn("t");
-        when(constants.noTrump()).thenReturn("nt");
-
         contractLink.setContract(Contract.SIX_NO_TRUMP);
         assertThat(contractLink.getHTML(), equalTo("<span class=\"t\">6</span> <span class=\"n\">nt</span>"));
     }
 
     @Test
     public void testSetContract_Pass() throws Exception {
-        when(constants.pass()).thenReturn("p");
-
         contractLink.setContract(Contract.PASS);
         assertThat(contractLink.getHTML(), equalTo("p"));
     }
 
     @Test
     public void testSetContract_Whist() throws Exception {
-        when(constants.whist()).thenReturn("w");
-
         contractLink.setContract(Contract.WHIST);
         assertThat(contractLink.getHTML(), equalTo("w"));
     }
 
     @Test
     public void testSetContract_Miser() throws Exception {
-        when(constants.miser()).thenReturn("m");
-
         contractLink.setContract(Contract.MISER);
         assertThat(contractLink.getHTML(), equalTo("m"));
+    }
+
+    @Test
+    public void testSetContract_Null() throws Exception {
+        contractLink.setContract(null);
+        assertThat(contractLink.getHTML(), equalTo(expectedContract));
     }
 }

@@ -23,10 +23,7 @@ import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.*;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.collect.Lists.newArrayList;
@@ -53,7 +50,7 @@ public class Game {
     private Map<Cardinal, Integer> cardinalTricks = Maps.newHashMapWithExpectedSize(Cardinal.values().length);
 
     private Map<Cardinal, Contract> cardinalContracts = Maps.newHashMapWithExpectedSize(Cardinal.values().length);
-    private BiMap<Card, Cardinal> centerCardCardinalBiMap = EnumBiMap.create(Card.class, Cardinal.class);
+    private Map<Card, Cardinal> centerCardCardinalMap = Maps.newLinkedHashMap(); // order is important
     private Type type = Type.THREE_PLAYERS; // TODO selection
     private Mode mode = Mode.EDIT;
 
@@ -69,10 +66,6 @@ public class Game {
         putCards(cardinal, newArrayList(cards));
     }
 
-    public void clearCardinalContracts() {
-        cardinalContracts.clear();
-    }
-
     public void clearCardinalTricks() {
         for (Cardinal cardinal : Cardinal.values()) {
             cardinalTricks.put(cardinal, 0);
@@ -86,7 +79,7 @@ public class Game {
             for (TableLocation tableLocation : tableLocations) {
                 switch (tableLocation) {
                     case CENTER:
-                        centerCardCardinalBiMap.clear();
+                        centerCardCardinalMap.clear();
                         break;
                     default:
                         cardinalCardMultimap.get(tableLocationToCardinal(tableLocation)).clear();
@@ -111,30 +104,30 @@ public class Game {
         if (CENTER != newLocation)
             return false;
 
-        if (centerCardCardinalBiMap.size() == type.numPlayers)
+        if (centerCardCardinalMap.size() == type.numPlayers)
             return false;
 
         Cardinal oldCardinal = tableLocationToCardinal(oldLocation);
-        if (centerCardCardinalBiMap.containsValue(oldCardinal))
+        if (centerCardCardinalMap.containsValue(oldCardinal))
             return false;
 
         cardinalCardMultimap.get(oldCardinal).remove(card);
-        centerCardCardinalBiMap.put(card, oldCardinal);
+        centerCardCardinalMap.put(card, oldCardinal);
         return true;
     }
 
     private boolean moveCardWhenEditing(Card card, TableLocation oldLocation, TableLocation newLocation) {
         if (CENTER == oldLocation) { // moving card out of center
-            checkArgument(centerCardCardinalBiMap.containsKey(card), "There is no %s in TableLocation.CENTER", card);
-            centerCardCardinalBiMap.remove(card);
+            checkArgument(centerCardCardinalMap.containsKey(card), "There is no %s in TableLocation.CENTER", card);
+            centerCardCardinalMap.remove(card);
             cardinalCardMultimap.get(tableLocationToCardinal(newLocation)).add(card);
         } else if (CENTER == newLocation) { // moving card to center
-            if (centerCardCardinalBiMap.size() == type.numPlayers) {
+            if (centerCardCardinalMap.size() == type.numPlayers) {
                 return false;
             }
             Cardinal oldCardinal = tableLocationToCardinal(oldLocation);
             cardinalCardMultimap.get(oldCardinal).remove(card);
-            centerCardCardinalBiMap.put(card, oldCardinal);
+            centerCardCardinalMap.put(card, oldCardinal);
         } else {
             Cardinal oldCardinal = tableLocationToCardinal(oldLocation);
             Cardinal newCardinal = tableLocationToCardinal(newLocation);
@@ -168,8 +161,8 @@ public class Game {
         return builder.build();
     }
 
-    public BiMap<Card, Cardinal> getCenterCards() {
-        return ImmutableBiMap.copyOf(centerCardCardinalBiMap);
+    public LinkedHashMap<Card, Cardinal> getCenterCards() {
+        return new LinkedHashMap<Card, Cardinal>(centerCardCardinalMap);
     }
 
     public Map<Cardinal, Integer> getCardinalTricks() {
@@ -199,9 +192,9 @@ public class Game {
     }
 
     public boolean moveCenterCardsToSluff() {
-        if (mode == Mode.PLAY && centerCardCardinalBiMap.size() == type.numPlayers) {
+        if (mode == Mode.PLAY && centerCardCardinalMap.size() == type.numPlayers) {
             Optional<Suit> maybeTrump = getTrump();
-            Cardinal winner = determineTrickWinner(maybeTrump, centerCardCardinalBiMap);
+            Cardinal winner = determineTrickWinner(maybeTrump, centerCardCardinalMap);
             cardinalTricks.put(winner, cardinalTricks.get(winner) + 1); // Non-atomic increment!
             clearCards(CENTER);
             return true;
@@ -239,10 +232,6 @@ public class Game {
             default:
                 throw new IllegalArgumentException("TableLocation " + location + " doesn't have a corresponding Cardinal!");
         }
-    }
-
-    public Type getType() {
-        return type;
     }
 
     public void setType(Type type) {

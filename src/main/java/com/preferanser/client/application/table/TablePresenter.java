@@ -34,6 +34,7 @@ import com.preferanser.client.place.NameTokens;
 import com.preferanser.shared.*;
 
 import java.util.Collection;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -45,7 +46,7 @@ public class TablePresenter extends Presenter<TablePresenter.TableView, TablePre
 
     public interface TableView extends View, HasUiHandlers<TableUiHandlers> {
 
-        void displayTableCards(Map<TableLocation, Collection<Card>> tableCards);
+        void displayTableCards(Map<TableLocation, Collection<Card>> tableCards, LinkedHashMap<Card, Cardinal> centerCards);
 
         void displayCardinalTricks(Map<Cardinal, Integer> cardinalTricks);
 
@@ -70,7 +71,8 @@ public class TablePresenter extends Presenter<TablePresenter.TableView, TablePre
         getView().setUiHandlers(this);
     }
 
-    @Override protected void onReveal() {
+    @Override
+    protected void onReveal() {
         super.onReveal();
         if (game.getMode() == Game.Mode.PLAY) {
             getView().setPlayMode();
@@ -82,9 +84,7 @@ public class TablePresenter extends Presenter<TablePresenter.TableView, TablePre
 
     @Override
     public void reset() {
-        game.clearCardinalTricks();
-        game.clearCardinalContracts();
-        game.clearCards();
+        game = new Game();
         game.putCards(Cardinal.NORTH, Card.values());
         refreshView();
     }
@@ -130,7 +130,7 @@ public class TablePresenter extends Presenter<TablePresenter.TableView, TablePre
 
     private void refreshView() {
         getView().displayContracts(game.getCardinalContracts());
-        getView().displayTableCards(game.getCardinalCards());
+        getView().displayTableCards(game.getCardinalCards(), game.getCenterCards());
         getView().displayCardinalTricks(game.getCardinalTricks());
     }
 }

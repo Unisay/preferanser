@@ -9,7 +9,7 @@ import java.util.List;
 
 import static com.google.common.collect.Collections2.transform;
 
-public class HorizontalCardLayout extends PanelCardLayout {
+public class HorizontalLayout extends SortingPanelLayout<CardWidget> {
 
     private final int imageWidth;
     private final int minOffsetDiffSuit;
@@ -21,7 +21,7 @@ public class HorizontalCardLayout extends PanelCardLayout {
     private int sameSuitOffsetCount;
     private int diffSuitOffsetCount;
 
-    public HorizontalCardLayout(Panel panel, int imageWidth) {
+    public HorizontalLayout(Panel panel, int imageWidth) {
         super(panel);
         this.imageWidth = imageWidth;
         this.minOffsetSameSuit = 24;

@@ -2,7 +2,7 @@ package com.preferanser.client.application.table.layout;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
-import com.google.gwt.dom.client.Style;
+import com.google.gwt.user.client.ui.Panel;
 import com.preferanser.client.application.widgets.CardWidget;
 import com.preferanser.shared.Card;
 import com.preferanser.shared.Rank;
@@ -15,22 +15,26 @@ import java.util.List;
 
 import static java.util.Collections.sort;
 
-public abstract class CardLayoutBase implements CardLayout {
+public abstract class SortingPanelLayout<T extends CardWidget> extends PanelLayout<T> {
+
+    protected SortingPanelLayout(Panel panel) {
+        super(panel);
+    }
 
     @Override
-    public void apply(Collection<CardWidget> cardWidgets) {
+    public void apply(Collection<T> cardWidgets) {
         if (cardWidgets == null || cardWidgets.isEmpty())
             return;
 
-        List<CardWidget> views = Lists.newArrayList(cardWidgets);
+        List<T> views = Lists.newArrayList(cardWidgets);
         sortCards(views);
         positionWidgets(views);
     }
 
-    protected void sortCards(List<CardWidget> views) {
-        sort(views, new Comparator<CardWidget>() {
-            @Override public int compare(CardWidget view1, CardWidget view2) {
-                return compareCards(view1.getCard(), view2.getCard());
+    protected void sortCards(List<T> views) {
+        sort(views, new Comparator<T>() {
+            @Override public int compare(T cardWidget1, T cardWidget2) {
+                return compareCards(cardWidget1.getCard(), cardWidget2.getCard());
             }
         });
     }
@@ -52,7 +56,7 @@ public abstract class CardLayoutBase implements CardLayout {
         return suit1.compareTo(suit2);
     }
 
-    protected void positionWidgets(List<CardWidget> cardWidgets) {
+    protected void positionWidgets(List<T> cardWidgets) {
         Integer x = null, y = null, z = null;
         CardWidget prev = null;
         for (CardWidget next : cardWidgets) {
@@ -62,14 +66,6 @@ public abstract class CardLayoutBase implements CardLayout {
             positionWidget(next, x, y, z);
             prev = next;
         }
-    }
-
-    protected int getStartX() {
-        return 0;
-    }
-
-    protected int getStartY() {
-        return 0;
     }
 
     protected int getStartZ() {
@@ -104,13 +100,6 @@ public abstract class CardLayoutBase implements CardLayout {
     @SuppressWarnings("unused")
     protected int getDeltaZ(CardWidget prev, CardWidget next) {
         return 1;
-    }
-
-    protected void positionWidget(CardWidget cardWidget, int x, int y, int z) {
-        Style style = cardWidget.getElement().getStyle();
-        style.setLeft(x, Style.Unit.PX);
-        style.setTop(y, Style.Unit.PX);
-        style.setZIndex(z);
     }
 
     protected class CardWidgetCardTransformer implements Function<CardWidget, Card> {

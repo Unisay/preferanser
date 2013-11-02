@@ -9,7 +9,7 @@ import java.util.*;
 
 import static com.google.common.collect.Collections2.transform;
 
-public class VerticalPanelCardLayout extends PanelCardLayout {
+public class VerticalPanelLayout<T extends CardWidget> extends SortingPanelLayout<T> {
 
     protected final int imageWidth;
     protected final int imageHeight;
@@ -20,7 +20,7 @@ public class VerticalPanelCardLayout extends PanelCardLayout {
     protected int minDiffSuitOffsetY;
     protected int maxDiffSuitOffsetY;
 
-    public VerticalPanelCardLayout(Panel panel, int imageWidth, int imageHeight) {
+    public VerticalPanelLayout(Panel panel, int imageWidth, int imageHeight) {
         super(panel);
         this.minSameSuitOffsetX = 24;
         this.imageWidth = imageWidth;
@@ -28,7 +28,7 @@ public class VerticalPanelCardLayout extends PanelCardLayout {
     }
 
     @Override
-    protected void positionWidgets(List<CardWidget> cardWidgets) {
+    protected void positionWidgets(List<T> cardWidgets) {
         Collection<Card> cards = transform(cardWidgets, new CardWidgetCardTransformer());
         sameSuitOffsetX = calculateSameSuitOffsetX(cards);
         diffSuitOffsetY = calculateDiffSuitOffsetY(cards);

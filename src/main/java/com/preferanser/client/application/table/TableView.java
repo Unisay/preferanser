@@ -32,12 +32,11 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.*;
 import com.google.inject.Inject;
-import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
-import com.preferanser.client.application.event.TurnChangeEvent;
 import com.preferanser.client.application.i18n.PreferanserConstants;
 import com.preferanser.client.application.table.layout.*;
 import com.preferanser.client.application.widgets.CardWidget;
+import com.preferanser.client.application.widgets.CardinalCard;
 import com.preferanser.client.application.widgets.ContractLink;
 import com.preferanser.client.geom.Point;
 import com.preferanser.client.geom.Rect;
@@ -49,6 +48,7 @@ import com.preferanser.shared.TableLocation;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -65,10 +65,10 @@ public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements Ta
 
     public interface Binder extends UiBinder<Widget, TableView> {}
 
-    private final EventBus eventBus;
     private final BiMap<Card, CardWidget> cardWidgetBiMap = EnumHashBiMap.create(Card.class);
     private final BiMap<TableLocation, FlowPanel> locationPanelMap = EnumHashBiMap.create(TableLocation.class);
-    private final BiMap<TableLocation, CardLayout> locationLayoutMap = EnumHashBiMap.create(TableLocation.class);
+    private CenterLayout centerCardLayout;
+    private final BiMap<TableLocation, Layout<CardWidget>> locationLayoutMap = EnumHashBiMap.create(TableLocation.class);
     private final Map<Cardinal, Label> cardinalTricksCountMap = Maps.newHashMapWithExpectedSize(Cardinal.values().length);
     private final Map<Cardinal, Label> cardinalTitleMap = Maps.newHashMapWithExpectedSize(Cardinal.values().length);
     private final Map<Cardinal, ContractLink> cardinalContractMap = Maps.newHashMapWithExpectedSize(Cardinal.values().length);
@@ -82,7 +82,6 @@ public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements Ta
     @UiField Button saveButton;
     @UiField ToggleButton playButton;
     @UiField ToggleButton editButton;
-
 
     @UiField FlowPanel northPanel;
     @UiField FlowPanel eastPanel;
@@ -108,8 +107,7 @@ public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements Ta
     @UiField ContractLink westContractLink;
 
     @Inject
-    public TableView(Binder uiBinder, GQuerySelectors selectors, EventBus eventBus) {
-        this.eventBus = eventBus;
+    public TableView(Binder uiBinder, GQuerySelectors selectors) {
         initWidget(uiBinder.createAndBindUi(this));
         disableStandardDragging(selectors.getAllDivsAndImages().elements());
         populateLocationPanelMap();
@@ -125,13 +123,39 @@ public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements Ta
     }
 
     @Override
-    public void displayTableCards(Map<TableLocation, Collection<Card>> tableCards) {
+    public void displayTableCards(Map<TableLocation, Collection<Card>> tableCards, LinkedHashMap<Card, Cardinal> centerCards) {
         for (CardWidget cardWidget : cardWidgetBiMap.values()) {
             cardWidget.removeFromParent();
         }
         for (Map.Entry<TableLocation, Collection<Card>> entry : tableCards.entrySet()) {
             displayCards(entry.getKey(), entry.getValue());
         }
+        displayCenterCards(centerCards);
+    }
+
+    private void displayCenterCards(LinkedHashMap<Card, Cardinal> centerCards) {
+        Function<Map.Entry<Card, Cardinal>, CardinalCard> func = new Function<Map.Entry<Card, Cardinal>, CardinalCard>() {
+            @Nullable @Override public CardinalCard apply(Map.Entry<Card, Cardinal> entry) {
+                return new CardinalCard(entry.getValue(), cardWidgetBiMap.get(entry.getKey()));
+            }
+        };
+        Collection<CardinalCard> widgets = newArrayList(transform(centerCards.entrySet(), func));
+        for (CardinalCard cardinalCard : widgets)
+            centerPanel.add(cardinalCard.getCardWidget());
+        centerCardLayout.apply(widgets);
+    }
+
+    private void displayCards(TableLocation location, Iterable<Card> cards) {
+        HasWidgets panel = locationPanelMap.get(location);
+        for (Card card : cards) {
+            displayCard(panel, card);
+        }
+        layoutLocation(location);
+    }
+
+    private void displayCard(HasWidgets panel, Card card) {
+        CardWidget cardWidget = cardWidgetBiMap.get(card);
+        panel.add(cardWidget);
     }
 
     @Override
@@ -166,30 +190,18 @@ public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements Ta
         event.preventDefault();
     }
 
-    private void displayCards(TableLocation location, Iterable<Card> cards) {
-        HasWidgets panel = locationPanelMap.get(location);
-        for (Card card : cards) {
-            displayCard(panel, card);
-        }
-        layoutLocation(location);
-    }
-
-    private void displayCard(HasWidgets panel, Card card) {
-        CardWidget cardWidget = cardWidgetBiMap.get(card);
-        panel.add(cardWidget);
-    }
-
     private void layoutLocation(TableLocation location) {
         FlowPanel panel = locationPanelMap.get(location);
-        CardLayout cardLayout = locationLayoutMap.get(location);
-        cardLayout.apply(newArrayList(transform(panel, new Function<Widget, CardWidget>() {
+        Layout<CardWidget> layout = locationLayoutMap.get(location);
+        Collection<CardWidget> cardWidgets = newArrayList(transform(panel, new Function<Widget, CardWidget>() {
             @Nullable @Override public CardWidget apply(@Nullable Widget widget) {
                 if (widget instanceof CardWidget) {
                     return (CardWidget) widget;
                 }
                 return null;
             }
-        })));
+        }));
+        layout.apply(cardWidgets);
     }
 
     private void disableStandardDragging(Element[] elements) {
@@ -449,19 +461,11 @@ public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements Ta
     private void populateLocationLayoutMap() {
         int cardWidth = resources.c7().getWidth();
         int cardHeight = resources.c7().getHeight();
-        final CenterCardLayout centerCardLayout = new CenterCardLayout(centerPanel, cardWidth, cardHeight);
-        centerCardLayout.setFirstTurn(Cardinal.NORTH);
-        eventBus.addHandler(TurnChangeEvent.getType(), new TurnChangeEvent.TurnChangeEventHandler() {
-            @Override public void onTurnChange(TurnChangeEvent event) {
-                centerCardLayout.setFirstTurn(event.getCardinal());
-            }
-        });
-
-        locationLayoutMap.put(NORTH, new HorizontalCardLayout(northPanel, cardWidth));
-        locationLayoutMap.put(EAST, new EastCardLayout(eastPanel, cardWidth, cardHeight));
-        locationLayoutMap.put(SOUTH, new HorizontalCardLayout(southPanel, cardWidth));
-        locationLayoutMap.put(WEST, new WestCardLayout(westPanel, cardWidth, cardHeight));
-        locationLayoutMap.put(CENTER, centerCardLayout);
+        centerCardLayout = new CenterLayout(centerPanel, cardWidth, cardHeight);
+        locationLayoutMap.put(NORTH, new HorizontalLayout(northPanel, cardWidth));
+        locationLayoutMap.put(EAST, new EastLayout(eastPanel, cardWidth, cardHeight));
+        locationLayoutMap.put(SOUTH, new HorizontalLayout(southPanel, cardWidth));
+        locationLayoutMap.put(WEST, new WestLayout(westPanel, cardWidth, cardHeight));
     }
 
     private void populateCardinalTrickCounts() {

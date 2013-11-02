@@ -5,9 +5,9 @@ import com.preferanser.client.application.widgets.CardWidget;
 import com.preferanser.shared.Card;
 import com.preferanser.shared.Rank;
 
-public class EastCardLayout extends VerticalPanelCardLayout {
+public class EastLayout extends VerticalPanelLayout<CardWidget> {
 
-    public EastCardLayout(Panel panel, int imageWidth, int imageHeight) {
+    public EastLayout(Panel panel, int imageWidth, int imageHeight) {
         super(panel, imageWidth, imageHeight);
         this.maxSameSuitOffsetX = imageWidth - minSameSuitOffsetX;
         this.minDiffSuitOffsetY = 85;

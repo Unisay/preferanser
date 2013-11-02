@@ -14,7 +14,7 @@ import static org.junit.Assert.assertThat;
 
 public class HorizontalCardLayoutTest {
 
-    private HorizontalCardLayout layout;
+    private HorizontalLayout layout;
     private Collection<Card> cards;
     private CardWidget clubAce;
     private CardWidget spadeAce;
@@ -22,7 +22,7 @@ public class HorizontalCardLayoutTest {
 
     @Before
     public void setUp() throws Exception {
-        layout = new HorizontalCardLayout(null, 30);
+        layout = new HorizontalLayout(null, 30);
         cards = newArrayList(CLUB_ACE, CLUB_TEN, SPADE_ACE, HEART_TEN, HEART_ACE);
         clubAce = new CardWidget(CLUB_ACE);
         spadeAce = new CardWidget(SPADE_ACE);
@@ -43,12 +43,12 @@ public class HorizontalCardLayoutTest {
 
     @Test
     public void testCountSameSuitOffsets() throws Exception {
-        assertThat(HorizontalCardLayout.countSameSuitOffsets(cards), equalTo(2));
+        assertThat(HorizontalLayout.countSameSuitOffsets(cards), equalTo(2));
     }
 
     @Test
     public void testCountDiffSuitOffsets() throws Exception {
-        assertThat(HorizontalCardLayout.countDiffSuitOffsets(cards), equalTo(2));
+        assertThat(HorizontalLayout.countDiffSuitOffsets(cards), equalTo(2));
     }
 
 }

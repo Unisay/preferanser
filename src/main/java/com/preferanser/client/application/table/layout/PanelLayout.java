@@ -1,22 +1,23 @@
 package com.preferanser.client.application.table.layout;
 
+import com.google.gwt.dom.client.Style;
+import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Panel;
+import com.preferanser.client.application.widgets.CardWidget;
 
-public abstract class PanelCardLayout extends CardLayoutBase {
+public abstract class PanelLayout<T extends IsWidget> implements Layout<T> {
 
     protected static final int PADDING = 10;
     private final Panel panel;
 
-    protected PanelCardLayout(Panel panel) {
+    protected PanelLayout(Panel panel) {
         this.panel = panel;
     }
 
-    @Override
     protected int getStartX() {
         return PADDING;
     }
 
-    @Override
     protected int getStartY() {
         return PADDING;
     }
@@ -35,5 +36,12 @@ public abstract class PanelCardLayout extends CardLayoutBase {
 
     protected int getDisposableHeight() {
         return getHeight() - 4 * PADDING;
+    }
+
+    protected void positionWidget(CardWidget cardWidget, int x, int y, int z) {
+        Style style = cardWidget.getElement().getStyle();
+        style.setLeft(x, Style.Unit.PX);
+        style.setTop(y, Style.Unit.PX);
+        style.setZIndex(z);
     }
 }

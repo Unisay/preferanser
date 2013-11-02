@@ -19,12 +19,12 @@ import static org.junit.Assert.assertThat;
 @GwtModule("com.preferanser.Preferanser")
 public class HorizontalCardLayoutGwtTest extends GwtTest {
 
-    private HorizontalCardLayout layout;
+    private HorizontalLayout layout;
 
     @Before
     public void setUp() throws Exception {
         FlowPanel panel = new FlowPanel();
-        layout = new HorizontalCardLayout(panel, 40);
+        layout = new HorizontalLayout(panel, 40);
     }
 
     @Test

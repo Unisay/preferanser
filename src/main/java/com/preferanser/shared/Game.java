@@ -152,12 +152,20 @@ public class Game {
     }
 
     public Map<TableLocation, Collection<Card>> getCardinalCards() {
-        return ImmutableMap.<TableLocation, Collection<Card>>builder()
-                .put(NORTH, cardinalCardMultimap.get(Cardinal.NORTH))
-                .put(EAST, cardinalCardMultimap.get(Cardinal.EAST))
-                .put(SOUTH, cardinalCardMultimap.get(Cardinal.SOUTH))
-                .put(WEST, cardinalCardMultimap.get(Cardinal.WEST))
-                .build();
+        ImmutableMap.Builder<TableLocation, Collection<Card>> builder = ImmutableMap.builder();
+        if (cardinalCardMultimap.containsKey(Cardinal.NORTH)) {
+            builder.put(NORTH, ImmutableList.copyOf(cardinalCardMultimap.get(Cardinal.NORTH)));
+        }
+        if (cardinalCardMultimap.containsKey(Cardinal.EAST)) {
+            builder.put(EAST, ImmutableList.copyOf(cardinalCardMultimap.get(Cardinal.EAST)));
+        }
+        if (cardinalCardMultimap.containsKey(Cardinal.SOUTH)) {
+            builder.put(SOUTH, ImmutableList.copyOf(cardinalCardMultimap.get(Cardinal.SOUTH)));
+        }
+        if (cardinalCardMultimap.containsKey(Cardinal.WEST)) {
+            builder.put(WEST, ImmutableList.copyOf(cardinalCardMultimap.get(Cardinal.WEST)));
+        }
+        return builder.build();
     }
 
     public BiMap<Card, Cardinal> getCenterCards() {
@@ -193,23 +201,21 @@ public class Game {
     public boolean moveCenterCardsToSluff() {
         if (mode == Mode.PLAY && centerCardCardinalBiMap.size() == type.numPlayers) {
             Optional<Suit> maybeTrump = getTrump();
-            if (maybeTrump.isPresent()) {
-                Cardinal winner = determineTrickWinner(maybeTrump.get(), centerCardCardinalBiMap);
-                cardinalTricks.put(winner, cardinalTricks.get(winner) + 1); // Non-atomic increment!
-            }
+            Cardinal winner = determineTrickWinner(maybeTrump, centerCardCardinalBiMap);
+            cardinalTricks.put(winner, cardinalTricks.get(winner) + 1); // Non-atomic increment!
             clearCards(CENTER);
             return true;
         }
         return false;
     }
 
-    private Cardinal determineTrickWinner(Suit trump, Map<Card, Cardinal> cardCardinalMap) {
+    private Cardinal determineTrickWinner(Optional<Suit> maybeTrump, Map<Card, Cardinal> cardCardinalMap) {
         assert (cardCardinalMap.size() == type.numPlayers);
         Iterator<Card> cardIterator = cardCardinalMap.keySet().iterator();
         Card maxCard = cardIterator.next();
         while (cardIterator.hasNext()) {
             Card nextCard = cardIterator.next();
-            if (maxCard.getSuit() != trump && nextCard.getSuit() == trump) {
+            if (maybeTrump.isPresent() && maxCard.getSuit() != maybeTrump.get() && nextCard.getSuit() == maybeTrump.get()) {
                 maxCard = nextCard;
             } else if (maxCard.getSuit() == nextCard.getSuit()) {
                 if (Rank.comparator().compare(maxCard.getRank(), nextCard.getRank()) < 0) {

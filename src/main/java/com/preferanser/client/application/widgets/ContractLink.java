@@ -57,7 +57,7 @@ public class ContractLink extends Composite implements HasHTML, HasClickHandlers
         hyperlink.setText(defaultText);
         hyperlink.setStylePrimaryName(tableStyle.contractLink());
         enable();
-        Panel widgets = new HorizontalPanel();
+        Panel widgets = new FlowPanel();
         widgets.add(hyperlink);
         widgets.add(label);
         initWidget(widgets);

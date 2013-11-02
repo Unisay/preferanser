@@ -27,7 +27,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Map;
 
 import static com.google.common.collect.Lists.newArrayList;
@@ -42,8 +41,8 @@ import static org.unitils.reflectionassert.ReflectionComparatorMode.LENIENT_ORDE
 public class GameTest {
 
     private Game game;
-    private Map<Cardinal, Collection<Card>> expectedCardinalCards;
-    private BiMap<Cardinal, Card> expectedCenterCards;
+    private Map<TableLocation, Collection<Card>> expectedTableCards;
+    private BiMap<Card, Cardinal> expectedCenterCards;
     private Map<Cardinal, Contract> expectedCardinalContracts;
     private Map<Cardinal, Integer> expectedCardinalTricks;
 
@@ -51,13 +50,15 @@ public class GameTest {
     public void setUp() throws Exception {
         game = new Game();
 
-        expectedCardinalCards = Maps.newLinkedHashMap();
-        expectedCardinalCards.put(Cardinal.NORTH, Collections.<Card>emptyList());
-        expectedCardinalCards.put(Cardinal.EAST, Collections.<Card>emptyList());
-        expectedCardinalCards.put(Cardinal.SOUTH, Collections.<Card>emptyList());
-        expectedCardinalCards.put(Cardinal.WEST, Collections.<Card>emptyList());
+        expectedTableCards = Maps.newLinkedHashMap();
+        /*
+        expectedTableCards.put(TableLocation.NORTH, Collections.<Card>emptyList());
+        expectedTableCards.put(TableLocation.EAST, Collections.<Card>emptyList());
+        expectedTableCards.put(TableLocation.SOUTH, Collections.<Card>emptyList());
+        expectedTableCards.put(TableLocation.WEST, Collections.<Card>emptyList());
+        */
 
-        expectedCenterCards = EnumBiMap.create(Cardinal.class, Card.class);
+        expectedCenterCards = EnumBiMap.create(Card.class, Cardinal.class);
         expectedCardinalContracts = Maps.newHashMap();
 
         expectedCardinalTricks = Maps.newHashMap();
@@ -73,21 +74,21 @@ public class GameTest {
         game.putCards(Cardinal.EAST);
         game.putCards(Cardinal.SOUTH);
         game.putCards(Cardinal.WEST);
-        assertReflectionEquals(expectedCardinalCards, game.getCardinalCards());
+        assertReflectionEquals(expectedTableCards, game.getCardinalCards());
     }
 
     @Test
     public void testPutCards_Some() throws Exception {
-        expectedCardinalCards.put(Cardinal.NORTH, newArrayList(Card.CLUB_ACE, Card.CLUB_EIGHT));
-        expectedCardinalCards.put(Cardinal.EAST, newArrayList(Card.CLUB_JACK, Card.DIAMOND_ACE, Card.DIAMOND_EIGHT));
-        expectedCardinalCards.put(Cardinal.SOUTH, newArrayList(Card.CLUB_KING));
-        expectedCardinalCards.put(Cardinal.WEST, newArrayList(Card.CLUB_QUEEN));
+        expectedTableCards.put(TableLocation.NORTH, newArrayList(Card.CLUB_ACE, Card.CLUB_EIGHT));
+        expectedTableCards.put(TableLocation.EAST, newArrayList(Card.CLUB_JACK, Card.DIAMOND_ACE, Card.DIAMOND_EIGHT));
+        expectedTableCards.put(TableLocation.SOUTH, newArrayList(Card.CLUB_KING));
+        expectedTableCards.put(TableLocation.WEST, newArrayList(Card.CLUB_QUEEN));
 
         game.putCards(Cardinal.NORTH, Card.CLUB_ACE, Card.CLUB_EIGHT);
         game.putCards(Cardinal.EAST, Card.CLUB_JACK, Card.DIAMOND_ACE, Card.DIAMOND_EIGHT);
         game.putCards(Cardinal.SOUTH, Card.CLUB_KING);
         game.putCards(Cardinal.WEST, Card.CLUB_QUEEN);
-        assertReflectionEquals(expectedCardinalCards, game.getCardinalCards(), LENIENT_ORDER);
+        assertReflectionEquals(expectedTableCards, game.getCardinalCards(), LENIENT_ORDER);
     }
 
     @Test
@@ -97,22 +98,22 @@ public class GameTest {
         game.putCards(Cardinal.SOUTH, Card.CLUB_KING);
         game.putCards(Cardinal.WEST, Card.CLUB_QUEEN);
         game.clearCards();
-        assertReflectionEquals(expectedCardinalCards, game.getCardinalCards());
+        assertReflectionEquals(expectedTableCards, game.getCardinalCards());
     }
 
     @Test
     public void testClearCards_SomeTableLocations() throws Exception {
-        expectedCardinalCards.put(Cardinal.NORTH, newArrayList(Card.CLUB_ACE, Card.CLUB_EIGHT));
-        expectedCardinalCards.put(Cardinal.EAST, newArrayList(Card.CLUB_JACK, Card.DIAMOND_ACE, Card.DIAMOND_EIGHT));
-        expectedCardinalCards.put(Cardinal.SOUTH, newArrayList(Card.CLUB_KING));
-
         game.putCards(Cardinal.NORTH, Card.CLUB_ACE, Card.CLUB_EIGHT);
         game.putCards(Cardinal.EAST, Card.CLUB_JACK, Card.DIAMOND_ACE, Card.DIAMOND_EIGHT);
         game.putCards(Cardinal.SOUTH, Card.CLUB_KING);
         game.putCards(Cardinal.WEST, Card.CLUB_QUEEN, Card.DIAMOND_QUEEN);
 
         game.clearCards(TableLocation.WEST);
-        assertReflectionEquals(expectedCardinalCards, game.getCardinalCards(), LENIENT_ORDER);
+
+        expectedTableCards.put(TableLocation.NORTH, newArrayList(Card.CLUB_ACE, Card.CLUB_EIGHT));
+        expectedTableCards.put(TableLocation.EAST, newArrayList(Card.CLUB_JACK, Card.DIAMOND_ACE, Card.DIAMOND_EIGHT));
+        expectedTableCards.put(TableLocation.SOUTH, newArrayList(Card.CLUB_KING));
+        assertReflectionEquals(expectedTableCards, game.getCardinalCards(), LENIENT_ORDER);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -125,14 +126,15 @@ public class GameTest {
         game.putCards(Cardinal.NORTH, Card.CLUB_ACE);
         game.moveCard(Card.CLUB_ACE, TableLocation.NORTH, TableLocation.CENTER);
 
-        expectedCenterCards.put(Cardinal.NORTH, Card.CLUB_ACE);
-        assertReflectionEquals(expectedCardinalCards, game.getCardinalCards());
+        expectedCenterCards.put(Card.CLUB_ACE, Cardinal.NORTH);
+        assertReflectionEquals(expectedTableCards, game.getCardinalCards());
         assertReflectionEquals(expectedCenterCards, game.getCenterCards());
 
         game.moveCard(Card.CLUB_ACE, TableLocation.CENTER, TableLocation.NORTH);
 
-        expectedCardinalCards.put(Cardinal.NORTH, newArrayList(Card.CLUB_ACE));
-        assertReflectionEquals(expectedCardinalCards, game.getCardinalCards());
+        expectedTableCards.put(TableLocation.NORTH, newArrayList(Card.CLUB_ACE));
+        assertReflectionEquals(expectedTableCards, game.getCardinalCards());
+        expectedCenterCards.clear();
         assertReflectionEquals(expectedCenterCards, game.getCenterCards());
     }
 
@@ -140,8 +142,8 @@ public class GameTest {
     public void testMoveCard_EastWest() throws Exception {
         game.putCards(Cardinal.EAST, Card.CLUB_ACE);
         game.moveCard(Card.CLUB_ACE, TableLocation.EAST, TableLocation.WEST);
-        expectedCardinalCards.put(Cardinal.WEST, newArrayList(Card.CLUB_ACE));
-        assertReflectionEquals(expectedCardinalCards, game.getCardinalCards());
+        expectedTableCards.put(TableLocation.WEST, newArrayList(Card.CLUB_ACE));
+        assertReflectionEquals(expectedTableCards, game.getCardinalCards());
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -218,7 +220,7 @@ public class GameTest {
         game.moveCenterCardsToSluff();
 
         assertReflectionEquals(expectedCardinalTricks, game.getCardinalTricks());
-        assertReflectionEquals(expectedCardinalCards, game.getCardinalCards());
+        assertReflectionEquals(expectedTableCards, game.getCardinalCards());
     }
 
     @Test
@@ -237,7 +239,7 @@ public class GameTest {
 
         expectedCardinalTricks.put(Cardinal.NORTH, 1);
         assertReflectionEquals(expectedCardinalTricks, game.getCardinalTricks());
-        assertReflectionEquals(expectedCardinalCards, game.getCardinalCards());
+        assertReflectionEquals(expectedTableCards, game.getCardinalCards());
     }
 
     @Test
@@ -256,9 +258,9 @@ public class GameTest {
 
         expectedCardinalTricks.put(Cardinal.NORTH, 0);
         assertReflectionEquals(expectedCardinalTricks, game.getCardinalTricks());
-        expectedCenterCards.put(Cardinal.NORTH, Card.CLUB_ACE);
-        expectedCenterCards.put(Cardinal.EAST, Card.CLUB_QUEEN);
-        expectedCenterCards.put(Cardinal.WEST, Card.CLUB_JACK);
+        expectedCenterCards.put(Card.CLUB_ACE, Cardinal.NORTH);
+        expectedCenterCards.put(Card.CLUB_QUEEN, Cardinal.EAST);
+        expectedCenterCards.put(Card.CLUB_JACK, Cardinal.WEST);
         assertReflectionEquals(expectedCenterCards, game.getCenterCards());
     }
 
@@ -278,7 +280,7 @@ public class GameTest {
 
         expectedCardinalTricks.put(Cardinal.NORTH, 1);
         assertReflectionEquals(expectedCardinalTricks, game.getCardinalTricks());
-        assertReflectionEquals(expectedCardinalCards, game.getCardinalCards());
+        assertReflectionEquals(expectedTableCards, game.getCardinalCards());
         assertThat(game.getCenterCards().size(), equalTo(0));
     }
 }

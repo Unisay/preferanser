@@ -29,7 +29,7 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.*;
 import com.preferanser.client.application.i18n.PreferanserConstants;
-import com.preferanser.client.application.table.TableStyle;
+import com.preferanser.client.application.table.style.TableStyle;
 import com.preferanser.shared.Contract;
 import com.preferanser.shared.Suit;
 

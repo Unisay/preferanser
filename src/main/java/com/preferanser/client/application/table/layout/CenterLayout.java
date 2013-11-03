@@ -30,23 +30,23 @@ public class CenterLayout extends PanelLayout<CardinalCard> {
         int x, y;
         switch (cardinalCard.getCardinal()) {
             case NORTH:
-                x = (getDisposableWidth() - imageWidth) / 2;
-                y = (getDisposableHeight() - imageHeight - imageHeight) / 2;
+                x = (getWidth() - imageWidth) / 2;
+                y = (getHeight() - imageHeight - imageHeight) / 2;
                 positionWidget(cardinalCard.getCardWidget(), x, y, z);
                 break;
             case EAST:
-                x = getDisposableWidth() / 2;
-                y = (getDisposableHeight() - imageHeight) / 2;
+                x = getWidth() / 2;
+                y = (getHeight() - imageHeight) / 2;
                 positionWidget(cardinalCard.getCardWidget(), x, y, z);
                 break;
             case SOUTH:
-                x = (getDisposableWidth() - imageWidth) / 2;
-                y = getDisposableHeight() / 2;
+                x = (getWidth() - imageWidth) / 2;
+                y = getHeight() / 2;
                 positionWidget(cardinalCard.getCardWidget(), x, y, z);
                 break;
             case WEST:
-                x = (getDisposableWidth() - imageWidth - imageWidth) / 2;
-                y = (getDisposableHeight() - imageHeight) / 2;
+                x = (getWidth() - imageWidth - imageWidth) / 2;
+                y = (getHeight() - imageHeight) / 2;
                 positionWidget(cardinalCard.getCardWidget(), x, y, z);
                 break;
             default:

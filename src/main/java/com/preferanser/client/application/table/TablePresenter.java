@@ -52,6 +52,8 @@ public class TablePresenter extends Presenter<TablePresenter.TableView, TablePre
 
         void displayContracts(Map<Cardinal, Contract> cardinalContracts);
 
+        void displayTurn(Cardinal turn);
+
         void setPlayMode();
 
         void setEditMode();
@@ -84,6 +86,9 @@ public class TablePresenter extends Presenter<TablePresenter.TableView, TablePre
 
     @Override
     public void reset() {
+        if (game.getMode() != Game.Mode.EDIT) {
+            return;
+        }
         game = new Game();
         game.putCards(Cardinal.NORTH, Card.values());
         refreshView();
@@ -91,6 +96,9 @@ public class TablePresenter extends Presenter<TablePresenter.TableView, TablePre
 
     @Override
     public void sluff() {
+        if (game.getMode() != Game.Mode.PLAY) {
+            return;
+        }
         if (game.moveCenterCardsToSluff()) {
             refreshView();
         }
@@ -98,8 +106,20 @@ public class TablePresenter extends Presenter<TablePresenter.TableView, TablePre
 
     @Override
     public void chooseContract(Cardinal cardinal) {
+        if (game.getMode() != Game.Mode.EDIT) {
+            return;
+        }
         contractDialog.setCardinal(cardinal);
         RevealRootPopupContentEvent.fire(this, contractDialog);
+    }
+
+    @Override
+    public void chooseTurn(Cardinal cardinal) {
+        if (game.getMode() != Game.Mode.EDIT) {
+            return;
+        }
+        game.setTurn(cardinal);
+        getView().displayTurn(game.getTurn());
     }
 
     @Override
@@ -111,6 +131,9 @@ public class TablePresenter extends Presenter<TablePresenter.TableView, TablePre
 
     @Override
     public boolean setCardinalContract(Cardinal cardinal, Contract contract) {
+        if (game.getMode() != Game.Mode.EDIT) {
+            return false;
+        }
         game.setCardinalContract(cardinal, contract);
         getView().displayContracts(game.getCardinalContracts());
         return true;
@@ -129,6 +152,7 @@ public class TablePresenter extends Presenter<TablePresenter.TableView, TablePre
     }
 
     private void refreshView() {
+        getView().displayTurn(game.getTurn());
         getView().displayContracts(game.getCardinalContracts());
         getView().displayTableCards(game.getCardinalCards(), game.getCenterCards());
         getView().displayCardinalTricks(game.getCardinalTricks());

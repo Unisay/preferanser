@@ -129,7 +129,7 @@
 .contractLink {
     text-transform: lowercase;
     display: inline;
-    color: #c2ffaa;
+    color: #ffa200;
     background-color: rgba(0, 0, 0, 0.3);
     border-radius: 3px;
     -webkit-border-radius: 3px;
@@ -160,4 +160,44 @@
 .edit {
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
+}
+
+.turnPointer {
+    position: absolute;
+    top: 47%;
+    left: 47%;
+    opacity: 0.2;
+}
+
+.turnPointerActive, .turnPointer:hover {
+    opacity: 1;
+    cursor: pointer;
+}
+
+.turnPointerNorth {
+    top: 25px;
+    transform:rotate(270deg);
+    -ms-transform:rotate(270deg);
+    -webkit-transform:rotate(270deg);
+}
+
+.turnPointerEast {
+    left: 515px;
+    transform:rotate(0);
+    -ms-transform:rotate(0);
+    -webkit-transform:rotate(0);
+}
+
+.turnPointerSouth {
+    top: 406px;
+    transform:rotate(90deg);
+    -ms-transform:rotate(90deg);
+    -webkit-transform:rotate(90deg);
+}
+
+.turnPointerWest {
+    left: 5px;
+    transform:rotate(180deg);
+    -ms-transform:rotate(180deg);
+    -webkit-transform:rotate(180deg);
 }

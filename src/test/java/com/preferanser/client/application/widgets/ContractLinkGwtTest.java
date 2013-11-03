@@ -23,7 +23,7 @@ import com.googlecode.gwt.test.GwtModule;
 import com.googlecode.gwt.test.GwtTestWithMockito;
 import com.googlecode.gwt.test.Mock;
 import com.preferanser.client.application.i18n.PreferanserConstants;
-import com.preferanser.client.application.table.TableStyle;
+import com.preferanser.client.application.table.style.TableStyle;
 import com.preferanser.shared.Contract;
 import org.junit.Before;
 import org.junit.Test;

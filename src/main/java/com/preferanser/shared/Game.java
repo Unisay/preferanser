@@ -53,6 +53,7 @@ public class Game {
     private Map<Card, Cardinal> centerCardCardinalMap = Maps.newLinkedHashMap(); // order is important
     private Type type = Type.THREE_PLAYERS; // TODO selection
     private Mode mode = Mode.EDIT;
+    private Cardinal turn;
 
     public Game() {
         clearCardinalTricks();
@@ -126,6 +127,9 @@ public class Game {
                 return false;
             }
             Cardinal oldCardinal = tableLocationToCardinal(oldLocation);
+            if (centerCardCardinalMap.containsValue(oldCardinal))
+                return false;
+
             cardinalCardMultimap.get(oldCardinal).remove(card);
             centerCardCardinalMap.put(card, oldCardinal);
         } else {
@@ -194,8 +198,8 @@ public class Game {
     public boolean moveCenterCardsToSluff() {
         if (mode == Mode.PLAY && centerCardCardinalMap.size() == type.numPlayers) {
             Optional<Suit> maybeTrump = getTrump();
-            Cardinal winner = determineTrickWinner(maybeTrump, centerCardCardinalMap);
-            cardinalTricks.put(winner, cardinalTricks.get(winner) + 1); // Non-atomic increment!
+            turn = determineTrickWinner(maybeTrump, centerCardCardinalMap);
+            cardinalTricks.put(turn, cardinalTricks.get(turn) + 1); // Non-atomic increment!
             clearCards(CENTER);
             return true;
         }
@@ -244,5 +248,13 @@ public class Game {
 
     public void setMode(Mode mode) {
         this.mode = mode;
+    }
+
+    public Cardinal getTurn() {
+        return turn;
+    }
+
+    public void setTurn(Cardinal turn) {
+        this.turn = turn;
     }
 }

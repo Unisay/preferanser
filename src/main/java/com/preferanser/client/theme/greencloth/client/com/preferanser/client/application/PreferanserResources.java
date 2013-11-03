@@ -32,16 +32,27 @@ public interface PreferanserResources extends ClientBundle {
 
     interface GreenClothCssResource extends CssResource {
 
+        @SuppressWarnings("unused") String dialogTop();
+
+        @SuppressWarnings("unused") String Caption();
+
         @ClassName("gwt-DialogBox") String gwtDialogBox();
 
         @ClassName("gwt-DialogBoxOverlay") String gwtDialogBoxOverlay();
 
-        @SuppressWarnings("unused") String dialogTop();
+        @ClassName("gwt-ToggleButton-down-hovering") String gwtToggleButtonDownHovering();
 
-        @SuppressWarnings("unused") String Caption();
+        @ClassName("gwt-ToggleButton-down") String gwtToggleButtonDown();
+
+        @ClassName("gwt-ToggleButton") String gwtToggleButton();
+
+        @ClassName("gwt-Button") String gwtButton();
     }
 
     @Source("green_cloth.css") GreenClothCssResource css();
+
+    @Source("images/arrow_right.png")
+    @ImageResource.ImageOptions(height = 32, width = 32) ImageResource arrowRight();
 
     @Source("images/green_cloth_back.jpg")
     @ImageResource.ImageOptions(repeatStyle = ImageResource.RepeatStyle.Horizontal) ImageResource pageBackground();

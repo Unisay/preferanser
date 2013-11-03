@@ -51,12 +51,6 @@ public class GameTest {
         game = new Game();
 
         expectedTableCards = Maps.newLinkedHashMap();
-        /*
-        expectedTableCards.put(TableLocation.NORTH, Collections.<Card>emptyList());
-        expectedTableCards.put(TableLocation.EAST, Collections.<Card>emptyList());
-        expectedTableCards.put(TableLocation.SOUTH, Collections.<Card>emptyList());
-        expectedTableCards.put(TableLocation.WEST, Collections.<Card>emptyList());
-        */
 
         expectedCenterCards = EnumBiMap.create(Card.class, Cardinal.class);
         expectedCardinalContracts = Maps.newHashMap();
@@ -219,8 +213,10 @@ public class GameTest {
 
         game.moveCenterCardsToSluff();
 
+        expectedCardinalTricks.put(Cardinal.NORTH, 1);
         assertReflectionEquals(expectedCardinalTricks, game.getCardinalTricks());
         assertReflectionEquals(expectedTableCards, game.getCardinalCards());
+        assertThat(game.getTurn(), equalTo(Cardinal.NORTH));
     }
 
     @Test
@@ -240,6 +236,7 @@ public class GameTest {
         expectedCardinalTricks.put(Cardinal.NORTH, 1);
         assertReflectionEquals(expectedCardinalTricks, game.getCardinalTricks());
         assertReflectionEquals(expectedTableCards, game.getCardinalCards());
+        assertThat(game.getTurn(), equalTo(Cardinal.NORTH));
     }
 
     @Test
@@ -282,5 +279,6 @@ public class GameTest {
         assertReflectionEquals(expectedCardinalTricks, game.getCardinalTricks());
         assertReflectionEquals(expectedTableCards, game.getCardinalCards());
         assertThat(game.getCenterCards().size(), equalTo(0));
+        assertThat(game.getTurn(), equalTo(Cardinal.NORTH));
     }
 }

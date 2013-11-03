@@ -35,9 +35,11 @@ import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
 import com.preferanser.client.application.i18n.PreferanserConstants;
 import com.preferanser.client.application.table.layout.*;
+import com.preferanser.client.application.table.style.TableStyle;
 import com.preferanser.client.application.widgets.CardWidget;
 import com.preferanser.client.application.widgets.CardinalCard;
 import com.preferanser.client.application.widgets.ContractLink;
+import com.preferanser.client.application.widgets.TurnPointer;
 import com.preferanser.client.geom.Point;
 import com.preferanser.client.geom.Rect;
 import com.preferanser.client.theme.greencloth.client.com.preferanser.client.application.PreferanserResources;
@@ -72,6 +74,7 @@ public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements Ta
     private final Map<Cardinal, Label> cardinalTricksCountMap = Maps.newHashMapWithExpectedSize(Cardinal.values().length);
     private final Map<Cardinal, Label> cardinalTitleMap = Maps.newHashMapWithExpectedSize(Cardinal.values().length);
     private final Map<Cardinal, ContractLink> cardinalContractMap = Maps.newHashMapWithExpectedSize(Cardinal.values().length);
+    private final Map<Cardinal, TurnPointer> cardinalTurnPointerMap = Maps.newHashMapWithExpectedSize(Cardinal.values().length);
     private final ImageDragController imageDragController = new ImageDragController(Document.get());
 
     @UiField PreferanserConstants constants;
@@ -106,6 +109,13 @@ public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements Ta
     @UiField ContractLink southContractLink;
     @UiField ContractLink westContractLink;
 
+    @UiField TurnPointer turnPointerNorth;
+    @UiField TurnPointer turnPointerEast;
+    @UiField TurnPointer turnPointerSouth;
+    @UiField TurnPointer turnPointerWest;
+
+    private boolean editMode;
+
     @Inject
     public TableView(Binder uiBinder, GQuerySelectors selectors) {
         initWidget(uiBinder.createAndBindUi(this));
@@ -115,6 +125,7 @@ public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements Ta
         populateCardinalTrickCounts();
         populateCardinalTitles();
         populateCardinalContractLinks();
+        populateCardinalTurnPointers();
         RootPanel rootPanel = RootPanel.get();
         installCenterPanelClickHandler();
         installMouseUpHandler(rootPanel);
@@ -174,6 +185,22 @@ public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements Ta
                 contractLink.setContract(contract);
             } else {
                 contractLink.setContract(null);
+            }
+        }
+    }
+
+    @Override
+    public void displayTurn(Cardinal turn) {
+        for (Map.Entry<Cardinal, TurnPointer> entry : cardinalTurnPointerMap.entrySet()) {
+            Cardinal cardinal = entry.getKey();
+            TurnPointer turnPointer = entry.getValue();
+            turnPointer.setActive(cardinal == turn);
+            if (! editMode) {
+                if (turnPointer.isActive()) {
+                    turnPointer.removeStyleName(style.notDisplayed());
+                } else {
+                    turnPointer.addStyleName(style.notDisplayed());
+                }
             }
         }
     }
@@ -280,6 +307,7 @@ public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements Ta
     }
 
     @Override public void setPlayMode() {
+        editMode = false;
         playButton.setDown(true);
         editButton.setDown(false);
         resetButton.setVisible(false);
@@ -287,15 +315,24 @@ public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements Ta
         for (ContractLink contractLink : cardinalContractMap.values()) {
             contractLink.disable();
         }
+        for (TurnPointer turnPointer : cardinalTurnPointerMap.values()) {
+            if (! turnPointer.isActive()) {
+                turnPointer.addStyleName(style.notDisplayed());
+            }
+        }
     }
 
     @Override public void setEditMode() {
+        editMode = true;
         editButton.setDown(true);
         playButton.setDown(false);
         resetButton.setVisible(true);
         saveButton.setVisible(true);
         for (ContractLink contractLink : cardinalContractMap.values()) {
             contractLink.enable();
+        }
+        for (TurnPointer turnPointer : cardinalTurnPointerMap.values()) {
+            turnPointer.removeStyleName(style.notDisplayed());
         }
     }
 
@@ -333,6 +370,16 @@ public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements Ta
 
     @UiFactory ToggleButton toggleButton(String caption) {
         return new ToggleButton(caption, caption);
+    }
+
+    @UiFactory TurnPointer turnPointer() {
+        final TurnPointer turnPointer = new TurnPointer(style, resources.arrowRight());
+        turnPointer.addClickHandler(new ClickHandler() {
+            @Override public void onClick(ClickEvent event) {
+                getUiHandlers().chooseTurn(turnPointer.getTurn());
+            }
+        });
+        return turnPointer;
     }
 
     @UiFactory CardWidget createCardWidget(Card card) {
@@ -487,6 +534,13 @@ public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements Ta
         cardinalContractMap.put(Cardinal.EAST, eastContractLink);
         cardinalContractMap.put(Cardinal.SOUTH, southContractLink);
         cardinalContractMap.put(Cardinal.WEST, westContractLink);
+    }
+
+    private void populateCardinalTurnPointers() {
+        cardinalTurnPointerMap.put(Cardinal.NORTH, turnPointerNorth);
+        cardinalTurnPointerMap.put(Cardinal.EAST, turnPointerEast);
+        cardinalTurnPointerMap.put(Cardinal.SOUTH, turnPointerSouth);
+        cardinalTurnPointerMap.put(Cardinal.WEST, turnPointerWest);
     }
 
 }

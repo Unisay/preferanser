@@ -52,6 +52,13 @@ public interface TableUiHandlers extends UiHandlers {
      */
     void chooseContract(Cardinal cardinal);
 
+    /**
+     * User chose first turn
+     *
+     * @param cardinal who turns first
+     */
+    void chooseTurn(Cardinal cardinal);
+
     boolean setPlayMode();
 
     boolean setEditMode();

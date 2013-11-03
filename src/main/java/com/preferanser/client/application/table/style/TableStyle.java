@@ -17,14 +17,14 @@
  *     along with this program.  If not, see [http://www.gnu.org/licenses/].
  */
 
-package com.preferanser.client.application.table;
+package com.preferanser.client.application.table.style;
 
 import com.google.gwt.resources.client.CssResource;
 
 /**
  * Css resource for table styles
  */
-public interface TableStyle extends CssResource {
+public interface TableStyle extends CssResource, TurnPointerStyle {
 
     String card();
 
@@ -111,5 +111,6 @@ public interface TableStyle extends CssResource {
     String contractLabel();
 
     String contractLink();
+
 
 }

@@ -24,8 +24,6 @@
              ui:generateKeys="com.google.gwt.i18n.server.keygen.MD5KeyGenerator"
              ui:generateLocales="default">
     <ui:with field="constants" type="com.preferanser.client.application.i18n.PreferanserConstants"/>
-    <ui:with field="resources"
-             type="com.preferanser.client.theme.greencloth.client.com.preferanser.client.application.PreferanserResources"/>
     <ui:style src="style/table.css" field="style" type="com.preferanser.client.application.table.style.TableStyle"/>
     <g:VerticalPanel addStyleNames="{style.verticalPanel}" spacing="0">
         <g:FlowPanel addStyleNames="{style.not-displayed}">

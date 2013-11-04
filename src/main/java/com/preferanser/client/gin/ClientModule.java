@@ -36,6 +36,7 @@ import com.preferanser.client.place.NameTokens;
 import com.preferanser.client.request.MyRequestFactory;
 
 public class ClientModule extends AbstractPresenterModule {
+
     @Override
     protected void configure() {
         install(new DefaultModule(DefaultPlaceManager.class));

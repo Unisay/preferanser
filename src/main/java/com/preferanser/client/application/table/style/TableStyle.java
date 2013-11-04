@@ -108,6 +108,10 @@ public interface TableStyle extends CssResource, TurnPointerStyle {
 
     String noTrump();
 
+    String play();
+
+    String edit();
+
     String contractLabel();
 
     String contractLink();

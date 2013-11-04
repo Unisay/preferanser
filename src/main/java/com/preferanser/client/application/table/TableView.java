@@ -78,13 +78,13 @@ public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements Ta
     private PreferanserResources resources;
     private CardImageResourceRetriever cardImageResourceRetriever;
 
-    @UiField PreferanserConstants constants;
+    @UiField(provided = true) PreferanserConstants constants;
 
     @UiField TableStyle style;
     @UiField Button resetButton;
     @UiField Button saveButton;
-    @UiField ToggleButton playButton;
-    @UiField ToggleButton editButton;
+    @UiField(provided = true) ToggleButton playButton;
+    @UiField(provided = true) ToggleButton editButton;
 
     @UiField FlowPanel northPanel;
     @UiField FlowPanel eastPanel;
@@ -117,10 +117,15 @@ public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements Ta
     private boolean editMode;
 
     @Inject
-    public TableView(Binder uiBinder, PreferanserResources resources) {
+    public TableView(Binder uiBinder, PreferanserResources resources, PreferanserConstants constants) {
         this.resources = resources;
+        this.constants = constants;
         cardImageResourceRetriever = new CardImageResourceRetriever(resources);
+        playButton = new ToggleButton(constants.play(), constants.play());
+        editButton = new ToggleButton(constants.edit(), constants.edit());
+
         initWidget(uiBinder.createAndBindUi(this));
+
         populateLocationPanelMap();
         populateLocationLayoutMap();
         populateCardinalTrickCounts();
@@ -139,6 +144,7 @@ public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements Ta
         for (CardWidget cardWidget : cardWidgetBiMap.values()) {
             cardWidget.removeFromParent();
         }
+
         for (Map.Entry<TableLocation, Collection<Card>> entry : tableCards.entrySet()) {
             displayCards(entry.getKey(), entry.getValue());
         }
@@ -148,7 +154,13 @@ public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements Ta
     private void displayCenterCards(LinkedHashMap<Card, Cardinal> centerCards) {
         Function<Map.Entry<Card, Cardinal>, CardinalCard> func = new Function<Map.Entry<Card, Cardinal>, CardinalCard>() {
             @Nullable @Override public CardinalCard apply(Map.Entry<Card, Cardinal> entry) {
-                return new CardinalCard(entry.getValue(), cardWidgetBiMap.get(entry.getKey()));
+                Card card = entry.getKey();
+                CardWidget cardWidget = cardWidgetBiMap.get(card);
+                if (null == cardWidget) {
+                    cardWidget = createCardWidget(card);
+                    cardWidgetBiMap.put(card, cardWidget);
+                }
+                return new CardinalCard(entry.getValue(), cardWidget);
             }
         };
         Collection<CardinalCard> widgets = newArrayList(transform(centerCards.entrySet(), func));
@@ -166,7 +178,13 @@ public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements Ta
     }
 
     private void displayCard(HasWidgets panel, Card card) {
-        CardWidget cardWidget = cardWidgetBiMap.get(card);
+        CardWidget cardWidget;
+        if (cardWidgetBiMap.containsKey(card)) {
+            cardWidget = cardWidgetBiMap.get(card);
+        } else {
+            cardWidget = createCardWidget(card);
+            cardWidgetBiMap.put(card, cardWidget);
+        }
         panel.add(cardWidget);
     }
 
@@ -363,10 +381,6 @@ public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements Ta
         getUiHandlers().chooseContract(Cardinal.WEST);
     }
 
-    @UiFactory ToggleButton toggleButton(String caption) {
-        return new ToggleButton(caption, caption);
-    }
-
     @UiFactory TurnPointer turnPointer() {
         final TurnPointer turnPointer = new TurnPointer(style, resources.arrowRight());
         turnPointer.addClickHandler(new ClickHandler() {
@@ -377,12 +391,11 @@ public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements Ta
         return turnPointer;
     }
 
-    @UiFactory CardWidget createCardWidget(Card card) {
+    private CardWidget createCardWidget(Card card) {
         CardWidget cardWidget = new CardWidget(card);
         cardWidget.setResource(cardImageResourceRetriever.getByCard(card));
         cardWidget.setHandlers(this);
         cardWidget.addStyleName(style.card());
-        cardWidgetBiMap.put(card, cardWidget);
         return cardWidget;
     }
 

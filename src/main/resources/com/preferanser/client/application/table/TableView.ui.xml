@@ -26,48 +26,10 @@
     <ui:with field="constants" type="com.preferanser.client.application.i18n.PreferanserConstants"/>
     <ui:style src="style/table.css" field="style" type="com.preferanser.client.application.table.style.TableStyle"/>
     <g:VerticalPanel addStyleNames="{style.verticalPanel}" spacing="0">
-        <g:FlowPanel addStyleNames="{style.not-displayed}">
-            <p:CardWidget card="CLUB_SEVEN"/>
-            <p:CardWidget card="SPADE_SEVEN"/>
-            <p:CardWidget card="DIAMOND_SEVEN"/>
-            <p:CardWidget card="HEART_SEVEN"/>
-            <p:CardWidget card="CLUB_EIGHT"/>
-            <p:CardWidget card="SPADE_EIGHT"/>
-            <p:CardWidget card="DIAMOND_EIGHT"/>
-            <p:CardWidget card="HEART_EIGHT"/>
-            <p:CardWidget card="CLUB_NINE"/>
-            <p:CardWidget card="SPADE_NINE"/>
-            <p:CardWidget card="DIAMOND_NINE"/>
-            <p:CardWidget card="HEART_NINE"/>
-            <p:CardWidget card="CLUB_TEN"/>
-            <p:CardWidget card="SPADE_TEN"/>
-            <p:CardWidget card="DIAMOND_TEN"/>
-            <p:CardWidget card="HEART_TEN"/>
-            <p:CardWidget card="CLUB_JACK"/>
-            <p:CardWidget card="SPADE_JACK"/>
-            <p:CardWidget card="DIAMOND_JACK"/>
-            <p:CardWidget card="HEART_JACK"/>
-            <p:CardWidget card="CLUB_QUEEN"/>
-            <p:CardWidget card="SPADE_QUEEN"/>
-            <p:CardWidget card="DIAMOND_QUEEN"/>
-            <p:CardWidget card="HEART_QUEEN"/>
-            <p:CardWidget card="CLUB_KING"/>
-            <p:CardWidget card="SPADE_KING"/>
-            <p:CardWidget card="DIAMOND_KING"/>
-            <p:CardWidget card="HEART_KING"/>
-            <p:CardWidget card="CLUB_ACE"/>
-            <p:CardWidget card="SPADE_ACE"/>
-            <p:CardWidget card="DIAMOND_ACE"/>
-            <p:CardWidget card="HEART_ACE"/>
-        </g:FlowPanel>
         <g:HorizontalPanel addStyleNames="{style.buttonsPanel}" spacing="10">
             <g:HorizontalPanel spacing="0">
-                <g:ToggleButton ui:field="playButton" caption="Play" addStyleNames="{style.play}">
-                    <ui:attribute name="caption" key="play" description="Play button caption"/>
-                </g:ToggleButton>
-                <g:ToggleButton ui:field="editButton" caption="Edit" addStyleNames="{style.edit}">
-                    <ui:attribute name="caption" key="edit" description="Edit button caption"/>
-                </g:ToggleButton>
+                <g:ToggleButton ui:field="playButton" addStyleNames="{style.play}"/>
+                <g:ToggleButton ui:field="editButton" addStyleNames="{style.edit}"/>
             </g:HorizontalPanel>
             <g:Button ui:field="resetButton" text="Deal">
                 <ui:attribute name="text" key="deal" description="Deal button caption"/>

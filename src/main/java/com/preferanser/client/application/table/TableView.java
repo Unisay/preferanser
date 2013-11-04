@@ -23,7 +23,6 @@ import com.google.common.base.Function;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.EnumHashBiMap;
 import com.google.gwt.dom.client.Document;
-import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.*;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiFactory;
@@ -118,11 +117,10 @@ public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements Ta
     private boolean editMode;
 
     @Inject
-    public TableView(Binder uiBinder, GQuerySelectors selectors, PreferanserResources resources) {
+    public TableView(Binder uiBinder, PreferanserResources resources) {
         this.resources = resources;
         cardImageResourceRetriever = new CardImageResourceRetriever(resources);
         initWidget(uiBinder.createAndBindUi(this));
-        disableStandardDragging(selectors.getAllDivsAndImages().elements());
         populateLocationPanelMap();
         populateLocationLayoutMap();
         populateCardinalTrickCounts();
@@ -232,12 +230,6 @@ public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements Ta
             }
         }));
         layout.apply(cardWidgets);
-    }
-
-    private void disableStandardDragging(Element[] elements) {
-        for (Element element : elements) {
-            element.setDraggable(Element.DRAGGABLE_FALSE);
-        }
     }
 
     private void installCenterPanelClickHandler() {

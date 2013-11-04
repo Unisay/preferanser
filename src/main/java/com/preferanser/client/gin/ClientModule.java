@@ -32,7 +32,6 @@ import com.gwtplatform.mvp.client.gin.DefaultModule;
 import com.gwtplatform.mvp.client.proxy.DefaultPlaceManager;
 import com.preferanser.client.application.ApplicationModule;
 import com.preferanser.client.application.ResourceLoader;
-import com.preferanser.client.application.table.GQuerySelectors;
 import com.preferanser.client.place.NameTokens;
 import com.preferanser.client.request.MyRequestFactory;
 
@@ -48,7 +47,6 @@ public class ClientModule extends AbstractPresenterModule {
         bindConstant().annotatedWith(UnauthorizedPlace.class).to(NameTokens.TABLE);
 
         bind(ResourceLoader.class).asEagerSingleton();
-        bind(GQuerySelectors.class).asEagerSingleton();
         bind(MyRequestFactory.class).toProvider(RequestFactoryProvider.class).in(Singleton.class);
     }
 

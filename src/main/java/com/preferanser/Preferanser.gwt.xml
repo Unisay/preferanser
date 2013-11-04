@@ -29,7 +29,6 @@
     <inherits name="com.google.gwt.text.Text"/>
     <inherits name="com.google.gwt.user.Debug"/>
     <inherits name="com.google.common.collect.Collect"/>
-    <inherits name="com.google.gwt.query.Query"/>
 
     <set-property name="gwt.logging.logLevel" value="FINEST"/>
     <set-property name="gwt.logging.enabled" value="TRUE"/>

@@ -213,6 +213,17 @@
         </plugins>
     </build>
 
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.jbehave.web</groupId>
+                <artifactId>jbehave-web-selenium</artifactId>
+                <version>3.5.5</version>
+                <scope>test</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
     <dependencies>
         <!-- Google Web Toolkit dependencies -->
         <dependency>

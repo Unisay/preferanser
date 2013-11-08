@@ -41,7 +41,7 @@
         <g:DockPanel debugId="dlp" addStyleNames="{style.dockPanel}" spacing="10">
             <g:Dock direction="NORTH" addStyleNames="{style.northDock}">
                 <g:VerticalPanel addStyleNames="{style.northVPanel}">
-                    <g:FlowPanel ui:field="northPanel" addStyleNames="{style.northFlowPanel}"/>
+                    <g:FlowPanel ui:field="northPanel" addStyleNames="{style.northFlowPanel}" debugId="NORTH"/>
                     <g:HorizontalPanel addStyleNames="{style.handTitle} {style.northHPanel}">
                         <g:FlowPanel addStyleNames="{style.handHeaderLeftPanel}">
                             <g:Label ui:field="titleNorth" addStyleNames="{style.titleNorth}">
@@ -55,7 +55,7 @@
             </g:Dock>
             <g:Dock direction="SOUTH" addStyleNames="{style.southDock}">
                 <g:VerticalPanel addStyleNames="{style.southVPanel}">
-                    <g:FlowPanel ui:field="southPanel" addStyleNames="{style.southFlowPanel}"/>
+                    <g:FlowPanel ui:field="southPanel" addStyleNames="{style.southFlowPanel}" debugId="SOUTH"/>
                     <g:HorizontalPanel addStyleNames="{style.handTitle} {style.southHPanel}">
                         <g:FlowPanel addStyleNames="{style.handHeaderLeftPanel}">
                             <g:Label ui:field="titleSouth" addStyleNames="{style.titleSouth}">
@@ -69,7 +69,7 @@
             </g:Dock>
             <g:Dock direction="EAST" addStyleNames="{style.eastDock}">
                 <g:VerticalPanel addStyleNames="{style.eastVPanel}">
-                    <g:FlowPanel ui:field="eastPanel" addStyleNames="{style.eastFlowPanel}"/>
+                    <g:FlowPanel ui:field="eastPanel" addStyleNames="{style.eastFlowPanel}" debugId="EAST"/>
                     <g:HorizontalPanel addStyleNames="{style.handTitle} {style.eastHPanel}">
                         <g:FlowPanel addStyleNames="{style.handHeaderLeftPanel}">
                             <g:Label ui:field="titleEast" addStyleNames="{style.titleEast}">
@@ -83,7 +83,7 @@
             </g:Dock>
             <g:Dock direction="WEST" addStyleNames="{style.westDock}">
                 <g:VerticalPanel addStyleNames="{style.westVPanel}">
-                    <g:FlowPanel ui:field="westPanel" addStyleNames="{style.westFlowPanel}"/>
+                    <g:FlowPanel ui:field="westPanel" addStyleNames="{style.westFlowPanel}" debugId="WEST"/>
                     <g:HorizontalPanel addStyleNames="{style.handTitle} {style.westHPanel}">
                         <g:FlowPanel addStyleNames="{style.handHeaderLeftPanel}">
                             <g:Label ui:field="titleWest" addStyleNames="{style.titleWest}">
@@ -97,7 +97,7 @@
             </g:Dock>
             <g:Dock direction="CENTER" addStyleNames="{style.centerDock}">
                 <g:VerticalPanel addStyleNames="{style.centerVPanel}">
-                    <g:FlowPanel ui:field="centerPanel" addStyleNames="{style.centerFlowPanel}"/>
+                    <g:FlowPanel ui:field="centerPanel" addStyleNames="{style.centerFlowPanel}" debugId="CENTER"/>
                     <g:HorizontalPanel addStyleNames="{style.handTitle} {style.centerHPanel}">
                         <g:Hyperlink ui:field="sluffLink" addStyleNames="{style.contractLink}">
                             <ui:msg key="toSluff" description="Move to sluff">В отбой</ui:msg>

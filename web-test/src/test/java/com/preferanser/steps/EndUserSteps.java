@@ -20,9 +20,13 @@
 package com.preferanser.steps;
 
 import com.preferanser.domain.Card;
+import com.preferanser.domain.TableLocation;
+import com.preferanser.pages.TablePage;
 import net.thucydides.core.annotations.Step;
 import net.thucydides.core.pages.Pages;
 import net.thucydides.core.steps.ScenarioSteps;
+
+import static org.junit.Assert.assertTrue;
 
 public class EndUserSteps extends ScenarioSteps {
 
@@ -31,23 +35,25 @@ public class EndUserSteps extends ScenarioSteps {
     }
 
     @Step
-    public void enters(String keyword) {
+    public EndUserSteps onTheTablePage() {
+        getPages().currentPageAt(TablePage.class);
+        return this;
     }
 
     @Step
-    public void starts_search() {
+    public EndUserSteps canSeeCardsAt(TableLocation location, Card... cards) {
+        TablePage page = getPages().get(TablePage.class);
+        for (Card card : cards) {
+            assertTrue(page.cardIsVisibleAtLocation(card, location));
+        }
+        return this;
     }
 
     @Step
-    public void should_see_definition(String definition) {
-    }
-
-    @Step
-    public void is_the_table_page() {
-    }
-
-    @Step
-    public void can_see(Card card) {
-
+    public void canSeeNoCardsAt(TableLocation... locations) {
+        TablePage page = getPages().get(TablePage.class);
+        for (TableLocation location : locations) {
+            assertTrue(page.locationHasNoCards(location));
+        }
     }
 }

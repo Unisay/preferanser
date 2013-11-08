@@ -128,24 +128,6 @@
             <groupId>net.thucydides</groupId>
             <artifactId>thucydides-core</artifactId>
             <version>${thucydides.version}</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>operadriver</artifactId>
-                    <groupId>com.opera</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>selenium-server</artifactId>
-                    <groupId>org.seleniumhq.selenium</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>asciidoctor-java-integration</artifactId>
-                    <groupId>org.asciidoctor</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-simple</artifactId>
         </dependency>
         <dependency>
             <groupId>net.thucydides</groupId>

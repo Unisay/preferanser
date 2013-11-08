@@ -29,6 +29,8 @@ import net.thucydides.core.annotations.Story;
 import net.thucydides.core.pages.Pages;
 import org.junit.Test;
 
+import static com.preferanser.domain.TableLocation.*;
+
 /**
  * TODO-ylazarev: write class javadoc
  */
@@ -44,10 +46,11 @@ public class CardsPresenceTest extends ThucydidesTest {
     @Issue("#WIKI-1")
     @Test
     public void all_cards_should_be_present_on_north() {
-        endUser.is_the_table_page();
-        for (Card card : Card.values()) {
-            endUser.can_see(card);
-        }
+        endUser.onTheTablePage()
+                .canSeeCardsAt(NORTH, Card.values())
+                .canSeeNoCardsAt(EAST, SOUTH, WEST);
     }
+
+
 
 }

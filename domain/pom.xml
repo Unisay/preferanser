@@ -30,6 +30,7 @@
     <packaging>jar</packaging>
 
     <artifactId>domain</artifactId>
+    <name>Preferanser Domain Classes</name>
 
     <dependencies>
         <dependency>

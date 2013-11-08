@@ -45,17 +45,11 @@ public class TablePresenter extends Presenter<TablePresenter.TableView, TablePre
     private ContractDialogPresenter contractDialog;
 
     public interface TableView extends View, HasUiHandlers<TableUiHandlers> {
-
         void displayTableCards(Map<TableLocation, Collection<Card>> tableCards, LinkedHashMap<Card, Cardinal> centerCards);
-
         void displayCardinalTricks(Map<Cardinal, Integer> cardinalTricks);
-
         void displayContracts(Map<Cardinal, Contract> cardinalContracts);
-
         void displayTurn(Cardinal turn);
-
         void setPlayMode();
-
         void setEditMode();
     }
 

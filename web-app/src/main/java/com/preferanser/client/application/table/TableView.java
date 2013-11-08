@@ -396,6 +396,7 @@ public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements Ta
         cardWidget.setResource(cardImageResourceRetriever.getByCard(card));
         cardWidget.setHandlers(this);
         cardWidget.addStyleName(style.card());
+        cardWidget.ensureDebugId(card.name());
         return cardWidget;
     }
 

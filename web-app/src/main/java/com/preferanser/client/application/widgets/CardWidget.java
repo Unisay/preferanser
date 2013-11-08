@@ -30,17 +30,12 @@ public class CardWidget extends Image {
 
     public interface Handlers {
         void onCardMouseDown(CardWidget cardWidget, MouseDownEvent event);
-
         void onCardDragStart(CardWidget cardWidget, DragStartEvent event);
     }
 
     private Card card;
 
-    public CardWidget() {
-    }
-
     public CardWidget(Card card) {
-        this();
         this.card = card;
     }
 
@@ -59,10 +54,6 @@ public class CardWidget extends Image {
 
     public Card getCard() {
         return card;
-    }
-
-    public void setCard(Card card) {
-        this.card = card;
     }
 
     @Override

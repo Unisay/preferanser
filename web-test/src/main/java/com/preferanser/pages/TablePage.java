@@ -19,53 +19,32 @@
 
 package com.preferanser.pages;
 
-import ch.lambdaj.function.convert.Converter;
+import com.preferanser.domain.Card;
+import com.preferanser.domain.TableLocation;
+import net.thucydides.core.annotations.At;
 import net.thucydides.core.annotations.DefaultUrl;
-import net.thucydides.core.pages.PageObject;
+import net.thucydides.core.pages.WebElementFacade;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.FindBy;
-
-import java.util.List;
-
-import static ch.lambdaj.Lambda.convert;
 
 /**
- * TODO-ylazarev: write class javadoc
+ * Table page
  */
-@DefaultUrl("http://en.wiktionary.org/wiki/Wiktionary:Main_Page")
-public class TablePage extends PageObject {
-
-    @FindBy(name = "search")
-    private WebElement searchTerms;
-
-    @FindBy(name = "go")
-    private WebElement lookupButton;
+@At("http://127.0.0.1:8888/Preferanser.html")
+@DefaultUrl("http://127.0.0.1:8888/Preferanser.html?gwt.codesvr=127.0.0.1:9997")
+public class TablePage extends GwtPage {
 
     public TablePage(WebDriver driver) {
         super(driver);
     }
 
-    public void enter_keywords(String keyword) {
-        element(searchTerms).type(keyword);
+    public boolean cardIsVisibleAtLocation(Card card, TableLocation location) {
+        WebElementFacade elementFacade = gwtElementById(location.name());
+        return elementFacade.isCurrentlyVisible() && elementFacade.findBy(getGwtId(card.name())).isCurrentlyVisible();
     }
 
-    public void lookup_terms() {
-        element(lookupButton).click();
-    }
-
-    public List<String> getDefinitions() {
-        WebElement definitionList = getDriver().findElement(By.tagName("ol"));
-        List<WebElement> results = definitionList.findElements(By.tagName("li"));
-        return convert(results, toStrings());
-    }
-
-    private Converter<WebElement, String> toStrings() {
-        return new Converter<WebElement, String>() {
-            public String convert(WebElement from) {
-                return from.getText();
-            }
-        };
+    public boolean locationHasNoCards(TableLocation location) {
+        WebElementFacade locationElement = gwtElementById(location.name());
+        return locationElement.getWrappedElement().findElements(By.className("card")).isEmpty();
     }
 }

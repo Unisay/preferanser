@@ -1,6 +1,7 @@
 @external .gwt-Label;
 @external .not-displayed, .not-visible, .dragging;
 @external .verticalPanel, .buttonsPanel, .dockPanel;
+@external .card;
 @external .northDock, .eastDock, .southDock, .westDock, .centerDock;
 @external .northVPanel, .eastVPanel, .southVPanel, .westVPanel, .centerVPanel;
 @external .northHPanel, .southHPanel, .eastHPanel, .westHPanel, .centerHPanel;

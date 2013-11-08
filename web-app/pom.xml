@@ -30,7 +30,7 @@
 
     <artifactId>web-app</artifactId>
     <packaging>war</packaging>
-    <name>Preferanser</name>
+    <name>Preferanser Web Application</name>
     <description>Preferanser - GWTP application using Requestfactory and Spring using a servlet container</description>
 
     <dependencies>
@@ -149,14 +149,6 @@
             <artifactId>servlet-api</artifactId>
             <version>${servlet-api.version}</version>
             <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
         </dependency>
         <dependency>
             <groupId>org.hsqldb</groupId>

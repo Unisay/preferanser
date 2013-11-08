@@ -34,7 +34,7 @@ public class PlaceManager extends PlaceManagerImpl {
                         @DefaultPlace final String defaultPlaceNameToken) {
         super(eventBus, tokenFormatter);
 
-        this.defaultPlaceRequest = new PlaceRequest(defaultPlaceNameToken);
+        this.defaultPlaceRequest = new PlaceRequest.Builder().nameToken(defaultPlaceNameToken).build();
     }
 
     @Override

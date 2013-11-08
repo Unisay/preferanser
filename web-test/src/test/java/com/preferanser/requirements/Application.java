@@ -21,17 +21,12 @@ package com.preferanser.requirements;
 
 import net.thucydides.core.annotations.Feature;
 
+@SuppressWarnings("unused")
 public class Application {
 
     @Feature
     public class Cards {
         public class CardsPresence {}
-    }
-
-    @Feature
-    public class Search {
-        public class SearchByKeyword {}
-        public class SearchByMultipleKeywords {}
     }
 
 }

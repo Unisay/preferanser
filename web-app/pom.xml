@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Preferanser is a program to simulate and calculate Russian Preferans Card game deals.
+  ~
+  ~     Copyright (C) 2013  Yuriy Lazarev <Yuriy.Lazarev@gmail.com>
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, either version 3 of the License, or
+  ~     (at your option) any later version.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see [http://www.gnu.org/licenses/].
+  -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>preferanser</artifactId>
+        <groupId>com.preferanser</groupId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>web-app</artifactId>
+    <packaging>war</packaging>
+    <name>Preferanser</name>
+    <description>Preferanser - GWTP application using Requestfactory and Spring using a servlet container</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.preferanser</groupId>
+            <artifactId>domain</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <!-- Google Web Toolkit dependencies -->
+        <dependency>
+            <groupId>com.google.gwt</groupId>
+            <artifactId>gwt-user</artifactId>
+            <version>${gwt.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.google.web.bindery</groupId>
+            <artifactId>requestfactory-server</artifactId>
+            <version>${gwt.version}</version>
+        </dependency>
+
+        <!-- GWT-Platform dependencies -->
+        <dependency>
+            <groupId>com.gwtplatform</groupId>
+            <artifactId>gwtp-mvp-client</artifactId>
+            <version>${gwtp.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- DI dependencies -->
+        <dependency>
+            <groupId>com.google.inject</groupId>
+            <artifactId>guice</artifactId>
+            <version>${guice.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.inject.extensions</groupId>
+            <artifactId>guice-servlet</artifactId>
+            <version>${guice.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.inject.extensions</groupId>
+            <artifactId>guice-assistedinject</artifactId>
+            <version>${guice.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.gwt.inject</groupId>
+            <artifactId>gin</artifactId>
+            <version>${gin.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Hibernate dependencies -->
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-entitymanager</artifactId>
+            <version>${hibernate.version}</version>
+        </dependency>
+
+        <!-- Hibernate validator dependencies -->
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-validator</artifactId>
+            <version>${hibernate-validator.version}</version>
+        </dependency>
+
+        <!-- Spring dependencies -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-aspects</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-jpa</artifactId>
+            <version>${spring-data.version}</version>
+        </dependency>
+
+        <!-- Spring Security dependencies -->
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-core</artifactId>
+            <version>${spring-security.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-web</artifactId>
+            <version>${spring-security.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>spring-jdbc</artifactId>
+                    <groupId>org.springframework</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-config</artifactId>
+            <version>${spring-security.version}</version>
+        </dependency>
+
+        <!-- Other dependencies -->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>${servlet-api.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.hsqldb</groupId>
+            <artifactId>hsqldb</artifactId>
+            <version>${hsqldb.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>${json.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>xalan</groupId>
+            <artifactId>xalan</artifactId>
+            <version>${xalan.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava-gwt</artifactId>
+            <version>${guava.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Test dependencies -->
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest-all</artifactId>
+            <version>1.3</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.googlecode.gwt-test-utils</groupId>
+            <artifactId>gwt-test-utils</artifactId>
+            <version>${gwt-test-utils.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.unitils</groupId>
+            <artifactId>unitils-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <outputDirectory>${webappDirectory}/WEB-INF/classes</outputDirectory>
+
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+            </resource>
+        </resources>
+
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven-compiler-plugin.version}</version>
+                <configuration>
+                    <source>${target.jdk}</source>
+                    <target>${target.jdk}</target>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                    <!-- Disable annotation processors during normal compilation -->
+                    <proc>none</proc>
+                </configuration>
+            </plugin>
+
+            <!-- JUnit Testing - skip *.GwtTest cases -->
+            <!-- 'mvn test' - runs the Jukito tests -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven-surefire-plugin.version}</version>
+                <configuration>
+                    <includes>
+                        <include>**/*Test.java</include>
+                    </includes>
+                    <excludes>
+                        <exclude>**/*GwtTest.java</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+
+            <!-- GWT -->
+            <!-- 'mvn gwt:run' - runs development mode -->
+            <!-- 'mvn gwt:debug' - runs debug mode -->
+            <!-- 'mvn gwt:compile' - compiles gwt -->
+            <!-- 'mvn integration-test' - runs the gwt tests (*GwtTest.java) -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>gwt-maven-plugin</artifactId>
+                <version>${gwt.version}</version>
+                <configuration>
+                    <!-- For multiple tests, use GwtTestSuite.java for speed -->
+                    <includes>**/*GwtTest.java</includes>
+                    <mode>htmlunit</mode>
+
+                    <extraJvmArgs>-Xss1024K -Xmx1024M -XX:MaxPermSize=256M</extraJvmArgs>
+                    <logLevel>INFO</logLevel>
+                    <style>${gwt.style}</style>
+
+                    <copyWebapp>true</copyWebapp>
+                    <hostedWebapp>${webappDirectory}</hostedWebapp>
+
+                    <runTarget>Preferanser.html</runTarget>
+                    <modules>
+                        <module>com.preferanser.Preferanser</module>
+                    </modules>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>compile</goal>
+                            <goal>test</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- Run annotation processors on src/home/java sources -->
+            <plugin>
+                <groupId>org.bsc.maven</groupId>
+                <artifactId>maven-processor-plugin</artifactId>
+                <version>${maven-processor-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>process</id>
+                        <goals>
+                            <goal>process</goal>
+                        </goals>
+                        <phase>generate-sources</phase>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>com.google.web.bindery</groupId>
+                        <artifactId>requestfactory-apt</artifactId>
+                        <version>${gwt.version}</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>${maven-build-helper-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>add-source</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>${project.build.directory}/generated-sources/apt</source>
+                                <source>${project.build.directory}/generated-sources/gwt</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

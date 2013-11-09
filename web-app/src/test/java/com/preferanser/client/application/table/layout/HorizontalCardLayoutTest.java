@@ -26,7 +26,6 @@ import com.googlecode.gwt.test.GwtTest;
 import com.preferanser.client.application.widgets.CardWidget;
 import com.preferanser.domain.Card;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -38,9 +37,8 @@ import static com.preferanser.domain.Card.*;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 
-@Ignore // TODO fix
 @GwtModule("com.preferanser.Preferanser")
-public class HorizontalCardLayoutGwtTest extends GwtTest {
+public class HorizontalCardLayoutTest extends GwtTest {
 
     private HorizontalLayout layout;
     private Collection<Card> cards;

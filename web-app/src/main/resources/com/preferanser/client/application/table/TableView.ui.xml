@@ -28,13 +28,13 @@
     <g:VerticalPanel addStyleNames="{style.verticalPanel}" spacing="0">
         <g:HorizontalPanel addStyleNames="{style.buttonsPanel}" spacing="10">
             <g:HorizontalPanel spacing="0">
-                <g:ToggleButton ui:field="playButton" addStyleNames="{style.play}"/>
-                <g:ToggleButton ui:field="editButton" addStyleNames="{style.edit}"/>
+                <g:ToggleButton ui:field="playButton" addStyleNames="{style.play}" debugId="play"/>
+                <g:ToggleButton ui:field="editButton" addStyleNames="{style.edit}" debugId="edit"/>
             </g:HorizontalPanel>
-            <g:Button ui:field="resetButton" text="Deal">
+            <g:Button ui:field="resetButton" text="Deal" debugId="reset">
                 <ui:attribute name="text" key="deal" description="Deal button caption"/>
             </g:Button>
-            <g:Button ui:field="saveButton" text="Save">
+            <g:Button ui:field="saveButton" text="Save" debugId="save">
                 <ui:attribute name="text" key="save" description="Save button caption"/>
             </g:Button>
         </g:HorizontalPanel>

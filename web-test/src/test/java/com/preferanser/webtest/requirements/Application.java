@@ -27,6 +27,7 @@ public class Application {
     @Feature
     public class Cards {
         public class CardsPresence {}
+        public class CardsDragAndDrop {}
     }
 
 }

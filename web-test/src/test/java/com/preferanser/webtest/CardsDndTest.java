@@ -20,20 +20,45 @@
 package com.preferanser.webtest;
 
 import com.preferanser.domain.Card;
+import com.preferanser.domain.TableLocation;
 import com.preferanser.webtest.requirements.Application;
 import net.thucydides.core.annotations.Story;
+import org.apache.commons.lang3.ArrayUtils;
 import org.junit.Test;
 
+import static com.preferanser.domain.Card.*;
 import static com.preferanser.domain.TableLocation.*;
 
-@Story(Application.Cards.CardsPresence.class)
-public class CardsPresenceTest extends TableTest {
+@Story(Application.Cards.CardsDragAndDrop.class)
+public class CardsDndTest extends TableTest {
 
     @Test
-    public void all_cards_should_be_present_on_north() {
-        endUser.onTheTablePage()
-                .canSeeCardsAt(NORTH, Card.values())
-                .canSeeNoCardsAt(EAST, SOUTH, WEST);
+    public void user_can_drag_card_to_east() {
+        user_can_drag_card_to_location(SPADE_ACE, NORTH, EAST);
     }
+
+    @Test
+    public void user_can_drag_card_to_south() {
+        user_can_drag_card_to_location(CLUB_ACE, NORTH, SOUTH);
+    }
+
+    @Test
+    public void user_can_drag_card_to_west() {
+        user_can_drag_card_to_location(DIAMOND_ACE, NORTH, WEST);
+    }
+
+    @Test
+    public void user_can_drag_card_to_center() {
+        user_can_drag_card_to_location(HEART_ACE, NORTH, CENTER);
+    }
+
+    private void user_can_drag_card_to_location(Card card, TableLocation fromLocation, TableLocation toLocation) {
+        endUser.onTheTablePage()
+                .editsNewDeal()
+                .dragsCardToOtherLocation(card, fromLocation, toLocation)
+                .canSeeCardsAt(toLocation, card)
+                .canSeeNoCardsAt(ArrayUtils.removeElements(TableLocation.values(), toLocation, fromLocation));
+    }
+
 
 }

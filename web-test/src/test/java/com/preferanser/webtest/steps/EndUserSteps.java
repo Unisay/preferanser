@@ -19,13 +19,20 @@
 
 package com.preferanser.webtest.steps;
 
+import com.google.common.base.Optional;
 import com.preferanser.domain.Card;
 import com.preferanser.domain.TableLocation;
 import com.preferanser.webtest.pages.TablePage;
 import net.thucydides.core.annotations.Step;
 import net.thucydides.core.pages.Pages;
+import net.thucydides.core.pages.WebElementFacade;
 import net.thucydides.core.steps.ScenarioSteps;
+import org.hamcrest.collection.IsEmptyCollection;
+import org.openqa.selenium.interactions.HasInputDevices;
+import org.openqa.selenium.interactions.Mouse;
 
+import static java.lang.String.format;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 public class EndUserSteps extends ScenarioSteps {
@@ -42,18 +49,55 @@ public class EndUserSteps extends ScenarioSteps {
 
     @Step
     public EndUserSteps canSeeCardsAt(TableLocation location, Card... cards) {
-        TablePage page = getPages().get(TablePage.class);
+        TablePage page = getTablePage();
         for (Card card : cards) {
-            assertTrue(page.cardIsVisibleAtLocation(card, location));
+            Optional<WebElementFacade> maybeCardAtTableLocationElement = page.getCardAtTableLocationElement(card, location);
+
+            assertTrue(format("Can't find card %s at location %s", card, location),
+                    maybeCardAtTableLocationElement.isPresent());
+
+            assertTrue(format("Card %s is not visible at location %s", card, location),
+                    maybeCardAtTableLocationElement.get().isCurrentlyVisible());
         }
         return this;
     }
 
     @Step
-    public void canSeeNoCardsAt(TableLocation... locations) {
-        TablePage page = getPages().get(TablePage.class);
+    public EndUserSteps canSeeNoCardsAt(TableLocation... locations) {
+        TablePage page = getTablePage();
         for (TableLocation location : locations) {
-            assertTrue(page.locationHasNoCards(location));
+            assertThat(page.getTableLocationCards(location), IsEmptyCollection.empty());
         }
+        return this;
+    }
+
+    @Step
+    public EndUserSteps dragsCardToOtherLocation(Card card, TableLocation fromLocation, TableLocation toLocation) {
+        TablePage page = getTablePage();
+
+        Optional<WebElementFacade> maybeCard = page.getCardAtTableLocationElement(card, fromLocation);
+        assertTrue(maybeCard.isPresent());
+
+        Optional<WebElementFacade> maybeTableLocation = page.getTableLocationElement(toLocation);
+        assertTrue(maybeTableLocation.isPresent());
+
+        Mouse mouse = ((HasInputDevices) getDriver()).getMouse();
+        mouse.mouseMove(maybeCard.get().getCoordinates(), 3, 3); // grab the top left corner
+        mouse.mouseDown(null); // at the current location
+        mouse.mouseMove(maybeTableLocation.get().getCoordinates());
+        mouse.mouseUp(maybeTableLocation.get().getCoordinates());
+        return this;
+    }
+
+    @Step
+    public EndUserSteps editsNewDeal() {
+        TablePage tablePage = getTablePage();
+        tablePage.getEditButton().click();
+        tablePage.getResetButton().click();
+        return this;
+    }
+
+    private TablePage getTablePage() {
+        return getPages().get(TablePage.class);
     }
 }

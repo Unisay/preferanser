@@ -36,7 +36,7 @@ import static org.mockito.Mockito.when;
  * Gwt Unit test for the ContractLink
  */
 @GwtModule("com.preferanser.Preferanser")
-public class ContractLinkGwtTest extends GwtTestWithMockito {
+public class ContractLinkTest extends GwtTestWithMockito {
 
     private ContractLink contractLink;
 

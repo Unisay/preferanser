@@ -19,13 +19,22 @@
 
 package com.preferanser.webtest.pages;
 
+import com.google.common.base.Optional;
 import com.preferanser.domain.Card;
 import com.preferanser.domain.TableLocation;
 import net.thucydides.core.annotations.At;
 import net.thucydides.core.annotations.DefaultUrl;
 import net.thucydides.core.pages.WebElementFacade;
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.List;
+
+import static com.google.common.base.Optional.absent;
 
 /**
  * Table page
@@ -34,17 +43,46 @@ import org.openqa.selenium.WebDriver;
 @DefaultUrl("http://127.0.0.1:8888/Preferanser.html?gwt.codesvr=127.0.0.1:9997")
 public class TablePage extends GwtPage {
 
+    private static final Logger log = LoggerFactory.getLogger(TablePage.class);
+
     public TablePage(WebDriver driver) {
         super(driver);
     }
 
-    public boolean cardIsVisibleAtLocation(Card card, TableLocation location) {
-        WebElementFacade elementFacade = gwtElementById(location.name());
-        return elementFacade.isCurrentlyVisible() && elementFacade.findBy(getGwtId(card.name())).isCurrentlyVisible();
+    public Optional<WebElementFacade> getCardAtTableLocationElement(Card card, TableLocation location) {
+        Optional<WebElementFacade> maybeTableLocation = getTableLocationElement(location);
+        if (maybeTableLocation.isPresent()) {
+            try {
+                WebElementFacade cardElementFacade = maybeTableLocation.get().findBy(getGwtId(card.name()));
+                return Optional.of(cardElementFacade);
+            } catch (NoSuchElementException e) {
+                log.warn("Element not found", e);
+                return absent();
+            }
+        }
+        return absent();
     }
 
-    public boolean locationHasNoCards(TableLocation location) {
-        WebElementFacade locationElement = gwtElementById(location.name());
-        return locationElement.getWrappedElement().findElements(By.className("card")).isEmpty();
+    public List<WebElement> getTableLocationCards(TableLocation location) {
+        Optional<WebElementFacade> maybeTableLocation = getTableLocationElement(location);
+        if (!maybeTableLocation.isPresent())
+            throw new IllegalStateException(String.format("TableLocation.%s web element is not present on page", location));
+        return maybeTableLocation.get().getWrappedElement().findElements(By.className("card"));
+    }
+
+    public Optional<WebElementFacade> getTableLocationElement(TableLocation location) {
+        WebElementFacade locationElementFacade = gwtElementById(location.name());
+        if (locationElementFacade.isCurrentlyVisible()) {
+            return Optional.fromNullable(locationElementFacade);
+        }
+        return absent();
+    }
+
+    public WebElementFacade getEditButton() {
+        return gwtElementById("edit");
+    }
+
+    public WebElementFacade getResetButton() {
+        return gwtElementById("reset");
     }
 }

@@ -17,7 +17,7 @@
  *     along with this program.  If not, see [http://www.gnu.org/licenses/].
  */
 
-package com.preferanser.pages;
+package com.preferanser.webtest.pages;
 
 import com.preferanser.domain.Card;
 import com.preferanser.domain.TableLocation;

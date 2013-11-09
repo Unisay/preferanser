@@ -17,20 +17,16 @@
  *     along with this program.  If not, see [http://www.gnu.org/licenses/].
  */
 
-package com.preferanser;
+package com.preferanser.webtest.requirements;
 
-import net.thucydides.core.annotations.Managed;
-import net.thucydides.junit.runners.ThucydidesRunner;
-import org.junit.runner.RunWith;
-import org.openqa.selenium.WebDriver;
+import net.thucydides.core.annotations.Feature;
 
-/**
- * Base Thucydides test
- */
-@RunWith(ThucydidesRunner.class)
-public abstract class ThucydidesTest {
+@SuppressWarnings("unused")
+public class Application {
 
-    @Managed(uniqueSession = true)
-    public WebDriver webdriver;
+    @Feature
+    public class Cards {
+        public class CardsPresence {}
+    }
 
 }

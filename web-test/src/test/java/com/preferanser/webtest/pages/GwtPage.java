@@ -1,4 +1,4 @@
-package com.preferanser.pages;
+package com.preferanser.webtest.pages;
 
 import com.google.common.base.Predicate;
 import net.thucydides.core.pages.PageObject;

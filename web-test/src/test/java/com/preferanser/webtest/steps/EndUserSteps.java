@@ -17,11 +17,11 @@
  *     along with this program.  If not, see [http://www.gnu.org/licenses/].
  */
 
-package com.preferanser.steps;
+package com.preferanser.webtest.steps;
 
 import com.preferanser.domain.Card;
 import com.preferanser.domain.TableLocation;
-import com.preferanser.pages.TablePage;
+import com.preferanser.webtest.pages.TablePage;
 import net.thucydides.core.annotations.Step;
 import net.thucydides.core.pages.Pages;
 import net.thucydides.core.steps.ScenarioSteps;

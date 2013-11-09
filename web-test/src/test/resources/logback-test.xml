@@ -7,7 +7,10 @@
         </encoder>
     </appender>
 
-    <root level="debug">
+    <logger name="org.apache.http" level="INFO"/>
+    <logger name="freemarker.cache" level="INFO"/>
+
+    <root level="INFO">
         <appender-ref ref="STDOUT"/>
     </root>
 

@@ -102,6 +102,13 @@ public class EndUserSteps extends ScenarioSteps {
     }
 
     @Step
+    public EndUserSteps resetsEditedDeal() {
+        TablePage tablePage = getTablePage();
+        tablePage.getResetButton().click();
+        return this;
+    }
+
+    @Step
     public EndUserSteps specifiesContract(Cardinal cardinal, Contract contract) {
         TablePage tablePage = getTablePage();
         tablePage.getContractLink(cardinal).click();
@@ -128,6 +135,11 @@ public class EndUserSteps extends ScenarioSteps {
         TablePage tablePage = getTablePage();
         assertThat(tablePage.getContractLabel(cardinal).getTextValue(), equalTo(""));
         return this;
+    }
+
+    @Step
+    public TurnPointerSteps withTurnPointer() {
+        return new TurnPointerSteps(this);
     }
 
     private TablePage getTablePage() {

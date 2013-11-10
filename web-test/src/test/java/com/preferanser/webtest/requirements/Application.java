@@ -21,7 +21,6 @@ package com.preferanser.webtest.requirements;
 
 import net.thucydides.core.annotations.Feature;
 
-@SuppressWarnings("unused")
 public class Application {
 
     @Feature
@@ -31,6 +30,10 @@ public class Application {
         public class Cards {
             public class Presence {}
             public class DragAndDrop {}
+        }
+
+        public class TurnPointer {
+            public class Editing {}
         }
     }
 }

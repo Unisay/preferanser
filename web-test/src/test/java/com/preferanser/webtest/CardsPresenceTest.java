@@ -30,7 +30,7 @@ import static com.preferanser.domain.TableLocation.*;
 public class CardsPresenceTest extends TableTest {
 
     @Test
-    public void all_cards_should_be_present_on_north() {
+    public void allCardsShouldBePresentOnNorth() {
         endUser.onTheTablePage()
                 .canSeeCardsAt(NORTH, Card.values())
                 .canSeeNoCardsAt(EAST, SOUTH, WEST);

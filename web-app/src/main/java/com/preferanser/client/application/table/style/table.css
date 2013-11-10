@@ -163,6 +163,7 @@
     border-bottom-left-radius: 0;
 }
 
+@external .turnPointer;
 .turnPointer {
     position: absolute;
     top: 47%;
@@ -170,6 +171,7 @@
     opacity: 0.2;
 }
 
+@external .turnPointerActive;
 .turnPointerActive, .turnPointer:hover {
     opacity: 1;
     cursor: pointer;

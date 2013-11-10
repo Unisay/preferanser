@@ -100,6 +100,10 @@ public class TablePage extends GwtPage {
     }
 
     public WebElementFacade getContractButton(Contract contract) {
-        return element(By.xpath(format("//button[@id='gwt-debug-%s']", contract.name())));
+        return element(By.id(format("gwt-debug-%s", contract.name())));
+    }
+
+    public WebElementFacade getCardinalTurnPointer(Cardinal cardinal) {
+        return element(By.id(format("gwt-debug-turn-pointer-%s", cardinal.name())));
     }
 }

@@ -52,6 +52,7 @@ public class TurnPointer extends Image {
                 addStyleName(style.turnPointerWest());
                 break;
         }
+        ensureDebugId("turn-pointer-" + turn.name());
     }
 
     public Cardinal getTurn() {

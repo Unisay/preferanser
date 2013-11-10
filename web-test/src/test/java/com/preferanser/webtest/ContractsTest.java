@@ -11,7 +11,7 @@ import static com.preferanser.domain.Cardinal.*;
 public class ContractsTest extends TableTest {
 
     @Test
-    public void user_can_specify_contracts() {
+    public void userCanSpecifyContracts() {
         endUser.onTheTablePage()
                 .editsNewDeal()
                 .specifiesContract(NORTH, Contract.SIX_SPADE)

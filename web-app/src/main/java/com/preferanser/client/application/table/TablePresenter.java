@@ -19,6 +19,7 @@
 
 package com.preferanser.client.application.table;
 
+import com.google.common.base.Optional;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.HasUiHandlers;
@@ -30,11 +31,13 @@ import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.gwtplatform.mvp.client.proxy.RevealRootPopupContentEvent;
 import com.preferanser.client.application.ApplicationPresenter;
 import com.preferanser.client.application.table.dialog.contract.ContractDialogPresenter;
+import com.preferanser.client.application.table.dialog.validation.ValidationDialogPresenter;
 import com.preferanser.client.place.NameTokens;
 import com.preferanser.domain.*;
 
 import java.util.Collection;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -43,6 +46,7 @@ import java.util.Map;
 public class TablePresenter extends Presenter<TablePresenter.TableView, TablePresenter.Proxy> implements TableUiHandlers, HasCardinalContracts {
 
     private ContractDialogPresenter contractDialog;
+    private ValidationDialogPresenter validationDialog;
 
     public interface TableView extends View, HasUiHandlers<TableUiHandlers> {
         void displayTableCards(Map<TableLocation, Collection<Card>> tableCards, LinkedHashMap<Card, Cardinal> centerCards);
@@ -60,10 +64,15 @@ public class TablePresenter extends Presenter<TablePresenter.TableView, TablePre
     public interface Proxy extends ProxyPlace<TablePresenter> {}
 
     @Inject
-    public TablePresenter(EventBus eventBus, TableView view, Proxy proxy, ContractDialogPresenter contractDialog) {
+    public TablePresenter(EventBus eventBus,
+                          TableView view,
+                          Proxy proxy,
+                          ContractDialogPresenter contractDialog,
+                          ValidationDialogPresenter validationDialog) {
         super(eventBus, view, proxy, ApplicationPresenter.TYPE_SetMainContent);
         this.contractDialog = contractDialog;
         this.contractDialog.setHasCardinalContracts(this);
+        this.validationDialog = validationDialog;
         getView().setUiHandlers(this);
     }
 
@@ -134,6 +143,12 @@ public class TablePresenter extends Presenter<TablePresenter.TableView, TablePre
     }
 
     @Override public boolean setPlayMode() {
+        Optional<List<Game.ValidationError>> maybeErrors = game.getValidationErrors();
+        if (maybeErrors.isPresent()) {
+            validationDialog.setValidationErrors(maybeErrors.get());
+            RevealRootPopupContentEvent.fire(this, validationDialog);
+            return false;
+        }
         game.setMode(Game.Mode.PLAY);
         getView().setPlayMode();
         return true;

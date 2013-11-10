@@ -23,6 +23,8 @@ import com.google.inject.Singleton;
 import com.gwtplatform.mvp.client.gin.AbstractPresenterModule;
 import com.preferanser.client.application.table.dialog.contract.ContractDialogPresenter;
 import com.preferanser.client.application.table.dialog.contract.ContractDialogView;
+import com.preferanser.client.application.table.dialog.validation.ValidationDialogPresenter;
+import com.preferanser.client.application.table.dialog.validation.ValidationDialogView;
 
 /**
  * Gin module for the table page
@@ -33,6 +35,7 @@ public class TableModule extends AbstractPresenterModule {
     protected void configure() {
         bind(HasCardinalContracts.class).to(TablePresenter.class).in(Singleton.class);
         bindSingletonPresenterWidget(ContractDialogPresenter.class, ContractDialogPresenter.MyView.class, ContractDialogView.class);
+        bindSingletonPresenterWidget(ValidationDialogPresenter.class, ValidationDialogPresenter.MyView.class, ValidationDialogView.class);
         bindPresenter(TablePresenter.class, TablePresenter.TableView.class, TableView.class, TablePresenter.Proxy.class);
     }
 

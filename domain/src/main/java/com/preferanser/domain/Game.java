@@ -34,6 +34,9 @@ import static com.preferanser.domain.TableLocation.*;
  */
 public class Game {
 
+    private static final int NUM_OF_CARDS_PER_CARDINAL = 10;
+    private static final int NUM_OF_CONTRACTS = 3;
+
     public static enum Type {
         THREE_PLAYERS(3), FOUR_PLAYERS(4);
 
@@ -42,14 +45,23 @@ public class Game {
         private Type(int numPlayers) {
             this.numPlayers = numPlayers;
         }
+
     }
 
     public static enum Mode {PLAY, EDIT}
 
-    private Multimap<Cardinal, Card> cardinalCardMultimap = LinkedHashMultimap.create(TableLocation.values().length, Card.values().length);
-    private Map<Cardinal, Integer> cardinalTricks = Maps.newHashMapWithExpectedSize(Cardinal.values().length);
+    public static enum ValidationError {
+        FIRST_TURN_NOT_SPECIFIED,
+        HAS_CONFLICTING_CONTRACTS,
+        WRONG_CARDINAL_CARDS,
+        WRONG_FIRST_TURN, WRONG_NUMBER_OF_CONTRACTS
+    }
 
+    private Multimap<Cardinal, Card> cardinalCardMultimap = LinkedHashMultimap.create(TableLocation.values().length, Card.values().length);
+
+    private Map<Cardinal, Integer> cardinalTricks = Maps.newHashMapWithExpectedSize(Cardinal.values().length);
     private Map<Cardinal, Contract> cardinalContracts = Maps.newHashMapWithExpectedSize(Cardinal.values().length);
+
     private Map<Card, Cardinal> centerCardCardinalMap = Maps.newLinkedHashMap(); // order is important
     private Type type = Type.THREE_PLAYERS; // TODO selection
     private Mode mode = Mode.EDIT;
@@ -57,6 +69,66 @@ public class Game {
 
     public Game() {
         clearCardinalTricks();
+    }
+
+    public Optional<List<ValidationError>> getValidationErrors() {
+        List<ValidationError> errors = newArrayList();
+
+        if (turn == null)
+            errors.add(ValidationError.FIRST_TURN_NOT_SPECIFIED);
+
+        if (wrongNumberOfContracts())
+            errors.add(ValidationError.WRONG_NUMBER_OF_CONTRACTS);
+
+        if (wrongFirstTurn())
+            errors.add(ValidationError.WRONG_FIRST_TURN);
+
+        if (hasConflictingContracts())
+            errors.add(ValidationError.HAS_CONFLICTING_CONTRACTS);
+
+        if (wrongCardinalCards())
+            errors.add(ValidationError.WRONG_CARDINAL_CARDS);
+
+        if (errors.isEmpty())
+            return Optional.absent();
+        else
+            return Optional.of(errors);
+    }
+
+    private boolean wrongNumberOfContracts() {
+        int count = 0;
+        for (Map.Entry<Cardinal, Contract> entry : cardinalContracts.entrySet()) {
+            if (entry.getValue() != null)
+                count++;
+        }
+        return count != NUM_OF_CONTRACTS;
+    }
+
+    private boolean wrongFirstTurn() {
+        return type == Type.THREE_PLAYERS && turn != null && cardinalContracts.get(turn) == null;
+    }
+
+    private boolean hasConflictingContracts() {
+        int numOfContracts = 0;
+        int numOfPlayingContracts = 0;
+        int numOfWhists = 0;
+        for (Contract contract : cardinalContracts.values()) {
+            if (contract != null) {
+                numOfContracts++;
+                if (contract.isPlaying())
+                    numOfPlayingContracts++;
+                if (contract == Contract.WHIST)
+                    numOfWhists++;
+            }
+        }
+        return numOfPlayingContracts > 1 || numOfWhists == numOfContracts;
+    }
+
+    private boolean wrongCardinalCards() {
+        for (Cardinal cardinal : Cardinal.values())
+            if (cardinalContracts.get(cardinal) != null && cardinalCardMultimap.get(cardinal).size() != NUM_OF_CARDS_PER_CARDINAL)
+                return true;
+        return false;
     }
 
     public void putCards(Cardinal cardinal, Collection<Card> cards) {

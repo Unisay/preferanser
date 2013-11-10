@@ -23,16 +23,19 @@ import com.google.common.base.Optional;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.EnumBiMap;
 import com.google.common.collect.Maps;
-import org.hamcrest.CoreMatchers;
-import org.junit.Assert;
+import org.apache.commons.lang.ArrayUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.unitils.reflectionassert.ReflectionComparatorMode;
 
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 import static com.google.common.collect.Lists.newArrayList;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.junit.Assert.*;
 import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
 
 /**
@@ -176,7 +179,7 @@ public class GameTest {
 
     @Test
     public void testGetPlayingContract() throws Exception {
-        Assert.assertThat(game.getPlayingContract(), CoreMatchers.equalTo(Optional.<Contract>absent()));
+        assertThat(game.getPlayingContract(), equalTo(Optional.<Contract>absent()));
     }
 
     @Test
@@ -184,7 +187,7 @@ public class GameTest {
         game.setCardinalContract(Cardinal.NORTH, Contract.EIGHT_CLUB);
         game.setCardinalContract(Cardinal.EAST, Contract.PASS);
         game.setCardinalContract(Cardinal.WEST, Contract.WHIST);
-        Assert.assertThat(game.getTrump(), CoreMatchers.equalTo(Optional.of(Suit.CLUB)));
+        assertThat(game.getTrump(), equalTo(Optional.of(Suit.CLUB)));
     }
 
     @Test
@@ -192,12 +195,12 @@ public class GameTest {
         game.setCardinalContract(Cardinal.NORTH, Contract.PASS);
         game.setCardinalContract(Cardinal.EAST, Contract.PASS);
         game.setCardinalContract(Cardinal.WEST, Contract.PASS);
-        Assert.assertThat(game.getTrump(), CoreMatchers.equalTo(Optional.<Suit>absent()));
+        assertThat(game.getTrump(), equalTo(Optional.<Suit>absent()));
     }
 
     @Test
     public void testGetTrump_Absent() throws Exception {
-        Assert.assertThat(game.getTrump(), CoreMatchers.equalTo(Optional.<Suit>absent()));
+        assertThat(game.getTrump(), equalTo(Optional.<Suit>absent()));
     }
 
     @Test
@@ -216,7 +219,7 @@ public class GameTest {
         expectedCardinalTricks.put(Cardinal.NORTH, 1);
         assertReflectionEquals(expectedCardinalTricks, game.getCardinalTricks());
         assertReflectionEquals(expectedTableCards, game.getCardinalCards());
-        Assert.assertThat(game.getTurn(), CoreMatchers.equalTo(Cardinal.NORTH));
+        assertThat(game.getTurn(), equalTo(Cardinal.NORTH));
     }
 
     @Test
@@ -236,7 +239,7 @@ public class GameTest {
         expectedCardinalTricks.put(Cardinal.NORTH, 1);
         assertReflectionEquals(expectedCardinalTricks, game.getCardinalTricks());
         assertReflectionEquals(expectedTableCards, game.getCardinalCards());
-        Assert.assertThat(game.getTurn(), CoreMatchers.equalTo(Cardinal.NORTH));
+        assertThat(game.getTurn(), equalTo(Cardinal.NORTH));
     }
 
     @Test
@@ -278,7 +281,77 @@ public class GameTest {
         expectedCardinalTricks.put(Cardinal.NORTH, 1);
         assertReflectionEquals(expectedCardinalTricks, game.getCardinalTricks());
         assertReflectionEquals(expectedTableCards, game.getCardinalCards());
-        Assert.assertThat(game.getCenterCards().size(), CoreMatchers.equalTo(0));
-        Assert.assertThat(game.getTurn(), CoreMatchers.equalTo(Cardinal.NORTH));
+        assertThat(game.getCenterCards().size(), equalTo(0));
+        assertThat(game.getTurn(), equalTo(Cardinal.NORTH));
     }
+
+    @Test
+    public void testGetValidationErrors_WrongFirstTurn() throws Exception {
+        dealByTenCards();
+        game.setTurn(Cardinal.NORTH);
+        game.setType(Game.Type.THREE_PLAYERS);
+        game.setCardinalContract(Cardinal.EAST, Contract.PASS);
+        game.setCardinalContract(Cardinal.WEST, Contract.PASS);
+        game.setCardinalContract(Cardinal.SOUTH, Contract.PASS);
+        assertValidationErrors(Game.ValidationError.WRONG_FIRST_TURN);
+    }
+
+    @Test
+    public void testGetValidationErrors_WrongNumberOfContractsSpecified() throws Exception {
+        dealByTenCards();
+        game.setTurn(Cardinal.NORTH);
+        game.setType(Game.Type.FOUR_PLAYERS);
+        game.setCardinalContract(Cardinal.EAST, Contract.PASS);
+        game.setCardinalContract(Cardinal.WEST, Contract.PASS);
+        assertValidationErrors(Game.ValidationError.WRONG_NUMBER_OF_CONTRACTS);
+        game.setCardinalContract(Cardinal.SOUTH, Contract.PASS);
+        assertFalse("Validation errors not expected but present", game.getValidationErrors().isPresent());
+    }
+
+    @Test
+    public void testGetValidationErrors_FirstTurnNotSpecified() throws Exception {
+        dealByTenCards();
+        game.setType(Game.Type.THREE_PLAYERS);
+        game.setCardinalContract(Cardinal.EAST, Contract.PASS);
+        game.setCardinalContract(Cardinal.SOUTH, Contract.SEVEN_NO_TRUMP);
+        game.setCardinalContract(Cardinal.WEST, Contract.PASS);
+        assertValidationErrors(Game.ValidationError.FIRST_TURN_NOT_SPECIFIED);
+    }
+
+    @Test
+    public void testGetValidationErrors_MoreThanOnePlayingContract() throws Exception {
+        dealByTenCards();
+        game.setTurn(Cardinal.NORTH);
+        game.setType(Game.Type.FOUR_PLAYERS);
+        game.setCardinalContract(Cardinal.EAST, Contract.MISER);
+        game.setCardinalContract(Cardinal.SOUTH, Contract.SEVEN_NO_TRUMP);
+        game.setCardinalContract(Cardinal.WEST, Contract.PASS);
+        assertValidationErrors(Game.ValidationError.HAS_CONFLICTING_CONTRACTS);
+    }
+
+    @Test
+    public void testGetValidationErrors_AllContractsAreWhists() throws Exception {
+        dealByTenCards();
+        game.setTurn(Cardinal.NORTH);
+        game.setType(Game.Type.FOUR_PLAYERS);
+        game.setCardinalContract(Cardinal.EAST, Contract.WHIST);
+        game.setCardinalContract(Cardinal.SOUTH, Contract.WHIST);
+        game.setCardinalContract(Cardinal.WEST, Contract.WHIST);
+        assertValidationErrors(Game.ValidationError.HAS_CONFLICTING_CONTRACTS);
+    }
+
+    private void dealByTenCards() {
+        Card[] allCards = Card.values();
+        game.putCards(Cardinal.EAST, (Card[]) ArrayUtils.subarray(allCards, 0, 10));
+        game.putCards(Cardinal.SOUTH, (Card[]) ArrayUtils.subarray(allCards, 10, 20));
+        game.putCards(Cardinal.WEST, (Card[]) ArrayUtils.subarray(allCards, 20, 30));
+        game.putCards(Cardinal.NORTH, (Card[]) ArrayUtils.subarray(allCards, 30, 32));
+    }
+
+    private void assertValidationErrors(Game.ValidationError... errors) {
+        Optional<List<Game.ValidationError>> maybeValidationErrors = game.getValidationErrors();
+        assertTrue("Validation errors expected but not returned", maybeValidationErrors.isPresent());
+        assertThat(maybeValidationErrors.get(), equalTo(Arrays.asList(errors)));
+    }
+
 }

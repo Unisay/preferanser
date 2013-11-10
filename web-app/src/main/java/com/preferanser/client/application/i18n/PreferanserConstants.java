@@ -59,4 +59,14 @@ public interface PreferanserConstants extends ConstantsWithLookup {
     @DefaultStringValue("Edit") String edit();
 
     @DefaultStringValue("Choose contract") String chooseContract();
+
+    @DefaultStringValue("Wrong number of contracts") String WRONG_NUMBER_OF_CONTRACTS();
+
+    @DefaultStringValue("There are conflicting contracts") String HAS_CONFLICTING_CONTRACTS();
+
+    @DefaultStringValue("Fist turn not specified") String FIRST_TURN_NOT_SPECIFIED();
+
+    @DefaultStringValue("First turn specified incorrectly") String WRONG_FIRST_TURN();
+
+    @DefaultStringValue("Cards dealed incorrectly") String WRONG_CARDINAL_CARDS();
 }

@@ -1,11 +1,11 @@
 package com.preferanser.webtest;
 
-import com.preferanser.domain.Contract;
 import com.preferanser.webtest.requirements.Application;
 import net.thucydides.core.annotations.Story;
 import org.junit.Test;
 
 import static com.preferanser.domain.Cardinal.*;
+import static com.preferanser.domain.Contract.*;
 
 @Story(Application.Table.Contracts.class)
 public class ContractsTest extends TableTest {
@@ -14,9 +14,9 @@ public class ContractsTest extends TableTest {
     public void userCanSpecifyContracts() {
         endUser.onTheTablePage()
                 .editsNewDeal()
-                .specifiesContract(NORTH, Contract.SIX_SPADE)
-                .specifiesContract(EAST, Contract.PASS)
-                .specifiesContract(WEST, Contract.WHIST)
+                .specifiesContract(NORTH, SIX_SPADE)
+                .specifiesContract(EAST, PASS)
+                .specifiesContract(WEST, WHIST)
                 .switchesToPlayMode()
                 .canSeeContract(NORTH, "6♠")
                 .canSeeContract(EAST, "пас")

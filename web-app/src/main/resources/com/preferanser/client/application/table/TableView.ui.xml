@@ -47,7 +47,8 @@
                             <g:Label ui:field="titleNorth" addStyleNames="{style.titleNorth}">
                                 <ui:msg key="north" description="north">Север</ui:msg>
                             </g:Label>
-                            <p:ContractLink ui:field="northContractLink" constants="{constants}" tableStyle="{style}"/>
+                            <p:ContractLink ui:field="northContractLink" constants="{constants}" tableStyle="{style}"
+                                            debugId="contract-link-NORTH"/>
                         </g:FlowPanel>
                         <g:Label ui:field="trickCountNorth" addStyleNames="{style.trickCountNorth}"/>
                     </g:HorizontalPanel>
@@ -61,7 +62,8 @@
                             <g:Label ui:field="titleSouth" addStyleNames="{style.titleSouth}">
                                 <ui:msg key="south" description="south">Юг</ui:msg>
                             </g:Label>
-                            <p:ContractLink ui:field="southContractLink" constants="{constants}" tableStyle="{style}"/>
+                            <p:ContractLink ui:field="southContractLink" constants="{constants}" tableStyle="{style}"
+                                            debugId="contract-link-SOUTH"/>
                         </g:FlowPanel>
                         <g:Label ui:field="trickCountSouth" addStyleNames="{style.trickCountSouth}"/>
                     </g:HorizontalPanel>
@@ -75,7 +77,8 @@
                             <g:Label ui:field="titleEast" addStyleNames="{style.titleEast}">
                                 <ui:msg key="east" description="east">Восток</ui:msg>
                             </g:Label>
-                            <p:ContractLink ui:field="eastContractLink" constants="{constants}" tableStyle="{style}"/>
+                            <p:ContractLink ui:field="eastContractLink" constants="{constants}" tableStyle="{style}"
+                                            debugId="contract-link-EAST"/>
                         </g:FlowPanel>
                         <g:Label ui:field="trickCountEast" addStyleNames="{style.trickCountEast}"/>
                     </g:HorizontalPanel>
@@ -89,7 +92,8 @@
                             <g:Label ui:field="titleWest" addStyleNames="{style.titleWest}">
                                 <ui:msg key="west" description="west">Запад</ui:msg>
                             </g:Label>
-                            <p:ContractLink ui:field="westContractLink" constants="{constants}" tableStyle="{style}"/>
+                            <p:ContractLink ui:field="westContractLink" constants="{constants}" tableStyle="{style}"
+                                            debugId="contract-link-WEST"/>
                         </g:FlowPanel>
                         <g:Label ui:field="trickCountWest" addStyleNames="{style.trickCountWest}"/>
                     </g:HorizontalPanel>

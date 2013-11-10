@@ -21,6 +21,8 @@ package com.preferanser.webtest.steps;
 
 import com.google.common.base.Optional;
 import com.preferanser.domain.Card;
+import com.preferanser.domain.Cardinal;
+import com.preferanser.domain.Contract;
 import com.preferanser.domain.TableLocation;
 import com.preferanser.webtest.pages.TablePage;
 import net.thucydides.core.annotations.Step;
@@ -32,6 +34,8 @@ import org.openqa.selenium.interactions.HasInputDevices;
 import org.openqa.selenium.interactions.Mouse;
 
 import static java.lang.String.format;
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
@@ -94,6 +98,35 @@ public class EndUserSteps extends ScenarioSteps {
         TablePage tablePage = getTablePage();
         tablePage.getEditButton().click();
         tablePage.getResetButton().click();
+        return this;
+    }
+
+    @Step
+    public EndUserSteps specifiesContract(Cardinal cardinal, Contract contract) {
+        TablePage tablePage = getTablePage();
+        tablePage.getContractLink(cardinal).click();
+        tablePage.getContractButton(contract).click();
+        return this;
+    }
+
+    @Step
+    public EndUserSteps switchesToPlayMode() {
+        TablePage tablePage = getTablePage();
+        tablePage.getPlayButton().click();
+        return this;
+    }
+
+    @Step
+    public EndUserSteps canSeeContract(Cardinal cardinal, String contractName) {
+        TablePage tablePage = getTablePage();
+        assertThat(tablePage.getContractLabel(cardinal).getTextValue(), containsString(" — " + contractName));
+        return this;
+    }
+
+    @Step
+    public EndUserSteps canSeeNoContract(Cardinal cardinal) {
+        TablePage tablePage = getTablePage();
+        assertThat(tablePage.getContractLabel(cardinal).getTextValue(), equalTo(""));
         return this;
     }
 

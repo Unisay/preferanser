@@ -26,7 +26,7 @@ import org.junit.Test;
 
 import static com.preferanser.domain.TableLocation.*;
 
-@Story(Application.Cards.CardsPresence.class)
+@Story(Application.Table.Cards.Presence.class)
 public class CardsPresenceTest extends TableTest {
 
     @Test

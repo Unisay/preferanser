@@ -21,9 +21,10 @@ package com.preferanser.webtest.pages;
 
 import com.google.common.base.Optional;
 import com.preferanser.domain.Card;
+import com.preferanser.domain.Cardinal;
+import com.preferanser.domain.Contract;
 import com.preferanser.domain.TableLocation;
 import net.thucydides.core.annotations.At;
-import net.thucydides.core.annotations.DefaultUrl;
 import net.thucydides.core.pages.WebElementFacade;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
@@ -35,12 +36,12 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 
 import static com.google.common.base.Optional.absent;
+import static java.lang.String.format;
 
 /**
  * Table page
  */
 @At("http://127.0.0.1:8888/Preferanser.html")
-@DefaultUrl("http://127.0.0.1:8888/Preferanser.html?gwt.codesvr=127.0.0.1:9997")
 public class TablePage extends GwtPage {
 
     private static final Logger log = LoggerFactory.getLogger(TablePage.class);
@@ -66,7 +67,7 @@ public class TablePage extends GwtPage {
     public List<WebElement> getTableLocationCards(TableLocation location) {
         Optional<WebElementFacade> maybeTableLocation = getTableLocationElement(location);
         if (!maybeTableLocation.isPresent())
-            throw new IllegalStateException(String.format("TableLocation.%s web element is not present on page", location));
+            throw new IllegalStateException(format("TableLocation.%s web element is not present on page", location));
         return maybeTableLocation.get().getWrappedElement().findElements(By.className("card"));
     }
 
@@ -82,7 +83,23 @@ public class TablePage extends GwtPage {
         return gwtElementById("edit");
     }
 
+    public WebElementFacade getPlayButton() {
+        return gwtElementById("play");
+    }
+
     public WebElementFacade getResetButton() {
         return gwtElementById("reset");
+    }
+
+    public WebElementFacade getContractLink(Cardinal cardinal) {
+        return element(By.xpath(format("//div[@id='gwt-debug-contract-link-%s']//a", cardinal.name())));
+    }
+
+    public WebElementFacade getContractLabel(Cardinal cardinal) {
+        return element(By.xpath(format("//div[@id='gwt-debug-contract-link-%s']/div[@id='gwt-debug-contract-label']", cardinal.name())));
+    }
+
+    public WebElementFacade getContractButton(Contract contract) {
+        return element(By.xpath(format("//button[@id='gwt-debug-%s']", contract.name())));
     }
 }

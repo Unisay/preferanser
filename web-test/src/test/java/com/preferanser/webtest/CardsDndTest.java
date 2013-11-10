@@ -29,7 +29,7 @@ import org.junit.Test;
 import static com.preferanser.domain.Card.*;
 import static com.preferanser.domain.TableLocation.*;
 
-@Story(Application.Cards.CardsDragAndDrop.class)
+@Story(Application.Table.Cards.DragAndDrop.class)
 public class CardsDndTest extends TableTest {
 
     @Test

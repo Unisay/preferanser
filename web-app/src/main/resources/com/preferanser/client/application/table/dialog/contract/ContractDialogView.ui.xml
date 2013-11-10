@@ -77,121 +77,121 @@
         }
     </ui:style>
     <p:EscapableDialogBox ui:field="dialog" modal="true" glassEnabled="true" autoHideEnabled="true"
-                          glassStyleName="gwt-DialogBoxOverlay">
+                          glassStyleName="gwt-DialogBoxOverlay" debugId="contract-dialog">
         <g:VerticalPanel addStyleNames="{style.buttonsPanel}">
             <g:HorizontalPanel>
-                <g:Button ui:field="sixSpadeButton" addStyleNames="{style.contractButton}">
+                <g:Button ui:field="sixSpadeButton" addStyleNames="{style.contractButton}" debugId="SIX_SPADE">
                     <span class="{style.tricks}">6</span>&#0160;
                     <span class="{style.spade}">&#9824;</span>
                 </g:Button>
-                <g:Button ui:field="sixClubButton" addStyleNames="{style.contractButton}">
+                <g:Button ui:field="sixClubButton" addStyleNames="{style.contractButton}" debugId="SIX_CLUB">
                     <span class="{style.tricks}">6</span>&#0160;
                     <span class="{style.club}">&#9827;</span>
                 </g:Button>
-                <g:Button ui:field="sixDiamondButton" addStyleNames="{style.contractButton}">
+                <g:Button ui:field="sixDiamondButton" addStyleNames="{style.contractButton}" debugId="SIX_DIAMOND">
                     <span class="{style.tricks}">6</span>&#0160;
                     <span class="{style.diamond}">&#9830;</span>
                 </g:Button>
-                <g:Button ui:field="sixHeartButton" addStyleNames="{style.contractButton}">
+                <g:Button ui:field="sixHeartButton" addStyleNames="{style.contractButton}" debugId="SIX_HEART">
                     <span class="{style.tricks}">6</span>&#0160;
                     <span class="{style.heart}">&#9829;</span>
                 </g:Button>
-                <g:Button ui:field="sixNoTrumpButton" addStyleNames="{style.contractButton}">
+                <g:Button ui:field="sixNoTrumpButton" addStyleNames="{style.contractButton}" debugId="SIX_NO_TRUMP">
                     <span class="{style.tricks}">6</span>
                 </g:Button>
             </g:HorizontalPanel>
             <g:HorizontalPanel>
-                <g:Button ui:field="sevenSpadeButton" addStyleNames="{style.contractButton}">
+                <g:Button ui:field="sevenSpadeButton" addStyleNames="{style.contractButton}" debugId="SEVEN_SPADE">
                     <span class="{style.tricks}">7</span>&#0160;
                     <span class="{style.spade}">&#9824;</span>
                 </g:Button>
-                <g:Button ui:field="sevenClubButton" addStyleNames="{style.contractButton}">
+                <g:Button ui:field="sevenClubButton" addStyleNames="{style.contractButton}" debugId="SEVEN_CLUB">
                     <span class="{style.tricks}">7</span>&#0160;
                     <span class="{style.club}">&#9827;</span>
                 </g:Button>
-                <g:Button ui:field="sevenDiamondButton" addStyleNames="{style.contractButton}">
+                <g:Button ui:field="sevenDiamondButton" addStyleNames="{style.contractButton}" debugId="SEVEN_DIAMOND">
                     <span class="{style.tricks}">7</span>&#0160;
                     <span class="{style.diamond}">&#9830;</span>
                 </g:Button>
-                <g:Button ui:field="sevenHeartButton" addStyleNames="{style.contractButton}">
+                <g:Button ui:field="sevenHeartButton" addStyleNames="{style.contractButton}" debugId="SEVEN_HEART">
                     <span class="{style.tricks}">7</span>&#0160;
                     <span class="{style.heart}">&#9829;</span>
                 </g:Button>
-                <g:Button ui:field="sevenNoTrumpButton" addStyleNames="{style.contractButton}">
+                <g:Button ui:field="sevenNoTrumpButton" addStyleNames="{style.contractButton}" debugId="SEVEN_NO_TRUMP">
                     <span class="{style.tricks}">7</span>
                 </g:Button>
             </g:HorizontalPanel>
             <g:HorizontalPanel>
-                <g:Button ui:field="eightSpadeButton" addStyleNames="{style.contractButton}">
+                <g:Button ui:field="eightSpadeButton" addStyleNames="{style.contractButton}" debugId="EIGHT_SPADE">
                     <span class="{style.tricks}">8</span>&#0160;
                     <span class="{style.spade}">&#9824;</span>
                 </g:Button>
-                <g:Button ui:field="eightClubButton" addStyleNames="{style.contractButton}">
+                <g:Button ui:field="eightClubButton" addStyleNames="{style.contractButton}" debugId="EIGHT_CLUB">
                     <span class="{style.tricks}">8</span>&#0160;
                     <span class="{style.club}">&#9827;</span>
                 </g:Button>
-                <g:Button ui:field="eightDiamondButton" addStyleNames="{style.contractButton}">
+                <g:Button ui:field="eightDiamondButton" addStyleNames="{style.contractButton}" debugId="EIGHT_DIAMOND">
                     <span class="{style.tricks}">8</span>&#0160;
                     <span class="{style.diamond}">&#9830;</span>
                 </g:Button>
-                <g:Button ui:field="eightHeartButton" addStyleNames="{style.contractButton}">
+                <g:Button ui:field="eightHeartButton" addStyleNames="{style.contractButton}" debugId="EIGHT_HEART">
                     <span class="{style.tricks}">8</span>&#0160;
                     <span class="{style.heart}">&#9829;</span>
                 </g:Button>
-                <g:Button ui:field="eightNoTrumpButton" addStyleNames="{style.contractButton}">
+                <g:Button ui:field="eightNoTrumpButton" addStyleNames="{style.contractButton}" debugId="EIGHT_NO_TRUMP">
                     <span class="{style.tricks}">8</span>
                 </g:Button>
             </g:HorizontalPanel>
             <g:HorizontalPanel>
-                <g:Button ui:field="nineSpadeButton" addStyleNames="{style.contractButton}">
+                <g:Button ui:field="nineSpadeButton" addStyleNames="{style.contractButton}" debugId="NINE_SPADE">
                     <span class="{style.tricks}">9</span>&#0160;
                     <span class="{style.spade}">&#9824;</span>
                 </g:Button>
-                <g:Button ui:field="nineClubButton" addStyleNames="{style.contractButton}">
+                <g:Button ui:field="nineClubButton" addStyleNames="{style.contractButton}" debugId="NINE_CLUB">
                     <span class="{style.tricks}">9</span>&#0160;
                     <span class="{style.club}">&#9827;</span>
                 </g:Button>
-                <g:Button ui:field="nineDiamondButton" addStyleNames="{style.contractButton}">
+                <g:Button ui:field="nineDiamondButton" addStyleNames="{style.contractButton}" debugId="NINE_DIAMOND">
                     <span class="{style.tricks}">9</span>&#0160;
                     <span class="{style.diamond}">&#9830;</span>
                 </g:Button>
-                <g:Button ui:field="nineHeartButton" addStyleNames="{style.contractButton}">
+                <g:Button ui:field="nineHeartButton" addStyleNames="{style.contractButton}" debugId="NINE_HEART">
                     <span class="{style.tricks}">9</span>&#0160;
                     <span class="{style.heart}">&#9829;</span>
                 </g:Button>
-                <g:Button ui:field="nineNoTrumpButton" addStyleNames="{style.contractButton}">
+                <g:Button ui:field="nineNoTrumpButton" addStyleNames="{style.contractButton}" debugId="NINE_NO_TRUMP">
                     <span class="{style.tricks}">9</span>
                 </g:Button>
             </g:HorizontalPanel>
             <g:HorizontalPanel>
-                <g:Button ui:field="tenSpadeButton" addStyleNames="{style.contractButton}">
+                <g:Button ui:field="tenSpadeButton" addStyleNames="{style.contractButton}" debugId="TEN_SPADE">
                     <span class="{style.tricks}">10</span>
                     <span class="{style.spade}">&#9824;</span>
                 </g:Button>
-                <g:Button ui:field="tenClubButton" addStyleNames="{style.contractButton}">
+                <g:Button ui:field="tenClubButton" addStyleNames="{style.contractButton}" debugId="TEN_CLUB">
                     <span class="{style.tricks}">10</span>
                     <span class="{style.club}">&#9827;</span>
                 </g:Button>
-                <g:Button ui:field="tenDiamondButton" addStyleNames="{style.contractButton}">
+                <g:Button ui:field="tenDiamondButton" addStyleNames="{style.contractButton}" debugId="TEN_DIAMOND">
                     <span class="{style.tricks}">10</span>
                     <span class="{style.diamond}">&#9830;</span>
                 </g:Button>
-                <g:Button ui:field="tenHeartButton" addStyleNames="{style.contractButton}">
+                <g:Button ui:field="tenHeartButton" addStyleNames="{style.contractButton}" debugId="TEN_HEART">
                     <span class="{style.tricks}">10</span>
                     <span class="{style.heart}">&#9829;</span>
                 </g:Button>
-                <g:Button ui:field="tenNoTrumpButton" addStyleNames="{style.contractButton}">
+                <g:Button ui:field="tenNoTrumpButton" addStyleNames="{style.contractButton}" debugId="TEN_NO_TRUMP">
                     <span class="{style.tricks}">10</span>
                 </g:Button>
             </g:HorizontalPanel>
             <g:HorizontalPanel>
-                <g:Button ui:field="passButton" addStyleNames="{style.contractButton} {style.passButton}">
+                <g:Button ui:field="passButton" addStyleNames="{style.contractButton} {style.passButton}" debugId="PASS">
                     <ui:msg key="pass" description="Pass contract button">Пас</ui:msg>
                 </g:Button>
-                <g:Button ui:field="whistButton" addStyleNames="{style.contractButton} {style.whistButton}">
+                <g:Button ui:field="whistButton" addStyleNames="{style.contractButton} {style.whistButton}" debugId="WHIST">
                     <ui:msg key="whist" description="Whist contract button">Вист</ui:msg>
                 </g:Button>
-                <g:Button ui:field="miserButton" addStyleNames="{style.contractButton}">
+                <g:Button ui:field="miserButton" addStyleNames="{style.contractButton}" debugId="MISER">
                     <ui:msg key="miser" description="Miser contract button">МЗ</ui:msg>
                 </g:Button>
             </g:HorizontalPanel>

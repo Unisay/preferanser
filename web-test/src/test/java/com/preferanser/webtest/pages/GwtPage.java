@@ -8,7 +8,7 @@ import org.openqa.selenium.WebDriver;
 
 public abstract class GwtPage extends PageObject {
 
-    private static final String GWT_DEBUG_PREFIX = "gwt-debug-";
+    protected static final String GWT_DEBUG_PREFIX = "gwt-debug-";
 
     public GwtPage(WebDriver driver, Predicate<PageObject> callback) {
         super(driver, callback);

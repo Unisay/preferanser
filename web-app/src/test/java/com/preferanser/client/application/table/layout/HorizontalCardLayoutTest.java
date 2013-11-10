@@ -22,7 +22,7 @@ package com.preferanser.client.application.table.layout;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.googlecode.gwt.test.GwtModule;
-import com.googlecode.gwt.test.GwtTest;
+import com.googlecode.gwt.test.GwtTestWithMockito;
 import com.preferanser.client.application.widgets.CardWidget;
 import com.preferanser.domain.Card;
 import org.junit.Before;
@@ -38,7 +38,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 
 @GwtModule("com.preferanser.Preferanser")
-public class HorizontalCardLayoutTest extends GwtTest {
+public class HorizontalCardLayoutTest extends GwtTestWithMockito {
 
     private HorizontalLayout layout;
     private Collection<Card> cards;

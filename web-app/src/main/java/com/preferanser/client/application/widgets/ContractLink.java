@@ -20,6 +20,7 @@
 package com.preferanser.client.application.widgets;
 
 import com.google.common.base.Optional;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -38,6 +39,8 @@ import com.preferanser.domain.Suit;
  */
 public class ContractLink extends Composite implements HasHTML, HasClickHandlers {
 
+    private static final String DEBUG_ID_CONTRACT_LINK = "contract-link";
+    private static final String DEBUG_ID_CONTRACT_LABEL = "contract-label";
     private final Hyperlink hyperlink;
     private final Label label;
     private final PreferanserConstants constants;
@@ -50,14 +53,16 @@ public class ContractLink extends Composite implements HasHTML, HasClickHandlers
         this.constants = constants;
         this.tableStyle = tableStyle;
         defaultText = constants.chooseContract();
-        label = new Label();
+        label = GWT.create(Label.class);
+        label.ensureDebugId(DEBUG_ID_CONTRACT_LABEL);
         String contractLabelStyle = tableStyle.contractLabel();
         label.setStylePrimaryName(contractLabelStyle);
-        hyperlink = new Hyperlink();
+        hyperlink = GWT.create(Hyperlink.class);
+        hyperlink.ensureDebugId(DEBUG_ID_CONTRACT_LINK);
         hyperlink.setText(defaultText);
         hyperlink.setStylePrimaryName(tableStyle.contractLink());
         enable();
-        Panel widgets = new FlowPanel();
+        Panel widgets = GWT.create(FlowPanel.class);
         widgets.add(hyperlink);
         widgets.add(label);
         initWidget(widgets);
@@ -67,35 +72,37 @@ public class ContractLink extends Composite implements HasHTML, HasClickHandlers
         this.contract = contract;
         if (contract == null) {
             setHTML(defaultText);
-        } else switch (contract) {
-            case PASS:
-                setText(constants.pass());
-                break;
-            case WHIST:
-                setText(constants.whist());
-                break;
-            case MISER:
-                setText(constants.miser());
-                break;
-            default:
-                Element suitSpan = DOM.createSpan();
-                Element tricksSpan = DOM.createSpan();
+        } else {
+            switch (contract) {
+                case PASS:
+                    setText(constants.pass());
+                    break;
+                case WHIST:
+                    setText(constants.whist());
+                    break;
+                case MISER:
+                    setText(constants.miser());
+                    break;
+                default:
+                    Element suitSpan = DOM.createSpan();
+                    Element tricksSpan = DOM.createSpan();
 
-                Optional<Suit> maybeTrump = contract.getTrump();
-                if (!maybeTrump.isPresent()) {
-                    suitSpan.addClassName(tableStyle.noTrump());
-                    suitSpan.setInnerText(constants.noTrump());
-                } else {
-                    Suit trump = maybeTrump.get();
-                    suitSpan.addClassName(tableStyle.contractSuit());
-                    suitSpan.addClassName(trump.name().toLowerCase());
-                    suitSpan.setInnerText(constants.getString(trump.name() + "_char"));
-                }
+                    Optional<Suit> maybeTrump = contract.getTrump();
+                    if (!maybeTrump.isPresent()) {
+                        suitSpan.addClassName(tableStyle.noTrump());
+                        suitSpan.setInnerText(constants.noTrump());
+                    } else {
+                        Suit trump = maybeTrump.get();
+                        suitSpan.addClassName(tableStyle.contractSuit());
+                        suitSpan.addClassName(trump.name().toLowerCase());
+                        suitSpan.setInnerText(constants.getString(trump.name() + "_char"));
+                    }
 
-                tricksSpan.addClassName(tableStyle.contractTricks());
-                tricksSpan.setInnerText("" + contract.getTricksNumber());
-                setHTML(tricksSpan.getString() + " " + suitSpan.getString());
-                break;
+                    tricksSpan.addClassName(tableStyle.contractTricks());
+                    tricksSpan.setInnerText("" + contract.getTricksNumber());
+                    setHTML(tricksSpan.getString() + " " + suitSpan.getString());
+                    break;
+            }
         }
     }
 

@@ -25,9 +25,12 @@ import net.thucydides.core.annotations.Feature;
 public class Application {
 
     @Feature
-    public class Cards {
-        public class CardsPresence {}
-        public class CardsDragAndDrop {}
-    }
+    public class Table {
+        public class Contracts {}
 
+        public class Cards {
+            public class Presence {}
+            public class DragAndDrop {}
+        }
+    }
 }

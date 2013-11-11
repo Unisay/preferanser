@@ -24,12 +24,11 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PopupPanel;
-import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.PopupViewWithUiHandlers;
 import com.preferanser.client.application.i18n.PreferanserConstants;
-import com.preferanser.client.application.widgets.EscapableDialogBox;
+import com.preferanser.client.application.widgets.UlListPanel;
 import com.preferanser.domain.Game;
 
 import java.util.Collection;
@@ -40,21 +39,18 @@ public class ValidationDialogView extends PopupViewWithUiHandlers<ValidationDial
 
     interface Binder extends UiBinder<PopupPanel, ValidationDialogView> {}
 
-    @UiField EscapableDialogBox dialog;
-    @UiField VerticalPanel verticalPanel;
-    @UiField ValidationDialogStyle style;
+    @UiField UlListPanel listPanel;
 
     @Inject
     protected ValidationDialogView(Binder uiBinder, EventBus eventBus, PreferanserConstants constants) {
         super(eventBus);
         this.constants = constants;
         initWidget(uiBinder.createAndBindUi(this));
-        dialog.setText("Ошибки");
     }
 
     @Override
     public void displayValidationErrors(Collection<Game.ValidationError> validationErrors) {
-        verticalPanel.clear();
+        listPanel.clear();
         for (Game.ValidationError validationError : validationErrors)
             displayValidationError(constants.getString(validationError.name()));
     }
@@ -62,7 +58,6 @@ public class ValidationDialogView extends PopupViewWithUiHandlers<ValidationDial
     private void displayValidationError(String errorMessage) {
         Label errorLabel = GWT.create(Label.class);
         errorLabel.setText(errorMessage);
-        errorLabel.setStylePrimaryName(style.errorLabel());
-        verticalPanel.add(errorLabel);
+        listPanel.add(errorLabel);
     }
 }

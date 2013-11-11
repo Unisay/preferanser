@@ -121,7 +121,7 @@ public class Game {
                     numOfWhists++;
             }
         }
-        return numOfPlayingContracts > 1 || numOfWhists == numOfContracts;
+        return numOfContracts != 0 && (numOfPlayingContracts > 1 || numOfWhists == numOfContracts);
     }
 
     private boolean wrongCardinalCards() {

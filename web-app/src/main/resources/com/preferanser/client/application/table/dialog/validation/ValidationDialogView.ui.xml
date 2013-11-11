@@ -24,21 +24,36 @@
              ui:generateFormat="com.google.gwt.i18n.rebind.format.PropertiesFormat"
              ui:generateKeys="com.google.gwt.i18n.server.keygen.MD5KeyGenerator"
              ui:generateLocales="default">
-    <ui:style field="style" type="com.preferanser.client.application.table.dialog.validation.ValidationDialogStyle">
-        .verticalPanel {
+    <ui:style>
+        .dialog {
+            color: white;
+            text-shadow: 1px 1px 1px black;
+        }
+
+        .listPanel {
             width: 100%;
             height: 100%;
+            padding-left: 1em;
         }
-        .errorLabel {
-            color: white;
+
+        .listPanel li {
+            margin-left: 0;
             margin-top: 1em;
         }
-        .errorLabel:before {
-            content: '\2022 ';
-        }
     </ui:style>
-    <p:EscapableDialogBox ui:field="dialog" modal="true" glassEnabled="true" autoHideEnabled="true"
-                          glassStyleName="gwt-DialogBoxOverlay" debugId="validation-dialog">
-        <g:VerticalPanel ui:field="verticalPanel" addStyleNames="{style.verticalPanel}"/>
+    <p:EscapableDialogBox debugId="validation-dialog" modal="true" glassEnabled="true"
+                          autoHideEnabled="true" glassStyleName="gwt-DialogBoxOverlay"
+                          addStyleNames="{style.dialog}" text="Ошибки!">
+        <ui:attribute name="text" description="Validation dialog title"/>
+        <g:VerticalPanel width="100%" height="100%" spacing="10">
+            <g:Label>
+                <ui:msg key="validationDescription">
+                    Данный расклад не может быть разыгран,
+                    так как он содержит следующие ошибки:
+                </ui:msg>
+            </g:Label>
+            <p:UlListPanel ui:field="listPanel" addStyleNames="{style.listPanel}"/>
+        </g:VerticalPanel>
     </p:EscapableDialogBox>
+
 </ui:UiBinder>

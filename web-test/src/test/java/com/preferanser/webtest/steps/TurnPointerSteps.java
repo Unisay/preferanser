@@ -50,9 +50,9 @@ public class TurnPointerSteps extends ScenarioSteps {
     @Step
     public TurnPointerSteps canSeeOnlyTurnPointerActive(Cardinal cardinal) {
         TablePage page = getTablePage();
-        Matcher isActive = containsString("turnPointerActive");
+        Matcher<String> isActive = containsString("turnPointerActive");
         for (Cardinal currentCardinal : Cardinal.values()) {
-            Matcher matcher = currentCardinal == cardinal ? isActive : not(isActive);
+            Matcher<String> matcher = currentCardinal == cardinal ? isActive : not(isActive);
             assertThat(page.getCardinalTurnPointer(currentCardinal).getAttribute("class"), matcher);
         }
         return this;
@@ -61,10 +61,10 @@ public class TurnPointerSteps extends ScenarioSteps {
     @Step
     public TurnPointerSteps canSeeOnlyTurnPointer(Cardinal cardinal) {
         TablePage page = getTablePage();
-        Matcher isActive = containsString("turnPointerActive");
-        Matcher notDisplayed = containsString("not-displayed");
+        Matcher<String> isActive = containsString("turnPointerActive");
+        Matcher<String> notDisplayed = containsString("not-displayed");
         for (Cardinal currentCardinal : Cardinal.values()) {
-            Matcher matcher = currentCardinal == cardinal ? isActive : notDisplayed;
+            Matcher<String> matcher = currentCardinal == cardinal ? isActive : notDisplayed;
             assertThat(page.getCardinalTurnPointer(currentCardinal).getAttribute("class"), matcher);
         }
         return this;

@@ -21,7 +21,11 @@ package com.preferanser.domain;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
-import com.google.common.collect.*;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.LinkedHashMultimap;
+import com.google.common.collect.Maps;
+import com.preferanser.util.EnumRotator;
 
 import java.util.*;
 
@@ -34,190 +38,31 @@ import static com.preferanser.domain.TableLocation.*;
  */
 public class Game {
 
-    private static final int NUM_OF_CARDS_PER_CARDINAL = 10;
     private static final int NUM_OF_CONTRACTS = 3;
 
-    public static enum Type {
-        THREE_PLAYERS(3), FOUR_PLAYERS(4);
+    private final int numPlayers;
+    private final EnumRotator<Cardinal> turnRotator;
+    private final Map<Cardinal, Contract> cardinalContracts;
+    private final LinkedHashMultimap<Cardinal, Card> cardinalCardMultimap;
+    private final Map<Cardinal, Integer> cardinalTricks = Maps.newHashMapWithExpectedSize(Cardinal.values().length);
+    private final Map<Card, Cardinal> centerCardCardinalMap = Maps.newLinkedHashMap(); // order is important
 
-        private int numPlayers;
-
-        private Type(int numPlayers) {
-            this.numPlayers = numPlayers;
-        }
-
+    private Game(int numPlayers,
+                 Map<Cardinal, Contract> cardinalContracts,
+                 EnumRotator<Cardinal> turnRotator,
+                 LinkedHashMultimap<Cardinal, Card> cardinalCardMultimap
+    ) {
+        this.numPlayers = numPlayers;
+        this.cardinalContracts = cardinalContracts;
+        this.turnRotator = turnRotator;
+        this.cardinalCardMultimap = cardinalCardMultimap;
+        initCardinalTricks();
     }
 
-    public static enum Mode {PLAY, EDIT}
-
-    public static enum ValidationError {
-        FIRST_TURN_NOT_SPECIFIED,
-        HAS_CONFLICTING_CONTRACTS,
-        WRONG_CARDINAL_CARDS,
-        WRONG_FIRST_TURN, WRONG_NUMBER_OF_CONTRACTS
-    }
-
-    private Multimap<Cardinal, Card> cardinalCardMultimap = LinkedHashMultimap.create(TableLocation.values().length, Card.values().length);
-
-    private Map<Cardinal, Integer> cardinalTricks = Maps.newHashMapWithExpectedSize(Cardinal.values().length);
-    private Map<Cardinal, Contract> cardinalContracts = Maps.newHashMapWithExpectedSize(Cardinal.values().length);
-
-    private Map<Card, Cardinal> centerCardCardinalMap = Maps.newLinkedHashMap(); // order is important
-    private Type type = Type.THREE_PLAYERS; // TODO selection
-    private Mode mode = Mode.EDIT;
-    private Cardinal turn;
-
-    public Game() {
-        clearCardinalTricks();
-    }
-
-    public Optional<List<ValidationError>> getValidationErrors() {
-        List<ValidationError> errors = newArrayList();
-
-        if (turn == null)
-            errors.add(ValidationError.FIRST_TURN_NOT_SPECIFIED);
-
-        if (wrongNumberOfContracts())
-            errors.add(ValidationError.WRONG_NUMBER_OF_CONTRACTS);
-
-        if (wrongFirstTurn())
-            errors.add(ValidationError.WRONG_FIRST_TURN);
-
-        if (hasConflictingContracts())
-            errors.add(ValidationError.HAS_CONFLICTING_CONTRACTS);
-
-        if (wrongCardinalCards())
-            errors.add(ValidationError.WRONG_CARDINAL_CARDS);
-
-        if (errors.isEmpty())
-            return Optional.absent();
-        else
-            return Optional.of(errors);
-    }
-
-    private boolean wrongNumberOfContracts() {
-        int count = 0;
-        for (Map.Entry<Cardinal, Contract> entry : cardinalContracts.entrySet()) {
-            if (entry.getValue() != null)
-                count++;
-        }
-        return count != NUM_OF_CONTRACTS;
-    }
-
-    private boolean wrongFirstTurn() {
-        return type == Type.THREE_PLAYERS && turn != null && cardinalContracts.get(turn) == null;
-    }
-
-    private boolean hasConflictingContracts() {
-        int numOfContracts = 0;
-        int numOfPlayingContracts = 0;
-        int numOfWhists = 0;
-        for (Contract contract : cardinalContracts.values()) {
-            if (contract != null) {
-                numOfContracts++;
-                if (contract.isPlaying())
-                    numOfPlayingContracts++;
-                if (contract == Contract.WHIST)
-                    numOfWhists++;
-            }
-        }
-        return numOfContracts != 0 && (numOfPlayingContracts > 1 || numOfWhists == numOfContracts);
-    }
-
-    private boolean wrongCardinalCards() {
-        for (Cardinal cardinal : Cardinal.values())
-            if (cardinalContracts.get(cardinal) != null && cardinalCardMultimap.get(cardinal).size() != NUM_OF_CARDS_PER_CARDINAL)
-                return true;
-        return false;
-    }
-
-    public void putCards(Cardinal cardinal, Collection<Card> cards) {
-        cardinalCardMultimap.putAll(cardinal, cards);
-    }
-
-    public void putCards(Cardinal cardinal, Card... cards) {
-        putCards(cardinal, newArrayList(cards));
-    }
-
-    public void clearCardinalTricks() {
+    private void initCardinalTricks() {
         for (Cardinal cardinal : Cardinal.values()) {
             cardinalTricks.put(cardinal, 0);
         }
-    }
-
-    public void clearCards(TableLocation... tableLocations) {
-        if (tableLocations.length == 0) {
-            cardinalCardMultimap.clear();
-        } else {
-            for (TableLocation tableLocation : tableLocations) {
-                switch (tableLocation) {
-                    case CENTER:
-                        centerCardCardinalMap.clear();
-                        break;
-                    default:
-                        cardinalCardMultimap.get(tableLocationToCardinal(tableLocation)).clear();
-                }
-            }
-        }
-    }
-
-    public boolean moveCard(Card card, TableLocation oldLocation, TableLocation newLocation) {
-        checkArgument(oldLocation != newLocation, "moveCard(oldLocation == newLocation)");
-        switch (mode) {
-            case EDIT:
-                return moveCardWhenEditing(card, oldLocation, newLocation);
-            case PLAY:
-                return moveCardWhenPlaying(card, oldLocation, newLocation);
-            default:
-                throw new IllegalStateException("Unknown game mode: " + mode);
-        }
-    }
-
-    private boolean moveCardWhenPlaying(Card card, TableLocation oldLocation, TableLocation newLocation) {
-        if (CENTER != newLocation)
-            return false;
-
-        if (centerCardCardinalMap.size() == type.numPlayers)
-            return false;
-
-        Cardinal oldCardinal = tableLocationToCardinal(oldLocation);
-        if (centerCardCardinalMap.containsValue(oldCardinal))
-            return false;
-
-        cardinalCardMultimap.get(oldCardinal).remove(card);
-        centerCardCardinalMap.put(card, oldCardinal);
-        return true;
-    }
-
-    private boolean moveCardWhenEditing(Card card, TableLocation oldLocation, TableLocation newLocation) {
-        if (CENTER == oldLocation) { // moving card out of center
-            checkArgument(centerCardCardinalMap.containsKey(card), "There is no %s in TableLocation.CENTER", card);
-            centerCardCardinalMap.remove(card);
-            cardinalCardMultimap.get(tableLocationToCardinal(newLocation)).add(card);
-        } else if (CENTER == newLocation) { // moving card to center
-            if (centerCardCardinalMap.size() == type.numPlayers) {
-                return false;
-            }
-            Cardinal oldCardinal = tableLocationToCardinal(oldLocation);
-            if (centerCardCardinalMap.containsValue(oldCardinal))
-                return false;
-
-            cardinalCardMultimap.get(oldCardinal).remove(card);
-            centerCardCardinalMap.put(card, oldCardinal);
-        } else {
-            Cardinal oldCardinal = tableLocationToCardinal(oldLocation);
-            Cardinal newCardinal = tableLocationToCardinal(newLocation);
-            checkArgument(cardinalCardMultimap.get(oldCardinal).contains(card), "There is no %s in Cardinal.%s", card, oldCardinal);
-            cardinalCardMultimap.get(oldCardinal).remove(card);
-            cardinalCardMultimap.get(newCardinal).add(card);
-        }
-        return true;
-    }
-
-    public void setCardinalContract(Cardinal cardinal, Contract contract) {
-        Preconditions.checkNotNull(cardinal);
-        Preconditions.checkNotNull(contract);
-        cardinalContracts.put(cardinal, contract);
     }
 
     public Map<TableLocation, Collection<Card>> getCardinalCards() {
@@ -268,18 +113,19 @@ public class Game {
     }
 
     public boolean moveCenterCardsToSluff() {
-        if (mode == Mode.PLAY && centerCardCardinalMap.size() == type.numPlayers) {
+        if (centerCardCardinalMap.size() == numPlayers) {
             Optional<Suit> maybeTrump = getTrump();
-            turn = determineTrickWinner(maybeTrump, centerCardCardinalMap);
+            Cardinal turn = determineTrickWinner(maybeTrump, centerCardCardinalMap);
             cardinalTricks.put(turn, cardinalTricks.get(turn) + 1); // Non-atomic increment!
-            clearCards(CENTER);
+            turnRotator.setCurrent(turn);
+            centerCardCardinalMap.clear();
             return true;
         }
         return false;
     }
 
     private Cardinal determineTrickWinner(Optional<Suit> maybeTrump, Map<Card, Cardinal> cardCardinalMap) {
-        assert (cardCardinalMap.size() == type.numPlayers);
+        assert (cardCardinalMap.size() == numPlayers);
         Iterator<Card> cardIterator = cardCardinalMap.keySet().iterator();
         Card maxCard = cardIterator.next();
         while (cardIterator.hasNext()) {
@@ -295,7 +141,7 @@ public class Game {
         return cardCardinalMap.get(maxCard);
     }
 
-    private Cardinal tableLocationToCardinal(TableLocation location) {
+    private static Cardinal tableLocationToCardinal(TableLocation location) {
         switch (location) {
             case NORTH:
                 return Cardinal.NORTH;
@@ -310,23 +156,207 @@ public class Game {
         }
     }
 
-    public void setType(Type type) {
-        this.type = type;
-    }
-
-    public Mode getMode() {
-        return mode;
-    }
-
-    public void setMode(Mode mode) {
-        this.mode = mode;
-    }
-
     public Cardinal getTurn() {
-        return turn;
+        return turnRotator.current();
     }
 
-    public void setTurn(Cardinal turn) {
-        this.turn = turn;
+    public int getNumPlayers() {
+        return numPlayers;
     }
+
+
+    public static class Builder {
+
+        private static final int NUM_OF_CARDS_PER_CARDINAL = 10;
+
+        public static enum BuilderError {
+            FIRST_TURN_NOT_SPECIFIED,
+            HAS_CONFLICTING_CONTRACTS,
+            WRONG_CARDINAL_CARDS,
+            WRONG_FIRST_TURN, NUM_PLAYERS_NO_SPECIFIED, WRONG_NUMBER_OF_CONTRACTS
+        }
+
+        private Integer numPlayers;
+
+        private Cardinal firstTurn;
+
+        private Map<Cardinal, Contract> cardinalContracts
+                = Maps.newHashMapWithExpectedSize(Cardinal.values().length);
+
+        private LinkedHashMultimap<Cardinal, Card> cardinalCardMultimap
+                = LinkedHashMultimap.create(TableLocation.values().length, Card.values().length);
+
+        private Map<Card, Cardinal> centerCardCardinalMap
+                = Maps.newLinkedHashMap(); // order is important
+
+        public Builder firstTurn(Cardinal firstTurn) {
+            this.firstTurn = firstTurn;
+            return this;
+        }
+
+        public Builder threePlayerGame() {
+            numPlayers = 3;
+            return this;
+        }
+
+        public Builder fourPlayerGame() {
+            numPlayers = 4;
+            return this;
+        }
+
+        public Builder cardinalContract(Cardinal cardinal, Contract contract) {
+            Preconditions.checkNotNull(cardinal);
+            Preconditions.checkNotNull(contract);
+            cardinalContracts.put(cardinal, contract);
+            return this;
+        }
+
+        public Builder putCards(Cardinal cardinal, Collection<Card> cards) {
+            cardinalCardMultimap.putAll(cardinal, cards);
+            return this;
+        }
+
+        public Builder putCards(Cardinal cardinal, Card... cards) {
+            putCards(cardinal, newArrayList(cards));
+            return this;
+        }
+
+        public Builder clearCards(TableLocation... tableLocations) {
+            if (tableLocations.length == 0) {
+                cardinalCardMultimap.clear();
+            } else {
+                for (TableLocation tableLocation : tableLocations) {
+                    switch (tableLocation) {
+                        case CENTER:
+                            centerCardCardinalMap.clear();
+                            break;
+                        default:
+                            cardinalCardMultimap.get(tableLocationToCardinal(tableLocation)).clear();
+                    }
+                }
+            }
+            return this;
+        }
+
+        public boolean moveCard(Card card, TableLocation oldLocation, TableLocation newLocation) {
+            checkArgument(oldLocation != newLocation, "moveCard(oldLocation == newLocation)");
+            if (CENTER != newLocation)
+                return false;
+
+            if (centerCardCardinalMap.size() == numPlayers)
+                return false;
+
+            Cardinal oldCardinal = tableLocationToCardinal(oldLocation);
+            if (centerCardCardinalMap.containsValue(oldCardinal))
+                return false;
+
+            cardinalCardMultimap.get(oldCardinal).remove(card);
+            centerCardCardinalMap.put(card, oldCardinal);
+            return true;
+        }
+
+        private boolean moveCardWhenEditing(Card card, TableLocation oldLocation, TableLocation newLocation) {
+            if (CENTER == oldLocation) { // moving card out of center
+                checkArgument(centerCardCardinalMap.containsKey(card), "There is no %s in TableLocation.CENTER", card);
+                centerCardCardinalMap.remove(card);
+                cardinalCardMultimap.get(tableLocationToCardinal(newLocation)).add(card);
+            } else if (CENTER == newLocation) { // moving card to center
+                if (centerCardCardinalMap.size() == numPlayers) {
+                    return false;
+                }
+                Cardinal oldCardinal = tableLocationToCardinal(oldLocation);
+                if (centerCardCardinalMap.containsValue(oldCardinal))
+                    return false;
+
+                cardinalCardMultimap.get(oldCardinal).remove(card);
+                centerCardCardinalMap.put(card, oldCardinal);
+            } else {
+                Cardinal oldCardinal = tableLocationToCardinal(oldLocation);
+                Cardinal newCardinal = tableLocationToCardinal(newLocation);
+                checkArgument(cardinalCardMultimap.get(oldCardinal).contains(card), "There is no %s in Cardinal.%s", card, oldCardinal);
+                cardinalCardMultimap.get(oldCardinal).remove(card);
+                cardinalCardMultimap.get(newCardinal).add(card);
+            }
+            return true;
+        }
+
+        private Optional<List<BuilderError>> getValidationErrors() {
+            List<BuilderError> errors = newArrayList();
+
+            if (numPlayers == null)
+                errors.add(BuilderError.NUM_PLAYERS_NO_SPECIFIED);
+
+            if (firstTurn == null)
+                errors.add(BuilderError.FIRST_TURN_NOT_SPECIFIED);
+
+            if (wrongNumberOfContracts())
+                errors.add(BuilderError.WRONG_NUMBER_OF_CONTRACTS);
+
+            if (wrongFirstTurn())
+                errors.add(BuilderError.WRONG_FIRST_TURN);
+
+            if (hasConflictingContracts())
+                errors.add(BuilderError.HAS_CONFLICTING_CONTRACTS);
+
+            if (wrongCardinalCards())
+                errors.add(BuilderError.WRONG_CARDINAL_CARDS);
+
+            if (errors.isEmpty())
+                return Optional.absent();
+            else
+                return Optional.of(errors);
+        }
+
+        private boolean wrongNumberOfContracts() {
+            int count = 0;
+            for (Map.Entry<Cardinal, Contract> entry : cardinalContracts.entrySet()) {
+                if (entry.getValue() != null)
+                    count++;
+            }
+            return count != NUM_OF_CONTRACTS;
+        }
+
+        private boolean wrongFirstTurn() {
+            return 3 == numPlayers && firstTurn != null && cardinalContracts.get(firstTurn) == null;
+        }
+
+        private boolean hasConflictingContracts() {
+            int numOfContracts = 0;
+            int numOfPlayingContracts = 0;
+            int numOfWhists = 0;
+            for (Contract contract : cardinalContracts.values()) {
+                if (contract != null) {
+                    numOfContracts++;
+                    if (contract.isPlaying())
+                        numOfPlayingContracts++;
+                    if (contract == Contract.WHIST)
+                        numOfWhists++;
+                }
+            }
+            return numOfContracts != 0 && (numOfPlayingContracts > 1 || numOfWhists == numOfContracts);
+        }
+
+        private boolean wrongCardinalCards() {
+            for (Cardinal cardinal : Cardinal.values())
+                if (cardinalContracts.get(cardinal) != null && cardinalCardMultimap.get(cardinal).size() != NUM_OF_CARDS_PER_CARDINAL)
+                    return true;
+            return false;
+        }
+
+        public Game build() throws GameBuilderException {
+            Optional<List<BuilderError>> validationErrors = getValidationErrors();
+            if (validationErrors.isPresent())
+                throw new GameBuilderException(validationErrors.get());
+
+            EnumRotator<Cardinal> cardinalRotator = new EnumRotator<Cardinal>(Cardinal.values(), firstTurn);
+            return new Game(
+                    numPlayers,
+                    cardinalContracts,
+                    cardinalRotator,
+                    cardinalCardMultimap
+            );
+        }
+
+    }
+
 }

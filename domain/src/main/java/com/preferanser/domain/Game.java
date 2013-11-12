@@ -68,18 +68,22 @@ public class Game {
     public Map<TableLocation, Collection<Card>> getCardinalCards() {
         ImmutableMap.Builder<TableLocation, Collection<Card>> builder = ImmutableMap.builder();
         if (cardinalCardMultimap.containsKey(Cardinal.NORTH)) {
-            builder.put(NORTH, ImmutableList.copyOf(cardinalCardMultimap.get(Cardinal.NORTH)));
+            builder.put(NORTH, getCardsByCardinal(Cardinal.NORTH));
         }
         if (cardinalCardMultimap.containsKey(Cardinal.EAST)) {
-            builder.put(EAST, ImmutableList.copyOf(cardinalCardMultimap.get(Cardinal.EAST)));
+            builder.put(EAST, getCardsByCardinal(Cardinal.EAST));
         }
         if (cardinalCardMultimap.containsKey(Cardinal.SOUTH)) {
-            builder.put(SOUTH, ImmutableList.copyOf(cardinalCardMultimap.get(Cardinal.SOUTH)));
+            builder.put(SOUTH, getCardsByCardinal(Cardinal.SOUTH));
         }
         if (cardinalCardMultimap.containsKey(Cardinal.WEST)) {
-            builder.put(WEST, ImmutableList.copyOf(cardinalCardMultimap.get(Cardinal.WEST)));
+            builder.put(WEST, getCardsByCardinal(Cardinal.WEST));
         }
         return builder.build();
+    }
+
+    public Collection<Card> getCardsByCardinal(Cardinal cardinal) {
+        return ImmutableList.copyOf(cardinalCardMultimap.get(cardinal));
     }
 
     public LinkedHashMap<Card, Cardinal> getCenterCards() {

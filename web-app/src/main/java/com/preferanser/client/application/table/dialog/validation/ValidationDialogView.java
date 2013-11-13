@@ -49,9 +49,9 @@ public class ValidationDialogView extends PopupViewWithUiHandlers<ValidationDial
     }
 
     @Override
-    public void displayValidationErrors(Collection<Game.ValidationError> validationErrors) {
+    public void displayValidationErrors(Collection<Game.Builder.Error> validationErrors) {
         listPanel.clear();
-        for (Game.ValidationError validationError : validationErrors)
+        for (Game.Builder.Error validationError : validationErrors)
             displayValidationError(constants.getString(validationError.name()));
     }
 

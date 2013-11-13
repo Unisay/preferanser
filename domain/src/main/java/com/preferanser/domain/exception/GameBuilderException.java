@@ -17,28 +17,36 @@
  *     along with this program.  If not, see [http://www.gnu.org/licenses/].
  */
 
-package com.preferanser.domain;
+package com.preferanser.domain.exception;
 
+import com.google.common.base.Joiner;
 import com.google.common.base.Objects;
+import com.preferanser.domain.Game;
 
 import java.util.Collection;
 
 public class GameBuilderException extends Exception {
 
-    private Collection<Game.Builder.BuilderError> builderErrors;
+    private Collection<Game.Builder.Error> builderErrors;
 
     public GameBuilderException() {
     }
 
-    public GameBuilderException(Collection<Game.Builder.BuilderError> builderErrors) {
+    public GameBuilderException(Collection<Game.Builder.Error> builderErrors) {
         this.builderErrors = builderErrors;
     }
 
-    public Collection<Game.Builder.BuilderError> getBuilderErrors() {
+    public Collection<Game.Builder.Error> getBuilderErrors() {
         return builderErrors;
     }
 
-    @Override public String toString() {
+    @Override
+    public String getMessage() {
+        return "Can't build game because of the following errors: " + Joiner.on(", ").join(getBuilderErrors());
+    }
+
+    @Override
+    public String toString() {
         return Objects.toStringHelper(this)
                 .add("builderErrors", builderErrors)
                 .toString();

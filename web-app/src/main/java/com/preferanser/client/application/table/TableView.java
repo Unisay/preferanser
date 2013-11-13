@@ -48,7 +48,6 @@ import com.preferanser.domain.TableLocation;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -140,7 +139,7 @@ public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements Ta
     }
 
     @Override
-    public void displayTableCards(Map<TableLocation, Collection<Card>> tableCards, LinkedHashMap<Card, Cardinal> centerCards) {
+    public TableView displayTableCards(Map<TableLocation, Collection<Card>> tableCards, Map<Card, Cardinal> centerCards) {
         for (CardWidget cardWidget : cardWidgetBiMap.values()) {
             cardWidget.removeFromParent();
         }
@@ -148,10 +147,10 @@ public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements Ta
         for (Map.Entry<TableLocation, Collection<Card>> entry : tableCards.entrySet()) {
             displayCards(entry.getKey(), entry.getValue());
         }
-        displayCenterCards(centerCards);
+        return displayCenterCards(centerCards);
     }
 
-    private void displayCenterCards(LinkedHashMap<Card, Cardinal> centerCards) {
+    private TableView displayCenterCards(Map<Card, Cardinal> centerCards) {
         Function<Map.Entry<Card, Cardinal>, CardinalCard> func = new Function<Map.Entry<Card, Cardinal>, CardinalCard>() {
             @Nullable @Override public CardinalCard apply(Map.Entry<Card, Cardinal> entry) {
                 Card card = entry.getKey();
@@ -167,14 +166,16 @@ public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements Ta
         for (CardinalCard cardinalCard : widgets)
             centerPanel.add(cardinalCard.getCardWidget());
         centerCardLayout.apply(widgets);
+        return this;
     }
 
-    private void displayCards(TableLocation location, Iterable<Card> cards) {
+    private TableView displayCards(TableLocation location, Iterable<Card> cards) {
         HasWidgets panel = locationPanelMap.get(location);
         for (Card card : cards) {
             displayCard(panel, card);
         }
         layoutLocation(location);
+        return this;
     }
 
     private void displayCard(HasWidgets panel, Card card) {
@@ -189,14 +190,23 @@ public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements Ta
     }
 
     @Override
-    public void displayCardinalTricks(Map<Cardinal, Integer> cardinalTricks) {
+    public TableView displayCardinalTricks(Map<Cardinal, Integer> cardinalTricks) {
         for (Map.Entry<Cardinal, Integer> entry : cardinalTricks.entrySet()) {
             cardinalTricksCountMap.get(entry.getKey()).setText("" + entry.getValue());
         }
+        return this;
     }
 
     @Override
-    public void displayContracts(Map<Cardinal, Contract> cardinalContracts) {
+    public TableView hideCardinalTricks() {
+        for (Map.Entry<Cardinal, Label> entry : cardinalTricksCountMap.entrySet()) {
+            entry.getValue().setText("");
+        }
+        return this;
+    }
+
+    @Override
+    public TableView displayContracts(Map<Cardinal, Contract> cardinalContracts) {
         for (Cardinal cardinal : Cardinal.values()) {
             ContractLink contractLink = cardinalContractMap.get(cardinal);
             if (cardinalContracts.containsKey(cardinal)) {
@@ -206,10 +216,11 @@ public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements Ta
                 contractLink.setContract(null);
             }
         }
+        return this;
     }
 
     @Override
-    public void displayTurn(Cardinal turn) {
+    public TableView displayTurn(Cardinal turn) {
         for (Map.Entry<Cardinal, TurnPointer> entry : cardinalTurnPointerMap.entrySet()) {
             Cardinal cardinal = entry.getKey();
             TurnPointer turnPointer = entry.getValue();
@@ -222,6 +233,7 @@ public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements Ta
                 }
             }
         }
+        return this;
     }
 
     @Override
@@ -319,7 +331,8 @@ public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements Ta
         return maxZIndex;
     }
 
-    @Override public void setPlayMode() {
+    @Override
+    public TableView setPlayMode() {
         editMode = false;
         playButton.setDown(true);
         editButton.setDown(false);
@@ -333,9 +346,11 @@ public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements Ta
                 turnPointer.addStyleName(style.notDisplayed());
             }
         }
+        return this;
     }
 
-    @Override public void setEditMode() {
+    @Override
+    public TableView setEditMode() {
         editMode = true;
         editButton.setDown(true);
         playButton.setDown(false);
@@ -347,6 +362,7 @@ public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements Ta
         for (TurnPointer turnPointer : cardinalTurnPointerMap.values()) {
             turnPointer.removeStyleName(style.notDisplayed());
         }
+        return this;
     }
 
     @UiHandler("playButton") void onPlayButtonClicked(@SuppressWarnings("unused") ClickEvent event) {

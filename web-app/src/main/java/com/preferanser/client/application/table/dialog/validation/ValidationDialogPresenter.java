@@ -27,14 +27,13 @@ import com.gwtplatform.mvp.client.PresenterWidget;
 import com.preferanser.domain.Game;
 
 import java.util.Collection;
-import java.util.List;
 
 public class ValidationDialogPresenter extends PresenterWidget<ValidationDialogPresenter.MyView> implements ValidationDialogUiHandlers {
 
-    private List<Game.ValidationError> validationErrors;
+    private Collection<Game.Builder.Error> validationErrors;
 
     public interface MyView extends PopupView, HasUiHandlers<ValidationDialogUiHandlers> {
-        void displayValidationErrors(Collection<Game.ValidationError> validationErrors);
+        void displayValidationErrors(Collection<Game.Builder.Error> validationErrors);
     }
 
     @Inject
@@ -49,7 +48,7 @@ public class ValidationDialogPresenter extends PresenterWidget<ValidationDialogP
         getView().displayValidationErrors(this.validationErrors);
     }
 
-    public void setValidationErrors(List<Game.ValidationError> validationErrors) {
+    public void setValidationErrors(Collection<Game.Builder.Error> validationErrors) {
         this.validationErrors = validationErrors;
     }
 }

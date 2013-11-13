@@ -27,46 +27,26 @@ import com.google.gwt.i18n.client.ConstantsWithLookup;
  * See <a href="http://www.gwtproject.org/doc/latest/DevGuideI18n.html">GWT i18n doc</a>
  */
 public interface PreferanserConstants extends ConstantsWithLookup {
-
     @DefaultStringValue("Preferanser") String preferanser();
-
     @DefaultStringValue("Pass") String pass();
-
     @DefaultStringValue("Whist") String whist();
-
     @DefaultStringValue("Miser") String miser();
-
     @DefaultStringValue("No Trump") String noTrump();
-
     @DefaultStringValue("North") String NORTH();
-
     @DefaultStringValue("East") String EAST();
-
     @DefaultStringValue("South") String SOUTH();
-
     @DefaultStringValue("North") String WEST();
-
     @DefaultStringValue("♠") String SPADE_char();
-
     @DefaultStringValue("♣") String CLUB_char();
-
     @DefaultStringValue("♦") String DIAMOND_char();
-
     @DefaultStringValue("♥") String HEART_char();
-
     @DefaultStringValue("Play") String play();
-
     @DefaultStringValue("Edit") String edit();
-
     @DefaultStringValue("Choose contract") String chooseContract();
-
     @DefaultStringValue("Wrong number of contracts") String WRONG_NUMBER_OF_CONTRACTS();
-
     @DefaultStringValue("There are conflicting contracts") String HAS_CONFLICTING_CONTRACTS();
-
     @DefaultStringValue("Fist turn not specified") String FIRST_TURN_NOT_SPECIFIED();
-
     @DefaultStringValue("First turn specified incorrectly") String WRONG_FIRST_TURN();
-
     @DefaultStringValue("Cards dealed incorrectly") String WRONG_CARDINAL_CARDS();
+    @DefaultStringValue("Number of players not specified") String NUM_PLAYERS_NOT_SPECIFIED();
 }

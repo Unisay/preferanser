@@ -19,7 +19,7 @@
 
 package com.preferanser.client.application.table;
 
-import com.google.common.base.Optional;
+import com.google.common.base.Preconditions;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.HasUiHandlers;
@@ -34,10 +34,9 @@ import com.preferanser.client.application.table.dialog.contract.ContractDialogPr
 import com.preferanser.client.application.table.dialog.validation.ValidationDialogPresenter;
 import com.preferanser.client.place.NameTokens;
 import com.preferanser.domain.*;
+import com.preferanser.domain.exception.GameBuilderException;
 
 import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -47,17 +46,20 @@ public class TablePresenter extends Presenter<TablePresenter.TableView, TablePre
 
     private ContractDialogPresenter contractDialog;
     private ValidationDialogPresenter validationDialog;
+    private boolean isPlaying = false;
 
     public interface TableView extends View, HasUiHandlers<TableUiHandlers> {
-        void displayTableCards(Map<TableLocation, Collection<Card>> tableCards, LinkedHashMap<Card, Cardinal> centerCards);
-        void displayCardinalTricks(Map<Cardinal, Integer> cardinalTricks);
-        void displayContracts(Map<Cardinal, Contract> cardinalContracts);
-        void displayTurn(Cardinal turn);
-        void setPlayMode();
-        void setEditMode();
+        TableView setPlayMode();
+        TableView setEditMode();
+        TableView displayTurn(Cardinal turn);
+        TableView displayContracts(Map<Cardinal, Contract> cardinalContracts);
+        TableView displayCardinalTricks(Map<Cardinal, Integer> cardinalTricks);
+        TableView displayTableCards(Map<TableLocation, Collection<Card>> tableCards, Map<Card, Cardinal> centerCards);
+        TableView hideCardinalTricks();
     }
 
-    private Game game = new Game();
+    private Game.Builder gameBuilder = new Game.Builder().setThreePlayers();
+    private Game game;
 
     @ProxyStandard
     @NameToken(NameTokens.TABLE)
@@ -79,9 +81,9 @@ public class TablePresenter extends Presenter<TablePresenter.TableView, TablePre
     @Override
     protected void onReveal() {
         super.onReveal();
-        if (game.getMode() == Game.Mode.PLAY) {
+        if (isPlaying) {
             getView().setPlayMode();
-        } else if (game.getMode() == Game.Mode.EDIT) {
+        } else {
             getView().setEditMode();
         }
         reset();
@@ -89,81 +91,85 @@ public class TablePresenter extends Presenter<TablePresenter.TableView, TablePre
 
     @Override
     public void reset() {
-        if (game.getMode() != Game.Mode.EDIT) {
-            return;
-        }
-        game = new Game();
-        game.putCards(Cardinal.NORTH, Card.values());
+        Preconditions.checkState(!isPlaying, "TablePresenter.reset(isPlaying==true)");
+        gameBuilder = new Game.Builder()
+                .setThreePlayers()
+                .putCards(Cardinal.NORTH, Card.values());
         refreshView();
     }
 
     @Override
     public void sluff() {
-        if (game.getMode() != Game.Mode.PLAY) {
-            return;
-        }
-        if (game.moveCenterCardsToSluff()) {
+        Preconditions.checkState(isPlaying, "TablePresenter.sluff(isPlaying==false)");
+        Preconditions.checkNotNull(game, "TablePresenter.sluff(game==null)");
+        if (game.moveCenterCardsToSluff())
             refreshView();
-        }
     }
 
     @Override
     public void chooseContract(Cardinal cardinal) {
-        if (game.getMode() != Game.Mode.EDIT) {
-            return;
-        }
+        Preconditions.checkState(!isPlaying, "TablePresenter.chooseContract(isPlaying==true)");
         contractDialog.setCardinal(cardinal);
         RevealRootPopupContentEvent.fire(this, contractDialog);
     }
 
     @Override
     public void chooseTurn(Cardinal cardinal) {
-        if (game.getMode() != Game.Mode.EDIT) {
-            return;
-        }
-        game.setTurn(cardinal);
-        getView().displayTurn(game.getTurn());
+        Preconditions.checkState(!isPlaying, "TablePresenter.chooseTurn(isPlaying==true)");
+        gameBuilder.setFirstTurn(cardinal);
+        getView().displayTurn(gameBuilder.getFirstTurn());
     }
 
     @Override
     public void changeCardLocation(Card card, TableLocation oldLocation, TableLocation newLocation) {
         if (oldLocation != newLocation)
-            game.moveCard(card, oldLocation, newLocation);
+            gameBuilder.moveCard(card, oldLocation, newLocation);
         refreshView();
     }
 
     @Override
     public boolean setCardinalContract(Cardinal cardinal, Contract contract) {
-        if (game.getMode() != Game.Mode.EDIT) {
-            return false;
-        }
-        game.setCardinalContract(cardinal, contract);
-        getView().displayContracts(game.getCardinalContracts());
+        Preconditions.checkState(!isPlaying, "TablePresenter.setCardinalContract(isPlaying==true)");
+        gameBuilder.setCardinalContract(cardinal, contract);
+        getView().displayContracts(gameBuilder.getCardinalContracts());
         return true;
     }
 
-    @Override public boolean setPlayMode() {
-        Optional<List<Game.ValidationError>> maybeErrors = game.getValidationErrors();
-        if (maybeErrors.isPresent()) {
-            validationDialog.setValidationErrors(maybeErrors.get());
+    @Override
+    public boolean setPlayMode() {
+        try {
+            game = gameBuilder.build();
+            getView().setPlayMode();
+            isPlaying = true;
+            return true;
+        } catch (GameBuilderException e) {
+            validationDialog.setValidationErrors(e.getBuilderErrors());
             RevealRootPopupContentEvent.fire(this, validationDialog);
             return false;
         }
-        game.setMode(Game.Mode.PLAY);
-        getView().setPlayMode();
-        return true;
     }
 
-    @Override public boolean setEditMode() {
-        game.setMode(Game.Mode.EDIT);
+    @Override
+    public boolean setEditMode() {
+        isPlaying = false;
         getView().setEditMode();
         return true;
     }
 
     private void refreshView() {
-        getView().displayTurn(game.getTurn());
-        getView().displayContracts(game.getCardinalContracts());
-        getView().displayTableCards(game.getCardinalCards(), game.getCenterCards());
-        getView().displayCardinalTricks(game.getCardinalTricks());
+        if (isPlaying) {
+            assert game != null : "TablePresenter.refreshView(isPlaying==true,game==null)";
+            getView()
+                    .displayTurn(game.getTurn())
+                    .displayContracts(game.getCardinalContracts())
+                    .displayTableCards(game.getCardinalCards(), game.getCenterCards())
+                    .displayCardinalTricks(game.getCardinalTricks());
+        } else {
+            getView()
+                    .displayTurn(gameBuilder.getFirstTurn())
+                    .displayContracts(gameBuilder.getCardinalContracts())
+                    .displayTableCards(gameBuilder.getTableCards(), gameBuilder.getCenterCards())
+                    .hideCardinalTricks();
+        }
     }
 }

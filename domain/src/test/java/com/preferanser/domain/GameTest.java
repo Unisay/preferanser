@@ -57,7 +57,7 @@ public class GameTest {
         game.putCards(Cardinal.EAST);
         game.putCards(Cardinal.SOUTH);
         game.putCards(Cardinal.WEST);
-        assertReflectionEquals(expectedTableCards, game.getCardinalCards());
+        assertReflectionEquals(expectedTableCards, game.getTableCards());
     }
 
     @Test
@@ -71,7 +71,7 @@ public class GameTest {
         game.putCards(Cardinal.EAST, Card.CLUB_JACK, Card.DIAMOND_ACE, Card.DIAMOND_EIGHT);
         game.putCards(Cardinal.SOUTH, Card.CLUB_KING);
         game.putCards(Cardinal.WEST, Card.CLUB_QUEEN);
-        assertReflectionEquals(expectedTableCards, game.getCardinalCards(), ReflectionComparatorMode.LENIENT_ORDER);
+        assertReflectionEquals(expectedTableCards, game.getTableCards(), ReflectionComparatorMode.LENIENT_ORDER);
     }
 
     @Test
@@ -81,7 +81,7 @@ public class GameTest {
         game.putCards(Cardinal.SOUTH, Card.CLUB_KING);
         game.putCards(Cardinal.WEST, Card.CLUB_QUEEN);
         game.clearCards();
-        assertReflectionEquals(expectedTableCards, game.getCardinalCards());
+        assertReflectionEquals(expectedTableCards, game.getTableCards());
     }
 
     @Test
@@ -96,7 +96,7 @@ public class GameTest {
         expectedTableCards.put(TableLocation.NORTH, newArrayList(Card.CLUB_ACE, Card.CLUB_EIGHT));
         expectedTableCards.put(TableLocation.EAST, newArrayList(Card.CLUB_JACK, Card.DIAMOND_ACE, Card.DIAMOND_EIGHT));
         expectedTableCards.put(TableLocation.SOUTH, newArrayList(Card.CLUB_KING));
-        assertReflectionEquals(expectedTableCards, game.getCardinalCards(), ReflectionComparatorMode.LENIENT_ORDER);
+        assertReflectionEquals(expectedTableCards, game.getTableCards(), ReflectionComparatorMode.LENIENT_ORDER);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -110,13 +110,13 @@ public class GameTest {
         game.moveCard(Card.CLUB_ACE, TableLocation.NORTH, TableLocation.CENTER);
 
         expectedCenterCards.put(Card.CLUB_ACE, Cardinal.NORTH);
-        assertReflectionEquals(expectedTableCards, game.getCardinalCards());
+        assertReflectionEquals(expectedTableCards, game.getTableCards());
         assertReflectionEquals(expectedCenterCards, game.getCenterCards());
 
         game.moveCard(Card.CLUB_ACE, TableLocation.CENTER, TableLocation.NORTH);
 
         expectedTableCards.put(TableLocation.NORTH, newArrayList(Card.CLUB_ACE));
-        assertReflectionEquals(expectedTableCards, game.getCardinalCards());
+        assertReflectionEquals(expectedTableCards, game.getTableCards());
         expectedCenterCards.clear();
         assertReflectionEquals(expectedCenterCards, game.getCenterCards());
     }
@@ -126,7 +126,7 @@ public class GameTest {
         game.putCards(Cardinal.EAST, Card.CLUB_ACE);
         game.moveCard(Card.CLUB_ACE, TableLocation.EAST, TableLocation.WEST);
         expectedTableCards.put(TableLocation.WEST, newArrayList(Card.CLUB_ACE));
-        assertReflectionEquals(expectedTableCards, game.getCardinalCards());
+        assertReflectionEquals(expectedTableCards, game.getTableCards());
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -204,7 +204,7 @@ public class GameTest {
 
         expectedCardinalTricks.put(Cardinal.NORTH, 1);
         assertReflectionEquals(expectedCardinalTricks, game.getCardinalTricks());
-        assertReflectionEquals(expectedTableCards, game.getCardinalCards());
+        assertReflectionEquals(expectedTableCards, game.getTableCards());
         assertThat(game.getTurn(), equalTo(Cardinal.NORTH));
     }
 
@@ -224,7 +224,7 @@ public class GameTest {
 
         expectedCardinalTricks.put(Cardinal.NORTH, 1);
         assertReflectionEquals(expectedCardinalTricks, game.getCardinalTricks());
-        assertReflectionEquals(expectedTableCards, game.getCardinalCards());
+        assertReflectionEquals(expectedTableCards, game.getTableCards());
         assertThat(game.getTurn(), equalTo(Cardinal.NORTH));
     }
 
@@ -266,7 +266,7 @@ public class GameTest {
 
         expectedCardinalTricks.put(Cardinal.NORTH, 1);
         assertReflectionEquals(expectedCardinalTricks, game.getCardinalTricks());
-        assertReflectionEquals(expectedTableCards, game.getCardinalCards());
+        assertReflectionEquals(expectedTableCards, game.getTableCards());
         assertThat(game.getCenterCards().size(), equalTo(0));
         assertThat(game.getTurn(), equalTo(Cardinal.NORTH));
     }

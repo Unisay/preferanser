@@ -21,10 +21,8 @@ package com.preferanser.domain;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.LinkedHashMultimap;
-import com.google.common.collect.Maps;
+import com.google.common.collect.*;
+import com.preferanser.domain.exception.GameBuilderException;
 import com.preferanser.util.EnumRotator;
 
 import java.util.*;
@@ -66,20 +64,7 @@ public class Game {
     }
 
     public Map<TableLocation, Collection<Card>> getCardinalCards() {
-        ImmutableMap.Builder<TableLocation, Collection<Card>> builder = ImmutableMap.builder();
-        if (cardinalCardMultimap.containsKey(Cardinal.NORTH)) {
-            builder.put(NORTH, getCardsByCardinal(Cardinal.NORTH));
-        }
-        if (cardinalCardMultimap.containsKey(Cardinal.EAST)) {
-            builder.put(EAST, getCardsByCardinal(Cardinal.EAST));
-        }
-        if (cardinalCardMultimap.containsKey(Cardinal.SOUTH)) {
-            builder.put(SOUTH, getCardsByCardinal(Cardinal.SOUTH));
-        }
-        if (cardinalCardMultimap.containsKey(Cardinal.WEST)) {
-            builder.put(WEST, getCardsByCardinal(Cardinal.WEST));
-        }
-        return builder.build();
+        return Builder.copyDefensive(cardinalCardMultimap);
     }
 
     public Collection<Card> getCardsByCardinal(Cardinal cardinal) {
@@ -114,6 +99,21 @@ public class Game {
             return contract.getTrump();
         }
         return Optional.absent();
+    }
+
+    public boolean moveCardToCenter(Card card, TableLocation oldLocation) {
+        checkArgument(oldLocation != CENTER, "Game.moveCardToCenter(oldLocation==CENTER)");
+
+        if (centerCardCardinalMap.size() == numPlayers)
+            return false;
+
+        Cardinal oldCardinal = tableLocationToCardinal(oldLocation);
+        if (centerCardCardinalMap.containsValue(oldCardinal))
+            return false;
+
+        cardinalCardMultimap.get(oldCardinal).remove(card);
+        centerCardCardinalMap.put(card, oldCardinal);
+        return true;
     }
 
     public boolean moveCenterCardsToSluff() {
@@ -173,11 +173,13 @@ public class Game {
 
         private static final int NUM_OF_CARDS_PER_CARDINAL = 10;
 
-        public static enum BuilderError {
-            FIRST_TURN_NOT_SPECIFIED,
-            HAS_CONFLICTING_CONTRACTS,
+        public static enum Error {
+            WRONG_FIRST_TURN,
             WRONG_CARDINAL_CARDS,
-            WRONG_FIRST_TURN, NUM_PLAYERS_NO_SPECIFIED, WRONG_NUMBER_OF_CONTRACTS
+            FIRST_TURN_NOT_SPECIFIED,
+            NUM_PLAYERS_NOT_SPECIFIED,
+            HAS_CONFLICTING_CONTRACTS,
+            WRONG_NUMBER_OF_CONTRACTS
         }
 
         private Integer numPlayers;
@@ -193,22 +195,22 @@ public class Game {
         private Map<Card, Cardinal> centerCardCardinalMap
                 = Maps.newLinkedHashMap(); // order is important
 
-        public Builder firstTurn(Cardinal firstTurn) {
+        public Builder setFirstTurn(Cardinal firstTurn) {
             this.firstTurn = firstTurn;
             return this;
         }
 
-        public Builder threePlayerGame() {
+        public Builder setThreePlayers() {
             numPlayers = 3;
             return this;
         }
 
-        public Builder fourPlayerGame() {
+        public Builder setFourPlayers() {
             numPlayers = 4;
             return this;
         }
 
-        public Builder cardinalContract(Cardinal cardinal, Contract contract) {
+        public Builder setCardinalContract(Cardinal cardinal, Contract contract) {
             Preconditions.checkNotNull(cardinal);
             Preconditions.checkNotNull(contract);
             cardinalContracts.put(cardinal, contract);
@@ -243,23 +245,6 @@ public class Game {
         }
 
         public boolean moveCard(Card card, TableLocation oldLocation, TableLocation newLocation) {
-            checkArgument(oldLocation != newLocation, "moveCard(oldLocation == newLocation)");
-            if (CENTER != newLocation)
-                return false;
-
-            if (centerCardCardinalMap.size() == numPlayers)
-                return false;
-
-            Cardinal oldCardinal = tableLocationToCardinal(oldLocation);
-            if (centerCardCardinalMap.containsValue(oldCardinal))
-                return false;
-
-            cardinalCardMultimap.get(oldCardinal).remove(card);
-            centerCardCardinalMap.put(card, oldCardinal);
-            return true;
-        }
-
-        private boolean moveCardWhenEditing(Card card, TableLocation oldLocation, TableLocation newLocation) {
             if (CENTER == oldLocation) { // moving card out of center
                 checkArgument(centerCardCardinalMap.containsKey(card), "There is no %s in TableLocation.CENTER", card);
                 centerCardCardinalMap.remove(card);
@@ -269,9 +254,7 @@ public class Game {
                     return false;
                 }
                 Cardinal oldCardinal = tableLocationToCardinal(oldLocation);
-                if (centerCardCardinalMap.containsValue(oldCardinal))
-                    return false;
-
+                checkArgument(!centerCardCardinalMap.containsValue(oldCardinal), "There is a card from %s in TableLocation.CENTER", oldCardinal);
                 cardinalCardMultimap.get(oldCardinal).remove(card);
                 centerCardCardinalMap.put(card, oldCardinal);
             } else {
@@ -284,26 +267,26 @@ public class Game {
             return true;
         }
 
-        private Optional<List<BuilderError>> getValidationErrors() {
-            List<BuilderError> errors = newArrayList();
+        private Optional<List<Error>> validate() {
+            List<Error> errors = newArrayList();
 
             if (numPlayers == null)
-                errors.add(BuilderError.NUM_PLAYERS_NO_SPECIFIED);
+                errors.add(Error.NUM_PLAYERS_NOT_SPECIFIED);
 
             if (firstTurn == null)
-                errors.add(BuilderError.FIRST_TURN_NOT_SPECIFIED);
+                errors.add(Error.FIRST_TURN_NOT_SPECIFIED);
 
             if (wrongNumberOfContracts())
-                errors.add(BuilderError.WRONG_NUMBER_OF_CONTRACTS);
+                errors.add(Error.WRONG_NUMBER_OF_CONTRACTS);
 
             if (wrongFirstTurn())
-                errors.add(BuilderError.WRONG_FIRST_TURN);
+                errors.add(Error.WRONG_FIRST_TURN);
 
             if (hasConflictingContracts())
-                errors.add(BuilderError.HAS_CONFLICTING_CONTRACTS);
+                errors.add(Error.HAS_CONFLICTING_CONTRACTS);
 
             if (wrongCardinalCards())
-                errors.add(BuilderError.WRONG_CARDINAL_CARDS);
+                errors.add(Error.WRONG_CARDINAL_CARDS);
 
             if (errors.isEmpty())
                 return Optional.absent();
@@ -321,7 +304,10 @@ public class Game {
         }
 
         private boolean wrongFirstTurn() {
-            return 3 == numPlayers && firstTurn != null && cardinalContracts.get(firstTurn) == null;
+            return numPlayers != null
+                    && numPlayers == 3
+                    && firstTurn != null
+                    && cardinalContracts.get(firstTurn) == null;
         }
 
         private boolean hasConflictingContracts() {
@@ -348,7 +334,7 @@ public class Game {
         }
 
         public Game build() throws GameBuilderException {
-            Optional<List<BuilderError>> validationErrors = getValidationErrors();
+            Optional<List<Error>> validationErrors = validate();
             if (validationErrors.isPresent())
                 throw new GameBuilderException(validationErrors.get());
 
@@ -359,6 +345,39 @@ public class Game {
                     cardinalRotator,
                     cardinalCardMultimap
             );
+        }
+
+        public Cardinal getFirstTurn() {
+            return firstTurn;
+        }
+
+        public Map<Cardinal, Contract> getCardinalContracts() {
+            return cardinalContracts;
+        }
+
+        public Map<TableLocation, Collection<Card>> getTableCards() {
+            return copyDefensive(cardinalCardMultimap);
+        }
+
+        public Map<Card, Cardinal> getCenterCards() {
+            return new LinkedHashMap<Card, Cardinal>(centerCardCardinalMap);
+        }
+
+        private static Map<TableLocation, Collection<Card>> copyDefensive(Multimap<Cardinal, Card> cardinalCardMultimap) {
+            ImmutableMap.Builder<TableLocation, Collection<Card>> builder = ImmutableMap.builder();
+            if (cardinalCardMultimap.containsKey(Cardinal.NORTH)) {
+                builder.put(NORTH, ImmutableList.copyOf(cardinalCardMultimap.get(Cardinal.NORTH)));
+            }
+            if (cardinalCardMultimap.containsKey(Cardinal.EAST)) {
+                builder.put(EAST, ImmutableList.copyOf(cardinalCardMultimap.get(Cardinal.EAST)));
+            }
+            if (cardinalCardMultimap.containsKey(Cardinal.SOUTH)) {
+                builder.put(SOUTH, ImmutableList.copyOf(cardinalCardMultimap.get(Cardinal.SOUTH)));
+            }
+            if (cardinalCardMultimap.containsKey(Cardinal.WEST)) {
+                builder.put(WEST, ImmutableList.copyOf(cardinalCardMultimap.get(Cardinal.WEST)));
+            }
+            return builder.build();
         }
 
     }

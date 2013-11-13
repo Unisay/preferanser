@@ -29,7 +29,7 @@ import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.PopupViewWithUiHandlers;
 import com.preferanser.client.application.i18n.PreferanserConstants;
 import com.preferanser.client.application.widgets.UlListPanel;
-import com.preferanser.domain.Game;
+import com.preferanser.domain.GameBuilder;
 
 import java.util.Collection;
 
@@ -49,9 +49,9 @@ public class ValidationDialogView extends PopupViewWithUiHandlers<ValidationDial
     }
 
     @Override
-    public void displayValidationErrors(Collection<Game.Builder.Error> validationErrors) {
+    public void displayValidationErrors(Collection<GameBuilder.Error> validationErrors) {
         listPanel.clear();
-        for (Game.Builder.Error validationError : validationErrors)
+        for (GameBuilder.Error validationError : validationErrors)
             displayValidationError(constants.getString(validationError.name()));
     }
 

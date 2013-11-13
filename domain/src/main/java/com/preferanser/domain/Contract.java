@@ -79,7 +79,4 @@ public enum Contract {
         return tricksNumber != null;
     }
 
-    public boolean isNotPlaying() {
-        return tricksNumber == null;
-    }
 }

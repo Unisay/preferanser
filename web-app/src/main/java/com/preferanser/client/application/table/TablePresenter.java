@@ -58,7 +58,7 @@ public class TablePresenter extends Presenter<TablePresenter.TableView, TablePre
         TableView hideCardinalTricks();
     }
 
-    private Game.Builder gameBuilder = new Game.Builder().setThreePlayers();
+    private GameBuilder gameBuilder = new GameBuilder().setThreePlayers();
     private Game game;
 
     @ProxyStandard
@@ -92,7 +92,7 @@ public class TablePresenter extends Presenter<TablePresenter.TableView, TablePre
     @Override
     public void reset() {
         Preconditions.checkState(!isPlaying, "TablePresenter.reset(isPlaying==true)");
-        gameBuilder = new Game.Builder()
+        gameBuilder = new GameBuilder()
                 .setThreePlayers()
                 .putCards(Cardinal.NORTH, Card.values());
         refreshView();

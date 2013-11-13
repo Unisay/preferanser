@@ -21,22 +21,22 @@ package com.preferanser.domain.exception;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Objects;
-import com.preferanser.domain.Game;
+import com.preferanser.domain.GameBuilder;
 
 import java.util.Collection;
 
 public class GameBuilderException extends Exception {
 
-    private Collection<Game.Builder.Error> builderErrors;
+    private Collection<GameBuilder.Error> builderErrors;
 
     public GameBuilderException() {
     }
 
-    public GameBuilderException(Collection<Game.Builder.Error> builderErrors) {
+    public GameBuilderException(Collection<GameBuilder.Error> builderErrors) {
         this.builderErrors = builderErrors;
     }
 
-    public Collection<Game.Builder.Error> getBuilderErrors() {
+    public Collection<GameBuilder.Error> getBuilderErrors() {
         return builderErrors;
     }
 

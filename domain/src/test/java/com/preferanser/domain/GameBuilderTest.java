@@ -39,7 +39,7 @@ import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEqua
 
 public class GameBuilderTest {
 
-    private Game.Builder builder;
+    private GameBuilder builder;
     private Card[] northCards;
     private Card[] eastCards;
     private Card[] westCards;
@@ -49,7 +49,7 @@ public class GameBuilderTest {
         northCards = (Card[]) ArrayUtils.subarray(Card.values(), 0, 10);
         eastCards = (Card[]) ArrayUtils.subarray(Card.values(), 10, 20);
         westCards = (Card[]) ArrayUtils.subarray(Card.values(), 20, 30);
-        builder = new Game.Builder()
+        builder = new GameBuilder()
                 .setThreePlayers()
                 .setCardinalContract(NORTH, Contract.SIX_SPADE)
                 .setCardinalContract(EAST, Contract.WHIST)
@@ -134,13 +134,13 @@ public class GameBuilderTest {
     @Test(expectedExceptions = GameBuilderException.class, expectedExceptionsMessageRegExp
             = ".*: NUM_PLAYERS_NOT_SPECIFIED, FIRST_TURN_NOT_SPECIFIED, WRONG_NUMBER_OF_CONTRACTS$")
     public void testValidate_NoPlayersNoTurnNoContracts() throws Exception {
-        new Game.Builder().build();
+        new GameBuilder().build();
     }
 
     @Test(expectedExceptions = GameBuilderException.class, expectedExceptionsMessageRegExp
             = ".*: FIRST_TURN_NOT_SPECIFIED, WRONG_NUMBER_OF_CONTRACTS$")
     public void testValidate_NoTurnNoContracts() throws Exception {
-        new Game.Builder()
+        new GameBuilder()
                 .setFourPlayers()
                 .build();
     }
@@ -148,7 +148,7 @@ public class GameBuilderTest {
     @Test(expectedExceptions = GameBuilderException.class,
             expectedExceptionsMessageRegExp = ".*: WRONG_NUMBER_OF_CONTRACTS$")
     public void testValidate_NoContracts() throws Exception {
-        new Game.Builder()
+        new GameBuilder()
                 .setFourPlayers()
                 .setFirstTurn(NORTH)
                 .build();
@@ -157,7 +157,7 @@ public class GameBuilderTest {
     @Test(expectedExceptions = GameBuilderException.class,
             expectedExceptionsMessageRegExp = ".*WRONG_NUMBER_OF_CONTRACTS.*")
     public void testValidate_WrongNumberContracts() throws Exception {
-        new Game.Builder()
+        new GameBuilder()
                 .setThreePlayers()
                 .setFirstTurn(NORTH)
                 .setCardinalContract(NORTH, Contract.SEVEN_CLUB)
@@ -191,7 +191,7 @@ public class GameBuilderTest {
     @Test(expectedExceptions = GameBuilderException.class,
             expectedExceptionsMessageRegExp = ".*: WRONG_CARDINAL_CARDS$")
     public void testValidate_WrongCardinalCards() throws Exception {
-        new Game.Builder()
+        new GameBuilder()
                 .setFourPlayers()
                 .setFirstTurn(NORTH)
                 .setCardinalContract(NORTH, Contract.SIX_DIAMOND)
@@ -203,7 +203,7 @@ public class GameBuilderTest {
     @Test(expectedExceptions = GameBuilderException.class,
             expectedExceptionsMessageRegExp = ".*: WRONG_CARDINAL_CARDS$")
     public void testValidate_WrongCardinalCards2() throws Exception {
-        new Game.Builder()
+        new GameBuilder()
                 .setFourPlayers()
                 .setFirstTurn(NORTH)
                 .putCards(NORTH, (Card[]) ArrayUtils.subarray(northCards, 0, 9))

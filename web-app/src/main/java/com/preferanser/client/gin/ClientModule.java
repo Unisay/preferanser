@@ -34,6 +34,7 @@ import com.preferanser.client.application.ApplicationModule;
 import com.preferanser.client.application.ResourceLoader;
 import com.preferanser.client.place.NameTokens;
 import com.preferanser.client.request.MyRequestFactory;
+import com.preferanser.domain.GameBuilder;
 
 public class ClientModule extends AbstractPresenterModule {
 
@@ -47,6 +48,7 @@ public class ClientModule extends AbstractPresenterModule {
         bindConstant().annotatedWith(ErrorPlace.class).to(NameTokens.TABLE); // TODO: define separate
         bindConstant().annotatedWith(UnauthorizedPlace.class).to(NameTokens.TABLE);
 
+        bind(GameBuilder.class).asEagerSingleton(); // TODO: should be prototype scope
         bind(ResourceLoader.class).asEagerSingleton();
         bind(MyRequestFactory.class).toProvider(RequestFactoryProvider.class).in(Singleton.class);
     }

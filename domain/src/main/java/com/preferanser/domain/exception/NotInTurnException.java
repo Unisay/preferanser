@@ -19,37 +19,32 @@
 
 package com.preferanser.domain.exception;
 
-import com.google.common.base.Joiner;
-import com.google.common.base.Objects;
-import com.preferanser.domain.GameBuilder;
+import com.preferanser.domain.Cardinal;
 
-import java.util.Collection;
+public class NotInTurnException extends GameTurnException {
 
-public class GameBuilderException extends Exception {
-
-    private Collection<GameBuilder.Error> builderErrors;
+    private Cardinal current;
+    private Cardinal fromCardinal;
 
     @SuppressWarnings("unused") // required for serialization
-    public GameBuilderException() {
+    public NotInTurnException() {
     }
 
-    public GameBuilderException(Collection<GameBuilder.Error> builderErrors) {
-        this.builderErrors = builderErrors;
+
+    public NotInTurnException(Cardinal current, Cardinal fromCardinal) {
+        this.current = current;
+        this.fromCardinal = fromCardinal;
     }
 
-    public Collection<GameBuilder.Error> getBuilderErrors() {
-        return builderErrors;
+    @Override public String getMessage() {
+        return fromCardinal + " attempted to make turn while current turn does " + current;
     }
 
-    @Override
-    public String getMessage() {
-        return "Can't build game because of the following errors: " + Joiner.on(", ").join(getBuilderErrors());
+    public Cardinal getCurrentCardinal() {
+        return current;
     }
 
-    @Override
-    public String toString() {
-        return Objects.toStringHelper(this)
-            .add("builderErrors", builderErrors)
-            .toString();
+    public Cardinal getFromCardinal() {
+        return fromCardinal;
     }
 }

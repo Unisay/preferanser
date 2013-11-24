@@ -24,14 +24,14 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
+import com.preferanser.domain.exception.*;
 import com.preferanser.util.EnumRotator;
 
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.preferanser.domain.TableLocation.CENTER;
+import static com.google.common.collect.Maps.newLinkedHashMap;
 
 /**
  * Represents game state
@@ -43,17 +43,19 @@ public class Game {
     private final Map<Cardinal, Contract> cardinalContracts;
     private final Multimap<Cardinal, Card> cardinalCardMultimap;
     private final Map<Cardinal, Integer> cardinalTricks = Maps.newHashMapWithExpectedSize(Cardinal.values().length);
-    private final Map<Card, Cardinal> centerCardCardinalMap = Maps.newLinkedHashMap(); // order is important
+    private final Map<Card, Cardinal> centerCardCardinalMap;
 
     Game(int numPlayers,
          Map<Cardinal, Contract> cardinalContracts,
          EnumRotator<Cardinal> turnRotator,
-         Multimap<Cardinal, Card> cardinalCardMultimap
+         Multimap<Cardinal, Card> cardinalCardMultimap,
+         Map<Card, Cardinal> centerCardCardinalMap
     ) {
         this.numPlayers = numPlayers;
         this.cardinalContracts = cardinalContracts;
         this.turnRotator = turnRotator;
         this.cardinalCardMultimap = cardinalCardMultimap;
+        this.centerCardCardinalMap = newLinkedHashMap(centerCardCardinalMap);  // order is important
         initCardinalTricks();
     }
 
@@ -101,19 +103,24 @@ public class Game {
         return Optional.absent();
     }
 
-    public boolean moveCardToCenter(Card card, TableLocation oldLocation) {
-        checkArgument(oldLocation != CENTER, "Game.moveCardToCenter(oldLocation==CENTER)");
+    public void makeTurn(Cardinal fromCardinal, Card card) throws GameTurnException {
+        if (fromCardinal != turnRotator.current())
+            throw new NotInTurnException(turnRotator.current(), fromCardinal);
+
+        if (!cardinalCardMultimap.containsEntry(fromCardinal, card))
+            throw new NoSuchCardinalCardException(fromCardinal, card);
+
+        if (centerCardCardinalMap.containsValue(fromCardinal))
+            throw new DuplicateGameTurnException(centerCardCardinalMap, fromCardinal);
 
         if (centerCardCardinalMap.size() == numPlayers)
-            return false;
+            throw new NoTurnsAllowedException(centerCardCardinalMap);
 
-        Cardinal oldCardinal = GameUtils.tableLocationToCardinal(oldLocation);
-        if (centerCardCardinalMap.containsValue(oldCardinal))
-            return false;
+        assert cardinalCardMultimap.get(fromCardinal).remove(card) :
+            "Failed to remove " + card + " from " + fromCardinal;
 
-        cardinalCardMultimap.get(oldCardinal).remove(card);
-        centerCardCardinalMap.put(card, oldCardinal);
-        return true;
+        centerCardCardinalMap.put(card, fromCardinal);
+        turnRotator.next();
     }
 
     public boolean moveCenterCardsToSluff() {

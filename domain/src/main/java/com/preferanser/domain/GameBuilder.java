@@ -1,9 +1,29 @@
+/*
+ * Preferanser is a program to simulate and calculate Russian Preferans Card game deals.
+ *
+ *     Copyright (C) 2013  Yuriy Lazarev <Yuriy.Lazarev@gmail.com>
+ *
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ *
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *
+ *     You should have received a copy of the GNU General Public License
+ *     along with this program.  If not, see [http://www.gnu.org/licenses/].
+ */
+
 package com.preferanser.domain;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Maps;
+import com.preferanser.domain.exception.DuplicateGameTurnException;
 import com.preferanser.domain.exception.GameBuilderException;
 import com.preferanser.util.EnumRotator;
 
@@ -35,13 +55,13 @@ public class GameBuilder {
     private Cardinal firstTurn;
 
     private Map<Cardinal, Contract> cardinalContracts
-            = Maps.newHashMapWithExpectedSize(Cardinal.values().length);
+        = Maps.newHashMapWithExpectedSize(Cardinal.values().length);
 
     private LinkedHashMultimap<Cardinal, Card> cardinalCardMultimap
-            = LinkedHashMultimap.create(TableLocation.values().length, Card.values().length);
+        = LinkedHashMultimap.create(TableLocation.values().length, Card.values().length);
 
     private Map<Card, Cardinal> centerCardCardinalMap
-            = Maps.newLinkedHashMap(); // order is important
+        = Maps.newLinkedHashMap(); // order is important
 
     public GameBuilder setFirstTurn(Cardinal firstTurn) {
         this.firstTurn = firstTurn;
@@ -92,7 +112,7 @@ public class GameBuilder {
         return this;
     }
 
-    public boolean moveCard(Card card, TableLocation oldLocation, TableLocation newLocation) {
+    public boolean moveCard(Card card, TableLocation oldLocation, TableLocation newLocation) throws DuplicateGameTurnException {
         if (CENTER == oldLocation) { // moving card out of center
             checkArgument(centerCardCardinalMap.containsKey(card), "There is no %s in TableLocation.CENTER", card);
             centerCardCardinalMap.remove(card);
@@ -102,7 +122,8 @@ public class GameBuilder {
                 return false;
             }
             Cardinal oldCardinal = GameUtils.tableLocationToCardinal(oldLocation);
-            checkArgument(!centerCardCardinalMap.containsValue(oldCardinal), "There is a card from %s in TableLocation.CENTER", oldCardinal);
+            if (centerCardCardinalMap.containsValue(oldCardinal))
+                throw new DuplicateGameTurnException(centerCardCardinalMap, oldCardinal);
             cardinalCardMultimap.get(oldCardinal).remove(card);
             centerCardCardinalMap.put(card, oldCardinal);
         } else {
@@ -153,9 +174,9 @@ public class GameBuilder {
 
     private boolean wrongFirstTurn() {
         return numPlayers != null
-                && numPlayers == 3
-                && firstTurn != null
-                && cardinalContracts.get(firstTurn) == null;
+            && numPlayers == 3
+            && firstTurn != null
+            && cardinalContracts.get(firstTurn) == null;
     }
 
     private boolean hasConflictingContracts() {
@@ -187,12 +208,23 @@ public class GameBuilder {
             throw new GameBuilderException(validationErrors.get());
 
         EnumRotator<Cardinal> cardinalRotator = new EnumRotator<Cardinal>(Cardinal.values(), firstTurn);
+        cardinalRotator.setSkipValues(getWidowCardinal());
+
         return new Game(
-                numPlayers,
-                cardinalContracts,
-                cardinalRotator,
-                cardinalCardMultimap
+            numPlayers,
+            cardinalContracts,
+            cardinalRotator,
+            cardinalCardMultimap,
+            centerCardCardinalMap
         );
+    }
+
+    private Cardinal getWidowCardinal() {
+        for (Cardinal cardinal : Cardinal.values())
+            if (!cardinalContracts.containsKey(cardinal))
+                return cardinal;
+
+        throw new IllegalStateException("Failed to determine widow cardinal");
     }
 
     public Cardinal getFirstTurn() {

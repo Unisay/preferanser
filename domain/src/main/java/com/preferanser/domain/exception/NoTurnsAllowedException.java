@@ -19,37 +19,28 @@
 
 package com.preferanser.domain.exception;
 
-import com.google.common.base.Joiner;
-import com.google.common.base.Objects;
-import com.preferanser.domain.GameBuilder;
+import com.preferanser.domain.Card;
+import com.preferanser.domain.Cardinal;
 
-import java.util.Collection;
+import java.util.Map;
 
-public class GameBuilderException extends Exception {
+public class NoTurnsAllowedException extends GameTurnException {
 
-    private Collection<GameBuilder.Error> builderErrors;
+    private Map<Card, Cardinal> centerCardCardinalMap;
 
     @SuppressWarnings("unused") // required for serialization
-    public GameBuilderException() {
+    public NoTurnsAllowedException() {
     }
 
-    public GameBuilderException(Collection<GameBuilder.Error> builderErrors) {
-        this.builderErrors = builderErrors;
+    public NoTurnsAllowedException(Map<Card, Cardinal> centerCardCardinalMap) {
+        this.centerCardCardinalMap = centerCardCardinalMap;
     }
 
-    public Collection<GameBuilder.Error> getBuilderErrors() {
-        return builderErrors;
+    @Override public String getMessage() {
+        return "No more turns allowed: " + centerCardCardinalMap;
     }
 
-    @Override
-    public String getMessage() {
-        return "Can't build game because of the following errors: " + Joiner.on(", ").join(getBuilderErrors());
-    }
-
-    @Override
-    public String toString() {
-        return Objects.toStringHelper(this)
-            .add("builderErrors", builderErrors)
-            .toString();
+    public Map<Card, Cardinal> getCenterCardCardinalMap() {
+        return centerCardCardinalMap;
     }
 }

@@ -19,37 +19,32 @@
 
 package com.preferanser.domain.exception;
 
-import com.google.common.base.Joiner;
-import com.google.common.base.Objects;
-import com.preferanser.domain.GameBuilder;
+import com.preferanser.domain.Card;
+import com.preferanser.domain.Cardinal;
 
-import java.util.Collection;
+public class NoSuchCardinalCardException extends GameTurnException {
 
-public class GameBuilderException extends Exception {
-
-    private Collection<GameBuilder.Error> builderErrors;
+    private Cardinal cardinal;
+    private Card card;
 
     @SuppressWarnings("unused") // required for serialization
-    public GameBuilderException() {
+    public NoSuchCardinalCardException() {
     }
 
-    public GameBuilderException(Collection<GameBuilder.Error> builderErrors) {
-        this.builderErrors = builderErrors;
+    public NoSuchCardinalCardException(Cardinal cardinal, Card card) {
+        this.cardinal = cardinal;
+        this.card = card;
     }
 
-    public Collection<GameBuilder.Error> getBuilderErrors() {
-        return builderErrors;
+    @Override public String getMessage() {
+        return "Can't make turn because there is no " + card + " at " + cardinal;
     }
 
-    @Override
-    public String getMessage() {
-        return "Can't build game because of the following errors: " + Joiner.on(", ").join(getBuilderErrors());
+    public Cardinal getCardinal() {
+        return cardinal;
     }
 
-    @Override
-    public String toString() {
-        return Objects.toStringHelper(this)
-            .add("builderErrors", builderErrors)
-            .toString();
+    public Card getCard() {
+        return card;
     }
 }

@@ -237,6 +237,15 @@ public class TableView extends ViewWithUiHandlers<TableUiHandlers> implements Ta
     }
 
     @Override
+    public TableView hideTurn() {
+        if (!editMode)
+            for (TurnPointer turnPointer : cardinalTurnPointerMap.values())
+                turnPointer.addStyleName(style.notDisplayed());
+
+        return this;
+    }
+
+    @Override
     public void onCardMouseDown(CardWidget cardWidget, MouseDownEvent event) {
         imageDragController.startDrag(cardWidget, event);
         putCardImageOnTop(cardWidget);

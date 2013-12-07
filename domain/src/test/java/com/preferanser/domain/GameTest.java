@@ -21,7 +21,6 @@ package com.preferanser.domain;
 
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Maps;
-import com.google.common.collect.Multimap;
 import com.preferanser.domain.exception.DuplicateGameTurnException;
 import com.preferanser.domain.exception.NoSuchCardinalCardException;
 import com.preferanser.domain.exception.NoTurnsAllowedException;
@@ -30,6 +29,7 @@ import com.preferanser.util.EnumRotator;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import static com.google.common.collect.Maps.newLinkedHashMap;
@@ -37,8 +37,7 @@ import static com.preferanser.domain.Card.*;
 import static com.preferanser.domain.Cardinal.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.fail;
+import static org.testng.Assert.*;
 
 /**
  * Unit test for the Game
@@ -46,27 +45,15 @@ import static org.testng.Assert.fail;
 public class GameTest {
 
     private Game game;
-    private Map<Card, Cardinal> centerCardCardinalMap;
-    private Multimap<Cardinal, Card> cardinalCardMultimap;
 
     @BeforeMethod
     public void setUp() throws Exception {
-        cardinalCardMultimap = LinkedHashMultimap.create();
-        cardinalCardMultimap.put(NORTH, CLUB_ACE);
-        cardinalCardMultimap.put(NORTH, CLUB_ACE);
-        cardinalCardMultimap.put(EAST, CLUB_EIGHT);
-        cardinalCardMultimap.put(EAST, SPADE_EIGHT);
-        cardinalCardMultimap.put(SOUTH, CLUB_KING);
-        cardinalCardMultimap.put(WEST, CLUB_JACK);
-        cardinalCardMultimap.put(WEST, CLUB_NINE);
-
-        centerCardCardinalMap = newLinkedHashMap();
         game = new Game(
-            4,
-            createCardinalContractMap(),
-            createTurnRotator(EAST, SOUTH),
-            cardinalCardMultimap,
-            centerCardCardinalMap
+                4,
+                createCardinalContractMap(),
+                createTurnRotator(EAST, SOUTH),
+                createCardinalCardMultimap(),
+                createCenterCardCardinalMap()
         );
     }
 
@@ -110,7 +97,12 @@ public class GameTest {
 
     @Test
     public void testMakeTurn_ThreePlayersExtraTurn() throws Exception {
-        game = new Game(3, createCardinalContractMap(), createTurnRotator(NORTH), cardinalCardMultimap, centerCardCardinalMap);
+        game = new Game(
+                3,
+                createCardinalContractMap(),
+                createTurnRotator(NORTH),
+                createCardinalCardMultimap(),
+                createCenterCardCardinalMap());
 
         game.makeTurn(NORTH, CLUB_ACE);
         game.makeTurn(EAST, CLUB_EIGHT);
@@ -127,11 +119,11 @@ public class GameTest {
     @Test
     public void testMakeTurn_SkipWidow() throws Exception {
         game = new Game(
-            4,
-            createCardinalContractMap(),
-            createTurnRotator(NORTH, SOUTH),
-            cardinalCardMultimap,
-            centerCardCardinalMap
+                4,
+                createCardinalContractMap(),
+                createTurnRotator(NORTH, SOUTH),
+                createCardinalCardMultimap(),
+                createCenterCardCardinalMap()
         );
 
         game.makeTurn(NORTH, CLUB_ACE);
@@ -139,6 +131,73 @@ public class GameTest {
         assertEquals(game.getTurn(), WEST, "Next turn is expected to be WEST, as SOUTH is skipped (widow)");
     }
 
+    @Test
+    public void testIsTrickComplete_ThreePlayers_Positive() throws Exception {
+        LinkedHashMap<Card, Cardinal> centerCardCardinalMap = createCenterCardCardinalMap();
+        centerCardCardinalMap.put(DIAMOND_ACE, NORTH);
+        centerCardCardinalMap.put(DIAMOND_KING, EAST);
+        centerCardCardinalMap.put(DIAMOND_QUEEN, WEST);
+
+        game = new Game(
+                3,
+                createCardinalContractMap(),
+                createTurnRotator(NORTH, SOUTH),
+                createCardinalCardMultimap(),
+                centerCardCardinalMap
+        );
+
+        assertTrue(game.isTrickComplete());
+    }
+
+    @Test
+    public void testIsTrickComplete_ThreePlayers_Negative() throws Exception {
+        game = new Game(
+                3,
+                createCardinalContractMap(),
+                createTurnRotator(NORTH, SOUTH),
+                createCardinalCardMultimap(),
+                createCenterCardCardinalMap()
+        );
+
+        assertFalse(game.isTrickComplete());
+    }
+
+    @Test
+    public void testIsTrickComplete_FourPlayers_Positive() throws Exception {
+        LinkedHashMap<Card, Cardinal> centerCardCardinalMap = createCenterCardCardinalMap();
+        centerCardCardinalMap.put(DIAMOND_ACE, NORTH);
+        centerCardCardinalMap.put(DIAMOND_KING, EAST);
+        centerCardCardinalMap.put(DIAMOND_JACK, SOUTH);
+        centerCardCardinalMap.put(DIAMOND_QUEEN, WEST);
+
+        game = new Game(
+                4,
+                createCardinalContractMap(),
+                createTurnRotator(NORTH),
+                createCardinalCardMultimap(),
+                centerCardCardinalMap
+        );
+
+        assertTrue(game.isTrickComplete());
+    }
+
+    @Test
+    public void testIsTrickComplete_FourPlayers_Negative() throws Exception {
+        LinkedHashMap<Card, Cardinal> centerCardCardinalMap = createCenterCardCardinalMap();
+        centerCardCardinalMap.put(DIAMOND_ACE, NORTH);
+        centerCardCardinalMap.put(DIAMOND_KING, EAST);
+        centerCardCardinalMap.put(DIAMOND_QUEEN, WEST);
+
+        game = new Game(
+                4,
+                createCardinalContractMap(),
+                createTurnRotator(NORTH, SOUTH),
+                createCardinalCardMultimap(),
+                centerCardCardinalMap
+        );
+
+        assertFalse(game.isTrickComplete());
+    }
 
     private EnumRotator<Cardinal> createTurnRotator(Cardinal curValue, Cardinal... valuesToSkip) {
         EnumRotator<Cardinal> turnRotator = new EnumRotator<Cardinal>(Cardinal.values(), curValue);
@@ -148,6 +207,22 @@ public class GameTest {
 
     private Map<Cardinal, Contract> createCardinalContractMap() {
         return Maps.newHashMap();
+    }
+
+    private LinkedHashMap<Card, Cardinal> createCenterCardCardinalMap() {
+        return newLinkedHashMap();
+    }
+
+    private LinkedHashMultimap<Cardinal, Card> createCardinalCardMultimap() {
+        LinkedHashMultimap<Cardinal, Card> multimap = LinkedHashMultimap.create();
+        multimap.put(NORTH, CLUB_ACE);
+        multimap.put(NORTH, CLUB_ACE);
+        multimap.put(EAST, CLUB_EIGHT);
+        multimap.put(EAST, SPADE_EIGHT);
+        multimap.put(SOUTH, CLUB_KING);
+        multimap.put(WEST, CLUB_JACK);
+        multimap.put(WEST, CLUB_NINE);
+        return multimap;
     }
 
 }

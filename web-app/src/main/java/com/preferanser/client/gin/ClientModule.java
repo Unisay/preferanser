@@ -48,9 +48,17 @@ public class ClientModule extends AbstractPresenterModule {
         bindConstant().annotatedWith(ErrorPlace.class).to(NameTokens.TABLE); // TODO: define separate
         bindConstant().annotatedWith(UnauthorizedPlace.class).to(NameTokens.TABLE);
 
-        bind(GameBuilder.class).asEagerSingleton(); // TODO: should be prototype scope
+        bind(GameBuilder.class).toProvider(GameBuilderProvider.class).in(Singleton.class); // TODO: should be prototype scope
         bind(ResourceLoader.class).asEagerSingleton();
         bind(MyRequestFactory.class).toProvider(RequestFactoryProvider.class).in(Singleton.class);
+    }
+
+    static class GameBuilderProvider implements Provider<GameBuilder> {
+        @Override public GameBuilder get() {
+            GameBuilder gameBuilder = new GameBuilder();
+            gameBuilder.setThreePlayers(); // TODO: remove this initialization
+            return gameBuilder;
+        }
     }
 
     static class RequestFactoryProvider implements Provider<MyRequestFactory> {

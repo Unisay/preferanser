@@ -78,13 +78,25 @@ public class TablePresenterTest {
         when(gameBuilder.build()).thenReturn(game);
         tablePresenter = new TablePresenter(eventBus, view, proxy, gameBuilder, contractDialog, validationDialog);
         turn = Cardinal.EAST;
+
+        when(view.displayTurn(turn)).thenReturn(view);
+        when(view.displayContracts(cardinalContracts)).thenReturn(view);
+        when(view.displayTableCards(cardinalCards, centerCards)).thenReturn(view);
+
         verify(view).setUiHandlers(tablePresenter);
-        verify(gameBuilder).setThreePlayers();
     }
 
     @Test
     public void testChangeCardLocation_EqualLocations() throws Exception {
+        when(gameBuilder.getTableCards()).thenReturn(cardinalCards);
+        when(gameBuilder.getCenterCards()).thenReturn(centerCards);
+
         tablePresenter.changeCardLocation(Card.CLUB_ACE, TableLocation.EAST, TableLocation.EAST);
+
+        verify(gameBuilder).getTableCards();
+        verify(gameBuilder).getCenterCards();
+        verify(view).displayTableCards(cardinalCards, centerCards);
+
         verifyNoMoreInteractions(view);
         verifyNoMoreInteractions(game);
         verifyNoMoreInteractions(gameBuilder);
@@ -92,10 +104,17 @@ public class TablePresenterTest {
 
     @Test
     public void testChangeCardLocation_NotToCenterWhenPlaying() throws Exception {
+        when(game.getCardinalCards()).thenReturn(cardinalCards);
+        when(game.getCenterCards()).thenReturn(centerCards);
+
         tablePresenter.setPlayMode();
         tablePresenter.changeCardLocation(Card.CLUB_ACE, TableLocation.WEST, TableLocation.EAST);
+
         verify(gameBuilder).build();
         verify(view).setPlayMode();
+        verify(game).getCardinalCards();
+        verify(game).getCenterCards();
+        verify(view).displayTableCards(cardinalCards, centerCards);
         verifyNoMoreInteractions(view);
         verifyNoMoreInteractions(game);
         verifyNoMoreInteractions(gameBuilder);
@@ -107,10 +126,6 @@ public class TablePresenterTest {
         when(gameBuilder.getCardinalContracts()).thenReturn(cardinalContracts);
         when(gameBuilder.getTableCards()).thenReturn(cardinalCards);
         when(gameBuilder.getCenterCards()).thenReturn(centerCards);
-
-        when(view.displayTurn(turn)).thenReturn(view);
-        when(view.displayContracts(cardinalContracts)).thenReturn(view);
-        when(view.displayTableCards(cardinalCards, centerCards)).thenReturn(view);
 
         tablePresenter.changeCardLocation(Card.CLUB_ACE, TableLocation.EAST, TableLocation.WEST);
 
@@ -129,16 +144,33 @@ public class TablePresenterTest {
         when(game.getCenterCards()).thenReturn(centerCards);
         when(game.getCardinalTricks()).thenReturn(cardinalTricks);
 
-        when(view.displayTurn(turn)).thenReturn(view);
-        when(view.displayContracts(cardinalContracts)).thenReturn(view);
-        when(view.displayTableCards(cardinalCards, centerCards)).thenReturn(view);
-
         tablePresenter.setPlayMode();
         tablePresenter.changeCardLocation(Card.CLUB_ACE, TableLocation.EAST, TableLocation.CENTER);
 
         verify(gameBuilder).build();
         verify(view).setPlayMode();
         verify(view).displayTurn(turn);
+        verify(view).displayContracts(cardinalContracts);
+        verify(view).displayTableCards(cardinalCards, centerCards);
+        verify(view).displayCardinalTricks(cardinalTricks);
+        verifyNoMoreInteractions(view);
+    }
+
+    @Test
+    public void testChangeCardLocation_PlayModeCompleteTrick() throws Exception {
+        when(game.isTrickComplete()).thenReturn(true);
+        when(game.getTurn()).thenReturn(turn);
+        when(game.getCardinalContracts()).thenReturn(cardinalContracts);
+        when(game.getCardinalCards()).thenReturn(cardinalCards);
+        when(game.getCenterCards()).thenReturn(centerCards);
+        when(game.getCardinalTricks()).thenReturn(cardinalTricks);
+
+        tablePresenter.setPlayMode();
+        tablePresenter.changeCardLocation(Card.CLUB_ACE, TableLocation.EAST, TableLocation.CENTER);
+
+        verify(gameBuilder).build();
+        verify(view).setPlayMode();
+        verify(view).hideTurn();
         verify(view).displayContracts(cardinalContracts);
         verify(view).displayTableCards(cardinalCards, centerCards);
         verify(view).displayCardinalTricks(cardinalTricks);

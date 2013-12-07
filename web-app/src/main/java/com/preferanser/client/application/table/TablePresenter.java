@@ -58,11 +58,12 @@ public class TablePresenter extends Presenter<TablePresenter.TableView, TablePre
     public interface TableView extends View, HasUiHandlers<TableUiHandlers> {
         TableView setPlayMode();
         TableView setEditMode();
+        TableView hideTurn();
         TableView displayTurn(Cardinal turn);
         TableView displayContracts(Map<Cardinal, Contract> cardinalContracts);
+        TableView hideCardinalTricks();
         TableView displayCardinalTricks(Map<Cardinal, Integer> cardinalTricks);
         TableView displayTableCards(Map<TableLocation, Collection<Card>> tableCards, Map<Card, Cardinal> centerCards);
-        TableView hideCardinalTricks();
     }
 
     private GameBuilder gameBuilder;
@@ -84,7 +85,6 @@ public class TablePresenter extends Presenter<TablePresenter.TableView, TablePre
         this.contractDialog = contractDialog;
         this.contractDialog.setHasCardinalContracts(this);
         this.validationDialog = validationDialog;
-        gameBuilder.setThreePlayers(); // TODO remove
         getView().setUiHandlers(this);
     }
 
@@ -119,7 +119,7 @@ public class TablePresenter extends Presenter<TablePresenter.TableView, TablePre
     public void sluff() {
         Preconditions.checkState(isPlaying, "TablePresenter.sluff(isPlaying==false)");
         Preconditions.checkNotNull(game, "TablePresenter.sluff(game==null)");
-        if (game.moveCenterCardsToSluff())
+        if (game.sluffTrick())
             refreshView();
     }
 
@@ -202,7 +202,10 @@ public class TablePresenter extends Presenter<TablePresenter.TableView, TablePre
     private void refreshTurn() {
         if (isPlaying) {
             assert game != null : "TablePresenter.refreshTurn(isPlaying==true,game==null)";
-            getView().displayTurn(game.getTurn());
+            if (game.isTrickComplete())
+                getView().hideTurn();
+            else
+                getView().displayTurn(game.getTurn());
         } else {
             getView().displayTurn(gameBuilder.getFirstTurn());
         }
@@ -234,4 +237,5 @@ public class TablePresenter extends Presenter<TablePresenter.TableView, TablePre
             getView().hideCardinalTricks();
         }
     }
+
 }

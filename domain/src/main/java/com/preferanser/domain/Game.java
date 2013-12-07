@@ -123,16 +123,20 @@ public class Game {
         turnRotator.next();
     }
 
-    public boolean moveCenterCardsToSluff() {
-        if (centerCardCardinalMap.size() == numPlayers) {
-            Optional<Suit> maybeTrump = getTrump();
-            Cardinal turn = determineTrickWinner(maybeTrump, centerCardCardinalMap);
-            cardinalTricks.put(turn, cardinalTricks.get(turn) + 1); // Non-atomic increment!
-            turnRotator.setCurrent(turn);
-            centerCardCardinalMap.clear();
-            return true;
-        }
-        return false;
+    public boolean isTrickComplete() {
+        return centerCardCardinalMap.size() == numPlayers;
+    }
+
+    public boolean sluffTrick() {
+        if (!isTrickComplete())
+            return false;
+
+        Optional<Suit> maybeTrump = getTrump();
+        Cardinal turn = determineTrickWinner(maybeTrump, centerCardCardinalMap);
+        cardinalTricks.put(turn, cardinalTricks.get(turn) + 1); // Non-atomic increment!
+        turnRotator.setCurrent(turn);
+        centerCardCardinalMap.clear();
+        return true;
     }
 
     private Cardinal determineTrickWinner(Optional<Suit> maybeTrump, Map<Card, Cardinal> cardCardinalMap) {

@@ -44,9 +44,9 @@ public class ClientModule extends AbstractPresenterModule {
         install(new ApplicationModule());
 
         // DefaultPlaceManager Places
-        bindConstant().annotatedWith(DefaultPlace.class).to(NameTokens.TABLE);
-        bindConstant().annotatedWith(ErrorPlace.class).to(NameTokens.TABLE); // TODO: define separate
-        bindConstant().annotatedWith(UnauthorizedPlace.class).to(NameTokens.TABLE);
+        bindConstant().annotatedWith(DefaultPlace.class).to(NameTokens.GAME_BUILDER);
+        bindConstant().annotatedWith(ErrorPlace.class).to(NameTokens.GAME_BUILDER); // TODO: define separate
+        bindConstant().annotatedWith(UnauthorizedPlace.class).to(NameTokens.GAME_BUILDER);
 
         bind(GameBuilder.class).toProvider(GameBuilderProvider.class).in(Singleton.class); // TODO: should be prototype scope
         bind(ResourceLoader.class).asEagerSingleton();

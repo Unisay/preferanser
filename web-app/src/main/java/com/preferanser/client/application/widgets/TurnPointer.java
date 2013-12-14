@@ -21,7 +21,7 @@ package com.preferanser.client.application.widgets;
 
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.Image;
-import com.preferanser.client.application.table.style.TurnPointerStyle;
+import com.preferanser.client.application.game.editor.style.TurnPointerStyle;
 import com.preferanser.domain.Cardinal;
 
 public class TurnPointer extends Image {

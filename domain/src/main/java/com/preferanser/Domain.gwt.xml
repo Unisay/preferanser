@@ -18,7 +18,7 @@
   -->
 
 <module>
-    <inherits name="com.google.gwt.user.User"/>
     <source path="domain"/>
     <source path="util"/>
+    <source path="client"/>
 </module>

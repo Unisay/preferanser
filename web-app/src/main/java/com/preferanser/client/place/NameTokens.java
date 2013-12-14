@@ -20,5 +20,6 @@
 package com.preferanser.client.place;
 
 public class NameTokens {
-    public static final String TABLE = "table";
+    public static final String GAME_BUILDER = "game-builder";
+    public static final String GAME = "game";
 }

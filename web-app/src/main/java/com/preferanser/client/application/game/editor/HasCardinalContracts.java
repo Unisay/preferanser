@@ -17,24 +17,14 @@
  *     along with this program.  If not, see [http://www.gnu.org/licenses/].
  */
 
-package com.preferanser.client.application;
+package com.preferanser.client.application.game.editor;
 
-import com.gwtplatform.mvp.client.gin.AbstractPresenterModule;
-import com.preferanser.client.application.game.editor.EditorModule;
-import com.preferanser.client.application.game.player.PlayerModule;
 
-public class ApplicationModule extends AbstractPresenterModule {
+import com.preferanser.domain.Cardinal;
+import com.preferanser.domain.Contract;
 
-    @Override
-    protected void configure() {
-        install(new PlayerModule());
-        install(new EditorModule());
-        bindPresenter(
-                ApplicationPresenter.class,
-                ApplicationPresenter.ApplicationView.class,
-                ApplicationView.class,
-                ApplicationPresenter.ApplicationPresenterProxy.class
-        );
-    }
+public interface HasCardinalContracts {
+
+    boolean setCardinalContract(Cardinal cardinal, Contract contract);
 
 }

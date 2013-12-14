@@ -17,24 +17,19 @@
  *     along with this program.  If not, see [http://www.gnu.org/licenses/].
  */
 
-package com.preferanser.client.application;
+package com.preferanser.client.application.game.editor.style;
 
-import com.gwtplatform.mvp.client.gin.AbstractPresenterModule;
-import com.preferanser.client.application.game.editor.EditorModule;
-import com.preferanser.client.application.game.player.PlayerModule;
+public interface TurnPointerStyle {
 
-public class ApplicationModule extends AbstractPresenterModule {
+    String turnPointer();
 
-    @Override
-    protected void configure() {
-        install(new PlayerModule());
-        install(new EditorModule());
-        bindPresenter(
-                ApplicationPresenter.class,
-                ApplicationPresenter.ApplicationView.class,
-                ApplicationView.class,
-                ApplicationPresenter.ApplicationPresenterProxy.class
-        );
-    }
+    String turnPointerNorth();
 
+    String turnPointerEast();
+
+    String turnPointerSouth();
+
+    String turnPointerWest();
+
+    String turnPointerActive();
 }

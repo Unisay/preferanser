@@ -17,24 +17,9 @@
  *     along with this program.  If not, see [http://www.gnu.org/licenses/].
  */
 
-package com.preferanser.client.application;
+package com.preferanser.client.application.game.editor.dialog.validation;
 
-import com.gwtplatform.mvp.client.gin.AbstractPresenterModule;
-import com.preferanser.client.application.game.editor.EditorModule;
-import com.preferanser.client.application.game.player.PlayerModule;
+import com.gwtplatform.mvp.client.UiHandlers;
 
-public class ApplicationModule extends AbstractPresenterModule {
-
-    @Override
-    protected void configure() {
-        install(new PlayerModule());
-        install(new EditorModule());
-        bindPresenter(
-                ApplicationPresenter.class,
-                ApplicationPresenter.ApplicationView.class,
-                ApplicationView.class,
-                ApplicationPresenter.ApplicationPresenterProxy.class
-        );
-    }
-
+public interface ValidationDialogUiHandlers extends UiHandlers {
 }

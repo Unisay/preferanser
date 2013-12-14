@@ -17,24 +17,18 @@
  *     along with this program.  If not, see [http://www.gnu.org/licenses/].
  */
 
-package com.preferanser.client.application;
+package com.preferanser.client.application.game.player;
 
 import com.gwtplatform.mvp.client.gin.AbstractPresenterModule;
-import com.preferanser.client.application.game.editor.EditorModule;
-import com.preferanser.client.application.game.player.PlayerModule;
 
-public class ApplicationModule extends AbstractPresenterModule {
+/**
+ * Gin module for the game page
+ */
+public class PlayerModule extends AbstractPresenterModule {
 
     @Override
     protected void configure() {
-        install(new PlayerModule());
-        install(new EditorModule());
-        bindPresenter(
-                ApplicationPresenter.class,
-                ApplicationPresenter.ApplicationView.class,
-                ApplicationView.class,
-                ApplicationPresenter.ApplicationPresenterProxy.class
-        );
+        bindPresenter(PlayerPresenter.class, PlayerPresenter.PlayerView.class, PlayerView.class, PlayerPresenter.Proxy.class);
     }
 
 }

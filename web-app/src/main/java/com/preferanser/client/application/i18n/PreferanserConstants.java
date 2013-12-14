@@ -42,6 +42,15 @@ public interface PreferanserConstants extends ConstantsWithLookup {
     @DefaultStringValue("♥") String HEART_char();
     @DefaultStringValue("Play") String play();
     @DefaultStringValue("Edit") String edit();
+
+    @DefaultStringValue("North") String north();
+    @DefaultStringValue("East") String east();
+    @DefaultStringValue("South") String south();
+    @DefaultStringValue("West") String west();
+    @DefaultStringValue("To sluff") String toSluff();
+    @DefaultStringValue("Deal") String deal();
+    @DefaultStringValue("Save") String save();
+
     @DefaultStringValue("Choose contract") String chooseContract();
     @DefaultStringValue("Wrong number of contracts") String WRONG_NUMBER_OF_CONTRACTS();
     @DefaultStringValue("There are conflicting contracts") String HAS_CONFLICTING_CONTRACTS();

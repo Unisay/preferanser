@@ -17,24 +17,18 @@
  *     along with this program.  If not, see [http://www.gnu.org/licenses/].
  */
 
-package com.preferanser.client.application;
+package com.preferanser.client.application.game.editor.layout;
 
-import com.gwtplatform.mvp.client.gin.AbstractPresenterModule;
-import com.preferanser.client.application.game.editor.EditorModule;
-import com.preferanser.client.application.game.player.PlayerModule;
+import com.google.gwt.user.client.ui.Panel;
+import com.preferanser.client.application.widgets.CardWidget;
 
-public class ApplicationModule extends AbstractPresenterModule {
+public class WestLayout extends VerticalPanelLayout<CardWidget> {
 
-    @Override
-    protected void configure() {
-        install(new PlayerModule());
-        install(new EditorModule());
-        bindPresenter(
-                ApplicationPresenter.class,
-                ApplicationPresenter.ApplicationView.class,
-                ApplicationView.class,
-                ApplicationPresenter.ApplicationPresenterProxy.class
-        );
+    public WestLayout(Panel panel, int imageWidth, int imageHeight) {
+        super(panel, imageWidth, imageHeight);
+        this.maxSameSuitOffsetX = imageWidth - minSameSuitOffsetX;
+        this.minDiffSuitOffsetY = 85;
+        this.maxDiffSuitOffsetY = imageHeight;
     }
 
 }

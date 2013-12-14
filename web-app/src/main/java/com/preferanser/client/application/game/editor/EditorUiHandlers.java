@@ -17,24 +17,32 @@
  *     along with this program.  If not, see [http://www.gnu.org/licenses/].
  */
 
-package com.preferanser.client.application;
+package com.preferanser.client.application.game.editor;
 
-import com.gwtplatform.mvp.client.gin.AbstractPresenterModule;
-import com.preferanser.client.application.game.editor.EditorModule;
-import com.preferanser.client.application.game.player.PlayerModule;
+import com.preferanser.client.application.game.TableUiHandlers;
+import com.preferanser.domain.Cardinal;
 
-public class ApplicationModule extends AbstractPresenterModule {
+/**
+ * Game builder UI handlers
+ */
+public interface EditorUiHandlers extends TableUiHandlers {
 
-    @Override
-    protected void configure() {
-        install(new PlayerModule());
-        install(new EditorModule());
-        bindPresenter(
-                ApplicationPresenter.class,
-                ApplicationPresenter.ApplicationView.class,
-                ApplicationView.class,
-                ApplicationPresenter.ApplicationPresenterProxy.class
-        );
-    }
+    /**
+     * User chose contract for cardinal
+     *
+     * @param cardinal for which contract is chosen
+     */
+    void chooseContract(Cardinal cardinal);
 
+    /**
+     * User chose first turn
+     *
+     * @param cardinal who turns first
+     */
+    void chooseTurn(Cardinal cardinal);
+
+    /**
+     *  Switch to player page
+     */
+    void switchToPlayer();
 }

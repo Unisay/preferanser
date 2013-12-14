@@ -1,0 +1,88 @@
+<!--
+  ~ Preferanser is a program to simulate and calculate Russian Preferans Card game deals.
+  ~
+  ~     Copyright (C) 2013  Yuriy Lazarev <Yuriy.Lazarev@gmail.com>
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, either version 3 of the License, or
+  ~     (at your option) any later version.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see [http://www.gnu.org/licenses/].
+  -->
+
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+             xmlns:g="urn:import:com.google.gwt.user.client.ui"
+             xmlns:p="urn:import:com.preferanser.client.application.widgets">
+    <ui:with field="constants" type="com.preferanser.client.application.i18n.PreferanserConstants"/>
+    <ui:style src="../table.css" field="style" type="com.preferanser.client.application.game.editor.style.TableStyle"/>
+
+    <p:TablePanel ui:field="table">
+
+        <p:header>
+            <g:HorizontalPanel> <!-- todo replace by holder widget -->
+                <g:Button ui:field="playButton" text="{constants.play}" debugId="play"/>
+                <g:Button ui:field="saveButton" text="{constants.save}" debugId="save"/>
+                <g:Button ui:field="dealButton" text="{constants.deal}" debugId="deal"/>
+            </g:HorizontalPanel>
+        </p:header>
+
+        <p:northheader>
+            <g:FlowPanel>
+                <g:FlowPanel addStyleNames="{style.handHeaderLeftPanel}">
+                    <g:Label ui:field="titleNorth" text="{constants.north}" addStyleNames="{style.titleNorth}"/>
+                    <p:ContractLink ui:field="northContractLink" constants="{constants}" tableStyle="{style}"
+                                    debugId="contract-link-NORTH"/>
+                </g:FlowPanel>
+                <g:Label ui:field="trickCountNorth" addStyleNames="{style.trickCountNorth}"/>
+            </g:FlowPanel>
+        </p:northheader>
+
+        <p:westheader>
+            <g:FlowPanel>
+                <g:FlowPanel addStyleNames="{style.handHeaderLeftPanel}">
+                    <g:Label ui:field="titleWest" text="{constants.west}" addStyleNames="{style.titleWest}"/>
+                    <p:ContractLink ui:field="westContractLink" constants="{constants}" tableStyle="{style}"
+                                    debugId="contract-link-WEST"/>
+                </g:FlowPanel>
+                <g:Label ui:field="trickCountWest" addStyleNames="{style.trickCountWest}"/>
+            </g:FlowPanel>
+        </p:westheader>
+
+        <p:southheader>
+            <g:FlowPanel>
+                <g:FlowPanel addStyleNames="{style.handHeaderLeftPanel}">
+                    <g:Label ui:field="titleSouth" text="{constants.south}" addStyleNames="{style.titleSouth}"/>
+                    <p:ContractLink ui:field="southContractLink" constants="{constants}" tableStyle="{style}"
+                                    debugId="contract-link-SOUTH"/>
+                </g:FlowPanel>
+                <g:Label ui:field="trickCountSouth" addStyleNames="{style.trickCountSouth}"/>
+            </g:FlowPanel>
+        </p:southheader>
+
+        <p:eastheader>
+            <g:FlowPanel>
+                <g:FlowPanel addStyleNames="{style.handHeaderLeftPanel}">
+                    <g:Label ui:field="titleEast" text="{constants.east}" addStyleNames="{style.titleEast}"/>
+                    <p:ContractLink ui:field="eastContractLink" constants="{constants}" tableStyle="{style}"
+                                    debugId="contract-link-EAST"/>
+                </g:FlowPanel>
+                <g:Label ui:field="trickCountEast" addStyleNames="{style.trickCountEast}"/>
+            </g:FlowPanel>
+        </p:eastheader>
+
+        <p:centerheader>
+            <g:FlowPanel>
+                <g:Hyperlink ui:field="sluffLink" text="{constants.toSluff}" addStyleNames="{style.contractLink}"/>
+            </g:FlowPanel>
+        </p:centerheader>
+
+    </p:TablePanel>
+
+</ui:UiBinder>

@@ -1,3 +1,22 @@
+/*
+ * Preferanser is a program to simulate and calculate Russian Preferans Card game deals.
+ *
+ *     Copyright (C) 2013  Yuriy Lazarev <Yuriy.Lazarev@gmail.com>
+ *
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ *
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *
+ *     You should have received a copy of the GNU General Public License
+ *     along with this program.  If not, see [http://www.gnu.org/licenses/].
+ */
+
 package com.preferanser.client.application.widgets;
 
 import com.google.common.base.Function;
@@ -18,16 +37,13 @@ import com.preferanser.domain.Cardinal;
 import com.preferanser.domain.TableLocation;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.Map;
 
 import static com.google.common.collect.Iterables.transform;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Maps.newHashMapWithExpectedSize;
 import static com.preferanser.domain.TableLocation.*;
-import static com.preferanser.domain.TableLocation.CENTER;
 
 public class TablePanel extends Composite {
 
@@ -41,21 +57,20 @@ public class TablePanel extends Composite {
     @UiField HorizontalPanel southPanelHeader;
     @UiField HorizontalPanel westPanelHeader;
     @UiField HorizontalPanel centerPanelHeader;
-
     @UiField HorizontalPanel headerPanel;
+
     @UiField public FlowPanel northPanel;
     @UiField public FlowPanel eastPanel;
     @UiField public FlowPanel southPanel;
     @UiField public FlowPanel westPanel;
-
     @UiField public FlowPanel centerPanel;
+
     @UiField TurnPointer turnPointerNorth;
     @UiField TurnPointer turnPointerEast;
     @UiField TurnPointer turnPointerSouth;
-
     @UiField TurnPointer turnPointerWest;
 
-    @UiField TableStyle style;
+    private TableStyle style;
 
     // TODO: consider replacing all public usages with methods
     public final BiMap<TableLocation, FlowPanel> locationPanelMap = EnumHashBiMap.create(TableLocation.class);
@@ -63,7 +78,8 @@ public class TablePanel extends Composite {
     private final BiMap<TableLocation, Layout<CardWidget>> locationLayoutMap = EnumHashBiMap.create(TableLocation.class);
     private CenterLayout centerCardLayout;
 
-    public TablePanel() {
+    public TablePanel(TableStyle style) {
+        this.style = style;
         initWidget(uiBinder.createAndBindUi(this));
 
         locationPanelMap.put(NORTH, northPanel);

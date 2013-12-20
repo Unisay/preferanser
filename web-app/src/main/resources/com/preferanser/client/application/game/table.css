@@ -1,11 +1,6 @@
 @external .gwt-Label;
 @external .not-displayed, .not-visible, .dragging;
-@external .verticalPanel, .buttonsPanel, .dockPanel;
 @external .card;
-@external .northDock, .eastDock, .southDock, .westDock, .centerDock;
-@external .northVPanel, .eastVPanel, .southVPanel, .westVPanel, .centerVPanel;
-@external .northHPanel, .southHPanel, .eastHPanel, .westHPanel, .centerHPanel;
-@external .northFlowPanel, .eastFlowPanel, .southFlowPanel, .westFlowPanel, .centerFlowPanel;
 
 .not-displayed {
     display: none;
@@ -27,82 +22,8 @@
     cursor: url("img/cursor/closed-hand.cur") 4 4, move;
 }
 
-.verticalPanel {
-    width: 1164px;
-    margin: 0 auto;
-}
-
-.buttonsPanel {
-    height: 60px;
-}
-
 .buttonsPanel td {
     vertical-align: middle ! important;
-}
-
-.dockPanel {
-    width: 100%;
-    height: 100%;
-}
-
-.northDock, .eastDock, .southDock, .westDock, .centerDock {
-    position: relative;
-}
-
-.northVPanel, .eastVPanel, .southVPanel, .westVPanel, .centerVPanel {
-    position: relative;
-    width: 100%;
-}
-
-.northHPanel, .southHPanel, .eastHPanel, .westHPanel, .centerHPanel {
-    width: 100%;
-    line-height: 20px;
-    padding: 0 10px 0 10px;
-    position: absolute;
-    top: 0;
-    left: 0;
-    -webkit-border-top-left-radius: 7px;
-    -webkit-border-top-right-radius: 7px;
-    -moz-border-radius-topleft: 7px;
-    -moz-border-radius-topright: 7px;
-    border-top-left-radius: 7px;
-    border-top-right-radius: 7px;
-    background-color: rgba(0, 0, 0, 0.1);
-    height: 20px;
-    font-weight: bold;
-    cursor: pointer;
-    white-space: nowrap;
-}
-
-.northFlowPanel, .eastFlowPanel, .southFlowPanel, .westFlowPanel, .centerFlowPanel {
-    width: 100%;
-    position: relative;
-    background-color: rgba(0, 0, 0, 0.1);
-    border-radius: 7px;
-}
-
-.northDock, .southDock {
-    width: 1164px;
-}
-
-.eastDock, .westDock {
-    width: 297px;
-}
-
-.northFlowPanel, .southFlowPanel {
-    height: 184px;
-}
-
-.eastFlowPanel, .westFlowPanel, .centerFlowPanel {
-    height: 440px;
-}
-
-.eastVPanel, .westVPanel {
-    width: 297px;
-}
-
-.centerVPanel {
-    width: 550px;
 }
 
 .titleNorth, .titleEast, .titleSouth, .titleWest, .handHeaderLeftPanel {
@@ -111,11 +32,6 @@
 
 .trickCountNorth, .trickCountEast, .trickCountSouth, .trickCountWest {
     float: right;
-}
-
-.handTitle {
-    font-size: small;
-    text-shadow: 1px 1px 1px #222;
 }
 
 .gwt-Label, .contractLabel {

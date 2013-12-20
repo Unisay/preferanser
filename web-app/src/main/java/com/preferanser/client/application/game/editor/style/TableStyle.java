@@ -28,25 +28,7 @@ public interface TableStyle extends CssResource, TurnPointerStyle {
 
     String card();
 
-    String southDock();
-
-    String titleWest();
-
-    String titleNorth();
-
-    String northVPanel();
-
-    String handHeaderLeftPanel();
-
-    String westHPanel();
-
-    String northHPanel();
-
-    String eastDock();
-
     @ClassName("gwt-Label") String gwtLabel();
-
-    String centerVPanel();
 
     String dragging();
 
@@ -56,49 +38,11 @@ public interface TableStyle extends CssResource, TurnPointerStyle {
 
     String trickCountWest();
 
-    String northDock();
-
-    String verticalPanel();
-
-    String westVPanel();
-
-    String centerHPanel();
-
-    String eastFlowPanel();
-
-    String southFlowPanel();
-
-    String southHPanel();
-
-    String dockPanel();
-
-    String northFlowPanel();
-
     String titleEast();
 
     String trickCountEast();
 
     String trickCountSouth();
-
-    String eastVPanel();
-
-    String titleSouth();
-
-    String centerFlowPanel();
-
-    String southVPanel();
-
-    String westDock();
-
-    String westFlowPanel();
-
-    String handTitle();
-
-    String centerDock();
-
-    String eastHPanel();
-
-    String buttonsPanel();
 
     @ClassName("not-displayed") String notDisplayed();
 
@@ -111,6 +55,5 @@ public interface TableStyle extends CssResource, TurnPointerStyle {
     String contractLabel();
 
     String contractLink();
-
 
 }

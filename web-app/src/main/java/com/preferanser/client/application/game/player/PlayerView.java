@@ -24,8 +24,8 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Hyperlink;
-import com.google.gwt.user.client.ui.ToggleButton;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.preferanser.client.application.game.BaseTableView;
@@ -47,8 +47,7 @@ public class PlayerView extends BaseTableView<PlayerUiHandlers> implements Playe
 
     public interface Binder extends UiBinder<Widget, PlayerView> {}
 
-    @UiField(provided = true) ToggleButton playButton;
-    @UiField(provided = true) ToggleButton editButton;
+    @UiField Button editButton;
 
     @UiField Hyperlink sluffLink;
 
@@ -62,9 +61,6 @@ public class PlayerView extends BaseTableView<PlayerUiHandlers> implements Playe
     @Inject
     public PlayerView(Binder uiBinder, PreferanserResources resources, PreferanserConstants constants) {
         super(constants, resources);
-        playButton = new ToggleButton(constants.play(), constants.play());
-        editButton = new ToggleButton(constants.edit(), constants.edit());
-
         initWidget(uiBinder.createAndBindUi(this));
         init();
     }
@@ -104,10 +100,6 @@ public class PlayerView extends BaseTableView<PlayerUiHandlers> implements Playe
 
     @UiHandler("editButton") void onEditButtonClicked(@SuppressWarnings("unused") ClickEvent event) {
         getUiHandlers().switchToEditor();
-    }
-
-    @UiHandler("resetButton") void onResetButtonClicked(@SuppressWarnings("unused") ClickEvent event) {
-        getUiHandlers().reset();
     }
 
     @UiHandler("sluffLink") void onSluffLinkClicked(@SuppressWarnings("unused") ClickEvent event) {

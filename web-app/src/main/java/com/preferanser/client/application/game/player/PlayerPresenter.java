@@ -27,8 +27,11 @@ import com.gwtplatform.mvp.client.Presenter;
 import com.gwtplatform.mvp.client.View;
 import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.ProxyStandard;
+import com.gwtplatform.mvp.client.proxy.PlaceManager;
+import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.preferanser.client.application.ApplicationPresenter;
+import com.preferanser.client.application.game.GameBuiltEvent;
 import com.preferanser.client.place.NameTokens;
 import com.preferanser.domain.*;
 import com.preferanser.domain.exception.GameTurnException;
@@ -41,7 +44,7 @@ import java.util.logging.Logger;
 /**
  * Presenter for the game page
  */
-public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, PlayerPresenter.Proxy> implements PlayerUiHandlers {
+public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, PlayerPresenter.Proxy> implements PlayerUiHandlers, GameBuiltEvent.GameBuiltHandler {
 
     private static final Logger log = Logger.getLogger("PlayerPresenter");
 
@@ -53,27 +56,37 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
         void displayTableCards(Map<TableLocation, Collection<Card>> tableCards, Map<Card, Cardinal> centerCards);
     }
 
+    private PlaceManager placeManager;
     private Game game;
 
     @ProxyStandard
-    @NameToken(NameTokens.GAME)
+    @NameToken(NameTokens.GAME_PLAYER)
     public interface Proxy extends ProxyPlace<PlayerPresenter> {}
 
     @Inject
-    public PlayerPresenter(EventBus eventBus, PlayerView view, Proxy proxy) {
+    public PlayerPresenter(PlaceManager placeManager, EventBus eventBus, PlayerView view, Proxy proxy) {
         super(eventBus, view, proxy, ApplicationPresenter.TYPE_SetMainContent);
+        this.placeManager = placeManager;
         getView().setUiHandlers(this);
     }
 
-    @Override
-    public void sluff() {
+    @Override protected void onBind() {
+        super.onBind();
+        addRegisteredHandler(GameBuiltEvent.getType(), this);
+    }
+
+    @Override public void onGameBuilt(GameBuiltEvent gameBuiltEvent) {
+        this.game = gameBuiltEvent.getGame();
+        refreshView();
+    }
+
+    @Override public void sluff() {
         Preconditions.checkNotNull(game, "PlayerPresenter.sluff(game==null)");
         if (game.sluffTrick())
             refreshView();
     }
 
-    @Override
-    public void changeCardLocation(Card card, TableLocation oldLocation, TableLocation newLocation) {
+    @Override public void changeCardLocation(Card card, TableLocation oldLocation, TableLocation newLocation) {
         if (oldLocation == newLocation) {
             refreshCards();
             return;
@@ -96,7 +109,7 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
     }
 
     @Override public void switchToEditor() {
-        throw new UnsupportedOperationException("Switching to editor is not implemented");
+        placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.GAME_EDITOR).build());
     }
 
     @Override public void reset() {
@@ -132,5 +145,4 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
         assert game != null : "PlayerPresenter.refreshCardinalTricks(game==null)";
         getView().displayCardinalTricks(game.getCardinalTricks());
     }
-
 }

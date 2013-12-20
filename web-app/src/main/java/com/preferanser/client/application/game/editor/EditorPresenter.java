@@ -25,12 +25,15 @@ import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.Presenter;
 import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.ProxyStandard;
+import com.gwtplatform.mvp.client.proxy.PlaceManager;
+import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.gwtplatform.mvp.client.proxy.RevealRootPopupContentEvent;
 import com.preferanser.client.application.ApplicationPresenter;
+import com.preferanser.client.application.game.GameBuiltEvent;
+import com.preferanser.client.application.game.TableView;
 import com.preferanser.client.application.game.editor.dialog.contract.ContractDialogPresenter;
 import com.preferanser.client.application.game.editor.dialog.validation.ValidationDialogPresenter;
-import com.preferanser.client.application.game.TableView;
 import com.preferanser.client.place.NameTokens;
 import com.preferanser.domain.*;
 import com.preferanser.domain.exception.GameBuilderException;
@@ -45,7 +48,7 @@ import static com.google.common.collect.Lists.newArrayList;
  * Table presenter
  */
 public class EditorPresenter extends Presenter<EditorPresenter.EditorView, EditorPresenter.Proxy>
-        implements EditorUiHandlers, HasCardinalContracts {
+    implements EditorUiHandlers, HasCardinalContracts {
 
     private static final Logger log = Logger.getLogger("EditorPresenter");
 
@@ -56,20 +59,23 @@ public class EditorPresenter extends Presenter<EditorPresenter.EditorView, Edito
         void hideCardinalTricks();
     }
 
+    private PlaceManager placeManager;
     private GameBuilder gameBuilder;
 
     @ProxyStandard
-    @NameToken(NameTokens.GAME_BUILDER)
+    @NameToken(NameTokens.GAME_EDITOR)
     public interface Proxy extends ProxyPlace<EditorPresenter> {}
 
     @Inject
-    public EditorPresenter(EventBus eventBus,
+    public EditorPresenter(PlaceManager placeManager,
+                           EventBus eventBus,
                            EditorView view,
                            Proxy proxy,
                            GameBuilder gameBuilder,
                            ContractDialogPresenter contractDialog,
                            ValidationDialogPresenter validationDialog) {
         super(eventBus, view, proxy, ApplicationPresenter.TYPE_SetMainContent);
+        this.placeManager = placeManager;
         this.gameBuilder = gameBuilder;
         this.contractDialog = contractDialog;
         this.contractDialog.setHasCardinalContracts(this);
@@ -139,6 +145,8 @@ public class EditorPresenter extends Presenter<EditorPresenter.EditorView, Edito
     public void switchToPlayer() {
         try {
             Game game = gameBuilder.build();
+            GameBuiltEvent.fire(this, game);
+            placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.GAME_PLAYER).build());
         } catch (GameBuilderException e) {
             validationDialog.setValidationErrors(e.getBuilderErrors());
             RevealRootPopupContentEvent.fire(this, validationDialog);

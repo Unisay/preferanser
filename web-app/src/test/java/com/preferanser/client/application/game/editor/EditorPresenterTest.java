@@ -22,6 +22,7 @@ package com.preferanser.client.application.game.editor;
 import com.google.web.bindery.event.shared.EventBus;
 import com.preferanser.client.application.game.editor.dialog.contract.ContractDialogPresenter;
 import com.preferanser.client.application.game.editor.dialog.validation.ValidationDialogPresenter;
+import com.preferanser.client.place.PlaceManager;
 import com.preferanser.domain.*;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -39,6 +40,9 @@ public class EditorPresenterTest {
 
     @Mock
     private EventBus eventBus;
+
+    @Mock
+    private PlaceManager placeManager;
 
     @Mock
     private EditorPresenter.EditorView view;
@@ -76,7 +80,7 @@ public class EditorPresenterTest {
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         when(gameBuilder.build()).thenReturn(game);
-        presenter = new EditorPresenter(eventBus, view, proxy, gameBuilder, contractDialog, validationDialog);
+        presenter = new EditorPresenter(placeManager, eventBus, view, proxy, gameBuilder, contractDialog, validationDialog);
         turn = Cardinal.EAST;
 
         verify(view).setUiHandlers(presenter);

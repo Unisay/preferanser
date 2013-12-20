@@ -17,9 +17,35 @@
  *     along with this program.  If not, see [http://www.gnu.org/licenses/].
  */
 
-package com.preferanser.client.place;
+package com.preferanser.client.application.widgets;
 
-public class NameTokens {
-    public static final String GAME_EDITOR = "editor";
-    public static final String GAME_PLAYER = "player";
+import com.google.common.collect.Lists;
+import com.google.gwt.user.client.ui.HasWidgets;
+import com.google.gwt.user.client.ui.Widget;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+
+/**
+ * Does not represent an HTML element, only holds child widgets.
+ */
+public class Widgets implements HasWidgets {
+
+    private ArrayList<Widget> widgets = Lists.newArrayList();
+
+    @Override public void add(Widget w) {
+        widgets.add(w);
+    }
+
+    @Override public void clear() {
+        widgets.clear();
+    }
+
+    @Override public Iterator<Widget> iterator() {
+        return widgets.iterator();
+    }
+
+    @Override public boolean remove(Widget w) {
+        return widgets.remove(w);
+    }
 }

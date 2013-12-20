@@ -35,7 +35,6 @@ import com.preferanser.client.application.game.BaseTableView;
 import com.preferanser.client.application.i18n.PreferanserConstants;
 import com.preferanser.client.application.widgets.CardWidget;
 import com.preferanser.client.application.widgets.ContractLink;
-import com.preferanser.client.application.widgets.TablePanel;
 import com.preferanser.client.application.widgets.TurnPointer;
 import com.preferanser.client.theme.greencloth.client.com.preferanser.client.application.PreferanserResources;
 import com.preferanser.domain.Cardinal;
@@ -46,9 +45,6 @@ import java.util.logging.Logger;
 
 import static com.google.common.collect.Maps.newHashMapWithExpectedSize;
 
-/**
- * Table view
- */
 public class EditorView extends BaseTableView<EditorUiHandlers> implements EditorPresenter.EditorView, CardWidget.Handlers {
 
     private static final Logger log = Logger.getLogger("EditorView");
@@ -141,10 +137,6 @@ public class EditorView extends BaseTableView<EditorUiHandlers> implements Edito
             }
         });
         return turnPointer;
-    }
-
-    @UiFactory TablePanel tablePanel() {
-        return new TablePanel(style);
     }
 
     @Override protected Logger getLog() {

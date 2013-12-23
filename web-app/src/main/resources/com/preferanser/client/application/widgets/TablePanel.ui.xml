@@ -19,7 +19,6 @@
 
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
              xmlns:g="urn:import:com.google.gwt.user.client.ui"
-             xmlns:p="urn:import:com.preferanser.client.application.widgets"
              ui:generateFormat="com.google.gwt.i18n.rebind.format.PropertiesFormat"
              ui:generateKeys="com.google.gwt.i18n.server.keygen.MD5KeyGenerator"
              ui:generateLocales="default">
@@ -135,12 +134,7 @@
             <g:Dock direction="CENTER" addStyleNames="{style.centerDock}">
                 <g:VerticalPanel addStyleNames="{style.centerVPanel}">
                     <g:FlowPanel ui:field="centerPanel" addStyleNames="{style.centerFlowPanel}" debugId="CENTER"/>
-                    <g:HorizontalPanel ui:field="centerPanelHeader" addStyleNames="{style.handTitle} {style.centerHPanel}">
-                        <p:TurnPointer ui:field="turnPointerNorth" turn="NORTH"/>
-                        <p:TurnPointer ui:field="turnPointerEast" turn="EAST"/>
-                        <p:TurnPointer ui:field="turnPointerSouth" turn="SOUTH"/>
-                        <p:TurnPointer ui:field="turnPointerWest" turn="WEST"/>
-                    </g:HorizontalPanel>
+                    <g:HorizontalPanel ui:field="centerPanelHeader" addStyleNames="{style.handTitle} {style.centerHPanel}"/>
                 </g:VerticalPanel>
             </g:Dock>
         </g:DockPanel>

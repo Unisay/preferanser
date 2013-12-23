@@ -32,6 +32,7 @@ import com.gwtplatform.mvp.client.gin.DefaultModule;
 import com.gwtplatform.mvp.client.proxy.DefaultPlaceManager;
 import com.preferanser.client.application.ApplicationModule;
 import com.preferanser.client.application.ResourceLoader;
+import com.preferanser.client.application.i18n.I18nHelper;
 import com.preferanser.client.place.NameTokens;
 import com.preferanser.client.request.MyRequestFactory;
 import com.preferanser.domain.GameBuilder;
@@ -47,6 +48,8 @@ public class ClientModule extends AbstractPresenterModule {
         bindConstant().annotatedWith(DefaultPlace.class).to(NameTokens.GAME_EDITOR);
         bindConstant().annotatedWith(ErrorPlace.class).to(NameTokens.GAME_EDITOR); // TODO: define separate
         bindConstant().annotatedWith(UnauthorizedPlace.class).to(NameTokens.GAME_EDITOR);
+
+        bind(I18nHelper.class).asEagerSingleton();
 
         bind(GameBuilder.class).toProvider(GameBuilderProvider.class).in(Singleton.class); // TODO: should be prototype scope
         bind(ResourceLoader.class).asEagerSingleton();

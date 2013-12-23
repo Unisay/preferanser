@@ -38,11 +38,6 @@
     color: white;
 }
 
-.contractLabel {
-    text-transform: lowercase;
-    white-space: pre;
-}
-
 .contractLink {
     text-transform: lowercase;
     display: inline;
@@ -82,6 +77,7 @@
     cursor: pointer;
 }
 
+@external .turnPointerNorth;
 .turnPointerNorth {
     top: 25px;
     transform: rotate(270deg);
@@ -89,6 +85,7 @@
     -webkit-transform: rotate(270deg);
 }
 
+@external .turnPointerEast;
 .turnPointerEast {
     left: 515px;
     transform: rotate(0);
@@ -96,6 +93,7 @@
     -webkit-transform: rotate(0);
 }
 
+@external .turnPointerSouth;
 .turnPointerSouth {
     top: 406px;
     transform: rotate(90deg);
@@ -103,6 +101,7 @@
     -webkit-transform: rotate(90deg);
 }
 
+@external .turnPointerWest;
 .turnPointerWest {
     left: 5px;
     transform: rotate(180deg);

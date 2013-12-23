@@ -27,22 +27,18 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiChild;
-import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.*;
 import com.preferanser.client.application.game.editor.layout.*;
 import com.preferanser.client.application.game.editor.style.TableStyle;
 import com.preferanser.client.theme.greencloth.client.com.preferanser.client.application.PreferanserResources;
-import com.preferanser.domain.Cardinal;
 import com.preferanser.domain.TableLocation;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
-import java.util.Map;
 
 import static com.google.common.collect.Iterables.transform;
 import static com.google.common.collect.Lists.newArrayList;
-import static com.google.common.collect.Maps.newHashMapWithExpectedSize;
 import static com.preferanser.domain.TableLocation.*;
 
 public class TablePanel extends Composite {
@@ -65,16 +61,10 @@ public class TablePanel extends Composite {
     @UiField public FlowPanel westPanel;
     @UiField public FlowPanel centerPanel;
 
-    @UiField TurnPointer turnPointerNorth;
-    @UiField TurnPointer turnPointerEast;
-    @UiField TurnPointer turnPointerSouth;
-    @UiField TurnPointer turnPointerWest;
-
     private TableStyle style;
 
     // TODO: consider replacing all public usages with methods
     public final BiMap<TableLocation, FlowPanel> locationPanelMap = EnumHashBiMap.create(TableLocation.class);
-    public final Map<Cardinal, TurnPointer> cardinalTurnPointerMap = newHashMapWithExpectedSize(Cardinal.values().length);
     private final BiMap<TableLocation, Layout<CardWidget>> locationLayoutMap = EnumHashBiMap.create(TableLocation.class);
     private CenterLayout centerCardLayout;
 
@@ -87,11 +77,6 @@ public class TablePanel extends Composite {
         locationPanelMap.put(SOUTH, southPanel);
         locationPanelMap.put(WEST, westPanel);
         locationPanelMap.put(CENTER, centerPanel);
-
-        cardinalTurnPointerMap.put(Cardinal.NORTH, turnPointerNorth);
-        cardinalTurnPointerMap.put(Cardinal.EAST, turnPointerEast);
-        cardinalTurnPointerMap.put(Cardinal.SOUTH, turnPointerSouth);
-        cardinalTurnPointerMap.put(Cardinal.WEST, turnPointerWest);
 
         int cardWidth = resources.c7().getWidth();
         int cardHeight = resources.c7().getHeight();
@@ -138,6 +123,12 @@ public class TablePanel extends Composite {
             centerPanelHeader.add(widget);
     }
 
+    @UiChild
+    public void addCenter(HasWidgets hasWidgets) {
+        for (Widget widget : newArrayList(hasWidgets))
+            centerPanel.add(widget);
+    }
+
     public void addCardinalCardsToCenter(Collection<CardinalCard> cardinalCards) {
         for (CardinalCard cardinalCard : cardinalCards)
             centerPanel.add(cardinalCard.getCardWidget());
@@ -161,10 +152,5 @@ public class TablePanel extends Composite {
     public void addCenterPanelClickHandler(ClickHandler clickHandler) {
         centerPanel.addDomHandler(clickHandler, ClickEvent.getType());
     }
-
-    @UiFactory TurnPointer turnPointer() {
-        return new TurnPointer(style, resources.arrowRight());
-    }
-
 
 }

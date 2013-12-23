@@ -19,6 +19,7 @@
 
 package com.preferanser.client.application.game.player;
 
+import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
@@ -57,7 +58,7 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
     }
 
     private PlaceManager placeManager;
-    private Game game;
+    private Optional<Game> gameOptional = Optional.absent();
 
     @ProxyStandard
     @NameToken(NameTokens.GAME_PLAYER)
@@ -75,18 +76,29 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
         addRegisteredHandler(GameBuiltEvent.getType(), this);
     }
 
+    @Override protected void onReveal() {
+        super.onReveal();
+        if (!gameOptional.isPresent())
+            switchToEditor();
+        else
+            refreshView();
+    }
+
     @Override public void onGameBuilt(GameBuiltEvent gameBuiltEvent) {
-        this.game = gameBuiltEvent.getGame();
-        refreshView();
+        Game game = gameBuiltEvent.getGame();
+        Preconditions.checkNotNull(game, "PlayerPresenter.onGameBuilt(gameBuiltEvent.getGame() is null)");
+        gameOptional = Optional.of(game);
     }
 
     @Override public void sluff() {
-        Preconditions.checkNotNull(game, "PlayerPresenter.sluff(game==null)");
-        if (game.sluffTrick())
+        Preconditions.checkState(gameOptional.isPresent(), "PlayerPresenter.sluff(game is null)");
+        if (gameOptional.get().sluffTrick())
             refreshView();
     }
 
     @Override public void changeCardLocation(Card card, TableLocation oldLocation, TableLocation newLocation) {
+        Preconditions.checkState(gameOptional.isPresent(), "PlayerPresenter.changeCardLocation(game is null)");
+
         if (oldLocation == newLocation) {
             refreshCards();
             return;
@@ -98,7 +110,7 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
         }
 
         try {
-            game.makeTurn(GameUtils.tableLocationToCardinal(oldLocation), card);
+            gameOptional.get().makeTurn(GameUtils.tableLocationToCardinal(oldLocation), card);
         } catch (GameTurnException e) {
             log.finer(e.getMessage());
             refreshCards();
@@ -124,25 +136,24 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
     }
 
     private void refreshTurn() {
-        assert game != null : "PlayerPresenter.refreshTurn(game==null)";
-        if (game.isTrickComplete())
-            getView().hideTurn();
-        else
-            getView().displayTurn(game.getTurn());
+        Preconditions.checkState(gameOptional.isPresent(), "PlayerPresenter.refreshTurn(game is null)");
+        Game game = gameOptional.get();
+        getView().displayTurn(game.getTurn());
     }
 
     private void refreshContracts() {
-        assert game != null : "PlayerPresenter.refreshContracts(game==null)";
-        getView().displayContracts(game.getCardinalContracts());
+        Preconditions.checkState(gameOptional.isPresent(), "PlayerPresenter.refreshContracts(game is null)");
+        getView().displayContracts(gameOptional.get().getCardinalContracts());
     }
 
     private void refreshCards() {
-        assert game != null : "PlayerPresenter.refreshCards(game==null)";
+        Preconditions.checkState(gameOptional.isPresent(), "PlayerPresenter.refreshCards(game is null)");
+        Game game = gameOptional.get();
         getView().displayTableCards(game.getCardinalCards(), game.getCenterCards());
     }
 
     private void refreshCardinalTricks() {
-        assert game != null : "PlayerPresenter.refreshCardinalTricks(game==null)";
-        getView().displayCardinalTricks(game.getCardinalTricks());
+        Preconditions.checkState(gameOptional.isPresent(), "PlayerPresenter.refreshCardinalTricks(game is null)");
+        getView().displayCardinalTricks(gameOptional.get().getCardinalTricks());
     }
 }

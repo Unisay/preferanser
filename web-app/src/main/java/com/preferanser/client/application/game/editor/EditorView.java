@@ -22,7 +22,6 @@ package com.preferanser.client.application.game.editor;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
-import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Window;
@@ -32,18 +31,15 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.preferanser.client.application.game.BaseTableView;
+import com.preferanser.client.application.i18n.I18nHelper;
 import com.preferanser.client.application.i18n.PreferanserConstants;
 import com.preferanser.client.application.widgets.CardWidget;
-import com.preferanser.client.application.widgets.ContractLink;
 import com.preferanser.client.application.widgets.TurnPointer;
 import com.preferanser.client.theme.greencloth.client.com.preferanser.client.application.PreferanserResources;
 import com.preferanser.domain.Cardinal;
-import com.preferanser.domain.Contract;
 
 import java.util.Map;
 import java.util.logging.Logger;
-
-import static com.google.common.collect.Maps.newHashMapWithExpectedSize;
 
 public class EditorView extends BaseTableView<EditorUiHandlers> implements EditorPresenter.EditorView, CardWidget.Handlers {
 
@@ -55,50 +51,48 @@ public class EditorView extends BaseTableView<EditorUiHandlers> implements Edito
     @UiField Button saveButton;
     @UiField Button dealButton;
 
-    @UiField Hyperlink sluffLink;
-    @UiField ContractLink northContractLink;
-    @UiField ContractLink eastContractLink;
-    @UiField ContractLink southContractLink;
-    @UiField ContractLink westContractLink;
-
-    protected final Map<Cardinal, ContractLink> cardinalContractMap = newHashMapWithExpectedSize(Cardinal.values().length);
+    @UiField Hyperlink northContractLink;
+    @UiField Hyperlink eastContractLink;
+    @UiField Hyperlink southContractLink;
+    @UiField Hyperlink westContractLink;
 
     @Inject
-    public EditorView(Binder uiBinder, PreferanserResources resources, PreferanserConstants constants) {
-        super(constants, resources);
+    public EditorView(Binder uiBinder, PreferanserResources resources, PreferanserConstants constants, I18nHelper i18nHelper) {
+        super(constants, resources, i18nHelper);
         initWidget(uiBinder.createAndBindUi(this));
         init();
     }
 
-    @Override protected void init() {
-        super.init();
-        populateCardinalContractLinks();
-    }
-
-    public void displayContracts(Map<Cardinal, Contract> cardinalContracts) {
-        for (Cardinal cardinal : Cardinal.values()) {
-            ContractLink contractLink = cardinalContractMap.get(cardinal);
-            if (cardinalContracts.containsKey(cardinal)) {
-                Contract contract = cardinalContracts.get(cardinal);
-                contractLink.setContract(contract);
-            } else {
-                contractLink.setContract(null);
-            }
+    @Override protected void populateCardinalTurnPointers() {
+        super.populateCardinalTurnPointers();
+        for (final TurnPointer turnPointer : cardinalTurnPointerMap.values()) {
+            turnPointer.addClickHandler(new ClickHandler() {
+                @Override public void onClick(ClickEvent event) {
+                    getUiHandlers().chooseTurn(turnPointer.getTurn());
+                }
+            });
         }
     }
 
-    @Override
-    public void hideCardinalTricks() {
+    @Override protected Hyperlink getCardinalContractTextHolder(Cardinal cardinal) {
+        switch (cardinal) {
+            case NORTH:
+                return northContractLink;
+            case EAST:
+                return eastContractLink;
+            case SOUTH:
+                return southContractLink;
+            case WEST:
+                return westContractLink;
+            default:
+                throw new IllegalStateException("No contract link for the cardinal: " + cardinal);
+        }
+    }
+
+    @Override public void hideCardinalTricks() {
         for (Map.Entry<Cardinal, Label> entry : cardinalTricksCountMap.entrySet()) {
             entry.getValue().setText("");
         }
-    }
-
-    protected void populateCardinalContractLinks() {
-        cardinalContractMap.put(Cardinal.NORTH, northContractLink);
-        cardinalContractMap.put(Cardinal.EAST, eastContractLink);
-        cardinalContractMap.put(Cardinal.SOUTH, southContractLink);
-        cardinalContractMap.put(Cardinal.WEST, westContractLink);
     }
 
     @UiHandler("playButton") void onPlayButtonClicked(@SuppressWarnings("unused") ClickEvent event) {
@@ -127,16 +121,6 @@ public class EditorView extends BaseTableView<EditorUiHandlers> implements Edito
 
     @UiHandler("westContractLink") void onWestContractLinkClicked(@SuppressWarnings("unused") ClickEvent event) {
         getUiHandlers().chooseContract(Cardinal.WEST);
-    }
-
-    @UiFactory TurnPointer turnPointer() {
-        final TurnPointer turnPointer = new TurnPointer(style, resources.arrowRight());
-        turnPointer.addClickHandler(new ClickHandler() {
-            @Override public void onClick(ClickEvent event) {
-                getUiHandlers().chooseTurn(turnPointer.getTurn());
-            }
-        });
-        return turnPointer;
     }
 
     @Override protected Logger getLog() {

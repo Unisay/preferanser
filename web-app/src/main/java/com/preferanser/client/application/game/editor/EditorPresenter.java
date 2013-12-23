@@ -19,6 +19,7 @@
 
 package com.preferanser.client.application.game.editor;
 
+import com.google.common.base.Optional;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.HasUiHandlers;
@@ -52,15 +53,15 @@ public class EditorPresenter extends Presenter<EditorPresenter.EditorView, Edito
 
     private static final Logger log = Logger.getLogger("EditorPresenter");
 
-    private ContractDialogPresenter contractDialog;
-    private ValidationDialogPresenter validationDialog;
-
     public interface EditorView extends HasUiHandlers<EditorUiHandlers>, TableView {
         void hideCardinalTricks();
     }
 
-    private PlaceManager placeManager;
+    private Optional<Game> maybeGame;
     private GameBuilder gameBuilder;
+    private PlaceManager placeManager;
+    private ContractDialogPresenter contractDialog;
+    private ValidationDialogPresenter validationDialog;
 
     @ProxyStandard
     @NameToken(NameTokens.GAME_EDITOR)
@@ -92,6 +93,7 @@ public class EditorPresenter extends Presenter<EditorPresenter.EditorView, Edito
     @Override
     public void reset() {
         // TODO: remove deal initialization once deal loading is done
+        maybeGame = Optional.absent();
         gameBuilder = new GameBuilder()
             .setThreePlayers()
             .setFirstTurn(Cardinal.NORTH)
@@ -144,9 +146,10 @@ public class EditorPresenter extends Presenter<EditorPresenter.EditorView, Edito
     @Override
     public void switchToPlayer() {
         try {
-            Game game = gameBuilder.build();
-            GameBuiltEvent.fire(this, game);
+            if (!maybeGame.isPresent())
+                maybeGame = Optional.of(gameBuilder.build());
             placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.GAME_PLAYER).build());
+            GameBuiltEvent.fire(this, maybeGame.get());
         } catch (GameBuilderException e) {
             validationDialog.setValidationErrors(e.getBuilderErrors());
             RevealRootPopupContentEvent.fire(this, validationDialog);

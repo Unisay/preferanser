@@ -29,6 +29,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.*;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
 import com.preferanser.client.application.game.editor.style.TableStyle;
+import com.preferanser.client.application.i18n.I18nHelper;
 import com.preferanser.client.application.i18n.PreferanserConstants;
 import com.preferanser.client.application.widgets.CardWidget;
 import com.preferanser.client.application.widgets.CardinalCard;
@@ -39,6 +40,7 @@ import com.preferanser.client.geom.Rect;
 import com.preferanser.client.theme.greencloth.client.com.preferanser.client.application.PreferanserResources;
 import com.preferanser.domain.Card;
 import com.preferanser.domain.Cardinal;
+import com.preferanser.domain.Contract;
 import com.preferanser.domain.TableLocation;
 
 import javax.annotation.Nullable;
@@ -54,29 +56,38 @@ abstract public class BaseTableView<U extends TableUiHandlers> extends ViewWithU
 
     protected final Map<Cardinal, Label> cardinalTricksCountMap = newHashMapWithExpectedSize(Cardinal.values().length);
 
+    public final Map<Cardinal, TurnPointer> cardinalTurnPointerMap = newHashMapWithExpectedSize(Cardinal.values().length);
     private final BiMap<Card, CardWidget> cardWidgetBiMap = EnumHashBiMap.create(Card.class);
     private final Map<Cardinal, Label> cardinalTitleMap = newHashMapWithExpectedSize(Cardinal.values().length);
     private final ImageDragController imageDragController = new ImageDragController(Document.get());
 
-    protected PreferanserResources resources;
-    protected CardImageResourceRetriever cardImageResourceRetriever;
+    protected final I18nHelper i18nHelper;
+    protected final PreferanserResources resources;
+    protected final CardImageResourceRetriever cardImageResourceRetriever;
 
     @UiField(provided = true) public PreferanserConstants constants;
-    @UiField public TableStyle style;
+    @UiField public TableStyle tableStyle;
     @UiField public TablePanel table;
+
+    @UiField public TurnPointer turnPointerNorth;
+    @UiField public TurnPointer turnPointerEast;
+    @UiField public TurnPointer turnPointerSouth;
+    @UiField public TurnPointer turnPointerWest;
 
     @UiField public Label trickCountNorth;
     @UiField public Label trickCountEast;
     @UiField public Label trickCountSouth;
     @UiField public Label trickCountWest;
+
     @UiField public Label titleNorth;
     @UiField public Label titleEast;
     @UiField public Label titleSouth;
     @UiField public Label titleWest;
 
-    public BaseTableView(PreferanserConstants constants, PreferanserResources resources) {
-        this.constants = constants;
+    public BaseTableView(PreferanserConstants constants, PreferanserResources resources, I18nHelper i18nHelper) {
         cardImageResourceRetriever = new CardImageResourceRetriever(resources);
+        this.constants = constants;
+        this.i18nHelper = i18nHelper;
         this.resources = resources;
     }
 
@@ -86,6 +97,7 @@ abstract public class BaseTableView<U extends TableUiHandlers> extends ViewWithU
         installMouseMoveHandler(RootPanel.get());
         populateCardinalTrickCounts();
         populateCardinalTitles();
+        populateCardinalTurnPointers();
     }
 
     public void displayTableCards(Map<TableLocation, Collection<Card>> tableCards, Map<Card, Cardinal> centerCards) {
@@ -133,6 +145,20 @@ abstract public class BaseTableView<U extends TableUiHandlers> extends ViewWithU
         panel.add(cardWidget);
     }
 
+    public void displayContracts(Map<Cardinal, Contract> cardinalContracts) {
+        for (Cardinal cardinal : Cardinal.values()) {
+            HasText hasContractText = getCardinalContractTextHolder(cardinal);
+            if (cardinalContracts.containsKey(cardinal)) {
+                Contract contract = cardinalContracts.get(cardinal);
+                hasContractText.setText(i18nHelper.getContractName(contract));
+            } else {
+                hasContractText.setText("");
+            }
+        }
+    }
+
+    protected abstract HasText getCardinalContractTextHolder(Cardinal cardinal);
+
     public void displayCardinalTricks(Map<Cardinal, Integer> cardinalTricks) {
         for (Map.Entry<Cardinal, Integer> entry : cardinalTricks.entrySet()) {
             cardinalTricksCountMap.get(entry.getKey()).setText("" + entry.getValue());
@@ -140,7 +166,7 @@ abstract public class BaseTableView<U extends TableUiHandlers> extends ViewWithU
     }
 
     public void displayTurn(Cardinal turn) {
-        for (Map.Entry<Cardinal, TurnPointer> entry : table.cardinalTurnPointerMap.entrySet())
+        for (Map.Entry<Cardinal, TurnPointer> entry : cardinalTurnPointerMap.entrySet())
             displayCardinalTurnPointer(entry.getKey(), entry.getValue(), turn);
     }
 
@@ -223,7 +249,7 @@ abstract public class BaseTableView<U extends TableUiHandlers> extends ViewWithU
         CardWidget cardWidget = new CardWidget(card);
         cardWidget.setResource(cardImageResourceRetriever.getByCard(card));
         cardWidget.setHandlers(this);
-        cardWidget.addStyleName(style.card());
+        cardWidget.addStyleName(tableStyle.card());
         cardWidget.ensureDebugId(card.name());
         return cardWidget;
     }
@@ -242,9 +268,21 @@ abstract public class BaseTableView<U extends TableUiHandlers> extends ViewWithU
         cardinalTitleMap.put(Cardinal.WEST, titleWest);
     }
 
+    protected void populateCardinalTurnPointers() {
+        cardinalTurnPointerMap.put(Cardinal.NORTH, turnPointerNorth);
+        cardinalTurnPointerMap.put(Cardinal.EAST, turnPointerEast);
+        cardinalTurnPointerMap.put(Cardinal.SOUTH, turnPointerSouth);
+        cardinalTurnPointerMap.put(Cardinal.WEST, turnPointerWest);
+    }
+
     abstract protected Logger getLog();
 
+
+    public @UiFactory TurnPointer turnPointer() {
+        return new TurnPointer(tableStyle, resources.arrowRight());
+    }
+
     public @UiFactory TablePanel tablePanel() {
-        return new TablePanel(style);
+        return new TablePanel(tableStyle);
     }
 }

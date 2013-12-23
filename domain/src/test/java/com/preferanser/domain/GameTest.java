@@ -49,11 +49,11 @@ public class GameTest {
     @BeforeMethod
     public void setUp() throws Exception {
         game = new Game(
-                4,
-                createCardinalContractMap(),
-                createTurnRotator(EAST, SOUTH),
-                createCardinalCardMultimap(),
-                createCenterCardCardinalMap()
+            3,
+            createCardinalContractMap(),
+            createTurnRotator(EAST, SOUTH),
+            createCardinalCardMultimap(),
+            createCenterCardCardinalMap()
         );
     }
 
@@ -98,11 +98,11 @@ public class GameTest {
     @Test
     public void testMakeTurn_ThreePlayersExtraTurn() throws Exception {
         game = new Game(
-                3,
-                createCardinalContractMap(),
-                createTurnRotator(NORTH),
-                createCardinalCardMultimap(),
-                createCenterCardCardinalMap());
+            3,
+            createCardinalContractMap(),
+            createTurnRotator(NORTH),
+            createCardinalCardMultimap(),
+            createCenterCardCardinalMap());
 
         game.makeTurn(NORTH, CLUB_ACE);
         game.makeTurn(EAST, CLUB_EIGHT);
@@ -119,11 +119,11 @@ public class GameTest {
     @Test
     public void testMakeTurn_SkipWidow() throws Exception {
         game = new Game(
-                4,
-                createCardinalContractMap(),
-                createTurnRotator(NORTH, SOUTH),
-                createCardinalCardMultimap(),
-                createCenterCardCardinalMap()
+            4,
+            createCardinalContractMap(),
+            createTurnRotator(NORTH, SOUTH),
+            createCardinalCardMultimap(),
+            createCenterCardCardinalMap()
         );
 
         game.makeTurn(NORTH, CLUB_ACE);
@@ -139,11 +139,11 @@ public class GameTest {
         centerCardCardinalMap.put(DIAMOND_QUEEN, WEST);
 
         game = new Game(
-                3,
-                createCardinalContractMap(),
-                createTurnRotator(NORTH, SOUTH),
-                createCardinalCardMultimap(),
-                centerCardCardinalMap
+            3,
+            createCardinalContractMap(),
+            createTurnRotator(NORTH, SOUTH),
+            createCardinalCardMultimap(),
+            centerCardCardinalMap
         );
 
         assertTrue(game.isTrickComplete());
@@ -152,11 +152,11 @@ public class GameTest {
     @Test
     public void testIsTrickComplete_ThreePlayers_Negative() throws Exception {
         game = new Game(
-                3,
-                createCardinalContractMap(),
-                createTurnRotator(NORTH, SOUTH),
-                createCardinalCardMultimap(),
-                createCenterCardCardinalMap()
+            3,
+            createCardinalContractMap(),
+            createTurnRotator(NORTH, SOUTH),
+            createCardinalCardMultimap(),
+            createCenterCardCardinalMap()
         );
 
         assertFalse(game.isTrickComplete());
@@ -171,11 +171,11 @@ public class GameTest {
         centerCardCardinalMap.put(DIAMOND_QUEEN, WEST);
 
         game = new Game(
-                4,
-                createCardinalContractMap(),
-                createTurnRotator(NORTH),
-                createCardinalCardMultimap(),
-                centerCardCardinalMap
+            4,
+            createCardinalContractMap(),
+            createTurnRotator(NORTH),
+            createCardinalCardMultimap(),
+            centerCardCardinalMap
         );
 
         assertTrue(game.isTrickComplete());
@@ -189,14 +189,25 @@ public class GameTest {
         centerCardCardinalMap.put(DIAMOND_QUEEN, WEST);
 
         game = new Game(
-                4,
-                createCardinalContractMap(),
-                createTurnRotator(NORTH, SOUTH),
-                createCardinalCardMultimap(),
-                centerCardCardinalMap
+            4,
+            createCardinalContractMap(),
+            createTurnRotator(NORTH, SOUTH),
+            createCardinalCardMultimap(),
+            centerCardCardinalMap
         );
 
         assertFalse(game.isTrickComplete());
+    }
+
+    @Test
+    public void testGetTurn() throws Exception {
+        assertThat(game.getTurn(), equalTo(EAST));
+        game.makeTurn(EAST, CLUB_EIGHT);
+        assertThat(game.getTurn(), equalTo(WEST));
+        game.makeTurn(WEST, CLUB_JACK);
+        assertThat(game.getTurn(), equalTo(NORTH));
+        game.makeTurn(NORTH, CLUB_ACE);
+        assertThat(game.getTurn(), equalTo(NORTH));
     }
 
     private EnumRotator<Cardinal> createTurnRotator(Cardinal curValue, Cardinal... valuesToSkip) {

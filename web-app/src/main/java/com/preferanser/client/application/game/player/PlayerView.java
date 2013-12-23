@@ -25,42 +25,32 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.Hyperlink;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.preferanser.client.application.game.BaseTableView;
+import com.preferanser.client.application.i18n.I18nHelper;
 import com.preferanser.client.application.i18n.PreferanserConstants;
-import com.preferanser.client.application.widgets.ContractLink;
 import com.preferanser.client.application.widgets.TurnPointer;
 import com.preferanser.client.theme.greencloth.client.com.preferanser.client.application.PreferanserResources;
 import com.preferanser.domain.Cardinal;
-import com.preferanser.domain.Contract;
 
-import java.util.Map;
 import java.util.logging.Logger;
-
-import static com.google.common.collect.Maps.newHashMapWithExpectedSize;
 
 public class PlayerView extends BaseTableView<PlayerUiHandlers> implements PlayerPresenter.PlayerView {
 
     private static final Logger log = Logger.getLogger("PlayerView");
-
     public interface Binder extends UiBinder<Widget, PlayerView> {}
 
     @UiField Button editButton;
-
-    @UiField Hyperlink sluffLink;
-
-    @UiField ContractLink northContractLink;
-    @UiField ContractLink eastContractLink;
-    @UiField ContractLink southContractLink;
-    @UiField ContractLink westContractLink;
-
-    protected final Map<Cardinal, ContractLink> cardinalContractMap = newHashMapWithExpectedSize(Cardinal.values().length);
+    @UiField Label northContractLabel;
+    @UiField Label eastContractLabel;
+    @UiField Label southContractLabel;
+    @UiField Label westContractLabel;
 
     @Inject
-    public PlayerView(Binder uiBinder, PreferanserResources resources, PreferanserConstants constants) {
-        super(constants, resources);
+    public PlayerView(Binder uiBinder, PreferanserResources resources, PreferanserConstants constants, I18nHelper i18nHelper) {
+        super(constants, resources, i18nHelper);
         initWidget(uiBinder.createAndBindUi(this));
         init();
     }
@@ -70,40 +60,24 @@ public class PlayerView extends BaseTableView<PlayerUiHandlers> implements Playe
         installCenterPanelClickHandler();
     }
 
-    public void displayContracts(Map<Cardinal, Contract> cardinalContracts) {
-        for (Cardinal cardinal : Cardinal.values()) {
-            ContractLink contractLink = cardinalContractMap.get(cardinal);
-            if (cardinalContracts.containsKey(cardinal)) {
-                Contract contract = cardinalContracts.get(cardinal);
-                contractLink.setContract(contract);
-            } else {
-                contractLink.setContract(null);
-            }
-        }
-    }
-
     @Override
     protected void displayCardinalTurnPointer(Cardinal cardinal, TurnPointer turnPointer, Cardinal turn) {
         super.displayCardinalTurnPointer(cardinal, turnPointer, turn);
         if (turnPointer.isActive()) {
-            turnPointer.removeStyleName(style.notDisplayed());
+            turnPointer.removeStyleName(tableStyle.notDisplayed());
         } else {
-            turnPointer.addStyleName(style.notDisplayed());
+            turnPointer.addStyleName(tableStyle.notDisplayed());
         }
     }
 
     @Override
     public void hideTurn() {
-        for (TurnPointer turnPointer : table.cardinalTurnPointerMap.values())
-            turnPointer.addStyleName(style.notDisplayed());
+        for (TurnPointer turnPointer : cardinalTurnPointerMap.values())
+            turnPointer.addStyleName(tableStyle.notDisplayed());
     }
 
     @UiHandler("editButton") void onEditButtonClicked(@SuppressWarnings("unused") ClickEvent event) {
         getUiHandlers().switchToEditor();
-    }
-
-    @UiHandler("sluffLink") void onSluffLinkClicked(@SuppressWarnings("unused") ClickEvent event) {
-        getUiHandlers().sluff();
     }
 
     protected void installCenterPanelClickHandler() {
@@ -112,6 +86,22 @@ public class PlayerView extends BaseTableView<PlayerUiHandlers> implements Playe
                 getUiHandlers().sluff();
             }
         });
+    }
+
+    @Override
+    protected Label getCardinalContractTextHolder(Cardinal cardinal) {
+        switch (cardinal) {
+            case NORTH:
+                return northContractLabel;
+            case EAST:
+                return eastContractLabel;
+            case SOUTH:
+                return southContractLabel;
+            case WEST:
+                return westContractLabel;
+            default:
+                throw new IllegalStateException("No contract label for the cardinal: " + cardinal);
+        }
     }
 
     @Override protected Logger getLog() {

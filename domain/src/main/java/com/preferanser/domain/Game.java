@@ -131,21 +131,21 @@ public class Game {
         if (!isTrickComplete())
             return false;
 
-        Optional<Suit> maybeTrump = getTrump();
-        Cardinal turn = determineTrickWinner(maybeTrump, centerCardCardinalMap);
+        Cardinal turn = determineTrickWinner();
         cardinalTricks.put(turn, cardinalTricks.get(turn) + 1); // Non-atomic increment!
         turnRotator.setCurrent(turn);
         centerCardCardinalMap.clear();
         return true;
     }
 
-    private Cardinal determineTrickWinner(Optional<Suit> maybeTrump, Map<Card, Cardinal> cardCardinalMap) {
-        assert (cardCardinalMap.size() == numPlayers);
-        Iterator<Card> cardIterator = cardCardinalMap.keySet().iterator();
+    private Cardinal determineTrickWinner() {
+        assert (centerCardCardinalMap.size() == numPlayers);
+        Iterator<Card> cardIterator = centerCardCardinalMap.keySet().iterator();
         Card maxCard = cardIterator.next();
+        Optional<Suit> optionalTrump = getTrump();
         while (cardIterator.hasNext()) {
             Card nextCard = cardIterator.next();
-            if (maybeTrump.isPresent() && maxCard.getSuit() != maybeTrump.get() && nextCard.getSuit() == maybeTrump.get()) {
+            if (optionalTrump.isPresent() && maxCard.getSuit() != optionalTrump.get() && nextCard.getSuit() == optionalTrump.get()) {
                 maxCard = nextCard;
             } else if (maxCard.getSuit() == nextCard.getSuit()) {
                 if (Rank.comparator().compare(maxCard.getRank(), nextCard.getRank()) < 0) {
@@ -153,11 +153,14 @@ public class Game {
                 }
             }
         }
-        return cardCardinalMap.get(maxCard);
+        return centerCardCardinalMap.get(maxCard);
     }
 
     public Cardinal getTurn() {
-        return turnRotator.current();
+        if (isTrickComplete())
+            return determineTrickWinner();
+        else
+            return turnRotator.current();
     }
 
     public int getNumPlayers() {

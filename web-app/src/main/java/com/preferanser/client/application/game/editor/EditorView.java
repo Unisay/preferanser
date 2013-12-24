@@ -25,10 +25,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.Hyperlink;
-import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.*;
 import com.google.inject.Inject;
 import com.preferanser.client.application.game.BaseTableView;
 import com.preferanser.client.application.i18n.I18nHelper;
@@ -37,6 +34,7 @@ import com.preferanser.client.application.widgets.CardWidget;
 import com.preferanser.client.application.widgets.TurnPointer;
 import com.preferanser.client.theme.greencloth.client.com.preferanser.client.application.PreferanserResources;
 import com.preferanser.domain.Cardinal;
+import com.preferanser.domain.Contract;
 
 import java.util.Map;
 import java.util.logging.Logger;
@@ -51,10 +49,10 @@ public class EditorView extends BaseTableView<EditorUiHandlers> implements Edito
     @UiField Button saveButton;
     @UiField Button dealButton;
 
-    @UiField Hyperlink northContractLink;
-    @UiField Hyperlink eastContractLink;
-    @UiField Hyperlink southContractLink;
-    @UiField Hyperlink westContractLink;
+    @UiField Anchor northContractAnchor;
+    @UiField Anchor eastContractAnchor;
+    @UiField Anchor southContractAnchor;
+    @UiField Anchor westContractAnchor;
 
     @Inject
     public EditorView(Binder uiBinder, PreferanserResources resources, PreferanserConstants constants, I18nHelper i18nHelper) {
@@ -73,17 +71,24 @@ public class EditorView extends BaseTableView<EditorUiHandlers> implements Edito
             });
         }
     }
+    @Override protected void displayCardinalContract(Cardinal cardinal, Contract contract) {
+        getCardinalContractTextHolder(cardinal).setText(i18nHelper.getContractName(contract));
+    }
 
-    @Override protected Hyperlink getCardinalContractTextHolder(Cardinal cardinal) {
+    @Override protected void displayNoContract(Cardinal cardinal) {
+        getCardinalContractTextHolder(cardinal).setText(constants.chooseContract());
+    }
+
+    private Anchor getCardinalContractTextHolder(Cardinal cardinal) {
         switch (cardinal) {
             case NORTH:
-                return northContractLink;
+                return northContractAnchor;
             case EAST:
-                return eastContractLink;
+                return eastContractAnchor;
             case SOUTH:
-                return southContractLink;
+                return southContractAnchor;
             case WEST:
-                return westContractLink;
+                return westContractAnchor;
             default:
                 throw new IllegalStateException("No contract link for the cardinal: " + cardinal);
         }
@@ -107,19 +112,19 @@ public class EditorView extends BaseTableView<EditorUiHandlers> implements Edito
         getUiHandlers().reset();
     }
 
-    @UiHandler("northContractLink") void onNorthContractLinkClicked(@SuppressWarnings("unused") ClickEvent event) {
+    @UiHandler("northContractAnchor") void onNorthContractLinkClicked(@SuppressWarnings("unused") ClickEvent event) {
         getUiHandlers().chooseContract(Cardinal.NORTH);
     }
 
-    @UiHandler("eastContractLink") void onEastContractLinkClicked(@SuppressWarnings("unused") ClickEvent event) {
+    @UiHandler("eastContractAnchor") void onEastContractLinkClicked(@SuppressWarnings("unused") ClickEvent event) {
         getUiHandlers().chooseContract(Cardinal.EAST);
     }
 
-    @UiHandler("southContractLink") void onSouthContractLinkClicked(@SuppressWarnings("unused") ClickEvent event) {
+    @UiHandler("southContractAnchor") void onSouthContractLinkClicked(@SuppressWarnings("unused") ClickEvent event) {
         getUiHandlers().chooseContract(Cardinal.SOUTH);
     }
 
-    @UiHandler("westContractLink") void onWestContractLinkClicked(@SuppressWarnings("unused") ClickEvent event) {
+    @UiHandler("westContractAnchor") void onWestContractLinkClicked(@SuppressWarnings("unused") ClickEvent event) {
         getUiHandlers().chooseContract(Cardinal.WEST);
     }
 

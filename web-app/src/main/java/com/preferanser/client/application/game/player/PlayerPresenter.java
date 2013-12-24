@@ -137,8 +137,7 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
 
     private void refreshTurn() {
         Preconditions.checkState(gameOptional.isPresent(), "PlayerPresenter.refreshTurn(game is null)");
-        Game game = gameOptional.get();
-        getView().displayTurn(game.getTurn());
+        getView().displayTurn(gameOptional.get().getTurn());
     }
 
     private void refreshContracts() {

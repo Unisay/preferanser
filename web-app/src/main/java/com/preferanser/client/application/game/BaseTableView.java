@@ -147,17 +147,16 @@ abstract public class BaseTableView<U extends TableUiHandlers> extends ViewWithU
 
     public void displayContracts(Map<Cardinal, Contract> cardinalContracts) {
         for (Cardinal cardinal : Cardinal.values()) {
-            HasText hasContractText = getCardinalContractTextHolder(cardinal);
             if (cardinalContracts.containsKey(cardinal)) {
-                Contract contract = cardinalContracts.get(cardinal);
-                hasContractText.setText(i18nHelper.getContractName(contract));
+                displayCardinalContract(cardinal, cardinalContracts.get(cardinal));
             } else {
-                hasContractText.setText("");
+                displayNoContract(cardinal);
             }
         }
     }
 
-    protected abstract HasText getCardinalContractTextHolder(Cardinal cardinal);
+    protected abstract void displayCardinalContract(Cardinal cardinal, Contract contract);
+    protected abstract void displayNoContract(Cardinal cardinal);
 
     public void displayCardinalTricks(Map<Cardinal, Integer> cardinalTricks) {
         for (Map.Entry<Cardinal, Integer> entry : cardinalTricks.entrySet()) {

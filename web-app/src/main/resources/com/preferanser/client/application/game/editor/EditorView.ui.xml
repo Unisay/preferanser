@@ -37,7 +37,7 @@
             <p:Widgets>
                 <g:FlowPanel addStyleNames="{tableStyle.handHeaderLeftPanel}">
                     <g:Label ui:field="titleNorth" text="{constants.north}" addStyleNames="{tableStyle.titleNorth}"/>
-                    <g:Hyperlink ui:field="northContractLink" debugId="contract-link-NORTH" addStyleNames="{tableStyle.contractLink}"/>
+                    <g:Anchor ui:field="northContractAnchor" debugId="contract-link-NORTH" addStyleNames="{tableStyle.contractLink}"/>
                 </g:FlowPanel>
                 <g:Label ui:field="trickCountNorth" addStyleNames="{tableStyle.trickCountNorth}"/>
             </p:Widgets>
@@ -47,7 +47,7 @@
             <p:Widgets>
                 <g:FlowPanel addStyleNames="{tableStyle.handHeaderLeftPanel}">
                     <g:Label ui:field="titleWest" text="{constants.west}" addStyleNames="{tableStyle.titleWest}"/>
-                    <g:Hyperlink ui:field="westContractLink" debugId="contract-link-WEST" addStyleNames="{tableStyle.contractLink}"/>
+                    <g:Anchor ui:field="westContractAnchor" debugId="contract-link-WEST" addStyleNames="{tableStyle.contractLink}"/>
                 </g:FlowPanel>
                 <g:Label ui:field="trickCountWest" addStyleNames="{tableStyle.trickCountWest}"/>
             </p:Widgets>
@@ -57,7 +57,7 @@
             <p:Widgets>
                 <g:FlowPanel addStyleNames="{tableStyle.handHeaderLeftPanel}">
                     <g:Label ui:field="titleSouth" text="{constants.south}" addStyleNames="{tableStyle.titleSouth}"/>
-                    <g:Hyperlink ui:field="southContractLink" debugId="contract-link-SOUTH" addStyleNames="{tableStyle.contractLink}"/>
+                    <g:Anchor ui:field="southContractAnchor" debugId="contract-link-SOUTH" addStyleNames="{tableStyle.contractLink}"/>
                 </g:FlowPanel>
                 <g:Label ui:field="trickCountSouth" addStyleNames="{tableStyle.trickCountSouth}"/>
             </p:Widgets>
@@ -67,7 +67,7 @@
             <p:Widgets>
                 <g:FlowPanel addStyleNames="{tableStyle.handHeaderLeftPanel}">
                     <g:Label ui:field="titleEast" text="{constants.east}" addStyleNames="{tableStyle.titleEast}"/>
-                    <g:Hyperlink ui:field="eastContractLink" debugId="contract-link-EAST" addStyleNames="{tableStyle.contractLink}"/>
+                    <g:Anchor ui:field="eastContractAnchor" debugId="contract-link-EAST" addStyleNames="{tableStyle.contractLink}"/>
                 </g:FlowPanel>
                 <g:Label ui:field="trickCountEast" addStyleNames="{tableStyle.trickCountEast}"/>
             </p:Widgets>

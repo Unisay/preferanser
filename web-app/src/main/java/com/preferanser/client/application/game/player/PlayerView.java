@@ -32,21 +32,20 @@ import com.preferanser.client.application.game.BaseTableView;
 import com.preferanser.client.application.i18n.I18nHelper;
 import com.preferanser.client.application.i18n.PreferanserConstants;
 import com.preferanser.client.application.widgets.TurnPointer;
+import com.preferanser.client.application.widgets.Widgets;
 import com.preferanser.client.theme.greencloth.client.com.preferanser.client.application.PreferanserResources;
 import com.preferanser.domain.Cardinal;
+import com.preferanser.domain.Contract;
 
 import java.util.logging.Logger;
 
 public class PlayerView extends BaseTableView<PlayerUiHandlers> implements PlayerPresenter.PlayerView {
 
     private static final Logger log = Logger.getLogger("PlayerView");
+
     public interface Binder extends UiBinder<Widget, PlayerView> {}
 
     @UiField Button editButton;
-    @UiField Label northContractLabel;
-    @UiField Label eastContractLabel;
-    @UiField Label southContractLabel;
-    @UiField Label westContractLabel;
 
     @Inject
     public PlayerView(Binder uiBinder, PreferanserResources resources, PreferanserConstants constants, I18nHelper i18nHelper) {
@@ -70,8 +69,7 @@ public class PlayerView extends BaseTableView<PlayerUiHandlers> implements Playe
         }
     }
 
-    @Override
-    public void hideTurn() {
+    @Override public void hideTurn() {
         for (TurnPointer turnPointer : cardinalTurnPointerMap.values())
             turnPointer.addStyleName(tableStyle.notDisplayed());
     }
@@ -88,17 +86,26 @@ public class PlayerView extends BaseTableView<PlayerUiHandlers> implements Playe
         });
     }
 
-    @Override
-    protected Label getCardinalContractTextHolder(Cardinal cardinal) {
+    @Override protected void displayCardinalContract(Cardinal cardinal, Contract contract) {
+        Label label = getCardinalContractTextHolder(cardinal);
+        label.setText(i18nHelper.getCardinalName(cardinal) + " – " + i18nHelper.getContractName(contract).toLowerCase());
+        label.setVisible(true);
+    }
+
+    @Override protected void displayNoContract(Cardinal cardinal) {
+        getCardinalContractTextHolder(cardinal).setVisible(false);
+    }
+
+    private Label getCardinalContractTextHolder(Cardinal cardinal) {
         switch (cardinal) {
             case NORTH:
-                return northContractLabel;
+                return titleNorth;
             case EAST:
-                return eastContractLabel;
+                return titleEast;
             case SOUTH:
-                return southContractLabel;
+                return titleSouth;
             case WEST:
-                return westContractLabel;
+                return titleWest;
             default:
                 throw new IllegalStateException("No contract label for the cardinal: " + cardinal);
         }

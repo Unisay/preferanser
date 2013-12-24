@@ -27,10 +27,6 @@
         .dashSeparator {
             margin: 0 .5em;
         }
-
-        .inline {
-            display: inline;
-        }
     </ui:style>
     <p:TablePanel ui:field="table">
 
@@ -42,44 +38,28 @@
 
         <p:northheader>
             <p:Widgets>
-                <g:FlowPanel addStyleNames="{tableStyle.handHeaderLeftPanel}">
-                    <g:Label ui:field="titleNorth" text="{constants.north}" addStyleNames="{tableStyle.titleNorth}"/>
-                    <g:Label text="—" addStyleNames="{style.dashSeparator} {style.inline}"/>
-                    <g:Label ui:field="northContractLabel" debugId="contract-label-NORTH" addStyleNames="{style.inline}"/>
-                </g:FlowPanel>
+                <g:Label ui:field="titleNorth" text="{constants.north}" addStyleNames="{tableStyle.titleNorth}"/>
                 <g:Label ui:field="trickCountNorth" addStyleNames="{tableStyle.trickCountNorth}"/>
             </p:Widgets>
         </p:northheader>
 
         <p:westheader>
             <p:Widgets>
-                <g:FlowPanel addStyleNames="{tableStyle.handHeaderLeftPanel}">
-                    <g:Label ui:field="titleWest" text="{constants.west}" addStyleNames="{tableStyle.titleWest}"/>
-                    <g:Label text="—" addStyleNames="{style.dashSeparator} {style.inline}"/>
-                    <g:Label ui:field="westContractLabel" debugId="contract-label-WEST" addStyleNames="{style.inline}"/>
-                </g:FlowPanel>
+                <g:Label ui:field="titleWest" text="{constants.west}" addStyleNames="{tableStyle.titleWest}"/>
                 <g:Label ui:field="trickCountWest" addStyleNames="{tableStyle.trickCountWest}"/>
             </p:Widgets>
         </p:westheader>
 
         <p:southheader>
             <p:Widgets>
-                <g:FlowPanel addStyleNames="{tableStyle.handHeaderLeftPanel}">
-                    <g:Label ui:field="titleSouth" text="{constants.south}" addStyleNames="{tableStyle.titleSouth}"/>
-                    <g:Label text="—" addStyleNames="{style.dashSeparator} {style.inline}"/>
-                    <g:Label ui:field="southContractLabel" debugId="contract-label-SOUTH" addStyleNames="{style.inline}"/>
-                </g:FlowPanel>
+                <g:Label ui:field="titleSouth" text="{constants.south}" addStyleNames="{tableStyle.titleSouth}"/>
                 <g:Label ui:field="trickCountSouth" addStyleNames="{tableStyle.trickCountSouth}"/>
             </p:Widgets>
         </p:southheader>
 
         <p:eastheader>
             <p:Widgets>
-                <g:FlowPanel addStyleNames="{tableStyle.handHeaderLeftPanel}">
-                    <g:Label ui:field="titleEast" text="{constants.east}" addStyleNames="{tableStyle.titleEast}"/>
-                    <g:Label text="—" addStyleNames="{style.dashSeparator} {style.inline}"/>
-                    <g:Label ui:field="eastContractLabel" debugId="contract-label-EAST" addStyleNames="{style.inline}"/>
-                </g:FlowPanel>
+                <g:Label ui:field="titleEast" text="{constants.east}" addStyleNames="{tableStyle.titleEast}"/>
                 <g:Label ui:field="trickCountEast" addStyleNames="{tableStyle.trickCountEast}"/>
             </p:Widgets>
         </p:eastheader>

@@ -20,6 +20,7 @@
 package com.preferanser.client.application.game.player;
 
 import com.google.web.bindery.event.shared.EventBus;
+import com.preferanser.client.application.game.GameBuiltEvent;
 import com.preferanser.client.place.PlaceManager;
 import com.preferanser.domain.*;
 import org.mockito.Mock;
@@ -69,6 +70,7 @@ public class PlayerPresenterTest {
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         presenter = new PlayerPresenter(placeManager, eventBus, view, proxy);
+        presenter.onGameBuilt(new GameBuiltEvent(game));
         turn = Cardinal.EAST;
 
         verify(view).setUiHandlers(presenter);
@@ -116,7 +118,7 @@ public class PlayerPresenterTest {
 
         presenter.changeCardLocation(Card.CLUB_ACE, TableLocation.EAST, TableLocation.CENTER);
 
-        verify(view).hideTurn();
+        verify(view).displayTurn(turn);
         verify(view).displayContracts(cardinalContracts);
         verify(view).displayTableCards(cardinalCards, centerCards);
         verify(view).displayCardinalTricks(cardinalTricks);

@@ -116,8 +116,8 @@ public class Game {
         if (centerCardCardinalMap.size() == numPlayers)
             throw new NoTurnsAllowedException(centerCardCardinalMap);
 
-        assert cardinalCardMultimap.get(fromCardinal).remove(card) :
-            "Failed to remove " + card + " from " + fromCardinal;
+        boolean removed = cardinalCardMultimap.get(fromCardinal).remove(card);
+        assert removed : "Failed to remove " + card + " from " + fromCardinal;
 
         centerCardCardinalMap.put(card, fromCardinal);
         turnRotator.next();

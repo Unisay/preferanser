@@ -21,7 +21,7 @@ package com.preferanser.domain.exception;
 
 import com.preferanser.domain.Cardinal;
 
-public class NotInTurnException extends GameTurnException {
+public class NotInTurnException extends GameException {
 
     private Cardinal current;
     private Cardinal fromCardinal;
@@ -29,7 +29,6 @@ public class NotInTurnException extends GameTurnException {
     @SuppressWarnings("unused") // required for serialization
     public NotInTurnException() {
     }
-
 
     public NotInTurnException(Cardinal current, Cardinal fromCardinal) {
         this.current = current;

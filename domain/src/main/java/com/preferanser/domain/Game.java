@@ -20,15 +20,13 @@
 package com.preferanser.domain;
 
 import com.google.common.base.Optional;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Multimap;
+import com.google.common.collect.*;
 import com.preferanser.domain.exception.*;
 import com.preferanser.util.EnumRotator;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import static com.google.common.collect.Maps.newLinkedHashMap;
@@ -43,7 +41,7 @@ public class Game {
     private final Map<Cardinal, Contract> cardinalContracts;
     private final Multimap<Cardinal, Card> cardinalCardMultimap;
     private final Map<Cardinal, Integer> cardinalTricks = Maps.newHashMapWithExpectedSize(Cardinal.values().length);
-    private final Map<Card, Cardinal> centerCardCardinalMap;
+    private final LinkedHashMap<Card, Cardinal> centerCardCardinalMap;  // order is important
 
     Game(int numPlayers,
          Map<Cardinal, Contract> cardinalContracts,
@@ -103,7 +101,7 @@ public class Game {
         return Optional.absent();
     }
 
-    public void makeTurn(Cardinal fromCardinal, Card card) throws GameTurnException {
+    public void makeTurn(Cardinal fromCardinal, Card card) throws GameException {
         if (fromCardinal != turnRotator.current())
             throw new NotInTurnException(turnRotator.current(), fromCardinal);
 
@@ -116,11 +114,41 @@ public class Game {
         if (centerCardCardinalMap.size() == numPlayers)
             throw new NoTurnsAllowedException(centerCardCardinalMap);
 
+        // TODO: test this functionality
+        Optional<Suit> maybeTrickSuit = getTrickSuit();
+        if (maybeTrickSuit.isPresent()) {
+            Suit trickSuit = maybeTrickSuit.get();
+            if (trickSuit != card.getSuit()) {
+                if (cardinalHasSuit(fromCardinal, trickSuit))
+                    throw new IllegalSuitException(trickSuit, card.getSuit());
+
+                Optional<Suit> maybeTrump = getTrump();
+                if (maybeTrump.isPresent()) {
+                    Suit trump = maybeTrump.get();
+                    if (card.getSuit() != trump && cardinalHasSuit(fromCardinal, trump))
+                        throw new IllegalSuitException(trump, card.getSuit());
+                }
+            }
+        }
+
         boolean removed = cardinalCardMultimap.get(fromCardinal).remove(card);
         assert removed : "Failed to remove " + card + " from " + fromCardinal;
 
         centerCardCardinalMap.put(card, fromCardinal);
         turnRotator.next();
+    }
+
+    private boolean cardinalHasSuit(Cardinal cardinal, Suit suit) {
+        for (Card card : cardinalCardMultimap.get(cardinal))
+            if (card.getSuit() == suit)
+                return true;
+        return false;
+    }
+
+    private Optional<Suit> getTrickSuit() {
+        if (centerCardCardinalMap.isEmpty())
+            return Optional.absent();
+        return Optional.of(centerCardCardinalMap.entrySet().iterator().next().getKey().getSuit());
     }
 
     public boolean isTrickComplete() {

@@ -24,7 +24,7 @@ import com.preferanser.domain.Cardinal;
 
 import java.util.Map;
 
-public class DuplicateGameTurnException extends GameTurnException {
+public class DuplicateGameTurnException extends GameException {
 
     private Map<Card, Cardinal> centerCardCardinalMap;
     private Cardinal fromCardinal;

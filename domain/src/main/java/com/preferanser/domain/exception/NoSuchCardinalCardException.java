@@ -22,7 +22,7 @@ package com.preferanser.domain.exception;
 import com.preferanser.domain.Card;
 import com.preferanser.domain.Cardinal;
 
-public class NoSuchCardinalCardException extends GameTurnException {
+public class NoSuchCardinalCardException extends GameException {
 
     private Cardinal cardinal;
     private Card card;

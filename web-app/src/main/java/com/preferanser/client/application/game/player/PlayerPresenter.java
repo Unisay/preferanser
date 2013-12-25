@@ -35,7 +35,7 @@ import com.preferanser.client.application.ApplicationPresenter;
 import com.preferanser.client.application.game.GameBuiltEvent;
 import com.preferanser.client.place.NameTokens;
 import com.preferanser.domain.*;
-import com.preferanser.domain.exception.GameTurnException;
+import com.preferanser.domain.exception.GameException;
 
 import java.util.Collection;
 import java.util.Map;
@@ -111,7 +111,7 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
 
         try {
             gameOptional.get().makeTurn(GameUtils.tableLocationToCardinal(oldLocation), card);
-        } catch (GameTurnException e) {
+        } catch (GameException e) {
             log.finer(e.getMessage());
             refreshCards();
             return;

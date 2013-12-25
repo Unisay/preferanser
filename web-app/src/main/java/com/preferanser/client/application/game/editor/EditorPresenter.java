@@ -38,7 +38,7 @@ import com.preferanser.client.application.game.editor.dialog.validation.Validati
 import com.preferanser.client.place.NameTokens;
 import com.preferanser.domain.*;
 import com.preferanser.domain.exception.GameBuilderException;
-import com.preferanser.domain.exception.GameTurnException;
+import com.preferanser.domain.exception.GameException;
 
 import java.util.logging.Logger;
 
@@ -127,7 +127,7 @@ public class EditorPresenter extends Presenter<EditorPresenter.EditorView, Edito
 
         try {
             gameBuilder.moveCard(card, oldLocation, newLocation);
-        } catch (GameTurnException e) {
+        } catch (GameException e) {
             log.finer(e.getMessage());
             refreshCards();
             return;

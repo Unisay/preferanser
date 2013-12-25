@@ -24,7 +24,7 @@ import com.preferanser.domain.Cardinal;
 
 import java.util.Map;
 
-public class NoTurnsAllowedException extends GameTurnException {
+public class NoTurnsAllowedException extends GameException {
 
     private Map<Card, Cardinal> centerCardCardinalMap;
 

@@ -19,4 +19,4 @@
 
 package com.preferanser.domain.exception;
 
-public abstract class GameTurnException extends Exception {}
+public abstract class GameException extends Exception {}

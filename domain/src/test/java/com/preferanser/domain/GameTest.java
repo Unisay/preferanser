@@ -21,10 +21,7 @@ package com.preferanser.domain;
 
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Maps;
-import com.preferanser.domain.exception.DuplicateGameTurnException;
-import com.preferanser.domain.exception.NoSuchCardinalCardException;
-import com.preferanser.domain.exception.NoTurnsAllowedException;
-import com.preferanser.domain.exception.NotInTurnException;
+import com.preferanser.domain.exception.*;
 import com.preferanser.util.EnumRotator;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -79,6 +76,23 @@ public class GameTest {
             assertThat(e.getCurrentCardinal(), equalTo(EAST));
             assertThat(e.getMessage(), equalTo("WEST attempted to make turn while current turn does EAST"));
         }
+    }
+
+    @Test
+    public void testMakeTurn_WrongSuit() throws Exception {
+        game.makeTurn(EAST, CLUB_EIGHT);
+        try {
+            game.makeTurn(WEST, HEART_JACK);
+            fail("IllegalSuitException must have been thrown!");
+        } catch (IllegalSuitException e) {
+            assertThat(e.getExpectedSuit(), equalTo(Suit.CLUB));
+            assertThat(e.getActualSuit(), equalTo(Suit.HEART));
+        }
+    }
+
+    @Test
+    public void testMakeTurn_NotSuitButTrump() throws Exception {
+        fail("Not implemented");
     }
 
     @Test
@@ -233,6 +247,7 @@ public class GameTest {
         multimap.put(SOUTH, CLUB_KING);
         multimap.put(WEST, CLUB_JACK);
         multimap.put(WEST, CLUB_NINE);
+        multimap.put(WEST, HEART_JACK);
         return multimap;
     }
 

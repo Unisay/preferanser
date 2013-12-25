@@ -114,28 +114,34 @@ public class Game {
         if (centerCardCardinalMap.size() == numPlayers)
             throw new NoTurnsAllowedException(centerCardCardinalMap);
 
-        // TODO: test this functionality
-        Optional<Suit> maybeTrickSuit = getTrickSuit();
-        if (maybeTrickSuit.isPresent()) {
-            Suit trickSuit = maybeTrickSuit.get();
-            if (trickSuit != card.getSuit()) {
-                if (cardinalHasSuit(fromCardinal, trickSuit))
-                    throw new IllegalSuitException(trickSuit, card.getSuit());
-
-                Optional<Suit> maybeTrump = getTrump();
-                if (maybeTrump.isPresent()) {
-                    Suit trump = maybeTrump.get();
-                    if (card.getSuit() != trump && cardinalHasSuit(fromCardinal, trump))
-                        throw new IllegalSuitException(trump, card.getSuit());
-                }
-            }
-        }
+        validateCardinalTurn(fromCardinal, card);
 
         boolean removed = cardinalCardMultimap.get(fromCardinal).remove(card);
         assert removed : "Failed to remove " + card + " from " + fromCardinal;
 
         centerCardCardinalMap.put(card, fromCardinal);
         turnRotator.next();
+    }
+
+    public void validateCardinalTurn(Cardinal cardinal, Card card) throws IllegalSuitException {
+        Optional<Suit> maybeTrickSuit = getTrickSuit();
+        if (!maybeTrickSuit.isPresent())
+            return;
+
+        Suit trickSuit = maybeTrickSuit.get();
+        if (trickSuit == card.getSuit())
+            return;
+
+        if (cardinalHasSuit(cardinal, trickSuit))
+            throw new IllegalSuitException(trickSuit, card.getSuit());
+
+        Optional<Suit> maybeTrump = getTrump();
+        if (!maybeTrump.isPresent())
+            return;
+
+        Suit trump = maybeTrump.get();
+        if (card.getSuit() != trump && cardinalHasSuit(cardinal, trump))
+            throw new IllegalSuitException(trump, card.getSuit());
     }
 
     private boolean cardinalHasSuit(Cardinal cardinal, Suit suit) {

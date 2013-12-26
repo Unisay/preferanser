@@ -37,8 +37,6 @@ import com.preferanser.client.application.game.TableView;
 import com.preferanser.client.application.game.editor.dialog.contract.ContractDialogPresenter;
 import com.preferanser.client.application.game.editor.dialog.validation.ValidationDialogPresenter;
 import com.preferanser.client.place.NameTokens;
-import com.preferanser.client.request.PreferanserRequestFactory;
-import com.preferanser.client.request.proxy.DealProxy;
 import com.preferanser.domain.*;
 import com.preferanser.domain.exception.GameBuilderException;
 import com.preferanser.domain.exception.GameException;
@@ -64,7 +62,6 @@ public class EditorPresenter extends Presenter<EditorPresenter.EditorView, Edito
     private Optional<Game> maybeGame;
     private GameBuilder gameBuilder;
     private final PlaceManager placeManager;
-    private final PreferanserRequestFactory requestFactory;
     private final ContractDialogPresenter contractDialog;
     private final ValidationDialogPresenter validationDialog;
 
@@ -80,13 +77,11 @@ public class EditorPresenter extends Presenter<EditorPresenter.EditorView, Edito
                            Proxy proxy,
                            GameBuilder gameBuilder,
                            ContractDialogPresenter contractDialog,
-                           ValidationDialogPresenter validationDialog,
-                           PreferanserRequestFactory requestFactory) {
+                           ValidationDialogPresenter validationDialog) {
         super(eventBus, view, proxy, ApplicationPresenter.TYPE_SetMainContent);
         this.placeManager = placeManager;
         this.gameBuilder = gameBuilder;
         this.contractDialog = contractDialog;
-        this.requestFactory = requestFactory;
         this.contractDialog.setHasCardinalContracts(this);
         this.validationDialog = validationDialog;
         getView().setUiHandlers(this);
@@ -165,7 +160,7 @@ public class EditorPresenter extends Presenter<EditorPresenter.EditorView, Edito
     }
 
     @Override public void saveDeal() {
-        PreferanserRequestFactory.DealServiceRequest dealServiceRequest = requestFactory.dealService();
+/*        PreferanserRequestFactory.DealServiceRequest dealServiceRequest = requestFactory.dealService();
 
         DealProxy dealProxy = dealServiceRequest.create(DealProxy.class);
         dealProxy.setFirstTurn(gameBuilder.getFirstTurn());
@@ -204,7 +199,7 @@ public class EditorPresenter extends Presenter<EditorPresenter.EditorView, Edito
             }
         }
 
-        dealServiceRequest.persist(dealProxy).fire();
+        dealServiceRequest.persist(dealProxy).fire();*/
     }
 
     private List<Card> newArrayListOrEmpty(Iterable<Card> cards) {

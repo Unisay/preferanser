@@ -34,7 +34,6 @@ import com.preferanser.client.application.ApplicationModule;
 import com.preferanser.client.application.ResourceLoader;
 import com.preferanser.client.application.i18n.I18nHelper;
 import com.preferanser.client.place.NameTokens;
-import com.preferanser.client.request.PreferanserRequestFactory;
 import com.preferanser.domain.GameBuilder;
 
 public class ClientModule extends AbstractPresenterModule {
@@ -53,7 +52,6 @@ public class ClientModule extends AbstractPresenterModule {
 
         bind(GameBuilder.class).toProvider(GameBuilderProvider.class).in(Singleton.class); // TODO: should be prototype scope
         bind(ResourceLoader.class).asEagerSingleton();
-        bind(PreferanserRequestFactory.class).toProvider(RequestFactoryProvider.class).in(Singleton.class);
     }
 
     static class GameBuilderProvider implements Provider<GameBuilder> {
@@ -64,17 +62,4 @@ public class ClientModule extends AbstractPresenterModule {
         }
     }
 
-    static class RequestFactoryProvider implements Provider<PreferanserRequestFactory> {
-        private final PreferanserRequestFactory requestFactory;
-
-        @Inject
-        public RequestFactoryProvider(EventBus eventBus) {
-            requestFactory = GWT.create(PreferanserRequestFactory.class);
-            requestFactory.initialize(eventBus);
-        }
-
-        public PreferanserRequestFactory get() {
-            return requestFactory;
-        }
-    }
 }

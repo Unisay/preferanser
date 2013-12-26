@@ -9,7 +9,7 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
-public class Deal extends DatastoreObject {
+public class Deal {
 
     @SuppressWarnings("unused")
     public Deal() {

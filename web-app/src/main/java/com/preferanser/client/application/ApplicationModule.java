@@ -20,6 +20,8 @@
 package com.preferanser.client.application;
 
 import com.gwtplatform.mvp.client.gin.AbstractPresenterModule;
+import com.preferanser.client.application.game.ErrorPresenter;
+import com.preferanser.client.application.game.ErrorView;
 import com.preferanser.client.application.game.editor.EditorModule;
 import com.preferanser.client.application.game.player.PlayerModule;
 
@@ -29,6 +31,12 @@ public class ApplicationModule extends AbstractPresenterModule {
     protected void configure() {
         install(new PlayerModule());
         install(new EditorModule());
+        bindPresenter(
+                ErrorPresenter.class,
+                ErrorPresenter.ErrorView.class,
+                ErrorView.class,
+                ErrorPresenter.Proxy.class
+        );
         bindPresenter(
                 ApplicationPresenter.class,
                 ApplicationPresenter.ApplicationView.class,

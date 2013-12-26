@@ -34,7 +34,7 @@ import com.preferanser.client.application.ApplicationModule;
 import com.preferanser.client.application.ResourceLoader;
 import com.preferanser.client.application.i18n.I18nHelper;
 import com.preferanser.client.place.NameTokens;
-import com.preferanser.client.request.MyRequestFactory;
+import com.preferanser.client.request.PreferanserRequestFactory;
 import com.preferanser.domain.GameBuilder;
 
 public class ClientModule extends AbstractPresenterModule {
@@ -45,15 +45,15 @@ public class ClientModule extends AbstractPresenterModule {
         install(new ApplicationModule());
 
         // DefaultPlaceManager Places
+        bindConstant().annotatedWith(ErrorPlace.class).to(NameTokens.ERROR);
         bindConstant().annotatedWith(DefaultPlace.class).to(NameTokens.GAME_EDITOR);
-        bindConstant().annotatedWith(ErrorPlace.class).to(NameTokens.GAME_EDITOR); // TODO: define separate
-        bindConstant().annotatedWith(UnauthorizedPlace.class).to(NameTokens.GAME_EDITOR);
+        bindConstant().annotatedWith(UnauthorizedPlace.class).to(NameTokens.UNAUTHORIZED);
 
         bind(I18nHelper.class).asEagerSingleton();
 
         bind(GameBuilder.class).toProvider(GameBuilderProvider.class).in(Singleton.class); // TODO: should be prototype scope
         bind(ResourceLoader.class).asEagerSingleton();
-        bind(MyRequestFactory.class).toProvider(RequestFactoryProvider.class).in(Singleton.class);
+        bind(PreferanserRequestFactory.class).toProvider(RequestFactoryProvider.class).in(Singleton.class);
     }
 
     static class GameBuilderProvider implements Provider<GameBuilder> {
@@ -64,16 +64,16 @@ public class ClientModule extends AbstractPresenterModule {
         }
     }
 
-    static class RequestFactoryProvider implements Provider<MyRequestFactory> {
-        private final MyRequestFactory requestFactory;
+    static class RequestFactoryProvider implements Provider<PreferanserRequestFactory> {
+        private final PreferanserRequestFactory requestFactory;
 
         @Inject
         public RequestFactoryProvider(EventBus eventBus) {
-            requestFactory = GWT.create(MyRequestFactory.class);
+            requestFactory = GWT.create(PreferanserRequestFactory.class);
             requestFactory.initialize(eventBus);
         }
 
-        public MyRequestFactory get() {
+        public PreferanserRequestFactory get() {
             return requestFactory;
         }
     }

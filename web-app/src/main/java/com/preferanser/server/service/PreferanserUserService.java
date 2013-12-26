@@ -17,29 +17,15 @@
  *     along with this program.  If not, see [http://www.gnu.org/licenses/].
  */
 
-package com.preferanser.client.request.proxy;
+package com.preferanser.server.service;
 
-import com.google.web.bindery.requestfactory.shared.ProxyFor;
-import com.google.web.bindery.requestfactory.shared.ValueProxy;
-import com.preferanser.server.business.User;
+import com.preferanser.server.business.AuthInfo;
+import com.preferanser.server.service.exception.NoAuthenticatedUserException;
 
-import java.util.Date;
+public interface PreferanserUserService {
 
-@ProxyFor(value = User.class)
-public interface UserProxy extends ValueProxy {
-    Long getId();
+    AuthInfo getAuthInfo();
 
-    void setId(Long id);
+    String getCurrentUserId() throws NoAuthenticatedUserException;
 
-    String getFirstName();
-
-    void setFirstName(String firstName);
-
-    String getLastName();
-
-    void setLastName(String lastName);
-
-    Date getCreated();
-
-    void setCreated(Date created);
 }

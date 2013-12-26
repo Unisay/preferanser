@@ -20,6 +20,8 @@
 package com.preferanser.client.place;
 
 public class NameTokens {
+    public static final String ERROR = "error";
+    public static final String UNAUTHORIZED = "unauthorized";
     public static final String GAME_EDITOR = "editor";
     public static final String GAME_PLAYER = "player";
 }

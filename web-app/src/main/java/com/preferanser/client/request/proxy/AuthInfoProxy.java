@@ -17,13 +17,25 @@
  *     along with this program.  If not, see [http://www.gnu.org/licenses/].
  */
 
-package com.preferanser.server.repos;
+package com.preferanser.client.request.proxy;
 
-import com.preferanser.server.business.User;
-import org.springframework.data.jpa.repository.JpaRepository;
+import com.google.web.bindery.requestfactory.shared.ProxyFor;
+import com.google.web.bindery.requestfactory.shared.ValueProxy;
+import com.preferanser.server.business.AuthInfo;
 
-import java.util.List;
+import java.util.Date;
 
-public interface MyEntityRepo extends JpaRepository<User, Long> {
-    List<User> findByFirstNameLikeOrLastNameLike(String firstName, String lastName);
+@ProxyFor(value = AuthInfo.class)
+public interface AuthInfoProxy extends ValueProxy {
+
+    boolean isAuthenticated();
+
+    String getUserId();
+
+    String getLoginURL();
+
+    String getNickname();
+
+    String getEmail();
+
 }

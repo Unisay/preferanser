@@ -19,20 +19,26 @@
 
 package com.preferanser.client.request;
 
-import com.google.web.bindery.requestfactory.shared.Request;
-import com.google.web.bindery.requestfactory.shared.RequestContext;
-import com.google.web.bindery.requestfactory.shared.Service;
-import com.preferanser.client.request.proxy.UserProxy;
-import com.preferanser.server.service.impl.MyServiceImpl;
+import com.google.web.bindery.requestfactory.shared.*;
+import com.preferanser.client.request.proxy.AuthInfoProxy;
+import com.preferanser.client.request.proxy.DealProxy;
+import com.preferanser.server.service.DealService;
+import com.preferanser.server.service.impl.AppengineUserService;
 import com.preferanser.server.util.SpringServiceLocator;
 
-import java.util.List;
+public interface PreferanserRequestFactory extends RequestFactory {
 
-@Service(value = MyServiceImpl.class, locator = SpringServiceLocator.class)
-public interface MyServiceRequest extends RequestContext {
-    abstract Request<Void> create(UserProxy entity);
+    @Service(value = AppengineUserService.class, locator = SpringServiceLocator.class)
+    interface UserServiceRequest extends RequestContext {
+        Request<AuthInfoProxy> getAuthInfo();
+    }
 
-    abstract Request<Void> delete(UserProxy entity);
+    @Service(value = DealService.class, locator = SpringServiceLocator.class)
+    interface DealServiceRequest extends RequestContext {
+        Request<Void> persist(DealProxy dealProxy);
+    }
 
-    abstract Request<List<UserProxy>> loadAll(String searchToken);
+    UserServiceRequest userService();
+    DealServiceRequest dealService();
+
 }

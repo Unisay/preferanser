@@ -22,16 +22,17 @@ package com.preferanser.client.place;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.annotations.DefaultPlace;
+import com.gwtplatform.mvp.client.annotations.ErrorPlace;
 import com.gwtplatform.mvp.client.proxy.PlaceManagerImpl;
 import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.TokenFormatter;
 
 public class PlaceManager extends PlaceManagerImpl {
+
     private final PlaceRequest defaultPlaceRequest;
 
     @Inject
-    public PlaceManager(final EventBus eventBus, final TokenFormatter tokenFormatter,
-                        @DefaultPlace final String defaultPlaceNameToken) {
+    public PlaceManager(EventBus eventBus, TokenFormatter tokenFormatter, @DefaultPlace String defaultPlaceNameToken) {
         super(eventBus, tokenFormatter);
 
         this.defaultPlaceRequest = new PlaceRequest.Builder().nameToken(defaultPlaceNameToken).build();
@@ -40,5 +41,15 @@ public class PlaceManager extends PlaceManagerImpl {
     @Override
     public void revealDefaultPlace() {
         revealPlace(defaultPlaceRequest, false);
+    }
+
+    @Override public void revealErrorPlace(String invalidHistoryToken) {
+        PlaceRequest errorPlaceRequest = new PlaceRequest.Builder().nameToken(invalidHistoryToken).build();
+        revealPlace(errorPlaceRequest, false);
+    }
+
+    @Override public void revealUnauthorizedPlace(String unauthorizedHistoryToken) {
+        PlaceRequest unauthorizedPlaceRequest = new PlaceRequest.Builder().nameToken(unauthorizedHistoryToken).build();
+        revealPlace(unauthorizedPlaceRequest, false);
     }
 }

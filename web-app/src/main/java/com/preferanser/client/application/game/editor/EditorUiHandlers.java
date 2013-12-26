@@ -45,4 +45,9 @@ public interface EditorUiHandlers extends TableUiHandlers {
      *  Switch to player page
      */
     void switchToPlayer();
+
+    /**
+     * Save deal
+     */
+    void saveDeal();
 }

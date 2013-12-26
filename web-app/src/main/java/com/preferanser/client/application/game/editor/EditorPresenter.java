@@ -25,6 +25,7 @@ import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.Presenter;
 import com.gwtplatform.mvp.client.annotations.NameToken;
+import com.gwtplatform.mvp.client.annotations.NoGatekeeper;
 import com.gwtplatform.mvp.client.annotations.ProxyStandard;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.PlaceRequest;
@@ -36,10 +37,13 @@ import com.preferanser.client.application.game.TableView;
 import com.preferanser.client.application.game.editor.dialog.contract.ContractDialogPresenter;
 import com.preferanser.client.application.game.editor.dialog.validation.ValidationDialogPresenter;
 import com.preferanser.client.place.NameTokens;
+import com.preferanser.client.request.PreferanserRequestFactory;
+import com.preferanser.client.request.proxy.DealProxy;
 import com.preferanser.domain.*;
 import com.preferanser.domain.exception.GameBuilderException;
 import com.preferanser.domain.exception.GameException;
 
+import java.util.*;
 import java.util.logging.Logger;
 
 import static com.google.common.collect.Lists.newArrayList;
@@ -49,7 +53,7 @@ import static com.google.common.collect.Lists.newArrayList;
  * Table presenter
  */
 public class EditorPresenter extends Presenter<EditorPresenter.EditorView, EditorPresenter.Proxy>
-    implements EditorUiHandlers, HasCardinalContracts {
+        implements EditorUiHandlers, HasCardinalContracts {
 
     private static final Logger log = Logger.getLogger("EditorPresenter");
 
@@ -59,10 +63,12 @@ public class EditorPresenter extends Presenter<EditorPresenter.EditorView, Edito
 
     private Optional<Game> maybeGame;
     private GameBuilder gameBuilder;
-    private PlaceManager placeManager;
-    private ContractDialogPresenter contractDialog;
-    private ValidationDialogPresenter validationDialog;
+    private final PlaceManager placeManager;
+    private final PreferanserRequestFactory requestFactory;
+    private final ContractDialogPresenter contractDialog;
+    private final ValidationDialogPresenter validationDialog;
 
+    @NoGatekeeper
     @ProxyStandard
     @NameToken(NameTokens.GAME_EDITOR)
     public interface Proxy extends ProxyPlace<EditorPresenter> {}
@@ -74,11 +80,13 @@ public class EditorPresenter extends Presenter<EditorPresenter.EditorView, Edito
                            Proxy proxy,
                            GameBuilder gameBuilder,
                            ContractDialogPresenter contractDialog,
-                           ValidationDialogPresenter validationDialog) {
+                           ValidationDialogPresenter validationDialog,
+                           PreferanserRequestFactory requestFactory) {
         super(eventBus, view, proxy, ApplicationPresenter.TYPE_SetMainContent);
         this.placeManager = placeManager;
         this.gameBuilder = gameBuilder;
         this.contractDialog = contractDialog;
+        this.requestFactory = requestFactory;
         this.contractDialog.setHasCardinalContracts(this);
         this.validationDialog = validationDialog;
         getView().setUiHandlers(this);
@@ -95,14 +103,14 @@ public class EditorPresenter extends Presenter<EditorPresenter.EditorView, Edito
         // TODO: remove deal initialization once deal loading is done
         maybeGame = Optional.absent();
         gameBuilder = new GameBuilder()
-            .setThreePlayers()
-            .setFirstTurn(Cardinal.NORTH)
-            .setCardinalContract(Cardinal.NORTH, Contract.SEVEN_SPADE)
-            .setCardinalContract(Cardinal.EAST, Contract.WHIST)
-            .setCardinalContract(Cardinal.WEST, Contract.PASS)
-            .putCards(Cardinal.NORTH, newArrayList(Card.values()).subList(0, 10))
-            .putCards(Cardinal.EAST, newArrayList(Card.values()).subList(10, 20))
-            .putCards(Cardinal.WEST, newArrayList(Card.values()).subList(20, 30));
+                .setThreePlayers()
+                .setFirstTurn(Cardinal.NORTH)
+                .setCardinalContract(Cardinal.NORTH, Contract.SEVEN_SPADE)
+                .setCardinalContract(Cardinal.EAST, Contract.WHIST)
+                .setCardinalContract(Cardinal.WEST, Contract.PASS)
+                .putCards(Cardinal.NORTH, newArrayList(Card.values()).subList(0, 10))
+                .putCards(Cardinal.EAST, newArrayList(Card.values()).subList(10, 20))
+                .putCards(Cardinal.WEST, newArrayList(Card.values()).subList(20, 30));
         refreshView();
     }
 
@@ -154,6 +162,55 @@ public class EditorPresenter extends Presenter<EditorPresenter.EditorView, Edito
             validationDialog.setValidationErrors(e.getBuilderErrors());
             RevealRootPopupContentEvent.fire(this, validationDialog);
         }
+    }
+
+    @Override public void saveDeal() {
+        PreferanserRequestFactory.DealServiceRequest dealServiceRequest = requestFactory.dealService();
+
+        DealProxy dealProxy = dealServiceRequest.create(DealProxy.class);
+        dealProxy.setFirstTurn(gameBuilder.getFirstTurn());
+        dealProxy.setCreated(new Date());
+        dealProxy.setName(new Date().toString()); // TODO: ask user for a name
+
+        Map<Cardinal, Contract> cardinalContracts = gameBuilder.getCardinalContracts();
+        dealProxy.setNorthContract(cardinalContracts.get(Cardinal.NORTH));
+        dealProxy.setEastContract(cardinalContracts.get(Cardinal.EAST));
+        dealProxy.setSouthContract(cardinalContracts.get(Cardinal.SOUTH));
+        dealProxy.setWestContract(cardinalContracts.get(Cardinal.WEST));
+
+        Map<TableLocation, Collection<Card>> tableCards = gameBuilder.getTableCards();
+        dealProxy.setNorthCards(newArrayListOrEmpty(tableCards.get(TableLocation.NORTH)));
+        dealProxy.setEastCards(newArrayListOrEmpty(tableCards.get(TableLocation.EAST)));
+        dealProxy.setSouthCards(newArrayListOrEmpty(tableCards.get(TableLocation.SOUTH)));
+        dealProxy.setWestCards(newArrayListOrEmpty(tableCards.get(TableLocation.WEST)));
+
+        Map<Card, Cardinal> centerCards = gameBuilder.getCenterCards();
+        for (Map.Entry<Card, Cardinal> cardCardinalEntry : centerCards.entrySet()) {
+            switch (cardCardinalEntry.getValue()) {
+                case NORTH:
+                    dealProxy.setCenterNorthCard(cardCardinalEntry.getKey());
+                    break;
+                case EAST:
+                    dealProxy.setCenterEastCard(cardCardinalEntry.getKey());
+                    break;
+                case SOUTH:
+                    dealProxy.setCenterSouthCard(cardCardinalEntry.getKey());
+                    break;
+                case WEST:
+                    dealProxy.setCenterWestCard(cardCardinalEntry.getKey());
+                    break;
+                default:
+                    throw new IllegalStateException("Invalid Cardinal constant: " + cardCardinalEntry.getValue());
+            }
+        }
+
+        dealServiceRequest.persist(dealProxy).fire();
+    }
+
+    private List<Card> newArrayListOrEmpty(Iterable<Card> cards) {
+        if (cards == null)
+            return Collections.emptyList();
+        return newArrayList(cards);
     }
 
     private void refreshView() {

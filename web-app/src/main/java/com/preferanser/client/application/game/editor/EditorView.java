@@ -105,7 +105,7 @@ public class EditorView extends BaseTableView<EditorUiHandlers> implements Edito
     }
 
     @UiHandler("saveButton") void onSaveButtonClicked(@SuppressWarnings("unused") ClickEvent event) {
-        Window.alert("Saving of deals is not implemented yet!"); // TODO implement
+        getUiHandlers().saveDeal();
     }
 
     @UiHandler("dealButton") void onDealButtonClicked(@SuppressWarnings("unused") ClickEvent event) {

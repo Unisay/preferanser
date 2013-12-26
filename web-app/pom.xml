@@ -33,11 +33,28 @@
     <name>Preferanser Web Application</name>
     <description>Preferanser - GWTP application using Requestfactory and Spring using a servlet container</description>
 
+    <properties>
+        <objectify.version>4.0b3</objectify.version>
+        <appengine-api.version>1.8.8</appengine-api.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>com.preferanser</groupId>
             <artifactId>domain</artifactId>
             <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.appengine</groupId>
+            <artifactId>appengine-api-1.0-sdk</artifactId>
+            <version>${appengine-api.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.googlecode.objectify</groupId>
+            <artifactId>objectify</artifactId>
+            <version>${objectify.version}</version>
         </dependency>
 
         <!-- Google Web Toolkit dependencies -->
@@ -50,6 +67,11 @@
         <dependency>
             <groupId>com.google.web.bindery</groupId>
             <artifactId>requestfactory-server</artifactId>
+            <version>${gwt.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.web.bindery</groupId>
+            <artifactId>requestfactory-apt</artifactId>
             <version>${gwt.version}</version>
         </dependency>
 
@@ -84,13 +106,6 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- Hibernate dependencies -->
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-entitymanager</artifactId>
-            <version>${hibernate.version}</version>
-        </dependency>
-
         <!-- Hibernate validator dependencies -->
         <dependency>
             <groupId>org.hibernate</groupId>
@@ -114,46 +129,18 @@
             <artifactId>spring-aspects</artifactId>
             <version>${spring.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.data</groupId>
-            <artifactId>spring-data-jpa</artifactId>
-            <version>${spring-data.version}</version>
-        </dependency>
-
-        <!-- Spring Security dependencies -->
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-core</artifactId>
-            <version>${spring-security.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-web</artifactId>
-            <version>${spring-security.version}</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>spring-jdbc</artifactId>
-                    <groupId>org.springframework</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-config</artifactId>
-            <version>${spring-security.version}</version>
-        </dependency>
 
         <!-- Other dependencies -->
+        <dependency>
+            <groupId>javax.persistence</groupId>
+            <artifactId>persistence-api</artifactId>
+            <version>1.0</version>
+        </dependency>
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>servlet-api</artifactId>
             <version>${servlet-api.version}</version>
             <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.hsqldb</groupId>
-            <artifactId>hsqldb</artifactId>
-            <version>${hsqldb.version}</version>
         </dependency>
         <dependency>
             <groupId>org.json</groupId>

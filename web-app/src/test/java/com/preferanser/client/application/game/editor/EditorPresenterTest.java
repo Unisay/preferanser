@@ -23,6 +23,7 @@ import com.google.web.bindery.event.shared.EventBus;
 import com.preferanser.client.application.game.editor.dialog.contract.ContractDialogPresenter;
 import com.preferanser.client.application.game.editor.dialog.validation.ValidationDialogPresenter;
 import com.preferanser.client.place.PlaceManager;
+import com.preferanser.client.request.PreferanserRequestFactory;
 import com.preferanser.domain.*;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -74,13 +75,16 @@ public class EditorPresenterTest {
     @Mock
     private Map<Cardinal, Integer> cardinalTricks;
 
+    @Mock
+    private PreferanserRequestFactory requestFactory;
+
     private Cardinal turn;
 
     @BeforeMethod
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         when(gameBuilder.build()).thenReturn(game);
-        presenter = new EditorPresenter(placeManager, eventBus, view, proxy, gameBuilder, contractDialog, validationDialog);
+        presenter = new EditorPresenter(placeManager, eventBus, view, proxy, gameBuilder, contractDialog, validationDialog,requestFactory);
         turn = Cardinal.EAST;
 
         verify(view).setUiHandlers(presenter);

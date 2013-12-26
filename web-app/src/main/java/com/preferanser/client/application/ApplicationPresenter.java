@@ -26,6 +26,7 @@ import com.gwtplatform.mvp.client.Presenter;
 import com.gwtplatform.mvp.client.View;
 import com.gwtplatform.mvp.client.annotations.ContentSlot;
 import com.gwtplatform.mvp.client.annotations.ProxyStandard;
+import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.Proxy;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 
@@ -44,4 +45,5 @@ public class ApplicationPresenter
     public ApplicationPresenter(EventBus eventBus, ApplicationView view, ApplicationPresenterProxy proxy) {
         super(eventBus, view, proxy, RevealType.Root);
     }
+
 }

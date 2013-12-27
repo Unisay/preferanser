@@ -45,13 +45,13 @@ public abstract class BaseDao<T> {
         return ofy().query(clazz).list();
     }
 
-    public T put(T object) {
+    public T save(T object) {
         ofy().save().entity(object).now();
 
         return object;
     }
 
-    public Collection<T> put(Iterable<T> entities) {
+    public Collection<T> save(Iterable<T> entities) {
         return ofy().save().entities(entities).now().values();
     }
 

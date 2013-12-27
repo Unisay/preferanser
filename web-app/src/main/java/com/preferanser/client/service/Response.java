@@ -17,31 +17,29 @@
  *     along with this program.  If not, see [http://www.gnu.org/licenses/].
  */
 
-package com.preferanser.server.resource;
+package com.preferanser.client.service;
+
+import org.fusesource.restygwt.client.Method;
+import org.fusesource.restygwt.client.MethodCallback;
+
+import java.util.logging.Logger;
 
 /**
- * REST resource responsible for an authorization
+ * Service response adapter
+ *
+ * @author Yuriy Lazarev <ylazarev@groupon.com>
  */
+public abstract class Response<T> implements MethodCallback<T> {
 
-import com.google.inject.Inject;
-import com.preferanser.shared.dto.CurrentUserDto;
+    private static final Logger log = Logger.getLogger("Response");
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-
-@Path("/auth")
-public class AuthResource {
-
-    @Inject
-    private CurrentUserDtoProvider currentUserDtoProvider;
-
-    @GET
-    @Path("current")
-    @Produces(MediaType.APPLICATION_JSON)
-    public CurrentUserDto getCurrentUserInfo() {
-        return currentUserDtoProvider.get();
+    @Override public void onFailure(Method method, Throwable exception) {
+        log.severe("Backend exception: " + exception.getMessage());
     }
 
+    @Override public void onSuccess(Method method, T response) {
+        handle(response);
+    }
+
+    protected abstract void handle(T response);
 }

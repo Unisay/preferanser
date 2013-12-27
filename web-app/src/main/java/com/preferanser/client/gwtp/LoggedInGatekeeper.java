@@ -17,31 +17,25 @@
  *     along with this program.  If not, see [http://www.gnu.org/licenses/].
  */
 
-package com.preferanser.server.resource;
-
-/**
- * REST resource responsible for an authorization
- */
+package com.preferanser.client.gwtp;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
+import com.gwtplatform.mvp.client.proxy.Gatekeeper;
 import com.preferanser.shared.dto.CurrentUserDto;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
+@Singleton
+public class LoggedInGatekeeper implements Gatekeeper {
 
-@Path("/auth")
-public class AuthResource {
+    private final CurrentUserDto currentUser;
 
     @Inject
-    private CurrentUserDtoProvider currentUserDtoProvider;
-
-    @GET
-    @Path("current")
-    @Produces(MediaType.APPLICATION_JSON)
-    public CurrentUserDto getCurrentUserInfo() {
-        return currentUserDtoProvider.get();
+    public LoggedInGatekeeper(CurrentUserDto currentUser) {
+        this.currentUser = currentUser;
     }
 
+    @Override
+    public boolean canReveal() {
+        return currentUser.isLoggedIn;
+    }
 }

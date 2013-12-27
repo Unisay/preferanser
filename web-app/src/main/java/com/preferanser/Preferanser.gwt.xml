@@ -31,14 +31,14 @@
     <inherits name="com.google.gwt.text.Text"/>
     <inherits name="com.google.gwt.user.Debug"/>
     <inherits name="com.google.common.collect.Collect"/>
+    <inherits name="com.gwtplatform.mvp.MvpWithEntryPoint"/>
+    <inherits name="org.fusesource.restygwt.RestyGWT"/>
 
     <set-property name="gwt.logging.logLevel" value="FINEST"/>
     <set-property name="gwt.logging.enabled" value="TRUE"/>
     <set-property name="gwt.logging.consoleHandler" value="ENABLED"/>
     <set-property name="gwt.logging.firebugHandler" value="ENABLED"/>
     <set-property name="gwt.logging.popupHandler" value="DISABLED"/>
-
-    <inherits name="com.gwtplatform.mvp.MvpWithEntryPoint"/>
 
     <source path="client"/>
     <source path="shared"/>
@@ -48,5 +48,6 @@
     <!--Defines default locale-->
     <set-property-fallback name="locale" value="ru"/>
 
+    <set-configuration-property name="gwtp.bootstrapper" value="com.preferanser.client.gwtp.AuthBootstrapper"/>
     <set-configuration-property name="gin.ginjector.modules" value="com.preferanser.client.gin.ClientModule"/>
 </module>

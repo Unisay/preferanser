@@ -17,11 +17,24 @@
  *     along with this program.  If not, see [http://www.gnu.org/licenses/].
  */
 
-package com.preferanser.client.place;
+package com.preferanser.client.service;
 
-public class NameTokens {
-    public static final String ERROR = "error";
-    public static final String UNAUTHORIZED = "unauthorized";
-    public static final String GAME_EDITOR = "editor";
-    public static final String GAME_PLAYER = "player";
+import java.util.logging.Logger;
+
+/**
+ * Response that logs message
+ */
+public class LogResponse<T> extends Response<T> {
+
+    private final Logger logger;
+    private final String message;
+
+    public LogResponse(Logger logger, String message) {
+        this.logger = logger;
+        this.message = message;
+    }
+
+    @Override protected void handle(T response) {
+        logger.fine(message);
+    }
 }

@@ -24,11 +24,13 @@ import com.google.inject.Singleton;
 import com.google.inject.servlet.RequestScoped;
 import com.preferanser.server.resource.AuthResource;
 import com.preferanser.server.resource.CurrentUserDtoProvider;
+import com.preferanser.server.resource.DealResource;
 import com.preferanser.shared.dto.CurrentUserDto;
 
 public class RestModule extends AbstractModule {
 
     @Override protected void configure() {
+        bind(DealResource.class).in(Singleton.class);
         bind(AuthResource.class).in(Singleton.class);
         bind(CurrentUserDtoProvider.class).in(Singleton.class);
         bind(CurrentUserDto.class).toProvider(CurrentUserDtoProvider.class).in(RequestScoped.class);

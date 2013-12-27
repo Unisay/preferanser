@@ -37,7 +37,7 @@ public class PreferanserServletContextListener extends GuiceServletContextListen
         @Override protected void configureServlets() {
             bind(GuiceContainer.class);
             bind(JacksonJsonProvider.class).in(Scopes.SINGLETON);
-            serve("/*").with(GuiceContainer.class);
+            serve("/Preferanser/*").with(GuiceContainer.class);
         }
     }
 

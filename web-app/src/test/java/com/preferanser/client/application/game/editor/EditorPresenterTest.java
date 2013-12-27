@@ -20,9 +20,10 @@
 package com.preferanser.client.application.game.editor;
 
 import com.google.web.bindery.event.shared.EventBus;
+import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.preferanser.client.application.game.editor.dialog.contract.ContractDialogPresenter;
 import com.preferanser.client.application.game.editor.dialog.validation.ValidationDialogPresenter;
-import com.preferanser.client.place.PlaceManager;
+import com.preferanser.client.service.DealService;
 import com.preferanser.shared.domain.*;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -57,6 +58,9 @@ public class EditorPresenterTest {
     private ValidationDialogPresenter validationDialog;
 
     @Mock
+    private DealService dealService;
+
+    @Mock
     private GameBuilder gameBuilder;
 
     @Mock
@@ -80,7 +84,7 @@ public class EditorPresenterTest {
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         when(gameBuilder.build()).thenReturn(game);
-        presenter = new EditorPresenter(placeManager, eventBus, view, proxy, gameBuilder, contractDialog, validationDialog);
+        presenter = new EditorPresenter(placeManager, eventBus, view, proxy, gameBuilder, dealService, contractDialog, validationDialog);
         turn = Cardinal.EAST;
 
         verify(view).setUiHandlers(presenter);

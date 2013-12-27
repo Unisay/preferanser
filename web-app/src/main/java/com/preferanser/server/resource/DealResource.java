@@ -24,24 +24,28 @@ package com.preferanser.server.resource;
  */
 
 import com.google.inject.Inject;
-import com.preferanser.shared.dto.CurrentUserDto;
+import com.preferanser.server.dao.DealDao;
+import com.preferanser.shared.domain.entity.Deal;
 
-import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-@Path("/auth")
-public class AuthResource {
+@Path("/deal")
+public class DealResource {
+
+    private final DealDao dealDao;
 
     @Inject
-    private CurrentUserDtoProvider currentUserDtoProvider;
-
-    @GET
-    @Path("current")
-    @Produces(MediaType.APPLICATION_JSON)
-    public CurrentUserDto getCurrentUserInfo() {
-        return currentUserDtoProvider.get();
+    public DealResource(DealDao dealDao) {
+        this.dealDao = dealDao;
     }
 
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    public void save(Deal deal) {
+        // TODO: add user id
+        dealDao.save(deal);
+    }
 }

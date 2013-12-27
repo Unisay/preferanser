@@ -21,31 +21,35 @@ package com.preferanser.client.gin;
 
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
+import com.gwtplatform.mvp.client.Bootstrapper;
 import com.gwtplatform.mvp.client.annotations.DefaultPlace;
 import com.gwtplatform.mvp.client.annotations.ErrorPlace;
 import com.gwtplatform.mvp.client.annotations.UnauthorizedPlace;
 import com.gwtplatform.mvp.client.gin.AbstractPresenterModule;
 import com.gwtplatform.mvp.client.gin.DefaultModule;
-import com.gwtplatform.mvp.client.proxy.DefaultPlaceManager;
 import com.preferanser.client.application.ApplicationModule;
 import com.preferanser.client.application.ResourceLoader;
 import com.preferanser.client.application.i18n.I18nHelper;
-import com.preferanser.client.place.NameTokens;
+import com.preferanser.client.gwtp.AuthBootstrapper;
+import com.preferanser.client.gwtp.NameTokens;
 import com.preferanser.shared.domain.GameBuilder;
+import com.preferanser.shared.dto.CurrentUserDto;
 
 public class ClientModule extends AbstractPresenterModule {
 
     @Override
     protected void configure() {
-        install(new DefaultModule(DefaultPlaceManager.class));
+        install(new DefaultModule());
         install(new ApplicationModule());
 
         // DefaultPlaceManager Places
-        bindConstant().annotatedWith(ErrorPlace.class).to(NameTokens.ERROR);
         bindConstant().annotatedWith(DefaultPlace.class).to(NameTokens.GAME_EDITOR);
+        bindConstant().annotatedWith(ErrorPlace.class).to(NameTokens.ERROR);
         bindConstant().annotatedWith(UnauthorizedPlace.class).to(NameTokens.UNAUTHORIZED);
 
         bind(I18nHelper.class).asEagerSingleton();
+        bind(Bootstrapper.class).to(AuthBootstrapper.class).in(Singleton.class);
+        bind(CurrentUserDto.class).asEagerSingleton();
 
         bind(GameBuilder.class).toProvider(GameBuilderProvider.class).in(Singleton.class); // TODO: should be prototype scope
         bind(ResourceLoader.class).asEagerSingleton();

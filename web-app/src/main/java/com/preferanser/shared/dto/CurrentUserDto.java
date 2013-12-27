@@ -19,16 +19,18 @@
 
 package com.preferanser.shared.dto;
 
+import com.google.common.base.Objects;
+import com.preferanser.shared.domain.entity.BaseEntity;
 import com.preferanser.shared.domain.entity.User;
 
-public class CurrentUserDto implements Dto {
+public class CurrentUserDto extends BaseEntity implements Dto {
 
-    private Boolean isAdmin;
-    private Boolean isLoggedIn;
-    private User user;
-    private String logoutUrl;
-    private String loginUrl;
-    private String nickname;
+    public Boolean isAdmin;
+    public Boolean isLoggedIn;
+    public User user;
+    public String logoutUrl;
+    public String loginUrl;
+    public String nickname;
 
     public CurrentUserDto() {
         isAdmin = false;
@@ -43,42 +45,6 @@ public class CurrentUserDto implements Dto {
         this.user = user;
     }
 
-    public Boolean isAdmin() {
-        return isAdmin;
-    }
-
-    public Boolean isLoggedIn() {
-        return isLoggedIn;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setLogoutUrl(String logoutUrl) {
-        this.logoutUrl = logoutUrl;
-    }
-
-    public String getLogoutUrl() {
-        return logoutUrl;
-    }
-
-    public void setLoginUrl(String loginUrl) {
-        this.loginUrl = loginUrl;
-    }
-
-    public String getLoginUrl() {
-        return loginUrl;
-    }
-
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
-    }
-
-    public String getNickname() {
-        return nickname;
-    }
-
     public void copyFrom(CurrentUserDto currentUser) {
         isAdmin = currentUser.isAdmin;
         isLoggedIn = currentUser.isLoggedIn;
@@ -88,8 +54,14 @@ public class CurrentUserDto implements Dto {
         nickname = currentUser.nickname;
     }
 
-    public void setIsAdmin(Boolean isAdmin) {
-        this.isAdmin = isAdmin;
+    @Override public String toString() {
+        return Objects.toStringHelper(this)
+            .add("isAdmin", isAdmin)
+            .add("isLoggedIn", isLoggedIn)
+            .add("user", user)
+            .add("logoutUrl", logoutUrl)
+            .add("loginUrl", loginUrl)
+            .add("nickname", nickname)
+            .toString();
     }
-
 }

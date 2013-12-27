@@ -17,31 +17,23 @@
  *     along with this program.  If not, see [http://www.gnu.org/licenses/].
  */
 
-package com.preferanser.server.resource;
+package com.preferanser.client.service;
 
-/**
- * REST resource responsible for an authorization
- */
-
-import com.google.inject.Inject;
 import com.preferanser.shared.dto.CurrentUserDto;
+import org.fusesource.restygwt.client.MethodCallback;
+import org.fusesource.restygwt.client.RestService;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
 
+/**
+ * Client rest-client service responsible for the authentication
+ */
 @Path("/auth")
-public class AuthResource {
-
-    @Inject
-    private CurrentUserDtoProvider currentUserDtoProvider;
+@SuppressWarnings("VoidMethodAnnotatedWithGET")
+public interface AuthService extends RestService {
 
     @GET
-    @Path("current")
-    @Produces(MediaType.APPLICATION_JSON)
-    public CurrentUserDto getCurrentUserInfo() {
-        return currentUserDtoProvider.get();
-    }
+    @Path("/current") void getCurrentUser(MethodCallback<CurrentUserDto> callback);
 
 }

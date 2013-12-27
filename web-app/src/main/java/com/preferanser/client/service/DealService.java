@@ -17,31 +17,22 @@
  *     along with this program.  If not, see [http://www.gnu.org/licenses/].
  */
 
-package com.preferanser.server.resource;
+package com.preferanser.client.service;
+
+import com.preferanser.shared.domain.entity.Deal;
+import org.fusesource.restygwt.client.MethodCallback;
+import org.fusesource.restygwt.client.RestService;
+
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
 
 /**
- * REST resource responsible for an authorization
+ * Client rest-client service responsible for deal persistence
  */
+@Path("/deal")
+@SuppressWarnings("VoidMethodAnnotatedWithGET")
+public interface DealService extends RestService {
 
-import com.google.inject.Inject;
-import com.preferanser.shared.dto.CurrentUserDto;
-
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-
-@Path("/auth")
-public class AuthResource {
-
-    @Inject
-    private CurrentUserDtoProvider currentUserDtoProvider;
-
-    @GET
-    @Path("current")
-    @Produces(MediaType.APPLICATION_JSON)
-    public CurrentUserDto getCurrentUserInfo() {
-        return currentUserDtoProvider.get();
-    }
+    @POST void persist(Deal dto, MethodCallback<Void> callback);
 
 }

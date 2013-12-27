@@ -43,12 +43,12 @@ public class CurrentUserDtoProvider implements Provider<CurrentUserDto> {
         Boolean isLoggedIn = userService.isUserLoggedIn();
 
         CurrentUserDto currentUser = new CurrentUserDto(isLoggedIn, getUser(isLoggedIn));
-        currentUser.setLogoutUrl(userService.createLogoutURL("/"));
-        currentUser.setLoginUrl(userService.createLoginURL("/"));
+        currentUser.logoutUrl = userService.createLogoutURL("/");
+        currentUser.loginUrl = userService.createLoginURL("/");
 
         if (isLoggedIn) {
-            currentUser.setIsAdmin(userService.isUserAdmin());
-            currentUser.setNickname(userService.getCurrentUser().getNickname());
+            currentUser.isAdmin = userService.isUserAdmin();
+            currentUser.nickname = userService.getCurrentUser().getNickname();
         }
 
         return currentUser;
@@ -63,7 +63,7 @@ public class CurrentUserDtoProvider implements Provider<CurrentUserDto> {
             if (user == null) {
                 user = new User();
                 user.setGoogleId(googleId);
-                user = userDao.put(user);
+                user = userDao.save(user);
             }
         }
         return user;

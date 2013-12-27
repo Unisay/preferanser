@@ -17,31 +17,15 @@
  *     along with this program.  If not, see [http://www.gnu.org/licenses/].
  */
 
-package com.preferanser.server.resource;
+package com.preferanser.server.dao;
 
-/**
- * REST resource responsible for an authorization
- */
 
-import com.google.inject.Inject;
-import com.preferanser.shared.dto.CurrentUserDto;
+import com.preferanser.shared.domain.entity.Deal;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
+public class DealDao extends BaseDao<Deal> {
 
-@Path("/auth")
-public class AuthResource {
-
-    @Inject
-    private CurrentUserDtoProvider currentUserDtoProvider;
-
-    @GET
-    @Path("current")
-    @Produces(MediaType.APPLICATION_JSON)
-    public CurrentUserDto getCurrentUserInfo() {
-        return currentUserDtoProvider.get();
+    public DealDao() {
+        super(Deal.class);
     }
 
 }

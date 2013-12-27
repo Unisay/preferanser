@@ -17,31 +17,18 @@
  *     along with this program.  If not, see [http://www.gnu.org/licenses/].
  */
 
-package com.preferanser.server.resource;
+package com.preferanser.client.application.game.unauthorized;
 
-/**
- * REST resource responsible for an authorization
- */
+import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.Label;
+import com.gwtplatform.mvp.client.ViewImpl;
 
-import com.google.inject.Inject;
-import com.preferanser.shared.dto.CurrentUserDto;
+public class UnauthorizedView extends ViewImpl implements UnauthorizedPresenter.TheView {
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-
-@Path("/auth")
-public class AuthResource {
-
-    @Inject
-    private CurrentUserDtoProvider currentUserDtoProvider;
-
-    @GET
-    @Path("current")
-    @Produces(MediaType.APPLICATION_JSON)
-    public CurrentUserDto getCurrentUserInfo() {
-        return currentUserDtoProvider.get();
+    public UnauthorizedView() {
+        FlowPanel panel = new FlowPanel();
+        panel.add(new Label("UNAUTHORIZED"));
+        initWidget(panel);
     }
 
 }

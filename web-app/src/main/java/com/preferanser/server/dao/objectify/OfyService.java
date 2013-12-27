@@ -22,12 +22,14 @@ package com.preferanser.server.dao.objectify;
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyFactory;
 import com.googlecode.objectify.ObjectifyService;
+import com.preferanser.shared.domain.entity.Deal;
 import com.preferanser.shared.domain.entity.User;
 
 public class OfyService {
 
     static {
         factory().register(User.class);
+        factory().register(Deal.class);
     }
 
     public static Objectify ofy() {

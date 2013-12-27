@@ -17,32 +17,41 @@
  *     along with this program.  If not, see [http://www.gnu.org/licenses/].
  */
 
-package com.preferanser.client.application;
+package com.preferanser.client.application.game.unauthorized;
 
-import com.google.gwt.event.shared.GwtEvent.Type;
+import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.Presenter;
 import com.gwtplatform.mvp.client.View;
-import com.gwtplatform.mvp.client.annotations.ContentSlot;
+import com.gwtplatform.mvp.client.annotations.NameToken;
+import com.gwtplatform.mvp.client.annotations.NoGatekeeper;
 import com.gwtplatform.mvp.client.annotations.ProxyStandard;
-import com.gwtplatform.mvp.client.proxy.Proxy;
-import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
+import com.gwtplatform.mvp.client.proxy.ProxyPlace;
+import com.preferanser.client.application.ApplicationPresenter;
+import com.preferanser.client.gwtp.NameTokens;
+import com.preferanser.shared.dto.CurrentUserDto;
 
-public class ApplicationPresenter
-    extends Presenter<ApplicationPresenter.TheView, ApplicationPresenter.TheProxy> {
+/**
+ * Presenter for the unauthorized page
+ */
+public class UnauthorizedPresenter extends Presenter<UnauthorizedPresenter.TheView, UnauthorizedPresenter.TheProxy> {
 
+    @NoGatekeeper
+    @ProxyStandard
+    @NameToken(NameTokens.UNAUTHORIZED)
+    public interface TheProxy extends ProxyPlace<UnauthorizedPresenter> {}
     public interface TheView extends View {}
 
-    @ContentSlot
-    public static final Type<RevealContentHandler<?>> TYPE_SetMainContent = new Type<RevealContentHandler<?>>();
-
-    @ProxyStandard
-    public interface TheProxy extends Proxy<ApplicationPresenter> {}
+    private final CurrentUserDto currentUserDto;
 
     @Inject
-    public ApplicationPresenter(EventBus eventBus, TheView view, TheProxy proxy) {
-        super(eventBus, view, proxy, RevealType.Root);
+    public UnauthorizedPresenter(EventBus eventBus, TheView view, TheProxy proxy, CurrentUserDto currentUserDto) {
+        super(eventBus, view, proxy, ApplicationPresenter.TYPE_SetMainContent);
+        this.currentUserDto = currentUserDto;
     }
 
+    @Override protected void onReveal() {
+        Window.Location.assign(currentUserDto.loginUrl);
+    }
 }

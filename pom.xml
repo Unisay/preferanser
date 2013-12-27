@@ -29,7 +29,6 @@
     <name>Preferanser Root POM</name>
 
     <modules>
-        <module>domain</module>
         <module>web-app</module>
         <module>web-test</module>
     </modules>

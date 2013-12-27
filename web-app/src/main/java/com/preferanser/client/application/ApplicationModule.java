@@ -20,28 +20,40 @@
 package com.preferanser.client.application;
 
 import com.gwtplatform.mvp.client.gin.AbstractPresenterModule;
-import com.preferanser.client.application.game.ErrorPresenter;
-import com.preferanser.client.application.game.ErrorView;
 import com.preferanser.client.application.game.editor.EditorModule;
+import com.preferanser.client.application.game.error.ErrorPresenter;
+import com.preferanser.client.application.game.error.ErrorView;
 import com.preferanser.client.application.game.player.PlayerModule;
+import com.preferanser.client.application.game.unauthorized.UnauthorizedPresenter;
+import com.preferanser.client.application.game.unauthorized.UnauthorizedView;
 
 public class ApplicationModule extends AbstractPresenterModule {
 
     @Override
+    @SuppressWarnings("OverlyCoupledMethod")
     protected void configure() {
         install(new PlayerModule());
         install(new EditorModule());
+
         bindPresenter(
-                ErrorPresenter.class,
-                ErrorPresenter.ErrorView.class,
-                ErrorView.class,
-                ErrorPresenter.Proxy.class
+            UnauthorizedPresenter.class,
+            UnauthorizedPresenter.TheView.class,
+            UnauthorizedView.class,
+            UnauthorizedPresenter.TheProxy.class
         );
+
         bindPresenter(
-                ApplicationPresenter.class,
-                ApplicationPresenter.ApplicationView.class,
-                ApplicationView.class,
-                ApplicationPresenter.ApplicationPresenterProxy.class
+            ErrorPresenter.class,
+            ErrorPresenter.TheView.class,
+            ErrorView.class,
+            ErrorPresenter.TheProxy.class
+        );
+
+        bindPresenter(
+            ApplicationPresenter.class,
+            ApplicationPresenter.TheView.class,
+            ApplicationView.class,
+            ApplicationPresenter.TheProxy.class
         );
     }
 

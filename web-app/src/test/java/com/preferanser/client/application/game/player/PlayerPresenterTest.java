@@ -20,8 +20,8 @@
 package com.preferanser.client.application.game.player;
 
 import com.google.web.bindery.event.shared.EventBus;
+import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.preferanser.client.application.game.GameBuiltEvent;
-import com.preferanser.client.place.PlaceManager;
 import com.preferanser.shared.domain.*;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;

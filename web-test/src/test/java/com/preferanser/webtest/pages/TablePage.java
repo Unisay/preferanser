@@ -36,6 +36,7 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 
 import static com.google.common.base.Optional.absent;
+import static java.lang.String.format;
 
 /**
  * Table page

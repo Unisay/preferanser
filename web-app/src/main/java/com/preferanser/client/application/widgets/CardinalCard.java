@@ -21,7 +21,7 @@ package com.preferanser.client.application.widgets;
 
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
-import com.preferanser.domain.Cardinal;
+import com.preferanser.shared.domain.Cardinal;
 
 public class CardinalCard implements IsWidget {
 

@@ -29,7 +29,7 @@ import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.PopupViewWithUiHandlers;
 import com.preferanser.client.application.i18n.PreferanserConstants;
 import com.preferanser.client.application.widgets.UlListPanel;
-import com.preferanser.domain.GameBuilder;
+import com.preferanser.shared.domain.GameBuilder;
 
 import java.util.Collection;
 

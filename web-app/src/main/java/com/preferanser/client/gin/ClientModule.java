@@ -19,11 +19,8 @@
 
 package com.preferanser.client.gin;
 
-import com.google.gwt.core.client.GWT;
-import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
-import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.annotations.DefaultPlace;
 import com.gwtplatform.mvp.client.annotations.ErrorPlace;
 import com.gwtplatform.mvp.client.annotations.UnauthorizedPlace;
@@ -34,7 +31,7 @@ import com.preferanser.client.application.ApplicationModule;
 import com.preferanser.client.application.ResourceLoader;
 import com.preferanser.client.application.i18n.I18nHelper;
 import com.preferanser.client.place.NameTokens;
-import com.preferanser.domain.GameBuilder;
+import com.preferanser.shared.domain.GameBuilder;
 
 public class ClientModule extends AbstractPresenterModule {
 

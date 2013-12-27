@@ -20,10 +20,10 @@
 package com.preferanser.webtest.steps;
 
 import com.google.common.base.Optional;
-import com.preferanser.domain.Card;
-import com.preferanser.domain.Cardinal;
-import com.preferanser.domain.Contract;
-import com.preferanser.domain.TableLocation;
+import com.preferanser.shared.domain.Card;
+import com.preferanser.shared.domain.Cardinal;
+import com.preferanser.shared.domain.Contract;
+import com.preferanser.shared.domain.TableLocation;
 import com.preferanser.webtest.pages.TablePage;
 import net.thucydides.core.annotations.Step;
 import net.thucydides.core.pages.Pages;
@@ -33,7 +33,6 @@ import org.hamcrest.collection.IsEmptyCollection;
 import org.openqa.selenium.interactions.HasInputDevices;
 import org.openqa.selenium.interactions.Mouse;
 
-import static java.lang.String.format;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
@@ -58,10 +57,10 @@ public class EndUserSteps extends ScenarioSteps {
             Optional<WebElementFacade> maybeCardAtTableLocationElement = page.getCardAtTableLocationElement(card, location);
 
             assertTrue(format("Can't find card %s at location %s", card, location),
-                    maybeCardAtTableLocationElement.isPresent());
+                maybeCardAtTableLocationElement.isPresent());
 
             assertTrue(format("Card %s is not visible at location %s", card, location),
-                    maybeCardAtTableLocationElement.get().isCurrentlyVisible());
+                maybeCardAtTableLocationElement.get().isCurrentlyVisible());
         }
         return this;
     }

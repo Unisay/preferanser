@@ -20,7 +20,6 @@
 
 <module rename-to='Preferanser'>
 
-    <inherits name="com.preferanser.Domain"/>
     <inherits name="com.preferanser.client.theme.greencloth.GreenCloth"/>
     <inherits name="com.google.gwt.user.User"/>
     <inherits name="com.google.gwt.inject.Inject"/>
@@ -42,6 +41,7 @@
     <inherits name="com.gwtplatform.mvp.MvpWithEntryPoint"/>
 
     <source path="client"/>
+    <source path="shared"/>
 
     <!--Defines all possible locales we'll use-->
     <extend-property name="locale" values="en,ru"/>

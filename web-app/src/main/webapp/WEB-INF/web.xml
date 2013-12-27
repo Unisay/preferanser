@@ -26,7 +26,7 @@
     <display-name>Preferanser</display-name>
 
     <listener>
-        <listener-class>foo.MyGuiceConfig</listener-class>
+        <listener-class>com.preferanser.server.guice.PreferanserServletContextListener</listener-class>
     </listener>
 
     <filter>

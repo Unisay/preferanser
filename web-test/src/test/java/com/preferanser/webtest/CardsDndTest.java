@@ -19,15 +19,15 @@
 
 package com.preferanser.webtest;
 
-import com.preferanser.domain.Card;
-import com.preferanser.domain.TableLocation;
+import com.preferanser.shared.domain.Card;
+import com.preferanser.shared.domain.TableLocation;
 import com.preferanser.webtest.requirements.Application;
 import net.thucydides.core.annotations.Story;
 import org.apache.commons.lang3.ArrayUtils;
 import org.junit.Test;
 
-import static com.preferanser.domain.Card.*;
-import static com.preferanser.domain.TableLocation.*;
+import static com.preferanser.shared.domain.Card.*;
+import static com.preferanser.shared.domain.TableLocation.*;
 
 @Story(Application.Table.Cards.DragAndDrop.class)
 public class CardsDndTest extends TableTest {
@@ -54,10 +54,10 @@ public class CardsDndTest extends TableTest {
 
     private void user_can_drag_card_to_location(Card card, TableLocation fromLocation, TableLocation toLocation) {
         endUser.onTheTablePage()
-                .editsNewDeal()
-                .dragsCardToOtherLocation(card, fromLocation, toLocation)
-                .canSeeCardsAt(toLocation, card)
-                .canSeeNoCardsAt(ArrayUtils.removeElements(TableLocation.values(), toLocation, fromLocation));
+            .editsNewDeal()
+            .dragsCardToOtherLocation(card, fromLocation, toLocation)
+            .canSeeCardsAt(toLocation, card)
+            .canSeeNoCardsAt(ArrayUtils.removeElements(TableLocation.values(), toLocation, fromLocation));
     }
 
 

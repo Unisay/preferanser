@@ -34,8 +34,9 @@ import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.preferanser.client.application.ApplicationPresenter;
 import com.preferanser.client.application.game.GameBuiltEvent;
 import com.preferanser.client.place.NameTokens;
-import com.preferanser.domain.*;
-import com.preferanser.domain.exception.GameException;
+import com.preferanser.shared.domain.*;
+import com.preferanser.shared.domain.exception.GameException;
+import com.preferanser.shared.util.GameUtils;
 
 import java.util.Collection;
 import java.util.Map;

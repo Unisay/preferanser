@@ -20,8 +20,8 @@
 package com.preferanser.client.application.game.editor;
 
 
-import com.preferanser.domain.Cardinal;
-import com.preferanser.domain.Contract;
+import com.preferanser.shared.domain.Cardinal;
+import com.preferanser.shared.domain.Contract;
 
 public interface HasCardinalContracts {
 

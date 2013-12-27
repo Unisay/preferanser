@@ -22,7 +22,7 @@ package com.preferanser.client.application.game;
 import com.google.common.base.Preconditions;
 import com.google.gwt.resources.client.ImageResource;
 import com.preferanser.client.theme.greencloth.client.com.preferanser.client.application.PreferanserResources;
-import com.preferanser.domain.Card;
+import com.preferanser.shared.domain.Card;
 
 /**
  * Returns image resource by card.

@@ -37,11 +37,12 @@ import com.preferanser.client.application.game.TableView;
 import com.preferanser.client.application.game.editor.dialog.contract.ContractDialogPresenter;
 import com.preferanser.client.application.game.editor.dialog.validation.ValidationDialogPresenter;
 import com.preferanser.client.place.NameTokens;
-import com.preferanser.domain.*;
-import com.preferanser.domain.exception.GameBuilderException;
-import com.preferanser.domain.exception.GameException;
+import com.preferanser.shared.domain.*;
+import com.preferanser.shared.domain.exception.GameBuilderException;
+import com.preferanser.shared.domain.exception.GameException;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
 import java.util.logging.Logger;
 
 import static com.google.common.collect.Lists.newArrayList;
@@ -51,7 +52,7 @@ import static com.google.common.collect.Lists.newArrayList;
  * Table presenter
  */
 public class EditorPresenter extends Presenter<EditorPresenter.EditorView, EditorPresenter.Proxy>
-        implements EditorUiHandlers, HasCardinalContracts {
+    implements EditorUiHandlers, HasCardinalContracts {
 
     private static final Logger log = Logger.getLogger("EditorPresenter");
 
@@ -98,14 +99,14 @@ public class EditorPresenter extends Presenter<EditorPresenter.EditorView, Edito
         // TODO: remove deal initialization once deal loading is done
         maybeGame = Optional.absent();
         gameBuilder = new GameBuilder()
-                .setThreePlayers()
-                .setFirstTurn(Cardinal.NORTH)
-                .setCardinalContract(Cardinal.NORTH, Contract.SEVEN_SPADE)
-                .setCardinalContract(Cardinal.EAST, Contract.WHIST)
-                .setCardinalContract(Cardinal.WEST, Contract.PASS)
-                .putCards(Cardinal.NORTH, newArrayList(Card.values()).subList(0, 10))
-                .putCards(Cardinal.EAST, newArrayList(Card.values()).subList(10, 20))
-                .putCards(Cardinal.WEST, newArrayList(Card.values()).subList(20, 30));
+            .setThreePlayers()
+            .setFirstTurn(Cardinal.NORTH)
+            .setCardinalContract(Cardinal.NORTH, Contract.SEVEN_SPADE)
+            .setCardinalContract(Cardinal.EAST, Contract.WHIST)
+            .setCardinalContract(Cardinal.WEST, Contract.PASS)
+            .putCards(Cardinal.NORTH, newArrayList(Card.values()).subList(0, 10))
+            .putCards(Cardinal.EAST, newArrayList(Card.values()).subList(10, 20))
+            .putCards(Cardinal.WEST, newArrayList(Card.values()).subList(20, 30));
         refreshView();
     }
 

@@ -32,10 +32,9 @@ import com.preferanser.client.application.game.BaseTableView;
 import com.preferanser.client.application.i18n.I18nHelper;
 import com.preferanser.client.application.i18n.PreferanserConstants;
 import com.preferanser.client.application.widgets.TurnPointer;
-import com.preferanser.client.application.widgets.Widgets;
 import com.preferanser.client.theme.greencloth.client.com.preferanser.client.application.PreferanserResources;
-import com.preferanser.domain.Cardinal;
-import com.preferanser.domain.Contract;
+import com.preferanser.shared.domain.Cardinal;
+import com.preferanser.shared.domain.Contract;
 
 import java.util.logging.Logger;
 

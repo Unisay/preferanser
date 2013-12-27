@@ -21,9 +21,9 @@ package com.preferanser.client.application.i18n;
 
 import com.google.common.base.Optional;
 import com.google.inject.Inject;
-import com.preferanser.domain.Cardinal;
-import com.preferanser.domain.Contract;
-import com.preferanser.domain.Suit;
+import com.preferanser.shared.domain.Cardinal;
+import com.preferanser.shared.domain.Contract;
+import com.preferanser.shared.domain.Suit;
 
 /**
  * @author Yuriy Lazarev <ylazarev@groupon.com>

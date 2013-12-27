@@ -20,7 +20,7 @@
 package com.preferanser.client.application.game.editor;
 
 import com.preferanser.client.application.game.TableUiHandlers;
-import com.preferanser.domain.Cardinal;
+import com.preferanser.shared.domain.Cardinal;
 
 /**
  * Game builder UI handlers
@@ -42,7 +42,7 @@ public interface EditorUiHandlers extends TableUiHandlers {
     void chooseTurn(Cardinal cardinal);
 
     /**
-     *  Switch to player page
+     * Switch to player page
      */
     void switchToPlayer();
 

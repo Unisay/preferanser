@@ -24,8 +24,10 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.*;
+import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.preferanser.client.application.game.BaseTableView;
 import com.preferanser.client.application.i18n.I18nHelper;
@@ -33,8 +35,8 @@ import com.preferanser.client.application.i18n.PreferanserConstants;
 import com.preferanser.client.application.widgets.CardWidget;
 import com.preferanser.client.application.widgets.TurnPointer;
 import com.preferanser.client.theme.greencloth.client.com.preferanser.client.application.PreferanserResources;
-import com.preferanser.domain.Cardinal;
-import com.preferanser.domain.Contract;
+import com.preferanser.shared.domain.Cardinal;
+import com.preferanser.shared.domain.Contract;
 
 import java.util.Map;
 import java.util.logging.Logger;
@@ -71,6 +73,7 @@ public class EditorView extends BaseTableView<EditorUiHandlers> implements Edito
             });
         }
     }
+
     @Override protected void displayCardinalContract(Cardinal cardinal, Contract contract) {
         getCardinalContractTextHolder(cardinal).setText(i18nHelper.getContractName(contract));
     }

@@ -25,8 +25,8 @@ import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.PopupView;
 import com.gwtplatform.mvp.client.PresenterWidget;
 import com.preferanser.client.application.game.editor.HasCardinalContracts;
-import com.preferanser.domain.Cardinal;
-import com.preferanser.domain.Contract;
+import com.preferanser.shared.domain.Cardinal;
+import com.preferanser.shared.domain.Contract;
 
 public class ContractDialogPresenter extends PresenterWidget<ContractDialogPresenter.MyView> implements ContractDialogUiHandlers {
 

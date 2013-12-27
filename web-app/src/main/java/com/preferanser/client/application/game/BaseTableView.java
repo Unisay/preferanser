@@ -38,10 +38,10 @@ import com.preferanser.client.application.widgets.TurnPointer;
 import com.preferanser.client.geom.Point;
 import com.preferanser.client.geom.Rect;
 import com.preferanser.client.theme.greencloth.client.com.preferanser.client.application.PreferanserResources;
-import com.preferanser.domain.Card;
-import com.preferanser.domain.Cardinal;
-import com.preferanser.domain.Contract;
-import com.preferanser.domain.TableLocation;
+import com.preferanser.shared.domain.Card;
+import com.preferanser.shared.domain.Cardinal;
+import com.preferanser.shared.domain.Contract;
+import com.preferanser.shared.domain.TableLocation;
 
 import javax.annotation.Nullable;
 import java.util.Collection;

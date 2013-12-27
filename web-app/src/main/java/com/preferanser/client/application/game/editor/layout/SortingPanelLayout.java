@@ -23,9 +23,9 @@ import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import com.google.gwt.user.client.ui.Panel;
 import com.preferanser.client.application.widgets.CardWidget;
-import com.preferanser.domain.Card;
-import com.preferanser.domain.Rank;
-import com.preferanser.domain.Suit;
+import com.preferanser.shared.domain.Card;
+import com.preferanser.shared.domain.Rank;
+import com.preferanser.shared.domain.Suit;
 
 import javax.annotation.Nullable;
 import java.util.Collection;

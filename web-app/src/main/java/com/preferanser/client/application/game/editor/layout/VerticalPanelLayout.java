@@ -21,8 +21,8 @@ package com.preferanser.client.application.game.editor.layout;
 
 import com.google.gwt.user.client.ui.Panel;
 import com.preferanser.client.application.widgets.CardWidget;
-import com.preferanser.domain.Card;
-import com.preferanser.domain.Suit;
+import com.preferanser.shared.domain.Card;
+import com.preferanser.shared.domain.Suit;
 
 import java.util.*;
 

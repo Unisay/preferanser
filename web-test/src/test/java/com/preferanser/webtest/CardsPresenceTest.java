@@ -19,12 +19,12 @@
 
 package com.preferanser.webtest;
 
-import com.preferanser.domain.Card;
+import com.preferanser.shared.domain.Card;
 import com.preferanser.webtest.requirements.Application;
 import net.thucydides.core.annotations.Story;
 import org.junit.Test;
 
-import static com.preferanser.domain.TableLocation.*;
+import static com.preferanser.shared.domain.TableLocation.*;
 
 @Story(Application.Table.Cards.Presence.class)
 public class CardsPresenceTest extends TableTest {
@@ -32,8 +32,8 @@ public class CardsPresenceTest extends TableTest {
     @Test
     public void allCardsShouldBePresentOnNorth() {
         endUser.onTheTablePage()
-                .canSeeCardsAt(NORTH, Card.values())
-                .canSeeNoCardsAt(EAST, SOUTH, WEST);
+            .canSeeCardsAt(NORTH, Card.values())
+            .canSeeNoCardsAt(EAST, SOUTH, WEST);
     }
 
 }

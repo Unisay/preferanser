@@ -24,7 +24,7 @@ import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.PopupView;
 import com.gwtplatform.mvp.client.PresenterWidget;
-import com.preferanser.domain.GameBuilder;
+import com.preferanser.shared.domain.GameBuilder;
 
 import java.util.Collection;
 

@@ -21,7 +21,7 @@ package com.preferanser.client.application.game.editor.layout;
 
 import com.google.gwt.user.client.ui.Panel;
 import com.preferanser.client.application.widgets.CardWidget;
-import com.preferanser.domain.Card;
+import com.preferanser.shared.domain.Card;
 
 import java.util.Collection;
 import java.util.List;
@@ -72,8 +72,8 @@ public class HorizontalLayout extends SortingPanelLayout<CardWidget> {
     @Override
     protected int getDeltaX(CardWidget prev, CardWidget next) {
         return prev.getCard().getSuit() == next.getCard().getSuit()
-                ? sameSuitOffsetX
-                : diffSuitOffsetX;
+            ? sameSuitOffsetX
+            : diffSuitOffsetX;
     }
 
     private int getCardsWidth() {

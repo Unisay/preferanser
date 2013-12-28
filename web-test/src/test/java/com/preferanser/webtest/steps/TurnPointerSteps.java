@@ -16,9 +16,10 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see [http://www.gnu.org/licenses/].
  */
+
 package com.preferanser.webtest.steps;
 
-import com.preferanser.domain.Cardinal;
+import com.preferanser.shared.domain.Cardinal;
 import com.preferanser.webtest.pages.TablePage;
 import net.thucydides.core.annotations.Step;
 import net.thucydides.core.steps.ScenarioSteps;

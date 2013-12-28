@@ -23,7 +23,7 @@ import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HasHandlers;
 import com.google.web.bindery.event.shared.HandlerRegistration;
-import com.preferanser.domain.Game;
+import com.preferanser.shared.domain.Game;
 
 public class GameBuiltEvent extends GwtEvent<GameBuiltEvent.GameBuiltHandler> {
 

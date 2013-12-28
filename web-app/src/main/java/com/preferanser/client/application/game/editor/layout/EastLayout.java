@@ -21,8 +21,8 @@ package com.preferanser.client.application.game.editor.layout;
 
 import com.google.gwt.user.client.ui.Panel;
 import com.preferanser.client.application.widgets.CardWidget;
-import com.preferanser.domain.Card;
-import com.preferanser.domain.Rank;
+import com.preferanser.shared.domain.Card;
+import com.preferanser.shared.domain.Rank;
 
 public class EastLayout extends VerticalPanelLayout<CardWidget> {
 

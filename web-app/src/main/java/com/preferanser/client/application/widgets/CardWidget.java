@@ -24,7 +24,7 @@ import com.google.gwt.event.dom.client.DragStartHandler;
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.user.client.ui.Image;
-import com.preferanser.domain.Card;
+import com.preferanser.shared.domain.Card;
 
 public class CardWidget extends Image {
 

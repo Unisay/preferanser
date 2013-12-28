@@ -20,10 +20,10 @@
 package com.preferanser.webtest.pages;
 
 import com.google.common.base.Optional;
-import com.preferanser.domain.Card;
-import com.preferanser.domain.Cardinal;
-import com.preferanser.domain.Contract;
-import com.preferanser.domain.TableLocation;
+import com.preferanser.shared.domain.Card;
+import com.preferanser.shared.domain.Cardinal;
+import com.preferanser.shared.domain.Contract;
+import com.preferanser.shared.domain.TableLocation;
 import net.thucydides.core.annotations.At;
 import net.thucydides.core.pages.WebElementFacade;
 import org.openqa.selenium.By;

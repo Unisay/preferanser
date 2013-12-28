@@ -26,6 +26,7 @@ import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.Presenter;
 import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.ProxyStandard;
+import com.gwtplatform.mvp.client.annotations.UseGatekeeper;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
@@ -35,10 +36,14 @@ import com.preferanser.client.application.game.GameBuiltEvent;
 import com.preferanser.client.application.game.TableView;
 import com.preferanser.client.application.game.editor.dialog.contract.ContractDialogPresenter;
 import com.preferanser.client.application.game.editor.dialog.validation.ValidationDialogPresenter;
-import com.preferanser.client.place.NameTokens;
-import com.preferanser.domain.*;
-import com.preferanser.domain.exception.GameBuilderException;
-import com.preferanser.domain.exception.GameException;
+import com.preferanser.client.gwtp.LoggedInGatekeeper;
+import com.preferanser.client.gwtp.NameTokens;
+import com.preferanser.client.service.DealService;
+import com.preferanser.client.service.LogResponse;
+import com.preferanser.shared.domain.*;
+import com.preferanser.shared.domain.entity.Deal;
+import com.preferanser.shared.domain.exception.GameBuilderException;
+import com.preferanser.shared.domain.exception.GameException;
 
 import java.util.logging.Logger;
 
@@ -59,12 +64,14 @@ public class EditorPresenter extends Presenter<EditorPresenter.EditorView, Edito
 
     private Optional<Game> maybeGame;
     private GameBuilder gameBuilder;
-    private PlaceManager placeManager;
-    private ContractDialogPresenter contractDialog;
-    private ValidationDialogPresenter validationDialog;
+    private final PlaceManager placeManager;
+    private final DealService dealService;
+    private final ContractDialogPresenter contractDialog;
+    private final ValidationDialogPresenter validationDialog;
 
     @ProxyStandard
     @NameToken(NameTokens.GAME_EDITOR)
+    @UseGatekeeper(LoggedInGatekeeper.class)
     public interface Proxy extends ProxyPlace<EditorPresenter> {}
 
     @Inject
@@ -73,11 +80,13 @@ public class EditorPresenter extends Presenter<EditorPresenter.EditorView, Edito
                            EditorView view,
                            Proxy proxy,
                            GameBuilder gameBuilder,
+                           DealService dealService,
                            ContractDialogPresenter contractDialog,
                            ValidationDialogPresenter validationDialog) {
         super(eventBus, view, proxy, ApplicationPresenter.TYPE_SetMainContent);
         this.placeManager = placeManager;
         this.gameBuilder = gameBuilder;
+        this.dealService = dealService;
         this.contractDialog = contractDialog;
         this.contractDialog.setHasCardinalContracts(this);
         this.validationDialog = validationDialog;
@@ -127,13 +136,11 @@ public class EditorPresenter extends Presenter<EditorPresenter.EditorView, Edito
 
         try {
             gameBuilder.moveCard(card, oldLocation, newLocation);
+            refreshView();
         } catch (GameException e) {
             log.finer(e.getMessage());
             refreshCards();
-            return;
         }
-
-        refreshView();
     }
 
     @Override
@@ -154,6 +161,11 @@ public class EditorPresenter extends Presenter<EditorPresenter.EditorView, Edito
             validationDialog.setValidationErrors(e.getBuilderErrors());
             RevealRootPopupContentEvent.fire(this, validationDialog);
         }
+    }
+
+    @Override public void saveDeal() {
+        Deal deal = Deal.fromGameBuilder(gameBuilder);
+        dealService.persist(deal, new LogResponse<Void>(log, "Deal persisted"));
     }
 
     private void refreshView() {

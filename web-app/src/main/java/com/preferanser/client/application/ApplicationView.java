@@ -27,7 +27,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewImpl;
 
-public class ApplicationView extends ViewImpl implements ApplicationPresenter.ApplicationView {
+public class ApplicationView extends ViewImpl implements ApplicationPresenter.TheView {
 
     public interface Binder extends UiBinder<Widget, ApplicationView> {}
 

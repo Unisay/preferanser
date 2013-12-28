@@ -32,14 +32,14 @@ import com.google.gwt.user.client.ui.*;
 import com.preferanser.client.application.game.editor.layout.*;
 import com.preferanser.client.application.game.editor.style.TableStyle;
 import com.preferanser.client.theme.greencloth.client.com.preferanser.client.application.PreferanserResources;
-import com.preferanser.domain.TableLocation;
+import com.preferanser.shared.domain.TableLocation;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
 
 import static com.google.common.collect.Iterables.transform;
 import static com.google.common.collect.Lists.newArrayList;
-import static com.preferanser.domain.TableLocation.*;
+import static com.preferanser.shared.domain.TableLocation.*;
 
 public class TablePanel extends Composite {
 

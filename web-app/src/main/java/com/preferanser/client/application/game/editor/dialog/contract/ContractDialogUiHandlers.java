@@ -20,7 +20,7 @@
 package com.preferanser.client.application.game.editor.dialog.contract;
 
 import com.gwtplatform.mvp.client.UiHandlers;
-import com.preferanser.domain.Contract;
+import com.preferanser.shared.domain.Contract;
 
 public interface ContractDialogUiHandlers extends UiHandlers {
     boolean setContract(Contract contract);

@@ -30,18 +30,19 @@ import com.gwtplatform.mvp.client.proxy.Proxy;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 
 public class ApplicationPresenter
-        extends Presenter<ApplicationPresenter.ApplicationView, ApplicationPresenter.ApplicationPresenterProxy> {
+    extends Presenter<ApplicationPresenter.TheView, ApplicationPresenter.TheProxy> {
 
-    public interface ApplicationView extends View {}
+    public interface TheView extends View {}
 
     @ContentSlot
     public static final Type<RevealContentHandler<?>> TYPE_SetMainContent = new Type<RevealContentHandler<?>>();
 
     @ProxyStandard
-    public interface ApplicationPresenterProxy extends Proxy<ApplicationPresenter> {}
+    public interface TheProxy extends Proxy<ApplicationPresenter> {}
 
     @Inject
-    public ApplicationPresenter(EventBus eventBus, ApplicationView view, ApplicationPresenterProxy proxy) {
+    public ApplicationPresenter(EventBus eventBus, TheView view, TheProxy proxy) {
         super(eventBus, view, proxy, RevealType.Root);
     }
+
 }

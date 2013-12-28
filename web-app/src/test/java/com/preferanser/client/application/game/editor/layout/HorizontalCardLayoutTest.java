@@ -24,7 +24,7 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.googlecode.gwt.test.GwtModule;
 import com.googlecode.gwt.test.GwtTestWithMockito;
 import com.preferanser.client.application.widgets.CardWidget;
-import com.preferanser.domain.Card;
+import com.preferanser.shared.domain.Card;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -33,7 +33,7 @@ import java.util.Collection;
 import java.util.List;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static com.preferanser.domain.Card.*;
+import static com.preferanser.shared.domain.Card.*;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 
@@ -60,17 +60,17 @@ public class HorizontalCardLayoutTest extends GwtTestWithMockito {
     @Test
     public void testApply() throws Exception {
         List<CardWidget> cardWidgets = Arrays.asList(
-                positionImage(CLUB_ACE, 0, 0, 0),
-                positionImage(SPADE_KING, 0, 0, 0),
-                positionImage(SPADE_ACE, 0, 0, 0)
+            positionImage(CLUB_ACE, 0, 0, 0),
+            positionImage(SPADE_KING, 0, 0, 0),
+            positionImage(SPADE_ACE, 0, 0, 0)
         );
 
         layout.apply(cardWidgets);
 
         List<CardWidget> expectedCardWidgets = Arrays.asList(
-                positionImage(CLUB_ACE, 0, 0, 0),
-                positionImage(SPADE_KING, 10, 0, 1),
-                positionImage(SPADE_ACE, 20, 0, 2)
+            positionImage(CLUB_ACE, 0, 0, 0),
+            positionImage(SPADE_KING, 10, 0, 1),
+            positionImage(SPADE_ACE, 20, 0, 2)
         );
 
         assertThat(cardWidgets, equalTo(expectedCardWidgets));

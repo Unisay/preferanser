@@ -121,7 +121,7 @@
     <dependencies>
         <dependency>
             <groupId>com.preferanser</groupId>
-            <artifactId>domain</artifactId>
+            <artifactId>web-app</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

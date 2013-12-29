@@ -30,7 +30,7 @@ import com.google.gwt.resources.client.ImageResource;
  */
 public interface PreferanserResources extends ClientBundle {
 
-    interface GreenClothCssResource extends CssResource {
+    interface Style extends CssResource {
 
         @SuppressWarnings("unused") String dialogTop();
 
@@ -47,9 +47,12 @@ public interface PreferanserResources extends ClientBundle {
         @ClassName("gwt-ToggleButton") String gwtToggleButton();
 
         @ClassName("gwt-Button") String gwtButton();
+
+        String statusPanel();
     }
 
-    @Source("green_cloth.css") GreenClothCssResource css();
+    @Source("green_cloth.css")
+    Style css();
 
     @Source("images/arrow_right.png")
     @ImageResource.ImageOptions(height = 32, width = 32) ImageResource arrowRight();

@@ -39,7 +39,7 @@
         <!-- client -->
         <gwt.version>2.5.1</gwt.version>
         <gwtp.version>1.0</gwtp.version>
-        <gin.version>2.0.0</gin.version>
+        <gin.version>2.1.2</gin.version>
         <gwt.style>OBF</gwt.style>
 
         <!-- server -->

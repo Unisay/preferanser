@@ -20,6 +20,7 @@
 package com.preferanser.client.application.game.editor;
 
 import com.google.common.base.Optional;
+import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.HasUiHandlers;
@@ -30,21 +31,23 @@ import com.gwtplatform.mvp.client.annotations.UseGatekeeper;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
-import com.gwtplatform.mvp.client.proxy.RevealRootPopupContentEvent;
 import com.preferanser.client.application.ApplicationPresenter;
 import com.preferanser.client.application.game.GameBuiltEvent;
 import com.preferanser.client.application.game.TableView;
+import com.preferanser.client.application.game.dialog.input.InputDialogPresenter;
 import com.preferanser.client.application.game.editor.dialog.contract.ContractDialogPresenter;
 import com.preferanser.client.application.game.editor.dialog.validation.ValidationDialogPresenter;
+import com.preferanser.client.application.i18n.PreferanserConstants;
 import com.preferanser.client.gwtp.LoggedInGatekeeper;
 import com.preferanser.client.gwtp.NameTokens;
 import com.preferanser.client.service.DealService;
-import com.preferanser.client.service.LogResponse;
+import com.preferanser.client.service.Response;
 import com.preferanser.shared.domain.*;
 import com.preferanser.shared.domain.entity.Deal;
 import com.preferanser.shared.domain.exception.GameBuilderException;
 import com.preferanser.shared.domain.exception.GameException;
 
+import java.util.List;
 import java.util.logging.Logger;
 
 import static com.google.common.collect.Lists.newArrayList;
@@ -54,7 +57,7 @@ import static com.google.common.collect.Lists.newArrayList;
  * Table presenter
  */
 public class EditorPresenter extends Presenter<EditorPresenter.EditorView, EditorPresenter.Proxy>
-    implements EditorUiHandlers, HasCardinalContracts {
+        implements EditorUiHandlers, HasCardinalContracts, InputDialogPresenter.InputResultHandler {
 
     private static final Logger log = Logger.getLogger("EditorPresenter");
 
@@ -66,13 +69,16 @@ public class EditorPresenter extends Presenter<EditorPresenter.EditorView, Edito
     private GameBuilder gameBuilder;
     private final PlaceManager placeManager;
     private final DealService dealService;
+    private final PreferanserConstants preferanserConstants;
     private final ContractDialogPresenter contractDialog;
+    private final InputDialogPresenter inputDialog;
     private final ValidationDialogPresenter validationDialog;
 
     @ProxyStandard
     @NameToken(NameTokens.GAME_EDITOR)
     @UseGatekeeper(LoggedInGatekeeper.class)
-    public interface Proxy extends ProxyPlace<EditorPresenter> {}
+    public interface Proxy extends ProxyPlace<EditorPresenter> {
+    }
 
     @Inject
     public EditorPresenter(PlaceManager placeManager,
@@ -81,13 +87,17 @@ public class EditorPresenter extends Presenter<EditorPresenter.EditorView, Edito
                            Proxy proxy,
                            GameBuilder gameBuilder,
                            DealService dealService,
+                           PreferanserConstants preferanserConstants,
                            ContractDialogPresenter contractDialog,
-                           ValidationDialogPresenter validationDialog) {
+                           ValidationDialogPresenter validationDialog,
+                           InputDialogPresenter inputDialog) {
         super(eventBus, view, proxy, ApplicationPresenter.TYPE_SetMainContent);
         this.placeManager = placeManager;
         this.gameBuilder = gameBuilder;
         this.dealService = dealService;
+        this.preferanserConstants = preferanserConstants;
         this.contractDialog = contractDialog;
+        this.inputDialog = inputDialog;
         this.contractDialog.setHasCardinalContracts(this);
         this.validationDialog = validationDialog;
         getView().setUiHandlers(this);
@@ -104,21 +114,21 @@ public class EditorPresenter extends Presenter<EditorPresenter.EditorView, Edito
         // TODO: remove deal initialization once deal loading is done
         maybeGame = Optional.absent();
         gameBuilder = new GameBuilder()
-            .setThreePlayers()
-            .setFirstTurn(Cardinal.NORTH)
-            .setCardinalContract(Cardinal.NORTH, Contract.SEVEN_SPADE)
-            .setCardinalContract(Cardinal.EAST, Contract.WHIST)
-            .setCardinalContract(Cardinal.WEST, Contract.PASS)
-            .putCards(Cardinal.NORTH, newArrayList(Card.values()).subList(0, 10))
-            .putCards(Cardinal.EAST, newArrayList(Card.values()).subList(10, 20))
-            .putCards(Cardinal.WEST, newArrayList(Card.values()).subList(20, 30));
+                .setThreePlayers()
+                .setFirstTurn(Cardinal.NORTH)
+                .setCardinalContract(Cardinal.NORTH, Contract.SEVEN_SPADE)
+                .setCardinalContract(Cardinal.EAST, Contract.WHIST)
+                .setCardinalContract(Cardinal.WEST, Contract.PASS)
+                .putCards(Cardinal.NORTH, newArrayList(Card.values()).subList(0, 10))
+                .putCards(Cardinal.EAST, newArrayList(Card.values()).subList(10, 20))
+                .putCards(Cardinal.WEST, newArrayList(Card.values()).subList(20, 30));
         refreshView();
     }
 
     @Override
     public void chooseContract(Cardinal cardinal) {
         contractDialog.setCardinal(cardinal);
-        RevealRootPopupContentEvent.fire(this, contractDialog);
+        addToPopupSlot(contractDialog);
     }
 
     @Override
@@ -159,13 +169,35 @@ public class EditorPresenter extends Presenter<EditorPresenter.EditorView, Edito
             GameBuiltEvent.fire(this, maybeGame.get());
         } catch (GameBuilderException e) {
             validationDialog.setValidationErrors(e.getBuilderErrors());
-            RevealRootPopupContentEvent.fire(this, validationDialog);
+            addToPopupSlot(validationDialog);
         }
     }
 
-    @Override public void saveDeal() {
-        Deal deal = Deal.fromGameBuilder(gameBuilder);
-        dealService.persist(deal, new LogResponse<Void>(log, "Deal persisted"));
+    @Override
+    public void saveDeal() {
+        inputDialog.setTitle(preferanserConstants.save());
+        inputDialog.setDescription(preferanserConstants.saveDescription());
+        inputDialog.onInputResult(this);
+        addToPopupSlot(inputDialog, true);
+    }
+
+    @Override
+    public void openDeal() {
+        dealService.load(new Response<List<Deal>>(){
+            @Override protected void handle(List<Deal> response) {
+                Window.alert("Loaded deals: " + response.size());
+            }
+        });
+    }
+
+    @Override
+    public void handleInputResult(String name) {
+        if (name != null && !"".equals(name.trim())) {
+            inputDialog.getView().hide();
+            Deal deal = Deal.fromGameBuilder(gameBuilder);
+            deal.setName(name);
+            dealService.persist(deal, new Response<Void>());
+        }
     }
 
     private void refreshView() {

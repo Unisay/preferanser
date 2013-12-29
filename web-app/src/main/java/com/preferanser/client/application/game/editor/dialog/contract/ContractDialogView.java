@@ -33,7 +33,7 @@ import com.preferanser.client.application.i18n.PreferanserMessages;
 import com.preferanser.shared.domain.Cardinal;
 import com.preferanser.shared.domain.Contract;
 
-public class ContractDialogView extends PopupViewWithUiHandlers<ContractDialogUiHandlers> implements ContractDialogPresenter.MyView {
+public class ContractDialogView extends PopupViewWithUiHandlers<ContractDialogUiHandlers> implements ContractDialogPresenter.TheView {
 
 
     interface Binder extends UiBinder<PopupPanel, ContractDialogView> {}

@@ -21,8 +21,10 @@ package com.preferanser.client.application.game.editor;
 
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
+import com.preferanser.client.application.game.dialog.input.InputDialogPresenter;
 import com.preferanser.client.application.game.editor.dialog.contract.ContractDialogPresenter;
 import com.preferanser.client.application.game.editor.dialog.validation.ValidationDialogPresenter;
+import com.preferanser.client.application.i18n.PreferanserConstants;
 import com.preferanser.client.service.DealService;
 import com.preferanser.shared.domain.*;
 import org.mockito.Mock;
@@ -58,6 +60,9 @@ public class EditorPresenterTest {
     private ValidationDialogPresenter validationDialog;
 
     @Mock
+    private InputDialogPresenter inputDialog;
+
+    @Mock
     private DealService dealService;
 
     @Mock
@@ -78,13 +83,16 @@ public class EditorPresenterTest {
     @Mock
     private Map<Cardinal, Integer> cardinalTricks;
 
+    @Mock
+    private PreferanserConstants preferanserConstants;
+
     private Cardinal turn;
 
     @BeforeMethod
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         when(gameBuilder.build()).thenReturn(game);
-        presenter = new EditorPresenter(placeManager, eventBus, view, proxy, gameBuilder, dealService, contractDialog, validationDialog);
+        presenter = new EditorPresenter(placeManager, eventBus, view, proxy, gameBuilder, dealService,  preferanserConstants, contractDialog, validationDialog, inputDialog);
         turn = Cardinal.EAST;
 
         verify(view).setUiHandlers(presenter);

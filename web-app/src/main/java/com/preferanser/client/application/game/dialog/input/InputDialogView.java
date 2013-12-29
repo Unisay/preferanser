@@ -17,47 +17,58 @@
  *     along with this program.  If not, see [http://www.gnu.org/licenses/].
  */
 
-package com.preferanser.client.application.game.editor.dialog.validation;
+package com.preferanser.client.application.game.dialog.input;
 
-import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PopupPanel;
+import com.google.gwt.user.client.ui.TextBox;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.PopupViewWithUiHandlers;
-import com.preferanser.client.application.i18n.PreferanserConstants;
-import com.preferanser.client.application.widgets.UlListPanel;
-import com.preferanser.shared.domain.GameBuilder;
+import com.preferanser.client.application.widgets.EscapableDialogBox;
 
-import java.util.Collection;
+public class InputDialogView extends PopupViewWithUiHandlers<InputDialogUiHandlers> implements InputDialogPresenter.TheView {
 
-public class ValidationDialogView extends PopupViewWithUiHandlers<ValidationDialogUiHandlers> implements ValidationDialogPresenter.TheView {
+    interface Binder extends UiBinder<PopupPanel, InputDialogView> {}
 
-    private final PreferanserConstants constants;
+    @UiField
+    EscapableDialogBox dialog;
 
-    interface Binder extends UiBinder<PopupPanel, ValidationDialogView> {}
+    @UiField
+    Label descriptionLabel;
 
-    @UiField UlListPanel listPanel;
+    @UiField
+    TextBox textBox;
+
+    @UiField
+    Button button;
 
     @Inject
-    protected ValidationDialogView(Binder uiBinder, EventBus eventBus, PreferanserConstants constants) {
+    protected InputDialogView(Binder uiBinder, EventBus eventBus) {
         super(eventBus);
-        this.constants = constants;
         initWidget(uiBinder.createAndBindUi(this));
     }
 
     @Override
-    public void displayValidationErrors(Collection<GameBuilder.Error> validationErrors) {
-        listPanel.clear();
-        for (GameBuilder.Error validationError : validationErrors)
-            displayValidationError(constants.getString(validationError.name()));
+    public void setTitle(String title) {
+        dialog.setText(title);
     }
 
-    private void displayValidationError(String errorMessage) {
-        Label errorLabel = GWT.create(Label.class);
-        errorLabel.setText(errorMessage);
-        listPanel.add(errorLabel);
+    @Override
+    public void setDescription(String description) {
+        descriptionLabel.setText(description);
     }
+
+    @UiHandler("button")
+    void onEnter(@SuppressWarnings("unused") ClickEvent event) {
+        String value = textBox.getValue();
+        textBox.setValue("");
+        getUiHandlers().save(value);
+    }
+
 }

@@ -28,16 +28,16 @@ import com.preferanser.shared.domain.GameBuilder;
 
 import java.util.Collection;
 
-public class ValidationDialogPresenter extends PresenterWidget<ValidationDialogPresenter.MyView> implements ValidationDialogUiHandlers {
+public class ValidationDialogPresenter extends PresenterWidget<ValidationDialogPresenter.TheView> implements ValidationDialogUiHandlers {
 
     private Collection<GameBuilder.Error> validationErrors;
 
-    public interface MyView extends PopupView, HasUiHandlers<ValidationDialogUiHandlers> {
+    public interface TheView extends PopupView, HasUiHandlers<ValidationDialogUiHandlers> {
         void displayValidationErrors(Collection<GameBuilder.Error> validationErrors);
     }
 
     @Inject
-    public ValidationDialogPresenter(EventBus eventBus, MyView view) {
+    public ValidationDialogPresenter(EventBus eventBus, TheView view) {
         super(eventBus, view);
         getView().setUiHandlers(this);
     }
@@ -51,4 +51,5 @@ public class ValidationDialogPresenter extends PresenterWidget<ValidationDialogP
     public void setValidationErrors(Collection<GameBuilder.Error> validationErrors) {
         this.validationErrors = validationErrors;
     }
+
 }

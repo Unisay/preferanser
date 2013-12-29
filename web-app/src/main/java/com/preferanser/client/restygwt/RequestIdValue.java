@@ -4,5 +4,6 @@ public enum RequestIdValue {
 
     GET_CURRENT_USER,
     SAVE_DEAL,
+    LOAD_DEALS,
 
 }

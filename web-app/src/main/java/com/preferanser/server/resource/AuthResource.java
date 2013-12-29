@@ -35,13 +35,13 @@ import javax.ws.rs.core.MediaType;
 public class AuthResource {
 
     @Inject
-    private CurrentUserDtoProvider currentUserDtoProvider;
+    private AuthenticationService authenticationService;
 
     @GET
     @Path("current")
     @Produces(MediaType.APPLICATION_JSON)
     public CurrentUserDto getCurrentUserInfo() {
-        return currentUserDtoProvider.get();
+        return authenticationService.get();
     }
 
 }

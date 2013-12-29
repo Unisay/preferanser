@@ -41,8 +41,9 @@ public interface PreferanserConstants extends ConstantsWithLookup {
     @DefaultStringValue("♦") String DIAMOND_char();
     @DefaultStringValue("♥") String HEART_char();
     @DefaultStringValue("Play") String play();
-    @DefaultStringValue("Edit") String edit();
+    @DefaultStringValue("Enter") String enter();
 
+    @DefaultStringValue("Edit") String edit();
     @DefaultStringValue("North") String north();
     @DefaultStringValue("East") String east();
     @DefaultStringValue("South") String south();
@@ -52,13 +53,18 @@ public interface PreferanserConstants extends ConstantsWithLookup {
     @DefaultStringValue("Save") String save();
     @DefaultStringValue("Saving") String saving();
     @DefaultStringValue("Saved") String saved();
+    @DefaultStringValue("Open") String open();
+    @DefaultStringValue("Loading") String loading();
+    @DefaultStringValue("Loaded") String loaded();
 
+    @DefaultStringValue("Please choose name for the deal") String saveDescription();
     @DefaultStringValue("Choose contract") String chooseContract();
     @DefaultStringValue("Wrong number of contracts") String WRONG_NUMBER_OF_CONTRACTS();
     @DefaultStringValue("There are conflicting contracts") String HAS_CONFLICTING_CONTRACTS();
     @DefaultStringValue("Fist turn not specified") String FIRST_TURN_NOT_SPECIFIED();
     @DefaultStringValue("First turn specified incorrectly") String WRONG_FIRST_TURN();
-    @DefaultStringValue("Cards dealed incorrectly") String WRONG_CARDINAL_CARDS();
+    @DefaultStringValue("Cards dealt incorrectly") String WRONG_CARDINAL_CARDS();
+
     @DefaultStringValue("Number of players not specified") String NUM_PLAYERS_NOT_SPECIFIED();
 
 }

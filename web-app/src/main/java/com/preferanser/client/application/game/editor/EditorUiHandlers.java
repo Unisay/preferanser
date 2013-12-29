@@ -50,4 +50,9 @@ public interface EditorUiHandlers extends TableUiHandlers {
      * Save deal
      */
     void saveDeal();
+
+    /**
+     * Open deal
+     */
+    void openDeal();
 }

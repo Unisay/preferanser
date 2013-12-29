@@ -35,7 +35,6 @@ import com.preferanser.client.application.i18n.PreferanserConstants;
 import com.preferanser.client.application.widgets.CardWidget;
 import com.preferanser.client.application.widgets.RequestButton;
 import com.preferanser.client.application.widgets.TurnPointer;
-import com.preferanser.client.restygwt.RequestIdValue;
 import com.preferanser.client.restygwt.RestyGwtDispatcher;
 import com.preferanser.client.theme.greencloth.client.com.preferanser.client.application.PreferanserResources;
 import com.preferanser.shared.domain.Cardinal;
@@ -43,6 +42,9 @@ import com.preferanser.shared.domain.Contract;
 
 import java.util.Map;
 import java.util.logging.Logger;
+
+import static com.preferanser.client.restygwt.RequestIdValue.LOAD_DEALS;
+import static com.preferanser.client.restygwt.RequestIdValue.SAVE_DEAL;
 
 public class EditorView extends BaseTableView<EditorUiHandlers> implements EditorPresenter.EditorView, CardWidget.Handlers {
 
@@ -52,6 +54,7 @@ public class EditorView extends BaseTableView<EditorUiHandlers> implements Edito
 
     @UiField Button playButton;
     @UiField(provided = true) RequestButton saveButton;
+    @UiField(provided = true) RequestButton openButton;
     @UiField Button dealButton;
 
     @UiField Anchor northContractAnchor;
@@ -62,7 +65,8 @@ public class EditorView extends BaseTableView<EditorUiHandlers> implements Edito
     @Inject
     public EditorView(Binder uiBinder, PreferanserResources resources, PreferanserConstants constants, I18nHelper i18nHelper, RestyGwtDispatcher restyGwtDispatcher) {
         super(constants, resources, i18nHelper);
-        saveButton = new RequestButton(restyGwtDispatcher, RequestIdValue.SAVE_DEAL, constants.saving(), constants.saved());
+        saveButton = new RequestButton(restyGwtDispatcher, SAVE_DEAL, constants.saving(), constants.saved());
+        openButton = new RequestButton(restyGwtDispatcher, LOAD_DEALS, constants.loading(), constants.loaded());
         initWidget(uiBinder.createAndBindUi(this));
         init();
     }
@@ -113,6 +117,10 @@ public class EditorView extends BaseTableView<EditorUiHandlers> implements Edito
 
     @UiHandler("saveButton") void onSaveButtonClicked(@SuppressWarnings("unused") ClickEvent event) {
         getUiHandlers().saveDeal();
+    }
+
+    @UiHandler("openButton") void onOpenButtonClicked(@SuppressWarnings("unused") ClickEvent event) {
+        getUiHandlers().openDeal();
     }
 
     @UiHandler("dealButton") void onDealButtonClicked(@SuppressWarnings("unused") ClickEvent event) {

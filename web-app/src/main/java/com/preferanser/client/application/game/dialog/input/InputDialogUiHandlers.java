@@ -17,34 +17,10 @@
  *     along with this program.  If not, see [http://www.gnu.org/licenses/].
  */
 
-package com.preferanser.client.service;
+package com.preferanser.client.application.game.dialog.input;
 
-import com.preferanser.client.restygwt.RequestId;
-import com.preferanser.shared.domain.entity.Deal;
-import org.fusesource.restygwt.client.MethodCallback;
-import org.fusesource.restygwt.client.RestService;
+import com.gwtplatform.mvp.client.UiHandlers;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import java.util.List;
-
-import static com.preferanser.client.restygwt.RequestIdValue.LOAD_DEALS;
-import static com.preferanser.client.restygwt.RequestIdValue.SAVE_DEAL;
-
-/**
- * Client rest-client service responsible for deal persistence
- */
-@Path("/deal")
-@SuppressWarnings("VoidMethodAnnotatedWithGET")
-public interface DealService extends RestService {
-
-    @POST
-    @RequestId(SAVE_DEAL)
-    void persist(Deal dto, MethodCallback<Void> callback);
-
-    @GET
-    @RequestId(LOAD_DEALS)
-    void load(MethodCallback<List<Deal>> callback);
-
+public interface InputDialogUiHandlers extends UiHandlers {
+    void save(String name);
 }

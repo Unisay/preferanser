@@ -29,7 +29,7 @@ import java.util.logging.Logger;
  *
  * @author Yuriy Lazarev <ylazarev@groupon.com>
  */
-public abstract class Response<T> implements MethodCallback<T> {
+public class Response<T> implements MethodCallback<T> {
 
     private static final Logger log = Logger.getLogger("Response");
 
@@ -41,5 +41,5 @@ public abstract class Response<T> implements MethodCallback<T> {
         handle(response);
     }
 
-    protected abstract void handle(T response);
+    protected void handle(T response) {};
 }

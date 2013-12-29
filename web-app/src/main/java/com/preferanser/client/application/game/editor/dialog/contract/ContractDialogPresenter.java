@@ -28,17 +28,17 @@ import com.preferanser.client.application.game.editor.HasCardinalContracts;
 import com.preferanser.shared.domain.Cardinal;
 import com.preferanser.shared.domain.Contract;
 
-public class ContractDialogPresenter extends PresenterWidget<ContractDialogPresenter.MyView> implements ContractDialogUiHandlers {
+public class ContractDialogPresenter extends PresenterWidget<ContractDialogPresenter.TheView> implements ContractDialogUiHandlers {
 
     private Cardinal cardinal;
     private HasCardinalContracts hasCardinalContracts;
 
-    public interface MyView extends PopupView, HasUiHandlers<ContractDialogUiHandlers> {
+    public interface TheView extends PopupView, HasUiHandlers<ContractDialogUiHandlers> {
         void setCardinal(Cardinal cardinal);
     }
 
     @Inject
-    public ContractDialogPresenter(EventBus eventBus, MyView view) {
+    public ContractDialogPresenter(EventBus eventBus, TheView view) {
         super(eventBus, view);
         getView().setUiHandlers(this);
     }

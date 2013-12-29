@@ -35,6 +35,8 @@ public class Deal extends BaseEntity implements Dto {
 
     @Index
     private String name;
+    @Index
+    private String userId;
     private Date created;
     private Cardinal firstTurn;
     private Contract northContract;
@@ -115,6 +117,14 @@ public class Deal extends BaseEntity implements Dto {
             cards.addAll(cardsCollection);
         }
         return cards;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public String getName() {

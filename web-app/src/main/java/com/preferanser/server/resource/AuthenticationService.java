@@ -21,6 +21,7 @@ package com.preferanser.server.resource;
 
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
+import com.google.common.base.Optional;
 import com.google.inject.Provider;
 import com.preferanser.server.dao.UserDao;
 import com.preferanser.shared.domain.entity.User;
@@ -28,21 +29,21 @@ import com.preferanser.shared.dto.CurrentUserDto;
 
 import javax.inject.Inject;
 
-public class CurrentUserDtoProvider implements Provider<CurrentUserDto> {
+public class AuthenticationService implements Provider<CurrentUserDto> {
 
     private final UserService userService = UserServiceFactory.getUserService();
     private final UserDao userDao;
 
     @Inject
-    public CurrentUserDtoProvider(UserDao userDao) {
+    public AuthenticationService(UserDao userDao) {
         this.userDao = userDao;
     }
 
     @Override
     public CurrentUserDto get() {
-        Boolean isLoggedIn = userService.isUserLoggedIn();
+        boolean isLoggedIn = userService.isUserLoggedIn();
 
-        CurrentUserDto currentUser = new CurrentUserDto(isLoggedIn, getUser(isLoggedIn));
+        CurrentUserDto currentUser = new CurrentUserDto(isLoggedIn, getUser());
         currentUser.logoutUrl = userService.createLogoutURL("/");
         currentUser.loginUrl = userService.createLoginURL("/");
 
@@ -54,9 +55,11 @@ public class CurrentUserDtoProvider implements Provider<CurrentUserDto> {
         return currentUser;
     }
 
-    private User getUser(Boolean loggedIn) {
+    public User getUser() {
+        boolean isLoggedIn = userService.isUserLoggedIn();
+
         User user = new User();
-        if (loggedIn) {
+        if (isLoggedIn) {
             String googleId = userService.getCurrentUser().getUserId();
 
             user = userDao.findByGoogleId(googleId);
@@ -67,6 +70,14 @@ public class CurrentUserDtoProvider implements Provider<CurrentUserDto> {
             }
         }
         return user;
+    }
+
+
+    public Optional<String> getCurrentUserId() {
+        if (!userService.isUserLoggedIn())
+            return Optional.absent();
+        else
+            return Optional.of(userService.getCurrentUser().getUserId());
     }
 
 }

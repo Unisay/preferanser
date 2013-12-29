@@ -19,33 +19,44 @@
 
 package com.preferanser.server.resource;
 
-/**
- * REST resource responsible for an authorization
- */
-
+import com.google.common.base.Optional;
 import com.google.inject.Inject;
 import com.preferanser.server.dao.DealDao;
 import com.preferanser.shared.domain.entity.Deal;
 
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import java.util.List;
 
 @Path("/deal")
+@Produces(MediaType.APPLICATION_JSON)
 public class DealResource {
 
+    private final AuthenticationService authenticationService;
     private final DealDao dealDao;
 
+
     @Inject
-    public DealResource(DealDao dealDao) {
+    public DealResource(AuthenticationService authenticationService, DealDao dealDao) {
+        this.authenticationService = authenticationService;
         this.dealDao = dealDao;
     }
 
+    @GET
+    public List<Deal> load() {
+        return dealDao.getAll();
+    }
+
     @POST
-    @Produces(MediaType.APPLICATION_JSON)
     public void save(Deal deal) {
-        // TODO: add user id
+
+        Optional<String> currentUserId = authenticationService.getCurrentUserId();
+        if (! currentUserId.isPresent())
+            throw new RuntimeException("Not Authorized"); // TODO come up with domain exception
+        deal.setUserId(currentUserId.get());
         dealDao.save(deal);
     }
 }

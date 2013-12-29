@@ -19,6 +19,7 @@
 
 package com.preferanser.client.application.game.unauthorized;
 
+import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
@@ -52,6 +53,8 @@ public class UnauthorizedPresenter extends Presenter<UnauthorizedPresenter.TheVi
     }
 
     @Override protected void onReveal() {
-        Window.Location.assign(currentUserDto.loginUrl);
+        String returnUrl = URL.encode(Window.Location.getHref());
+        String loginUrl = currentUserDto.loginUrl.replace("%2F", returnUrl);
+        Window.Location.assign(loginUrl);
     }
 }

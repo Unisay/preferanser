@@ -50,4 +50,5 @@
 
     <set-configuration-property name="gwtp.bootstrapper" value="com.preferanser.client.gwtp.AuthBootstrapper"/>
     <set-configuration-property name="gin.ginjector.modules" value="com.preferanser.client.gin.ClientModule"/>
+    <set-configuration-property name="org.fusesource.restygwt.annotationresolver" value="com.preferanser.client.restygwt.PreferanserAnnotationResolver"/>
 </module>

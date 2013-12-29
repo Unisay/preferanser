@@ -40,12 +40,6 @@ public interface PreferanserResources extends ClientBundle {
 
         @ClassName("gwt-DialogBoxOverlay") String gwtDialogBoxOverlay();
 
-        @ClassName("gwt-ToggleButton-down-hovering") String gwtToggleButtonDownHovering();
-
-        @ClassName("gwt-ToggleButton-down") String gwtToggleButtonDown();
-
-        @ClassName("gwt-ToggleButton") String gwtToggleButton();
-
         @ClassName("gwt-Button") String gwtButton();
 
         String statusPanel();

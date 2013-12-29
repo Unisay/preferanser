@@ -8,7 +8,6 @@ import org.fusesource.restygwt.client.Method;
 
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Logger;
 
 import static com.google.common.collect.Lists.newArrayList;
 
@@ -22,7 +21,7 @@ public class RestyGwtDispatcher implements Dispatcher {
     /**
      * Provides the {@link RestyGwtDispatcher} and set it as default Resty {@link Dispatcher}.
      */
-    public static class Provider implements com.google.inject.Provider<Dispatcher> {
+    public static class Provider implements com.google.inject.Provider<RestyGwtDispatcher> {
 
         private Set<RestyGwtRequestListener> requestListeners;
 
@@ -32,7 +31,7 @@ public class RestyGwtDispatcher implements Dispatcher {
         }
 
         @Override
-        public Dispatcher get() {
+        public RestyGwtDispatcher get() {
             RestyGwtDispatcher restyGwtDispatcher = new RestyGwtDispatcher();
             for (RestyGwtRequestListener requestListener : requestListeners)
                 restyGwtDispatcher.addRequestListener(requestListener);
@@ -42,25 +41,25 @@ public class RestyGwtDispatcher implements Dispatcher {
     }
 
     @Override
-    public Request send(Method method, RequestBuilder builder) throws RequestException {
+    public Request send(final Method method, RequestBuilder builder) throws RequestException {
         final RequestCallback callback = builder.getCallback();
         builder.setCallback(new RequestCallback() {
             @Override
             public void onResponseReceived(Request request, Response response) {
                 for (RestyGwtRequestListener requestListener : requestListeners)
-                    requestListener.beforeResponseHandled(request, response);
+                    requestListener.beforeResponseHandled(method, request, response);
                 callback.onResponseReceived(request, response);
                 for (RestyGwtRequestListener requestListener : requestListeners)
-                    requestListener.afterResponseHandled(request, response);
+                    requestListener.afterResponseHandled(method, request, response);
             }
 
             @Override
             public void onError(Request request, Throwable exception) {
                 for (RestyGwtRequestListener requestListener : requestListeners)
-                    requestListener.beforeErrorHandled(request, exception);
+                    requestListener.beforeErrorHandled(method, request, exception);
                 callback.onError(request, exception);
                 for (RestyGwtRequestListener requestListener : requestListeners)
-                    requestListener.afterErrorHandled(request, exception);
+                    requestListener.afterErrorHandled(method, request, exception);
             }
         });
 

@@ -11,11 +11,11 @@ public interface RestyGwtRequestListener {
 
     void afterRequestSent(Method method, RequestBuilder builder);
 
-    void beforeResponseHandled(Request request, Response response);
+    void beforeResponseHandled(Method method, Request request, Response response);
 
-    void afterResponseHandled(Request request, Response response);
+    void afterResponseHandled(Method method, Request request, Response response);
 
-    void beforeErrorHandled(Request request, Throwable exception);
+    void beforeErrorHandled(Method method, Request request, Throwable exception);
 
-    void afterErrorHandled(Request request, Throwable exception);
+    void afterErrorHandled(Method method, Request request, Throwable exception);
 }

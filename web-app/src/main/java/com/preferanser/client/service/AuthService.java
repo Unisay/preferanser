@@ -19,12 +19,15 @@
 
 package com.preferanser.client.service;
 
+import com.preferanser.client.restygwt.RequestId;
 import com.preferanser.shared.dto.CurrentUserDto;
 import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.RestService;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+
+import static com.preferanser.client.restygwt.RequestIdValue.GET_CURRENT_USER;
 
 /**
  * Client rest-client service responsible for the authentication
@@ -34,6 +37,8 @@ import javax.ws.rs.Path;
 public interface AuthService extends RestService {
 
     @GET
-    @Path("/current") void getCurrentUser(MethodCallback<CurrentUserDto> callback);
+    @Path("/current")
+    @RequestId(GET_CURRENT_USER)
+    void getCurrentUser(MethodCallback<CurrentUserDto> callback);
 
 }

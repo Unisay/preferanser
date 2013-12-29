@@ -33,7 +33,10 @@ import com.preferanser.client.application.game.BaseTableView;
 import com.preferanser.client.application.i18n.I18nHelper;
 import com.preferanser.client.application.i18n.PreferanserConstants;
 import com.preferanser.client.application.widgets.CardWidget;
+import com.preferanser.client.application.widgets.RequestButton;
 import com.preferanser.client.application.widgets.TurnPointer;
+import com.preferanser.client.restygwt.RequestIdValue;
+import com.preferanser.client.restygwt.RestyGwtDispatcher;
 import com.preferanser.client.theme.greencloth.client.com.preferanser.client.application.PreferanserResources;
 import com.preferanser.shared.domain.Cardinal;
 import com.preferanser.shared.domain.Contract;
@@ -48,7 +51,7 @@ public class EditorView extends BaseTableView<EditorUiHandlers> implements Edito
     public interface Binder extends UiBinder<Widget, EditorView> {}
 
     @UiField Button playButton;
-    @UiField Button saveButton;
+    @UiField(provided = true) RequestButton saveButton;
     @UiField Button dealButton;
 
     @UiField Anchor northContractAnchor;
@@ -57,8 +60,9 @@ public class EditorView extends BaseTableView<EditorUiHandlers> implements Edito
     @UiField Anchor westContractAnchor;
 
     @Inject
-    public EditorView(Binder uiBinder, PreferanserResources resources, PreferanserConstants constants, I18nHelper i18nHelper) {
+    public EditorView(Binder uiBinder, PreferanserResources resources, PreferanserConstants constants, I18nHelper i18nHelper, RestyGwtDispatcher restyGwtDispatcher) {
         super(constants, resources, i18nHelper);
+        saveButton = new RequestButton(restyGwtDispatcher, RequestIdValue.SAVE_DEAL, constants.saving(), constants.saved());
         initWidget(uiBinder.createAndBindUi(this));
         init();
     }

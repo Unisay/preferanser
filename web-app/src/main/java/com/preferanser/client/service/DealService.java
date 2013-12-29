@@ -19,12 +19,15 @@
 
 package com.preferanser.client.service;
 
+import com.preferanser.client.restygwt.RequestId;
 import com.preferanser.shared.domain.entity.Deal;
 import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.RestService;
 
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+
+import static com.preferanser.client.restygwt.RequestIdValue.SAVE_DEAL;
 
 /**
  * Client rest-client service responsible for deal persistence
@@ -33,6 +36,8 @@ import javax.ws.rs.Path;
 @SuppressWarnings("VoidMethodAnnotatedWithGET")
 public interface DealService extends RestService {
 
-    @POST void persist(Deal dto, MethodCallback<Void> callback);
+    @POST
+    @RequestId(SAVE_DEAL)
+    void persist(Deal dto, MethodCallback<Void> callback);
 
 }

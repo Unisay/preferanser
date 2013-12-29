@@ -28,7 +28,7 @@
         <p:header>
             <p:Widgets>
                 <g:Button ui:field="playButton" text="{constants.play}" debugId="play"/>
-                <g:Button ui:field="saveButton" text="{constants.save}" debugId="save"/>
+                <p:RequestButton ui:field="saveButton" text="{constants.save}" debugId="save" />
                 <g:Button ui:field="dealButton" text="{constants.deal}" debugId="deal"/>
             </p:Widgets>
         </p:header>

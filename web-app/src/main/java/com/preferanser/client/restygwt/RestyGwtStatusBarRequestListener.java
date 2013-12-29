@@ -22,12 +22,12 @@ public class RestyGwtStatusBarRequestListener extends RestyGwtRequestListenerAda
     }
 
     @Override
-    public void afterResponseHandled(Request request, Response response) {
+    public void afterResponseHandled(Method method, Request request, Response response) {
         statusBar.hideStatus();
     }
 
     @Override
-    public void afterErrorHandled(Request request, Throwable exception) {
+    public void afterErrorHandled(Method method, Request request, Throwable exception) {
         statusBar.hideStatus();
     }
 }

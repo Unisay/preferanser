@@ -50,6 +50,8 @@ public interface PreferanserConstants extends ConstantsWithLookup {
     @DefaultStringValue("To sluff") String toSluff();
     @DefaultStringValue("Deal") String deal();
     @DefaultStringValue("Save") String save();
+    @DefaultStringValue("Saving") String saving();
+    @DefaultStringValue("Saved") String saved();
 
     @DefaultStringValue("Choose contract") String chooseContract();
     @DefaultStringValue("Wrong number of contracts") String WRONG_NUMBER_OF_CONTRACTS();
@@ -58,4 +60,5 @@ public interface PreferanserConstants extends ConstantsWithLookup {
     @DefaultStringValue("First turn specified incorrectly") String WRONG_FIRST_TURN();
     @DefaultStringValue("Cards dealed incorrectly") String WRONG_CARDINAL_CARDS();
     @DefaultStringValue("Number of players not specified") String NUM_PLAYERS_NOT_SPECIFIED();
+
 }

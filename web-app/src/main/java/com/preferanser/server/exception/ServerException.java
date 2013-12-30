@@ -17,27 +17,27 @@
  *     along with this program.  If not, see [http://www.gnu.org/licenses/].
  */
 
-package com.preferanser.server.resource;
+package com.preferanser.server.exception;
 
-import com.google.inject.Inject;
-import com.preferanser.shared.dto.CurrentUserDto;
+public class ServerException extends RuntimeException {
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
+    public ServerException() {
+    }
 
-@Path("/auth")
-@Produces(MediaType.APPLICATION_JSON)
-public class AuthResource {
+    public ServerException(String message) {
+        super(message);
+    }
 
-    @Inject
-    private AuthenticationService authenticationService;
+    public ServerException(String message, Throwable cause) {
+        super(message, cause);
+    }
 
-    @GET
-    @Path("current")
-    public CurrentUserDto getCurrentUserInfo() {
-        return authenticationService.get();
+    public ServerException(Throwable cause) {
+        super(cause);
+    }
+
+    public ServerException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+        super(message, cause, enableSuppression, writableStackTrace);
     }
 
 }

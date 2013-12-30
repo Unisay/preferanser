@@ -27,9 +27,13 @@ import com.preferanser.server.resource.AuthenticationService;
 import com.preferanser.server.resource.DealResource;
 import com.preferanser.shared.dto.CurrentUserDto;
 
+import javax.validation.Validator;
+
 public class RestModule extends AbstractModule {
 
     @Override protected void configure() {
+        bind(Validator.class).toProvider(HibernateValidatorProvider.class).in(Singleton.class);
+
         bind(DealResource.class).in(Singleton.class);
         bind(AuthResource.class).in(Singleton.class);
         bind(AuthenticationService.class).in(Singleton.class);

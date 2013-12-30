@@ -22,6 +22,7 @@ package com.preferanser.server.resource;
 import com.google.common.base.Optional;
 import com.google.inject.Inject;
 import com.preferanser.server.dao.DealDao;
+import com.preferanser.server.exception.NoAuthenticatedUserException;
 import com.preferanser.shared.domain.entity.Deal;
 
 import javax.ws.rs.GET;
@@ -38,7 +39,6 @@ public class DealResource {
     private final AuthenticationService authenticationService;
     private final DealDao dealDao;
 
-
     @Inject
     public DealResource(AuthenticationService authenticationService, DealDao dealDao) {
         this.authenticationService = authenticationService;
@@ -52,11 +52,11 @@ public class DealResource {
 
     @POST
     public void save(Deal deal) {
-
         Optional<String> currentUserId = authenticationService.getCurrentUserId();
-        if (! currentUserId.isPresent())
-            throw new RuntimeException("Not Authorized"); // TODO come up with domain exception
+        if (!currentUserId.isPresent())
+            throw new NoAuthenticatedUserException();
         deal.setUserId(currentUserId.get());
         dealDao.save(deal);
     }
+
 }

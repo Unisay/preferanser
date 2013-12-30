@@ -17,27 +17,23 @@
  *     along with this program.  If not, see [http://www.gnu.org/licenses/].
  */
 
-package com.preferanser.server.resource;
+package com.preferanser.server.guice;
 
-import com.google.inject.Inject;
-import com.preferanser.shared.dto.CurrentUserDto;
+import com.google.inject.Provider;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
+import javax.validation.Validation;
+import javax.validation.Validator;
 
-@Path("/auth")
-@Produces(MediaType.APPLICATION_JSON)
-public class AuthResource {
+public class HibernateValidatorProvider implements Provider<Validator> {
 
-    @Inject
-    private AuthenticationService authenticationService;
+    private final Validator validator;
 
-    @GET
-    @Path("current")
-    public CurrentUserDto getCurrentUserInfo() {
-        return authenticationService.get();
+    public HibernateValidatorProvider() {
+        validator = Validation.buildDefaultValidatorFactory().getValidator();
+    }
+
+    @Override public Validator get() {
+        return validator;
     }
 
 }

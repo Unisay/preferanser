@@ -20,6 +20,7 @@
 package com.preferanser.client.application.game.editor;
 
 import com.google.common.base.Optional;
+import com.google.common.base.Strings;
 import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
@@ -57,7 +58,7 @@ import static com.google.common.collect.Lists.newArrayList;
  * Table presenter
  */
 public class EditorPresenter extends Presenter<EditorPresenter.EditorView, EditorPresenter.Proxy>
-        implements EditorUiHandlers, HasCardinalContracts, InputDialogPresenter.InputResultHandler {
+    implements EditorUiHandlers, HasCardinalContracts, InputDialogPresenter.InputResultHandler {
 
     private static final Logger log = Logger.getLogger("EditorPresenter");
 
@@ -114,14 +115,14 @@ public class EditorPresenter extends Presenter<EditorPresenter.EditorView, Edito
         // TODO: remove deal initialization once deal loading is done
         maybeGame = Optional.absent();
         gameBuilder = new GameBuilder()
-                .setThreePlayers()
-                .setFirstTurn(Cardinal.NORTH)
-                .setCardinalContract(Cardinal.NORTH, Contract.SEVEN_SPADE)
-                .setCardinalContract(Cardinal.EAST, Contract.WHIST)
-                .setCardinalContract(Cardinal.WEST, Contract.PASS)
-                .putCards(Cardinal.NORTH, newArrayList(Card.values()).subList(0, 10))
-                .putCards(Cardinal.EAST, newArrayList(Card.values()).subList(10, 20))
-                .putCards(Cardinal.WEST, newArrayList(Card.values()).subList(20, 30));
+            .setThreePlayers()
+            .setFirstTurn(Cardinal.NORTH)
+            .setCardinalContract(Cardinal.NORTH, Contract.SEVEN_SPADE)
+            .setCardinalContract(Cardinal.EAST, Contract.WHIST)
+            .setCardinalContract(Cardinal.WEST, Contract.PASS)
+            .putCards(Cardinal.NORTH, newArrayList(Card.values()).subList(0, 10))
+            .putCards(Cardinal.EAST, newArrayList(Card.values()).subList(10, 20))
+            .putCards(Cardinal.WEST, newArrayList(Card.values()).subList(20, 30));
         refreshView();
     }
 
@@ -183,7 +184,7 @@ public class EditorPresenter extends Presenter<EditorPresenter.EditorView, Edito
 
     @Override
     public void openDeal() {
-        dealService.load(new Response<List<Deal>>(){
+        dealService.load(new Response<List<Deal>>() {
             @Override protected void handle(List<Deal> response) {
                 Window.alert("Loaded deals: " + response.size());
             }
@@ -192,7 +193,7 @@ public class EditorPresenter extends Presenter<EditorPresenter.EditorView, Edito
 
     @Override
     public void handleInputResult(String name) {
-        if (name != null && !"".equals(name.trim())) {
+        if (!Strings.isNullOrEmpty(name)) {
             inputDialog.getView().hide();
             Deal deal = Deal.fromGameBuilder(gameBuilder);
             deal.setName(name);

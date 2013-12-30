@@ -25,6 +25,7 @@ import com.googlecode.objectify.annotation.Index;
 import com.preferanser.shared.domain.*;
 import com.preferanser.shared.dto.Dto;
 
+import javax.validation.constraints.Size;
 import java.util.*;
 
 import static com.google.common.collect.Lists.newArrayList;
@@ -34,7 +35,9 @@ import static com.google.common.collect.Lists.newArrayList;
 public class Deal extends BaseEntity implements Dto {
 
     @Index
+    @Size(min = 2, max = 32)
     private String name;
+
     @Index
     private String userId;
     private Date created;

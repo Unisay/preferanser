@@ -24,8 +24,12 @@ import com.googlecode.objectify.Key;
 import com.googlecode.objectify.cmd.LoadType;
 import com.preferanser.server.dao.objectify.Ofy;
 import com.preferanser.server.dao.objectify.OfyFactory;
+import org.apache.commons.collections.CollectionUtils;
 
 import javax.inject.Inject;
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+import javax.validation.Validator;
 import java.util.*;
 
 public abstract class BaseDao<T> {
@@ -34,6 +38,9 @@ public abstract class BaseDao<T> {
 
     @Inject
     private OfyFactory ofyFactory;
+
+    @Inject
+    private Validator validator;
 
     private Ofy lazyOfy;
 
@@ -46,9 +53,14 @@ public abstract class BaseDao<T> {
     }
 
     public T save(T object) {
-        ofy().save().entity(object).now();
-
-        return object;
+        Set<ConstraintViolation<T>> constraintViolations = validator.validate(object);
+        if (CollectionUtils.isEmpty(constraintViolations)) {
+            ofy().save().entity(object).now();
+            return object;
+        } else {
+            String message = String.format("Entity of type '%s' failed validation on save()", clazz.getSimpleName());
+            throw new ConstraintViolationException(message, constraintViolations);
+        }
     }
 
     public Collection<T> save(Iterable<T> entities) {

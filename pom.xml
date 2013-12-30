@@ -47,7 +47,7 @@
         <servlet-api.version>2.5</servlet-api.version>
 
         <!-- other -->
-        <guava.version>14.0.1</guava.version>
+        <guava.version>15.0</guava.version>
         <xalan.version>2.7.1</xalan.version>
         <json.version>20090211</json.version>
 
@@ -70,6 +70,7 @@
         <maven-build-helper-plugin.version>1.7</maven-build-helper-plugin.version>
 
         <webappDirectory>${project.build.directory}/${project.build.finalName}</webappDirectory>
+        <commons-collections.version>3.2.1</commons-collections.version>
     </properties>
 
     <repositories>
@@ -112,6 +113,11 @@
                 <groupId>com.google.guava</groupId>
                 <artifactId>guava</artifactId>
                 <version>${guava.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-collections</groupId>
+                <artifactId>commons-collections</artifactId>
+                <version>${commons-collections.version}</version>
             </dependency>
 
             <!-- Test Dependencies -->

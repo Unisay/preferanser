@@ -24,15 +24,20 @@ import com.googlecode.objectify.Key;
 import com.googlecode.objectify.cmd.LoadType;
 import com.preferanser.server.dao.objectify.Ofy;
 import com.preferanser.server.dao.objectify.OfyFactory;
+import com.preferanser.server.exception.ValidationException;
+import com.preferanser.shared.domain.entity.BaseEntity;
 import org.apache.commons.collections.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
 import javax.validation.Validator;
 import java.util.*;
 
-public abstract class BaseDao<T> {
+public abstract class BaseDao<T extends BaseEntity> {
+
+    private static Logger logger = LoggerFactory.getLogger(BaseDao.class);
 
     private final Class<T> clazz;
 
@@ -58,8 +63,10 @@ public abstract class BaseDao<T> {
             ofy().save().entity(object).now();
             return object;
         } else {
+            for (ConstraintViolation<T> constraintViolation : constraintViolations)
+                logger.warn(constraintViolation.getMessage());
             String message = String.format("Entity of type '%s' failed validation on save()", clazz.getSimpleName());
-            throw new ConstraintViolationException(message, constraintViolations);
+            throw new ValidationException(message);
         }
     }
 
@@ -72,9 +79,7 @@ public abstract class BaseDao<T> {
     }
 
     public T get(Long id) {
-        // work around for objectify cacheing and new query not having the
-        // latest
-        // data
+        // work around for objectify caching and new query not having the latest data
         ofy().clear();
 
         return ofy().get(clazz, id);

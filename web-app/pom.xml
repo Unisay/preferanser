@@ -41,7 +41,7 @@
         <jackson.version>2.0.0</jackson.version>
         <jersey-guice.version>1.18</jersey-guice.version>
         <javax.el.version>3.0.0</javax.el.version>
-        <hibernate-validator.version>5.0.2.Final</hibernate-validator.version>
+        <hibernate-validator.version>4.3.1.Final</hibernate-validator.version>
         <juel.version>2.2.6</juel.version>
     </properties>
 
@@ -201,36 +201,6 @@
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-validator</artifactId>
             <version>${hibernate-validator.version}</version>
-        </dependency>
-
-        <!--        <dependency>
-                    <groupId>javax.el</groupId>
-                    <artifactId>javax.el-api</artifactId>
-                    <version>${javax.el.version}</version>
-                </dependency>
-
-                <dependency>
-                    <groupId>org.glassfish</groupId>
-                    <artifactId>javax.el</artifactId>
-                    <version>${javax.el.version}</version>
-                </dependency>-->
-
-        <dependency>
-            <groupId>de.odysseus.juel</groupId>
-            <artifactId>juel-api</artifactId>
-            <version>${juel.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>de.odysseus.juel</groupId>
-            <artifactId>juel-impl</artifactId>
-            <version>${juel.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>de.odysseus.juel</groupId>
-            <artifactId>juel-spi</artifactId>
-            <version>${juel.version}</version>
         </dependency>
 
         <!-- End of Hibernate validator dependencies -->

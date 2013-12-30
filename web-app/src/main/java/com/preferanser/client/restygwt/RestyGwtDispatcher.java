@@ -36,6 +36,7 @@ public class RestyGwtDispatcher implements Dispatcher {
             for (RestyGwtRequestListener requestListener : requestListeners)
                 restyGwtDispatcher.addRequestListener(requestListener);
             Defaults.setDispatcher(restyGwtDispatcher);
+            Defaults.setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZZZ");
             return restyGwtDispatcher;
         }
     }

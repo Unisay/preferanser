@@ -36,7 +36,7 @@ public class PreferanserServletContextListener extends GuiceServletContextListen
     private static class GuiceServletModule extends ServletModule {
         @Override protected void configureServlets() {
             bind(GuiceContainer.class);
-            bind(JacksonJsonProvider.class).in(Scopes.SINGLETON);
+            bind(JacksonJsonProvider.class).toProvider(JacksonJsonProviderProvider.class).in(Scopes.SINGLETON);
             serve("/Preferanser/*").with(GuiceContainer.class);
         }
     }

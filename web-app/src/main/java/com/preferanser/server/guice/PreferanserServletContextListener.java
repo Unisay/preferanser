@@ -20,12 +20,14 @@
 package com.preferanser.server.guice;
 
 import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
+import com.google.common.collect.ImmutableMap;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Scopes;
 import com.google.inject.servlet.GuiceServletContextListener;
-import com.google.inject.servlet.ServletModule;
+import com.sun.jersey.guice.JerseyServletModule;
 import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
+import com.sun.jersey.spi.container.servlet.WebComponent;
 
 public class PreferanserServletContextListener extends GuiceServletContextListener {
 
@@ -33,11 +35,12 @@ public class PreferanserServletContextListener extends GuiceServletContextListen
         return Guice.createInjector(new GuiceServletModule(), new RestModule());
     }
 
-    private static class GuiceServletModule extends ServletModule {
+    private static class GuiceServletModule extends JerseyServletModule {
         @Override protected void configureServlets() {
             bind(GuiceContainer.class);
             bind(JacksonJsonProvider.class).toProvider(JacksonJsonProviderProvider.class).in(Scopes.SINGLETON);
-            serve("/Preferanser/*").with(GuiceContainer.class);
+            serve("/Preferanser/*").with(GuiceContainer.class, ImmutableMap.of(
+                    WebComponent.RESOURCE_CONFIG_CLASS, JerseyResourceConfig.class.getName()));
         }
     }
 

@@ -29,8 +29,8 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiChild;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.*;
-import com.preferanser.client.application.game.editor.layout.*;
-import com.preferanser.client.application.game.editor.style.TableStyle;
+import com.preferanser.client.application.mvp.editor.layout.*;
+import com.preferanser.client.application.mvp.editor.style.TableStyle;
 import com.preferanser.client.theme.greencloth.client.com.preferanser.client.application.PreferanserResources;
 import com.preferanser.shared.domain.TableLocation;
 

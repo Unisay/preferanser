@@ -17,24 +17,22 @@
  *     along with this program.  If not, see [http://www.gnu.org/licenses/].
  */
 
-package com.preferanser.server.guice;
+package com.preferanser.client.application.mvp;
 
-import com.google.inject.AbstractModule;
-import com.google.inject.Singleton;
-import com.google.inject.servlet.RequestScoped;
-import com.preferanser.server.resource.AuthenticationService;
-import com.preferanser.shared.dto.CurrentUserDto;
-import com.sun.jersey.api.core.PackagesResourceConfig;
+import com.gwtplatform.mvp.client.UiHandlers;
+import com.preferanser.shared.domain.Card;
+import com.preferanser.shared.domain.TableLocation;
 
-import javax.validation.Validator;
+public interface TableUiHandlers extends UiHandlers {
 
-public class RestModule extends AbstractModule {
+    void reset();
 
-    @Override protected void configure() {
-        bind(Validator.class).toProvider(HibernateValidatorProvider.class).in(Singleton.class);
-        for (Class<?> resource : new PackagesResourceConfig("com.preferanser.server.resource").getClasses())
-            bind(resource).in(Singleton.class);
-        bind(CurrentUserDto.class).toProvider(AuthenticationService.class).in(RequestScoped.class);
-    }
-
+    /**
+     * User changed card location
+     *
+     * @param card        card
+     * @param oldLocation old location
+     * @param newLocation new location
+     */
+    void changeCardLocation(Card card, TableLocation oldLocation, TableLocation newLocation);
 }

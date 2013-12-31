@@ -17,24 +17,12 @@
  *     along with this program.  If not, see [http://www.gnu.org/licenses/].
  */
 
-package com.preferanser.server.guice;
+package com.preferanser.client.application.mvp.editor.layout;
 
-import com.google.inject.AbstractModule;
-import com.google.inject.Singleton;
-import com.google.inject.servlet.RequestScoped;
-import com.preferanser.server.resource.AuthenticationService;
-import com.preferanser.shared.dto.CurrentUserDto;
-import com.sun.jersey.api.core.PackagesResourceConfig;
+import com.google.gwt.user.client.ui.IsWidget;
 
-import javax.validation.Validator;
+import java.util.Collection;
 
-public class RestModule extends AbstractModule {
-
-    @Override protected void configure() {
-        bind(Validator.class).toProvider(HibernateValidatorProvider.class).in(Singleton.class);
-        for (Class<?> resource : new PackagesResourceConfig("com.preferanser.server.resource").getClasses())
-            bind(resource).in(Singleton.class);
-        bind(CurrentUserDto.class).toProvider(AuthenticationService.class).in(RequestScoped.class);
-    }
-
+public interface Layout<T extends IsWidget> {
+    void apply(Collection<T> widgets);
 }

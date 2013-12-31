@@ -31,7 +31,6 @@ import com.gwtplatform.mvp.client.gin.AbstractPresenterModule;
 import com.gwtplatform.mvp.client.gin.DefaultModule;
 import com.preferanser.client.application.ApplicationModule;
 import com.preferanser.client.application.ResourceLoader;
-import com.preferanser.client.application.game.editor.style.TableStyle;
 import com.preferanser.client.application.i18n.I18nHelper;
 import com.preferanser.client.application.widgets.StatusBar;
 import com.preferanser.client.gwtp.AuthBootstrapper;
@@ -39,11 +38,9 @@ import com.preferanser.client.gwtp.NameTokens;
 import com.preferanser.client.restygwt.RestyGwtDispatcher;
 import com.preferanser.client.restygwt.RestyGwtLoggingRequestListener;
 import com.preferanser.client.restygwt.RestyGwtRequestListener;
-import com.preferanser.client.restygwt.RestyGwtStatusBarRequestListener;
 import com.preferanser.client.theme.greencloth.client.com.preferanser.client.application.PreferanserResources;
 import com.preferanser.shared.domain.GameBuilder;
 import com.preferanser.shared.dto.CurrentUserDto;
-import org.fusesource.restygwt.client.Dispatcher;
 
 public class ClientModule extends AbstractPresenterModule {
 

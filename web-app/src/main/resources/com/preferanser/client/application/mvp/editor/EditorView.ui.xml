@@ -1,0 +1,88 @@
+<!--
+  ~ Preferanser is a program to simulate and calculate Russian Preferans Card game deals.
+  ~
+  ~     Copyright (C) 2013  Yuriy Lazarev <Yuriy.Lazarev@gmail.com>
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, either version 3 of the License, or
+  ~     (at your option) any later version.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see [http://www.gnu.org/licenses/].
+  -->
+
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+             xmlns:g="urn:import:com.google.gwt.user.client.ui"
+             xmlns:p="urn:import:com.preferanser.client.application.widgets">
+    <ui:with field="constants" type="com.preferanser.client.application.i18n.PreferanserConstants"/>
+    <ui:style src="../table.css" field="tableStyle" type="com.preferanser.client.application.mvp.editor.style.TableStyle"/>
+
+    <p:TablePanel ui:field="table">
+
+        <p:header>
+            <p:Widgets>
+                <g:Button ui:field="playButton" text="{constants.play}" debugId="play"/>
+                <p:RequestButton ui:field="saveButton" text="{constants.save}" debugId="save" />
+                <p:RequestButton ui:field="openButton" text="{constants.open}" debugId="open" />
+                <g:Button ui:field="dealButton" text="{constants.deal}" debugId="deal"/>
+            </p:Widgets>
+        </p:header>
+
+        <p:northheader>
+            <p:Widgets>
+                <g:FlowPanel addStyleNames="{tableStyle.handHeaderLeftPanel}">
+                    <g:Label ui:field="titleNorth" text="{constants.north}" addStyleNames="{tableStyle.titleNorth}"/>
+                    <g:Anchor ui:field="northContractAnchor" debugId="contract-link-NORTH" addStyleNames="{tableStyle.contractLink}"/>
+                </g:FlowPanel>
+                <g:Label ui:field="trickCountNorth" addStyleNames="{tableStyle.trickCountNorth}"/>
+            </p:Widgets>
+        </p:northheader>
+
+        <p:westheader>
+            <p:Widgets>
+                <g:FlowPanel addStyleNames="{tableStyle.handHeaderLeftPanel}">
+                    <g:Label ui:field="titleWest" text="{constants.west}" addStyleNames="{tableStyle.titleWest}"/>
+                    <g:Anchor ui:field="westContractAnchor" debugId="contract-link-WEST" addStyleNames="{tableStyle.contractLink}"/>
+                </g:FlowPanel>
+                <g:Label ui:field="trickCountWest" addStyleNames="{tableStyle.trickCountWest}"/>
+            </p:Widgets>
+        </p:westheader>
+
+        <p:southheader>
+            <p:Widgets>
+                <g:FlowPanel addStyleNames="{tableStyle.handHeaderLeftPanel}">
+                    <g:Label ui:field="titleSouth" text="{constants.south}" addStyleNames="{tableStyle.titleSouth}"/>
+                    <g:Anchor ui:field="southContractAnchor" debugId="contract-link-SOUTH" addStyleNames="{tableStyle.contractLink}"/>
+                </g:FlowPanel>
+                <g:Label ui:field="trickCountSouth" addStyleNames="{tableStyle.trickCountSouth}"/>
+            </p:Widgets>
+        </p:southheader>
+
+        <p:eastheader>
+            <p:Widgets>
+                <g:FlowPanel addStyleNames="{tableStyle.handHeaderLeftPanel}">
+                    <g:Label ui:field="titleEast" text="{constants.east}" addStyleNames="{tableStyle.titleEast}"/>
+                    <g:Anchor ui:field="eastContractAnchor" debugId="contract-link-EAST" addStyleNames="{tableStyle.contractLink}"/>
+                </g:FlowPanel>
+                <g:Label ui:field="trickCountEast" addStyleNames="{tableStyle.trickCountEast}"/>
+            </p:Widgets>
+        </p:eastheader>
+
+        <p:center>
+            <p:Widgets>
+                <p:TurnPointer ui:field="turnPointerNorth" turn="NORTH"/>
+                <p:TurnPointer ui:field="turnPointerEast" turn="EAST"/>
+                <p:TurnPointer ui:field="turnPointerSouth" turn="SOUTH"/>
+                <p:TurnPointer ui:field="turnPointerWest" turn="WEST"/>
+            </p:Widgets>
+        </p:center>
+
+    </p:TablePanel>
+
+</ui:UiBinder>

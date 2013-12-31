@@ -17,24 +17,22 @@
  *     along with this program.  If not, see [http://www.gnu.org/licenses/].
  */
 
-package com.preferanser.server.guice;
+package com.preferanser.client.application.mvp.player;
 
-import com.google.inject.AbstractModule;
-import com.google.inject.Singleton;
-import com.google.inject.servlet.RequestScoped;
-import com.preferanser.server.resource.AuthenticationService;
-import com.preferanser.shared.dto.CurrentUserDto;
-import com.sun.jersey.api.core.PackagesResourceConfig;
+import com.preferanser.client.application.mvp.TableUiHandlers;
 
-import javax.validation.Validator;
+/**
+ * Game UI handlers
+ */
+public interface PlayerUiHandlers extends TableUiHandlers {
 
-public class RestModule extends AbstractModule {
+    /**
+     * User moved cards to sluff
+     */
+    void sluff();
 
-    @Override protected void configure() {
-        bind(Validator.class).toProvider(HibernateValidatorProvider.class).in(Singleton.class);
-        for (Class<?> resource : new PackagesResourceConfig("com.preferanser.server.resource").getClasses())
-            bind(resource).in(Singleton.class);
-        bind(CurrentUserDto.class).toProvider(AuthenticationService.class).in(RequestScoped.class);
-    }
-
+    /**
+     *  Switch to editor page
+     */
+    void switchToEditor();
 }

@@ -26,7 +26,6 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewImpl;
-import com.preferanser.client.application.game.editor.style.TableStyle;
 import com.preferanser.client.application.widgets.StatusBar;
 
 public class ApplicationView extends ViewImpl implements ApplicationPresenter.TheView {

@@ -20,12 +20,12 @@
 package com.preferanser.client.application;
 
 import com.gwtplatform.mvp.client.gin.AbstractPresenterModule;
-import com.preferanser.client.application.game.editor.EditorModule;
-import com.preferanser.client.application.game.error.ErrorPresenter;
-import com.preferanser.client.application.game.error.ErrorView;
-import com.preferanser.client.application.game.player.PlayerModule;
-import com.preferanser.client.application.game.unauthorized.UnauthorizedPresenter;
-import com.preferanser.client.application.game.unauthorized.UnauthorizedView;
+import com.preferanser.client.application.mvp.editor.EditorModule;
+import com.preferanser.client.application.mvp.error.ErrorPresenter;
+import com.preferanser.client.application.mvp.error.ErrorView;
+import com.preferanser.client.application.mvp.player.PlayerModule;
+import com.preferanser.client.application.mvp.unauthorized.UnauthorizedPresenter;
+import com.preferanser.client.application.mvp.unauthorized.UnauthorizedView;
 
 public class ApplicationModule extends AbstractPresenterModule {
 

@@ -25,6 +25,8 @@ import com.preferanser.client.application.mvp.dialog.input.InputDialogPresenter;
 import com.preferanser.client.application.mvp.dialog.input.InputDialogView;
 import com.preferanser.client.application.mvp.editor.dialog.contract.ContractDialogPresenter;
 import com.preferanser.client.application.mvp.editor.dialog.contract.ContractDialogView;
+import com.preferanser.client.application.mvp.editor.dialog.open.OpenDialogPresenter;
+import com.preferanser.client.application.mvp.editor.dialog.open.OpenDialogView;
 import com.preferanser.client.application.mvp.editor.dialog.validation.ValidationDialogPresenter;
 import com.preferanser.client.application.mvp.editor.dialog.validation.ValidationDialogView;
 
@@ -36,6 +38,7 @@ public class EditorModule extends AbstractPresenterModule {
     @Override
     protected void configure() {
         bind(HasCardinalContracts.class).to(EditorPresenter.class).in(Singleton.class);
+        bindSingletonPresenterWidget(OpenDialogPresenter.class, OpenDialogPresenter.TheView.class, OpenDialogView.class);
         bindSingletonPresenterWidget(ContractDialogPresenter.class, ContractDialogPresenter.TheView.class, ContractDialogView.class);
         bindSingletonPresenterWidget(ValidationDialogPresenter.class, ValidationDialogPresenter.TheView.class, ValidationDialogView.class);
         bindSingletonPresenterWidget(InputDialogPresenter.class, InputDialogPresenter.TheView.class, InputDialogView.class);

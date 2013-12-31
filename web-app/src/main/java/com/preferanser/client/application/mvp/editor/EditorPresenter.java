@@ -21,7 +21,6 @@ package com.preferanser.client.application.mvp.editor;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Strings;
-import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.HasUiHandlers;
@@ -37,8 +36,7 @@ import com.preferanser.client.application.i18n.PreferanserConstants;
 import com.preferanser.client.application.mvp.GameBuiltEvent;
 import com.preferanser.client.application.mvp.TableView;
 import com.preferanser.client.application.mvp.dialog.input.InputDialogPresenter;
-import com.preferanser.client.application.mvp.editor.dialog.contract.ContractDialogPresenter;
-import com.preferanser.client.application.mvp.editor.dialog.validation.ValidationDialogPresenter;
+import com.preferanser.client.application.mvp.editor.dialog.EditorDialogs;
 import com.preferanser.client.gwtp.LoggedInGatekeeper;
 import com.preferanser.client.gwtp.NameTokens;
 import com.preferanser.client.service.DealService;
@@ -58,7 +56,7 @@ import static com.google.common.collect.Lists.newArrayList;
  * Table presenter
  */
 public class EditorPresenter extends Presenter<EditorPresenter.EditorView, EditorPresenter.Proxy>
-    implements EditorUiHandlers, HasCardinalContracts, InputDialogPresenter.InputResultHandler {
+        implements EditorUiHandlers, HasCardinalContracts, InputDialogPresenter.InputResultHandler {
 
     private static final Logger log = Logger.getLogger("EditorPresenter");
 
@@ -70,10 +68,8 @@ public class EditorPresenter extends Presenter<EditorPresenter.EditorView, Edito
     private GameBuilder gameBuilder;
     private final PlaceManager placeManager;
     private final DealService dealService;
-    private final PreferanserConstants preferanserConstants;
-    private final ContractDialogPresenter contractDialog;
-    private final InputDialogPresenter inputDialog;
-    private final ValidationDialogPresenter validationDialog;
+    private final PreferanserConstants constants;
+    private final EditorDialogs editorDialogs;
 
     @ProxyStandard
     @NameToken(NameTokens.GAME_EDITOR)
@@ -88,19 +84,14 @@ public class EditorPresenter extends Presenter<EditorPresenter.EditorView, Edito
                            Proxy proxy,
                            GameBuilder gameBuilder,
                            DealService dealService,
-                           PreferanserConstants preferanserConstants,
-                           ContractDialogPresenter contractDialog,
-                           ValidationDialogPresenter validationDialog,
-                           InputDialogPresenter inputDialog) {
+                           PreferanserConstants constants,
+                           EditorDialogs editorDialogs) {
         super(eventBus, view, proxy, ApplicationPresenter.TYPE_SetMainContent);
         this.placeManager = placeManager;
         this.gameBuilder = gameBuilder;
         this.dealService = dealService;
-        this.preferanserConstants = preferanserConstants;
-        this.contractDialog = contractDialog;
-        this.inputDialog = inputDialog;
-        this.contractDialog.setHasCardinalContracts(this);
-        this.validationDialog = validationDialog;
+        this.constants = constants;
+        this.editorDialogs = editorDialogs;
         getView().setUiHandlers(this);
     }
 
@@ -115,21 +106,20 @@ public class EditorPresenter extends Presenter<EditorPresenter.EditorView, Edito
         // TODO: remove deal initialization once deal loading is done
         maybeGame = Optional.absent();
         gameBuilder = new GameBuilder()
-            .setThreePlayers()
-            .setFirstTurn(Cardinal.NORTH)
-            .setCardinalContract(Cardinal.NORTH, Contract.SEVEN_SPADE)
-            .setCardinalContract(Cardinal.EAST, Contract.WHIST)
-            .setCardinalContract(Cardinal.WEST, Contract.PASS)
-            .putCards(Cardinal.NORTH, newArrayList(Card.values()).subList(0, 10))
-            .putCards(Cardinal.EAST, newArrayList(Card.values()).subList(10, 20))
-            .putCards(Cardinal.WEST, newArrayList(Card.values()).subList(20, 30));
+                .setThreePlayers()
+                .setFirstTurn(Cardinal.NORTH)
+                .setCardinalContract(Cardinal.NORTH, Contract.SEVEN_SPADE)
+                .setCardinalContract(Cardinal.EAST, Contract.WHIST)
+                .setCardinalContract(Cardinal.WEST, Contract.PASS)
+                .putCards(Cardinal.NORTH, newArrayList(Card.values()).subList(0, 10))
+                .putCards(Cardinal.EAST, newArrayList(Card.values()).subList(10, 20))
+                .putCards(Cardinal.WEST, newArrayList(Card.values()).subList(20, 30));
         refreshView();
     }
 
     @Override
     public void chooseContract(Cardinal cardinal) {
-        contractDialog.setCardinal(cardinal);
-        addToPopupSlot(contractDialog);
+        editorDialogs.showContractDialog(cardinal);
     }
 
     @Override
@@ -169,24 +159,21 @@ public class EditorPresenter extends Presenter<EditorPresenter.EditorView, Edito
             placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.GAME_PLAYER).build());
             GameBuiltEvent.fire(this, maybeGame.get());
         } catch (GameBuilderException e) {
-            validationDialog.setValidationErrors(e.getBuilderErrors());
-            addToPopupSlot(validationDialog);
+            editorDialogs.showValidationDialog(e.getBuilderErrors());
         }
     }
 
     @Override
     public void saveDeal() {
-        inputDialog.setTitle(preferanserConstants.save());
-        inputDialog.setDescription(preferanserConstants.saveDescription());
-        inputDialog.onInputResult(this);
-        addToPopupSlot(inputDialog, true);
+        editorDialogs.showInputDialog(constants.save(), constants.saveDescription());
     }
 
     @Override
     public void openDeal() {
         dealService.load(new Response<List<Deal>>() {
-            @Override protected void handle(List<Deal> response) {
-                Window.alert("Loaded deals: " + response.size());
+            @Override
+            protected void handle(List<Deal> deals) {
+                editorDialogs.showOpenDialog(deals);
             }
         });
     }
@@ -194,7 +181,7 @@ public class EditorPresenter extends Presenter<EditorPresenter.EditorView, Edito
     @Override
     public void handleInputResult(String name) {
         if (!Strings.isNullOrEmpty(name)) {
-            inputDialog.getView().hide();
+            editorDialogs.hideInputDialog();
             Deal deal = Deal.fromGameBuilder(gameBuilder);
             deal.setName(name);
             dealService.persist(deal, new Response<Void>());

@@ -26,19 +26,12 @@
             color: white;
             text-shadow: 1px 1px 1px black;
         }
-
-        .dialogMiddleCenterInner {
-            margin-top: 1em;
-            background-color: rgba(0, 0, 0, 0.2);
-            border-radius: 7px;
-            -webkit-border-radius: 7px;
-        }
     </ui:style>
     <ui:with field="constants" type="com.preferanser.client.application.i18n.PreferanserConstants"/>
     <p:EscapableDialogBox debugId="open-dialog" modal="true" glassEnabled="true"
                           autoHideEnabled="true" glassStyleName="gwt-DialogBoxOverlay"
                           addStyleNames="{style.dialog}" text="{constants.open}">
-        <c:DataGrid ui:field="dealDataGrid" width="460px" height="300px" debugId="dataGrid" />
+        <c:DataGrid ui:field="dealDataGrid" width="460px" height="300px" debugId="dataGrid"/>
     </p:EscapableDialogBox>
 
 </ui:UiBinder>

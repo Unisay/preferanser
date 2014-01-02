@@ -22,13 +22,16 @@ package com.preferanser.shared.domain.entity;
 
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Index;
-import com.preferanser.shared.domain.*;
+import com.preferanser.shared.domain.Card;
+import com.preferanser.shared.domain.Cardinal;
+import com.preferanser.shared.domain.Contract;
+import com.preferanser.shared.domain.GamePlayers;
 import com.preferanser.shared.dto.Dto;
 
 import javax.validation.constraints.Size;
-import java.util.*;
-
-import static com.google.common.collect.Lists.newArrayList;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 @Entity
 @SuppressWarnings({"unused", "ClassWithTooManyFields", "ClassWithTooManyMethods"})
@@ -40,9 +43,14 @@ public class Deal extends BaseEntity implements Dto {
 
     @Index
     private String userId;
+
     @Index
     private Date created;
+
     private Cardinal firstTurn;
+
+    private GamePlayers gamePlayers;
+
     private Contract northContract;
     private Contract eastContract;
     private Contract southContract;
@@ -61,66 +69,6 @@ public class Deal extends BaseEntity implements Dto {
         eastCards = new ArrayList<Card>();
         southCards = new ArrayList<Card>();
         westCards = new ArrayList<Card>();
-    }
-
-    public static Deal fromGameBuilder(GameBuilder gameBuilder) {
-        Deal dto = new Deal();
-        dto.created = new Date();
-        dto.firstTurn = gameBuilder.getFirstTurn();
-        dto.name = new Date().toString(); // TODO: ask user for a name
-        initContracts(gameBuilder, dto);
-        initCardinalCards(gameBuilder, dto);
-        initCenterCards(gameBuilder, dto);
-        return dto;
-    }
-
-    private static void initCenterCards(GameBuilder gameBuilder, Deal dto) {
-        Map<Card, Cardinal> centerCards = gameBuilder.getCenterCards();
-        for (Map.Entry<Card, Cardinal> cardCardinalEntry : centerCards.entrySet()) {
-            switch (cardCardinalEntry.getValue()) {
-                case NORTH:
-                    dto.centerNorthCard = cardCardinalEntry.getKey();
-                    break;
-                case EAST:
-                    dto.centerEastCard = cardCardinalEntry.getKey();
-                    break;
-                case SOUTH:
-                    dto.centerSouthCard = cardCardinalEntry.getKey();
-                    break;
-                case WEST:
-                    dto.centerWestCard = cardCardinalEntry.getKey();
-                    break;
-                default:
-                    throw new IllegalStateException("Invalid Cardinal constant: " + cardCardinalEntry.getValue());
-            }
-        }
-    }
-
-    private static void initCardinalCards(GameBuilder gameBuilder, Deal dto) {
-        Map<TableLocation, Collection<Card>> tableCards = gameBuilder.getTableCards();
-        dto.northCards.addAll(getCardinalCards(tableCards, TableLocation.NORTH));
-        dto.eastCards.addAll(getCardinalCards(tableCards, TableLocation.EAST));
-        dto.southCards.addAll(getCardinalCards(tableCards, TableLocation.SOUTH));
-        dto.westCards.addAll(getCardinalCards(tableCards, TableLocation.WEST));
-    }
-
-    private static void initContracts(GameBuilder gameBuilder, Deal dto) {
-        Map<Cardinal, Contract> cardinalContracts = gameBuilder.getCardinalContracts();
-        dto.northContract = cardinalContracts.get(Cardinal.NORTH);
-        dto.eastContract = cardinalContracts.get(Cardinal.EAST);
-        dto.southContract = cardinalContracts.get(Cardinal.SOUTH);
-        dto.westContract = cardinalContracts.get(Cardinal.WEST);
-    }
-
-    private static List<Card> getCardinalCards(Map<TableLocation, Collection<Card>> tableCards, TableLocation location) {
-        Collection<Card> cardsCollection = tableCards.get(location);
-        List<Card> cards = newArrayList();
-        if (cardsCollection == null) {
-            cards = Collections.emptyList();
-        } else {
-            cards.addAll(cardsCollection);
-        }
-        return cards;
     }
 
     public String getUserId() {
@@ -145,6 +93,14 @@ public class Deal extends BaseEntity implements Dto {
 
     public void setCreated(Date created) {
         this.created = created;
+    }
+
+    public GamePlayers getGamePlayers() {
+        return gamePlayers;
+    }
+
+    public void setGamePlayers(GamePlayers gamePlayers) {
+        this.gamePlayers = gamePlayers;
     }
 
     public Cardinal getFirstTurn() {

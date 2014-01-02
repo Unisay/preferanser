@@ -40,9 +40,9 @@ public class OpenDialogPresenter extends PresenterWidget<OpenDialogPresenter.The
     private EditorPresenter editorPresenter;
 
     public interface TheView extends PopupView, HasUiHandlers<OpenDialogUiHandlers> {
-
         void displayAvailableDeals(List<Deal> deals);
     }
+
     @Inject
     public OpenDialogPresenter(EventBus eventBus, TheView view, DealService dealService) {
         super(eventBus, view);

@@ -58,7 +58,7 @@ public class GameTest {
 
     @Test
     public void testMakeTurn_FromCardinalWrongCard() throws Exception {
-        game = new Game(3, cardinalContractMap, turnRotator, cardinalCardMultimap, centerCardCardinalMap);
+        game = new Game(GamePlayers.THREE, cardinalContractMap, turnRotator, cardinalCardMultimap, centerCardCardinalMap);
 
         try {
             game.makeTurn(NORTH, DIAMOND_ACE);
@@ -72,7 +72,7 @@ public class GameTest {
 
     @Test
     public void testMakeTurn_NotInTurn() throws Exception {
-        game = new Game(3, cardinalContractMap, turnRotator, cardinalCardMultimap, centerCardCardinalMap);
+        game = new Game(GamePlayers.THREE, cardinalContractMap, turnRotator, cardinalCardMultimap, centerCardCardinalMap);
 
         try {
             game.makeTurn(WEST, CLUB_JACK);
@@ -91,7 +91,7 @@ public class GameTest {
         cardinalCardMultimap.put(EAST, CLUB_KING);
         cardinalCardMultimap.put(EAST, HEART_ACE);
 
-        game = new Game(3, cardinalContractMap, turnRotator, cardinalCardMultimap, centerCardCardinalMap);
+        game = new Game(GamePlayers.THREE, cardinalContractMap, turnRotator, cardinalCardMultimap, centerCardCardinalMap);
 
         game.makeTurn(NORTH, CLUB_ACE);
         try {
@@ -111,7 +111,7 @@ public class GameTest {
         cardinalCardMultimap.put(EAST, HEART_ACE);
         cardinalCardMultimap.put(EAST, SPADE_ACE);
 
-        game = new Game(3, cardinalContractMap, turnRotator, cardinalCardMultimap, centerCardCardinalMap);
+        game = new Game(GamePlayers.THREE, cardinalContractMap, turnRotator, cardinalCardMultimap, centerCardCardinalMap);
 
         game.makeTurn(NORTH, CLUB_ACE);
         try {
@@ -130,7 +130,7 @@ public class GameTest {
         cardinalCardMultimap.put(EAST, HEART_ACE);
         cardinalCardMultimap.put(EAST, SPADE_ACE);
 
-        game = new Game(3, cardinalContractMap, turnRotator, cardinalCardMultimap, centerCardCardinalMap);
+        game = new Game(GamePlayers.THREE, cardinalContractMap, turnRotator, cardinalCardMultimap, centerCardCardinalMap);
 
         game.makeTurn(NORTH, CLUB_ACE);
         try {
@@ -149,7 +149,7 @@ public class GameTest {
         cardinalCardMultimap.put(EAST, HEART_ACE);
         cardinalCardMultimap.put(EAST, DIAMOND_ACE);
 
-        game = new Game(3, cardinalContractMap, turnRotator, cardinalCardMultimap, centerCardCardinalMap);
+        game = new Game(GamePlayers.THREE, cardinalContractMap, turnRotator, cardinalCardMultimap, centerCardCardinalMap);
 
         game.makeTurn(NORTH, CLUB_ACE);
         game.makeTurn(EAST, HEART_ACE);
@@ -168,7 +168,7 @@ public class GameTest {
         cardinalCardMultimap.put(EAST, HEART_ACE);
         cardinalCardMultimap.put(EAST, SPADE_ACE);
 
-        game = new Game(3, cardinalContractMap, turnRotator, cardinalCardMultimap, centerCardCardinalMap);
+        game = new Game(GamePlayers.THREE, cardinalContractMap, turnRotator, cardinalCardMultimap, centerCardCardinalMap);
 
         game.makeTurn(NORTH, CLUB_ACE);
         game.makeTurn(EAST, HEART_ACE);
@@ -176,7 +176,7 @@ public class GameTest {
 
     @Test
     public void testMakeTurn_FourPlayersExtraTurn() throws Exception {
-        game = new Game(3, cardinalContractMap, turnRotator, cardinalCardMultimap, centerCardCardinalMap);
+        game = new Game(GamePlayers.THREE, cardinalContractMap, turnRotator, cardinalCardMultimap, centerCardCardinalMap);
 
         game.makeTurn(NORTH, CLUB_ACE);
         game.makeTurn(EAST, CLUB_EIGHT);
@@ -193,7 +193,7 @@ public class GameTest {
     @Test
     public void testMakeTurn_ThreePlayersExtraTurn() throws Exception {
         turnRotator = createTurnRotator(NORTH);
-        game = new Game(3, cardinalContractMap, turnRotator, cardinalCardMultimap, centerCardCardinalMap);
+        game = new Game(GamePlayers.THREE, cardinalContractMap, turnRotator, cardinalCardMultimap, centerCardCardinalMap);
 
         game.makeTurn(NORTH, CLUB_ACE);
         game.makeTurn(EAST, CLUB_EIGHT);
@@ -208,7 +208,7 @@ public class GameTest {
 
     @Test
     public void testMakeTurn_SkipWidow() throws Exception {
-        game = new Game(4, cardinalContractMap, turnRotator, cardinalCardMultimap, centerCardCardinalMap);
+        game = new Game(GamePlayers.FOUR, cardinalContractMap, turnRotator, cardinalCardMultimap, centerCardCardinalMap);
 
         game.makeTurn(NORTH, CLUB_ACE);
         game.makeTurn(EAST, CLUB_EIGHT);
@@ -222,14 +222,14 @@ public class GameTest {
         centerCardCardinalMap.put(DIAMOND_KING, EAST);
         centerCardCardinalMap.put(DIAMOND_QUEEN, WEST);
 
-        game = new Game(3, cardinalContractMap, turnRotator, cardinalCardMultimap, centerCardCardinalMap);
+        game = new Game(GamePlayers.THREE, cardinalContractMap, turnRotator, cardinalCardMultimap, centerCardCardinalMap);
 
         assertTrue(game.isTrickComplete());
     }
 
     @Test
     public void testIsTrickComplete_ThreePlayers_Negative() throws Exception {
-        game = new Game(3, cardinalContractMap, turnRotator, cardinalCardMultimap, centerCardCardinalMap);
+        game = new Game(GamePlayers.THREE, cardinalContractMap, turnRotator, cardinalCardMultimap, centerCardCardinalMap);
 
         assertFalse(game.isTrickComplete());
     }
@@ -243,7 +243,7 @@ public class GameTest {
         centerCardCardinalMap.put(DIAMOND_QUEEN, WEST);
 
         turnRotator = createTurnRotator(NORTH);
-        game = new Game(4, cardinalContractMap, turnRotator, cardinalCardMultimap, centerCardCardinalMap);
+        game = new Game(GamePlayers.FOUR, cardinalContractMap, turnRotator, cardinalCardMultimap, centerCardCardinalMap);
 
         assertTrue(game.isTrickComplete());
     }
@@ -255,14 +255,14 @@ public class GameTest {
         centerCardCardinalMap.put(DIAMOND_KING, EAST);
         centerCardCardinalMap.put(DIAMOND_QUEEN, WEST);
 
-        game = new Game(4, cardinalContractMap, turnRotator, cardinalCardMultimap, centerCardCardinalMap);
+        game = new Game(GamePlayers.FOUR, cardinalContractMap, turnRotator, cardinalCardMultimap, centerCardCardinalMap);
 
         assertFalse(game.isTrickComplete());
     }
 
     @Test
     public void testGetTurn() throws Exception {
-        game = new Game(3, cardinalContractMap, turnRotator, cardinalCardMultimap, centerCardCardinalMap);
+        game = new Game(GamePlayers.THREE, cardinalContractMap, turnRotator, cardinalCardMultimap, centerCardCardinalMap);
         assertThat(game.getTurn(), equalTo(NORTH));
         game.makeTurn(NORTH, CLUB_ACE);
         assertThat(game.getTurn(), equalTo(EAST));
@@ -274,7 +274,7 @@ public class GameTest {
 
     @Test
     public void testGetTrump() throws Exception {
-        game = new Game(3, cardinalContractMap, turnRotator, cardinalCardMultimap, centerCardCardinalMap);
+        game = new Game(GamePlayers.THREE, cardinalContractMap, turnRotator, cardinalCardMultimap, centerCardCardinalMap);
 
         assertTrue(game.getTrump().isPresent());
         assertThat(game.getTrump().get(), equalTo(Suit.SPADE));
@@ -283,7 +283,7 @@ public class GameTest {
     @Test
     public void testGetTrump_NoTrumpPlayingContract() throws Exception {
         cardinalContractMap = ImmutableMap.of(NORTH, Contract.SIX_NO_TRUMP, EAST, Contract.PASS, WEST, Contract.WHIST);
-        game = new Game(3, cardinalContractMap, turnRotator, cardinalCardMultimap, centerCardCardinalMap);
+        game = new Game(GamePlayers.THREE, cardinalContractMap, turnRotator, cardinalCardMultimap, centerCardCardinalMap);
 
         assertFalse(game.getTrump().isPresent());
     }
@@ -291,14 +291,14 @@ public class GameTest {
     @Test
     public void testGetTrump_NoTrumpNotPlayingContract() throws Exception {
         cardinalContractMap = ImmutableMap.of(NORTH, Contract.PASS, EAST, Contract.PASS, WEST, Contract.PASS);
-        game = new Game(3, cardinalContractMap, turnRotator, cardinalCardMultimap, centerCardCardinalMap);
+        game = new Game(GamePlayers.THREE, cardinalContractMap, turnRotator, cardinalCardMultimap, centerCardCardinalMap);
 
         assertFalse(game.getTrump().isPresent());
     }
 
     @Test
     public void testSluffTrick() throws Exception {
-        game = new Game(3, cardinalContractMap, turnRotator, cardinalCardMultimap, centerCardCardinalMap);
+        game = new Game(GamePlayers.THREE, cardinalContractMap, turnRotator, cardinalCardMultimap, centerCardCardinalMap);
         assertFalse(game.sluffTrick());
         game.makeTurn(NORTH, CLUB_ACE);
         assertFalse(game.sluffTrick());

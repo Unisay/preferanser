@@ -23,15 +23,14 @@ import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Maps;
+import com.preferanser.shared.domain.entity.Deal;
 import com.preferanser.shared.domain.exception.DuplicateGameTurnException;
 import com.preferanser.shared.domain.exception.GameBuilderException;
+import com.preferanser.shared.util.Clock;
 import com.preferanser.shared.util.EnumRotator;
 import com.preferanser.shared.util.GameUtils;
 
-import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.collect.Lists.newArrayList;
@@ -51,7 +50,7 @@ public class GameBuilder {
         WRONG_NUMBER_OF_CONTRACTS
     }
 
-    private Integer numPlayers;
+    private GamePlayers gamePlayers;
 
     private Cardinal firstTurn;
 
@@ -64,18 +63,87 @@ public class GameBuilder {
     private Map<Card, Cardinal> centerCardCardinalMap
         = Maps.newLinkedHashMap(); // order is important
 
+    public GameBuilder setDeal(Deal deal) {
+        firstTurn = deal.getFirstTurn();
+        gamePlayers = deal.getGamePlayers();
+        setCardinalDealContracts(deal);
+        setCardinalDealCards(deal);
+        setCenterDealCards(deal);
+        return this;
+    }
+
+    private void setCardinalDealContracts(Deal deal) {
+        if (deal.getNorthContract() == null)
+            cardinalContracts.remove(Cardinal.NORTH);
+        else
+            cardinalContracts.put(Cardinal.NORTH, deal.getNorthContract());
+
+        if (deal.getEastContract() == null)
+            cardinalContracts.remove(Cardinal.EAST);
+        else
+            cardinalContracts.put(Cardinal.EAST, deal.getEastContract());
+
+        if (deal.getSouthContract() == null)
+            cardinalContracts.remove(Cardinal.SOUTH);
+        else
+            cardinalContracts.put(Cardinal.SOUTH, deal.getSouthContract());
+
+        if (deal.getWestContract() == null)
+            cardinalContracts.remove(Cardinal.WEST);
+        else
+            cardinalContracts.put(Cardinal.WEST, deal.getWestContract());
+    }
+
+    private void setCardinalDealCards(Deal deal) {
+        cardinalCardMultimap.putAll(Cardinal.NORTH, deal.getNorthCards());
+        cardinalCardMultimap.putAll(Cardinal.EAST, deal.getEastCards());
+        cardinalCardMultimap.putAll(Cardinal.SOUTH, deal.getSouthCards());
+        cardinalCardMultimap.putAll(Cardinal.WEST, deal.getWestCards());
+    }
+
+    private void setCenterDealCards(Deal deal) {
+        if (deal.getCenterNorthCard() == null)
+            removeCenterCardByCardinal(Cardinal.NORTH);
+        else
+            centerCardCardinalMap.put(deal.getCenterNorthCard(), Cardinal.NORTH);
+
+        if (deal.getCenterEastCard() == null)
+            removeCenterCardByCardinal(Cardinal.EAST);
+        else
+            centerCardCardinalMap.put(deal.getCenterEastCard(), Cardinal.EAST);
+
+        if (deal.getCenterSouthCard() == null)
+            removeCenterCardByCardinal(Cardinal.SOUTH);
+        else
+            centerCardCardinalMap.put(deal.getCenterSouthCard(), Cardinal.SOUTH);
+
+        if (deal.getCenterWestCard() == null)
+            removeCenterCardByCardinal(Cardinal.WEST);
+        else
+            centerCardCardinalMap.put(deal.getCenterWestCard(), Cardinal.WEST);
+    }
+
+    private void removeCenterCardByCardinal(Cardinal cardinal) {
+        for (Map.Entry<Card, Cardinal> entry : centerCardCardinalMap.entrySet()) {
+            if (entry.getValue() == cardinal) {
+                centerCardCardinalMap.remove(entry.getKey());
+                return;
+            }
+        }
+    }
+
     public GameBuilder setFirstTurn(Cardinal firstTurn) {
         this.firstTurn = firstTurn;
         return this;
     }
 
     public GameBuilder setThreePlayers() {
-        numPlayers = 3;
+        gamePlayers = GamePlayers.THREE;
         return this;
     }
 
     public GameBuilder setFourPlayers() {
-        numPlayers = 4;
+        gamePlayers = GamePlayers.FOUR;
         return this;
     }
 
@@ -119,7 +187,7 @@ public class GameBuilder {
             centerCardCardinalMap.remove(card);
             cardinalCardMultimap.get(GameUtils.tableLocationToCardinal(newLocation)).add(card);
         } else if (CENTER == newLocation) { // moving card to center
-            if (centerCardCardinalMap.size() == numPlayers) {
+            if (centerCardCardinalMap.size() == gamePlayers.getNumPlayers()) {
                 return false;
             }
             Cardinal oldCardinal = GameUtils.tableLocationToCardinal(oldLocation);
@@ -140,7 +208,7 @@ public class GameBuilder {
     private Optional<List<Error>> validate() {
         List<Error> errors = newArrayList();
 
-        if (numPlayers == null)
+        if (gamePlayers == null)
             errors.add(Error.NUM_PLAYERS_NOT_SPECIFIED);
 
         if (firstTurn == null)
@@ -174,8 +242,8 @@ public class GameBuilder {
     }
 
     private boolean wrongFirstTurn() {
-        return numPlayers != null
-            && numPlayers == 3
+        return gamePlayers != null
+            && gamePlayers == GamePlayers.THREE
             && firstTurn != null
             && cardinalContracts.get(firstTurn) == null;
     }
@@ -212,12 +280,73 @@ public class GameBuilder {
         cardinalRotator.setSkipValues(getWidowCardinal());
 
         return new Game(
-            numPlayers,
+            gamePlayers,
             cardinalContracts,
             cardinalRotator,
             cardinalCardMultimap,
             centerCardCardinalMap
         );
+    }
+
+    public Deal buildDeal(String name) {
+        Deal deal = new Deal();
+        deal.setCreated(Clock.getNow());
+        deal.setFirstTurn(firstTurn);
+        deal.setName(name);
+        deal.setGamePlayers(gamePlayers);
+        initContracts(deal);
+        initCardinalCards(deal);
+        initCenterCards(deal);
+        return deal;
+    }
+
+    private void initCenterCards(Deal dto) {
+        Map<Card, Cardinal> centerCards = getCenterCards();
+        for (Map.Entry<Card, Cardinal> cardCardinalEntry : centerCards.entrySet()) {
+            switch (cardCardinalEntry.getValue()) {
+                case NORTH:
+                    dto.setCenterNorthCard(cardCardinalEntry.getKey());
+                    break;
+                case EAST:
+                    dto.setCenterEastCard(cardCardinalEntry.getKey());
+                    break;
+                case SOUTH:
+                    dto.setCenterSouthCard(cardCardinalEntry.getKey());
+                    break;
+                case WEST:
+                    dto.setCenterWestCard(cardCardinalEntry.getKey());
+                    break;
+                default:
+                    throw new IllegalStateException("Invalid Cardinal constant: " + cardCardinalEntry.getValue());
+            }
+        }
+    }
+
+    private void initCardinalCards(Deal dto) {
+        Map<TableLocation, Collection<Card>> tableCards = getTableCards();
+        dto.setNorthCards(getCardinalCards(tableCards, TableLocation.NORTH));
+        dto.setEastCards(getCardinalCards(tableCards, TableLocation.EAST));
+        dto.setSouthCards(getCardinalCards(tableCards, TableLocation.SOUTH));
+        dto.setWestCards(getCardinalCards(tableCards, TableLocation.WEST));
+    }
+
+    private void initContracts(Deal dto) {
+        Map<Cardinal, Contract> cardinalContracts = getCardinalContracts();
+        dto.setNorthContract(cardinalContracts.get(Cardinal.NORTH));
+        dto.setEastContract(cardinalContracts.get(Cardinal.EAST));
+        dto.setSouthContract(cardinalContracts.get(Cardinal.SOUTH));
+        dto.setWestContract(cardinalContracts.get(Cardinal.WEST));
+    }
+
+    private List<Card> getCardinalCards(Map<TableLocation, Collection<Card>> tableCards, TableLocation location) {
+        Collection<Card> cardsCollection = tableCards.get(location);
+        List<Card> cards = newArrayList();
+        if (cardsCollection == null) {
+            cards = Collections.emptyList();
+        } else {
+            cards.addAll(cardsCollection);
+        }
+        return cards;
     }
 
     private Cardinal getWidowCardinal() {

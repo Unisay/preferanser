@@ -19,12 +19,15 @@
 
 package com.preferanser.shared.domain;
 
+import com.preferanser.shared.domain.entity.Deal;
 import com.preferanser.shared.domain.exception.GameBuilderException;
+import com.preferanser.shared.util.Clock;
 import org.apache.commons.lang.ArrayUtils;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.Map;
 
 import static com.google.common.collect.Lists.newArrayList;
@@ -43,9 +46,11 @@ public class GameBuilderTest {
     private Card[] northCards;
     private Card[] eastCards;
     private Card[] westCards;
+    private Deal deal;
 
     @BeforeMethod
     public void setUp() throws Exception {
+        Clock.setNow(new Date(1));
         northCards = (Card[]) ArrayUtils.subarray(Card.values(), 0, 10);
         eastCards = (Card[]) ArrayUtils.subarray(Card.values(), 10, 20);
         westCards = (Card[]) ArrayUtils.subarray(Card.values(), 20, 30);
@@ -58,18 +63,30 @@ public class GameBuilderTest {
             .putCards(EAST, eastCards)
             .putCards(WEST, westCards)
             .setFirstTurn(NORTH);
+
+        deal = new Deal();
+        deal.setGamePlayers(GamePlayers.THREE);
+        deal.setFirstTurn(NORTH);
+        deal.setCreated(Clock.getNow());
+        deal.setName("name");
+        deal.setNorthCards(newArrayList(northCards));
+        deal.setEastCards(newArrayList(eastCards));
+        deal.setWestCards(newArrayList(westCards));
+        deal.setNorthContract(Contract.SIX_SPADE);
+        deal.setEastContract(Contract.WHIST);
+        deal.setWestContract(Contract.PASS);
     }
 
     @Test
     public void testBuild_ThreePlayerGame() throws Exception {
         Game game = builder.setThreePlayers().build();
-        assertThat(game.getNumPlayers(), equalTo(3));
+        assertThat(game.getGamePlayers(), equalTo(GamePlayers.THREE));
     }
 
     @Test
     public void testBuild_FourPlayerGame() throws Exception {
         Game game = builder.setFourPlayers().build();
-        assertThat(game.getNumPlayers(), equalTo(4));
+        assertThat(game.getGamePlayers(), equalTo(GamePlayers.FOUR));
     }
 
     @Test
@@ -232,6 +249,18 @@ public class GameBuilderTest {
         assertTrue(builder.moveCard(Card.SPADE_QUEEN, TableLocation.WEST, TableLocation.CENTER));
         assertTrue(builder.moveCard(Card.CLUB_SEVEN, TableLocation.NORTH, TableLocation.CENTER));
         assertFalse(builder.moveCard(Card.DIAMOND_SEVEN, TableLocation.NORTH, TableLocation.CENTER));
+    }
+
+    @Test
+    public void testBuildDeal() throws Exception {
+        Deal actualDeal = builder.buildDeal("name");
+        assertReflectionEquals(deal, actualDeal);
+    }
+
+    @Test
+    public void testBuildFromDeal() throws Exception {
+        GameBuilder actualBuilder = new GameBuilder().setDeal(deal);
+        assertReflectionEquals(builder, actualBuilder);
     }
 
 }

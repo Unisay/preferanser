@@ -179,7 +179,7 @@ public class EditorPresenter extends Presenter<EditorPresenter.EditorView, Edito
     }
 
     public void onDealOpenClicked(Deal deal) {
-        gameBuilder = new GameBuilder().setDeal(deal);  // TODO: find out why it doesn't work properly without recreating gameBuilder
+        gameBuilder.setDeal(deal);
         refreshView();
     }
 

@@ -20,6 +20,7 @@
 package com.preferanser.server.resource;
 
 import com.google.inject.Inject;
+import com.preferanser.server.service.AuthenticationService;
 import com.preferanser.shared.dto.CurrentUserDto;
 
 import javax.ws.rs.GET;

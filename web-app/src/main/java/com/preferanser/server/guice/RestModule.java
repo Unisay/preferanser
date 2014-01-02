@@ -22,7 +22,7 @@ package com.preferanser.server.guice;
 import com.google.inject.AbstractModule;
 import com.google.inject.Singleton;
 import com.google.inject.servlet.RequestScoped;
-import com.preferanser.server.resource.AuthenticationService;
+import com.preferanser.server.service.AuthenticationService;
 import com.preferanser.shared.dto.CurrentUserDto;
 import com.sun.jersey.api.core.PackagesResourceConfig;
 

@@ -73,28 +73,23 @@ public class GameBuilder {
     }
 
     private void setCardinalDealContracts(Deal deal) {
-        if (deal.getNorthContract() == null)
-            cardinalContracts.remove(Cardinal.NORTH);
-        else
+        cardinalContracts.clear();
+
+        if (deal.getNorthContract() != null)
             cardinalContracts.put(Cardinal.NORTH, deal.getNorthContract());
 
-        if (deal.getEastContract() == null)
-            cardinalContracts.remove(Cardinal.EAST);
-        else
+        if (deal.getEastContract() != null)
             cardinalContracts.put(Cardinal.EAST, deal.getEastContract());
 
-        if (deal.getSouthContract() == null)
-            cardinalContracts.remove(Cardinal.SOUTH);
-        else
+        if (deal.getSouthContract() != null)
             cardinalContracts.put(Cardinal.SOUTH, deal.getSouthContract());
 
-        if (deal.getWestContract() == null)
-            cardinalContracts.remove(Cardinal.WEST);
-        else
+        if (deal.getWestContract() != null)
             cardinalContracts.put(Cardinal.WEST, deal.getWestContract());
     }
 
     private void setCardinalDealCards(Deal deal) {
+        cardinalCardMultimap.clear();
         cardinalCardMultimap.putAll(Cardinal.NORTH, deal.getNorthCards());
         cardinalCardMultimap.putAll(Cardinal.EAST, deal.getEastCards());
         cardinalCardMultimap.putAll(Cardinal.SOUTH, deal.getSouthCards());
@@ -102,34 +97,19 @@ public class GameBuilder {
     }
 
     private void setCenterDealCards(Deal deal) {
-        if (deal.getCenterNorthCard() == null)
-            removeCenterCardByCardinal(Cardinal.NORTH);
-        else
+        centerCardCardinalMap.clear();
+
+        if (deal.getCenterNorthCard() != null)
             centerCardCardinalMap.put(deal.getCenterNorthCard(), Cardinal.NORTH);
 
-        if (deal.getCenterEastCard() == null)
-            removeCenterCardByCardinal(Cardinal.EAST);
-        else
+        if (deal.getCenterEastCard() != null)
             centerCardCardinalMap.put(deal.getCenterEastCard(), Cardinal.EAST);
 
-        if (deal.getCenterSouthCard() == null)
-            removeCenterCardByCardinal(Cardinal.SOUTH);
-        else
+        if (deal.getCenterSouthCard() != null)
             centerCardCardinalMap.put(deal.getCenterSouthCard(), Cardinal.SOUTH);
 
-        if (deal.getCenterWestCard() == null)
-            removeCenterCardByCardinal(Cardinal.WEST);
-        else
+        if (deal.getCenterWestCard() != null)
             centerCardCardinalMap.put(deal.getCenterWestCard(), Cardinal.WEST);
-    }
-
-    private void removeCenterCardByCardinal(Cardinal cardinal) {
-        for (Map.Entry<Card, Cardinal> entry : centerCardCardinalMap.entrySet()) {
-            if (entry.getValue() == cardinal) {
-                centerCardCardinalMap.remove(entry.getKey());
-                return;
-            }
-        }
     }
 
     public GameBuilder setFirstTurn(Cardinal firstTurn) {

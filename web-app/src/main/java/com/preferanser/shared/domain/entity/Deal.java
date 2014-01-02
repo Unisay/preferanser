@@ -20,12 +20,10 @@
 package com.preferanser.shared.domain.entity;
 
 
+import com.google.common.base.Objects;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Index;
-import com.preferanser.shared.domain.Card;
-import com.preferanser.shared.domain.Cardinal;
-import com.preferanser.shared.domain.Contract;
-import com.preferanser.shared.domain.GamePlayers;
+import com.preferanser.shared.domain.*;
 import com.preferanser.shared.dto.Dto;
 
 import javax.validation.constraints.Size;
@@ -58,6 +56,7 @@ public class Deal extends BaseEntity implements Dto {
     private Contract eastContract;
     private Contract southContract;
     private Contract westContract;
+    private Widow widow;
     private List<Card> northCards;
     private List<Card> eastCards;
     private List<Card> southCards;
@@ -154,6 +153,14 @@ public class Deal extends BaseEntity implements Dto {
         this.westContract = westContract;
     }
 
+    public Widow getWidow() {
+        return widow;
+    }
+
+    public void setWidow(Widow widow) {
+        this.widow = widow;
+    }
+
     public List<Card> getNorthCards() {
         return northCards;
     }
@@ -231,9 +238,11 @@ public class Deal extends BaseEntity implements Dto {
         if (centerSouthCard != deal.centerSouthCard) return false;
         if (centerWestCard != deal.centerWestCard) return false;
         if (created != null ? !created.equals(deal.created) : deal.created != null) return false;
+        if (description != null ? !description.equals(deal.description) : deal.description != null) return false;
         if (eastCards != null ? !eastCards.equals(deal.eastCards) : deal.eastCards != null) return false;
         if (eastContract != deal.eastContract) return false;
         if (firstTurn != deal.firstTurn) return false;
+        if (gamePlayers != deal.gamePlayers) return false;
         if (name != null ? !name.equals(deal.name) : deal.name != null) return false;
         if (northCards != null ? !northCards.equals(deal.northCards) : deal.northCards != null) return false;
         if (northContract != deal.northContract) return false;
@@ -242,6 +251,7 @@ public class Deal extends BaseEntity implements Dto {
         if (userId != null ? !userId.equals(deal.userId) : deal.userId != null) return false;
         if (westCards != null ? !westCards.equals(deal.westCards) : deal.westCards != null) return false;
         if (westContract != deal.westContract) return false;
+        //if (widow != null ? !widow.equals(deal.widow) : deal.widow != null) return false;
 
         return true;
     }
@@ -250,13 +260,16 @@ public class Deal extends BaseEntity implements Dto {
     public int hashCode() {
         int result = super.hashCode();
         result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (description != null ? description.hashCode() : 0);
         result = 31 * result + (userId != null ? userId.hashCode() : 0);
         result = 31 * result + (created != null ? created.hashCode() : 0);
         result = 31 * result + (firstTurn != null ? firstTurn.hashCode() : 0);
+        result = 31 * result + (gamePlayers != null ? gamePlayers.hashCode() : 0);
         result = 31 * result + (northContract != null ? northContract.hashCode() : 0);
         result = 31 * result + (eastContract != null ? eastContract.hashCode() : 0);
         result = 31 * result + (southContract != null ? southContract.hashCode() : 0);
         result = 31 * result + (westContract != null ? westContract.hashCode() : 0);
+        result = 31 * result + (widow != null ? widow.hashCode() : 0);
         result = 31 * result + (northCards != null ? northCards.hashCode() : 0);
         result = 31 * result + (eastCards != null ? eastCards.hashCode() : 0);
         result = 31 * result + (southCards != null ? southCards.hashCode() : 0);
@@ -266,5 +279,29 @@ public class Deal extends BaseEntity implements Dto {
         result = 31 * result + (centerSouthCard != null ? centerSouthCard.hashCode() : 0);
         result = 31 * result + (centerWestCard != null ? centerWestCard.hashCode() : 0);
         return result;
+    }
+
+    @Override public String toString() {
+        return Objects.toStringHelper(this)
+            .add("name", name)
+            .add("description", description)
+            .add("userId", userId)
+            .add("created", created)
+            .add("firstTurn", firstTurn)
+            .add("gamePlayers", gamePlayers)
+            .add("northContract", northContract)
+            .add("eastContract", eastContract)
+            .add("southContract", southContract)
+            .add("westContract", westContract)
+            .add("widow", widow)
+            .add("northCards", northCards)
+            .add("eastCards", eastCards)
+            .add("southCards", southCards)
+            .add("westCards", westCards)
+            .add("centerNorthCard", centerNorthCard)
+            .add("centerEastCard", centerEastCard)
+            .add("centerSouthCard", centerSouthCard)
+            .add("centerWestCard", centerWestCard)
+            .toString();
     }
 }

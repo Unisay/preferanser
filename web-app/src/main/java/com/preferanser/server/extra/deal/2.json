@@ -1,0 +1,29 @@
+{
+    "name": "Этюд №2",
+    "description": "Предложите план розыгрыша за вистующих.",
+    "firstTurn": "WEST",
+    "gamePlayers": "THREE",
+    "eastContract": "WHIST",
+    "southContract": "SIX_CLUB",
+    "westContract": "WHIST",
+    "widow": {
+        "card1": "DIAMOND_KING",
+        "card2": "DIAMOND_SEVEN"
+    },
+    "eastCards": [
+        "SPADE_SEVEN",
+        "DIAMOND_ACE", "DIAMOND_QUEEN", "DIAMOND_NINE", "DIAMOND_EIGHT",
+        "CLUB_KING", "CLUB_QUEEN", "CLUB_TEN",
+        "HEART_QUEEN", "HEART_SEVEN"
+    ],
+    "southCards": [
+        "SPADE_QUEEN", "SPADE_JACK", "SPADE_TEN",
+        "CLUB_ACE", "CLUB_JACK", "CLUB_NINE", "CLUB_EIGHT", "CLUB_SEVEN",
+        "HEART_ACE", "HEART_EIGHT"
+    ],
+    "westCards": [
+        "SPADE_ACE", "SPADE_KING", "SPADE_NINE", "SPADE_EIGHT",
+        "DIAMOND_JACK", "DIAMOND_TEN",
+        "HEART_KING", "HEART_JACK", "HEART_TEN", "HEART_NINE"
+    ]
+}

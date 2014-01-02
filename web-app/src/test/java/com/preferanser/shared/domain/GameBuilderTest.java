@@ -56,6 +56,7 @@ public class GameBuilderTest {
         westCards = (Card[]) ArrayUtils.subarray(Card.values(), 20, 30);
         builder = new GameBuilder()
             .setThreePlayers()
+            .setWidow(Widow.fromArray((Card[]) ArrayUtils.subarray(Card.values(), 30, 32)))
             .setCardinalContract(NORTH, Contract.SIX_SPADE)
             .setCardinalContract(EAST, Contract.WHIST)
             .setCardinalContract(WEST, Contract.PASS)
@@ -69,6 +70,7 @@ public class GameBuilderTest {
         deal.setFirstTurn(NORTH);
         deal.setCreated(Clock.getNow());
         deal.setName("name");
+        deal.setWidow(Widow.fromArray((Card[]) ArrayUtils.subarray(Card.values(), 30, 32)));
         deal.setNorthCards(newArrayList(northCards));
         deal.setEastCards(newArrayList(eastCards));
         deal.setWestCards(newArrayList(westCards));

@@ -40,6 +40,7 @@ public class GameBuilder {
 
     private static final int NUM_OF_CARDS_PER_CARDINAL = 10;
     private static final int NUM_OF_CONTRACTS = 3;
+    private Widow widow;
 
     public static enum Error {
         WRONG_FIRST_TURN,
@@ -66,6 +67,7 @@ public class GameBuilder {
     public GameBuilder setDeal(Deal deal) {
         firstTurn = deal.getFirstTurn();
         gamePlayers = deal.getGamePlayers();
+        widow = deal.getWidow();
         setCardinalDealContracts(deal);
         setCardinalDealCards(deal);
         setCenterDealCards(deal);
@@ -124,6 +126,12 @@ public class GameBuilder {
 
     public GameBuilder setFourPlayers() {
         gamePlayers = GamePlayers.FOUR;
+        return this;
+    }
+
+    // TODO: use widow in ui
+    public GameBuilder setWidow(Widow widow) {
+        this.widow = widow;
         return this;
     }
 
@@ -274,6 +282,7 @@ public class GameBuilder {
         deal.setFirstTurn(firstTurn);
         deal.setName(name);
         deal.setGamePlayers(gamePlayers);
+        //deal.setWidow(widow);
         initContracts(deal);
         initCardinalCards(deal);
         initCenterCards(deal);

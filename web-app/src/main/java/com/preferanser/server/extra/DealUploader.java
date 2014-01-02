@@ -68,7 +68,7 @@ public class DealUploader {
             logger.info("Posting json from file {} ...", jsonFile);
             HttpResponse response = Request
                 .Post(url)
-                .addHeader("Cookie", "dev_appserver_login=" + authCookie)
+                .addHeader("Cookie", authCookie)
                 .bodyFile(jsonFile, ContentType.APPLICATION_JSON)
                 .execute()
                 .returnResponse();

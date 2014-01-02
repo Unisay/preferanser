@@ -19,8 +19,10 @@
 
 package com.preferanser.client.application.mvp.editor.dialog.open;
 
+import com.google.gwt.cell.client.ActionCell;
 import com.google.gwt.cell.client.DateCell;
 import com.google.gwt.dom.client.Style;
+import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.Column;
@@ -33,60 +35,108 @@ import com.google.gwt.view.client.ProvidesKey;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.PopupViewWithUiHandlers;
+import com.preferanser.client.application.i18n.PreferanserConstants;
+import com.preferanser.client.theme.greencloth.client.com.preferanser.client.application.PreferanserResources;
 import com.preferanser.shared.domain.entity.Deal;
 
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
-import static com.google.common.collect.Lists.newArrayList;
 
 public class OpenDialogView extends PopupViewWithUiHandlers<OpenDialogUiHandlers> implements OpenDialogPresenter.TheView {
 
     @UiField(provided = true)
     DataGrid<Deal> dealDataGrid;
 
-    private final List<Deal> deals = newArrayList();
+    private final ListDataProvider<Deal> dealDataProvider;
 
     interface Binder extends UiBinder<PopupPanel, OpenDialogView> {
     }
 
     @Inject
-    protected OpenDialogView(Binder uiBinder, EventBus eventBus) {
+    protected OpenDialogView(
+            Binder uiBinder,
+            EventBus eventBus,
+            PreferanserResources resources,
+            PreferanserConstants constants
+    ) {
         super(eventBus);
-        dealDataGrid = new DataGrid<Deal>(new ProvidesKey<Deal>() {
-            @Override
-            public Object getKey(Deal item) {
-                return item.getId();
-            }
-        });
+        dealDataGrid = new DataGrid<Deal>(10, resources.dataGrid(), new ProvidesDealKey());
         dealDataGrid.setKeyboardSelectionPolicy(HasKeyboardSelectionPolicy.KeyboardSelectionPolicy.ENABLED);
-        dealDataGrid.addColumn(new TextColumn<Deal>() {
-            @Override
-            public String getValue(Deal deal) {
-                return deal.getName();
-            }
-        }, "Name");
-        dealDataGrid.addColumn(new Column<Deal, Date>(new DateCell()) {
-            @Override
-            public Date getValue(Deal object) {
-                return object.getCreated();
-            }
-        }, "Date");
-        dealDataGrid.setMinimumTableWidth(140, Style.Unit.EM);
-        dealDataGrid.setWidth("300px");
-        dealDataGrid.setHeight("200px");
-        ListDataProvider<Deal> listDataProvider = new ListDataProvider<Deal>(this.deals);
-        listDataProvider.addDataDisplay(dealDataGrid);
+        dealDataGrid.addColumn(new DealNameColumn());
+        dealDataGrid.addColumn(new DealDateColumn());
+        dealDataGrid.addColumn(new OpenActionColumn(constants.open()));
+        dealDataGrid.addColumn(new RemoveActionColumn(constants.delete()));
+
+        dealDataGrid.setColumnWidth(1, 110.0, Style.Unit.PX);
+        dealDataGrid.setColumnWidth(2, 95.0, Style.Unit.PX);
+        dealDataGrid.setColumnWidth(3, 95.0, Style.Unit.PX);
+        dealDataProvider = new ListDataProvider<Deal>();
+        dealDataProvider.addDataDisplay(dealDataGrid);
 
         initWidget(uiBinder.createAndBindUi(this));
     }
 
     @Override
-    public void displayAvailableDeals(Collection<Deal> deals) {
+    public void displayAvailableDeals(List<Deal> deals) {
         // TODO: handle empty deals
-        this.deals.clear();
-        this.deals.addAll(deals);
+        dealDataProvider.setList(deals);
     }
 
+    private static class ProvidesDealKey implements ProvidesKey<Deal> {
+        @Override
+        public Object getKey(Deal item) {
+            return item.getId();
+        }
+    }
+
+    private static class DealNameColumn extends TextColumn<Deal> {
+        @Override
+        public String getValue(Deal deal) {
+            return deal.getName();
+        }
+    }
+
+    private static class DealDateColumn extends Column<Deal, Date> {
+        public DealDateColumn() {
+            super(new DateCell(DateTimeFormat.getFormat(DateTimeFormat.PredefinedFormat.DATE_TIME_SHORT)));
+        }
+
+        @Override
+        public Date getValue(Deal object) {
+            return object.getCreated();
+        }
+    }
+
+    private class OpenActionColumn extends Column<Deal, Deal> {
+        private OpenActionColumn(String text) {
+            super(new ActionCell<Deal>(text, new ActionCell.Delegate<Deal>() {
+                @Override
+                public void execute(Deal deal) {
+                    getUiHandlers().onDealOpenClicked(deal);
+                }
+            }));
+        }
+
+        @Override
+        public Deal getValue(Deal deal) {
+            return deal;
+        }
+    }
+
+    private class RemoveActionColumn extends Column<Deal, Deal> {
+        private RemoveActionColumn(String text) {
+            super(new ActionCell<Deal>(text, new ActionCell.Delegate<Deal>() {
+                @Override
+                public void execute(Deal deal) {
+                    getUiHandlers().deleteDeal(deal);
+                }
+            }));
+        }
+
+        @Override
+        public Deal getValue(Deal deal) {
+            return deal;
+        }
+    }
 }

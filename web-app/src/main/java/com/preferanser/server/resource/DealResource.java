@@ -25,10 +25,7 @@ import com.preferanser.server.dao.DealDao;
 import com.preferanser.server.exception.NoAuthenticatedUserException;
 import com.preferanser.shared.domain.entity.Deal;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 
@@ -47,7 +44,7 @@ public class DealResource {
 
     @GET
     public List<Deal> load() {
-        return dealDao.getAll();
+        return dealDao.getAllDescDateCreated();
     }
 
     @POST
@@ -57,6 +54,18 @@ public class DealResource {
             throw new NoAuthenticatedUserException();
         deal.setUserId(currentUserId.get());
         dealDao.save(deal);
+    }
+
+    @DELETE
+    @Path("/{dealId}")
+    public void delete(@PathParam("dealId") Long dealId) {
+        Optional<String> currentUserId = authenticationService.getCurrentUserId();
+        if (!currentUserId.isPresent())
+            throw new NoAuthenticatedUserException(); // TODO replace by standard JAX-RS exception
+        Deal deal = dealDao.get(dealId);
+        if (! deal.getUserId().equals(currentUserId.get()))
+            throw new NoAuthenticatedUserException(); // TODO replace by standard JAX-RS exception
+        dealDao.delete(deal);
     }
 
 }

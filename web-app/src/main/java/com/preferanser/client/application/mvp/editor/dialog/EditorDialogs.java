@@ -36,8 +36,10 @@ public class EditorDialogs {
     }
 
     public void showContractDialog(Cardinal cardinal) {
+        EditorPresenter editorPresenter = editorPresenterProvider.get();
         contractDialog.setCardinal(cardinal);
-        editorPresenterProvider.get().addToPopupSlot(contractDialog);
+        contractDialog.setHasCardinalContracts(editorPresenter);
+        editorPresenter.addToPopupSlot(contractDialog);
     }
 
     public void showInputDialog(String title, String description) {
@@ -58,7 +60,9 @@ public class EditorDialogs {
     }
 
     public void showOpenDialog(List<Deal> deals) {
+        EditorPresenter editorPresenter = editorPresenterProvider.get();
         openDialog.setDeals(deals);
-        editorPresenterProvider.get().addToPopupSlot(openDialog);
+        openDialog.setEditorPresenter(editorPresenter);
+        editorPresenter.addToPopupSlot(openDialog);
     }
 }

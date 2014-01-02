@@ -20,6 +20,9 @@
 package com.preferanser.client.application.mvp.editor.dialog.open;
 
 import com.gwtplatform.mvp.client.UiHandlers;
+import com.preferanser.shared.domain.entity.Deal;
 
 public interface OpenDialogUiHandlers extends UiHandlers {
+    void onDealOpenClicked(Deal deal);
+    void deleteDeal(Deal deal);
 }

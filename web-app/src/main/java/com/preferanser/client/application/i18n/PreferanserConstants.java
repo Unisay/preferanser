@@ -54,6 +54,7 @@ public interface PreferanserConstants extends ConstantsWithLookup {
     @DefaultStringValue("Saving") String saving();
     @DefaultStringValue("Saved") String saved();
     @DefaultStringValue("Open") String open();
+    @DefaultStringValue("Delete") String delete();
     @DefaultStringValue("Loading") String loading();
     @DefaultStringValue("Loaded") String loaded();
 

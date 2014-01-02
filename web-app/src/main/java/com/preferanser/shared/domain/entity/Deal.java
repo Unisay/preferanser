@@ -40,6 +40,7 @@ public class Deal extends BaseEntity implements Dto {
 
     @Index
     private String userId;
+    @Index
     private Date created;
     private Cardinal firstTurn;
     private Contract northContract;
@@ -248,5 +249,55 @@ public class Deal extends BaseEntity implements Dto {
 
     public void setCenterWestCard(Card centerWestCard) {
         this.centerWestCard = centerWestCard;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+
+        Deal deal = (Deal) o;
+
+        if (centerEastCard != deal.centerEastCard) return false;
+        if (centerNorthCard != deal.centerNorthCard) return false;
+        if (centerSouthCard != deal.centerSouthCard) return false;
+        if (centerWestCard != deal.centerWestCard) return false;
+        if (created != null ? !created.equals(deal.created) : deal.created != null) return false;
+        if (eastCards != null ? !eastCards.equals(deal.eastCards) : deal.eastCards != null) return false;
+        if (eastContract != deal.eastContract) return false;
+        if (firstTurn != deal.firstTurn) return false;
+        if (name != null ? !name.equals(deal.name) : deal.name != null) return false;
+        if (northCards != null ? !northCards.equals(deal.northCards) : deal.northCards != null) return false;
+        if (northContract != deal.northContract) return false;
+        if (southCards != null ? !southCards.equals(deal.southCards) : deal.southCards != null) return false;
+        if (southContract != deal.southContract) return false;
+        if (userId != null ? !userId.equals(deal.userId) : deal.userId != null) return false;
+        if (westCards != null ? !westCards.equals(deal.westCards) : deal.westCards != null) return false;
+        if (westContract != deal.westContract) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (userId != null ? userId.hashCode() : 0);
+        result = 31 * result + (created != null ? created.hashCode() : 0);
+        result = 31 * result + (firstTurn != null ? firstTurn.hashCode() : 0);
+        result = 31 * result + (northContract != null ? northContract.hashCode() : 0);
+        result = 31 * result + (eastContract != null ? eastContract.hashCode() : 0);
+        result = 31 * result + (southContract != null ? southContract.hashCode() : 0);
+        result = 31 * result + (westContract != null ? westContract.hashCode() : 0);
+        result = 31 * result + (northCards != null ? northCards.hashCode() : 0);
+        result = 31 * result + (eastCards != null ? eastCards.hashCode() : 0);
+        result = 31 * result + (southCards != null ? southCards.hashCode() : 0);
+        result = 31 * result + (westCards != null ? westCards.hashCode() : 0);
+        result = 31 * result + (centerNorthCard != null ? centerNorthCard.hashCode() : 0);
+        result = 31 * result + (centerEastCard != null ? centerEastCard.hashCode() : 0);
+        result = 31 * result + (centerSouthCard != null ? centerSouthCard.hashCode() : 0);
+        result = 31 * result + (centerWestCard != null ? centerWestCard.hashCode() : 0);
+        return result;
     }
 }

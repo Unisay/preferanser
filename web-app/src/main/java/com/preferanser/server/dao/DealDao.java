@@ -22,10 +22,15 @@ package com.preferanser.server.dao;
 
 import com.preferanser.shared.domain.entity.Deal;
 
+import java.util.List;
+
 public class DealDao extends BaseDao<Deal> {
 
     public DealDao() {
         super(Deal.class);
     }
 
+    public List<Deal> getAllDescDateCreated() {
+        return ofy().query(Deal.class).order("-created").list();
+    }
 }

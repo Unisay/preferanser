@@ -24,22 +24,29 @@ import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.PopupView;
 import com.gwtplatform.mvp.client.PresenterWidget;
+import com.preferanser.client.application.mvp.editor.EditorPresenter;
+import com.preferanser.client.service.DealService;
+import com.preferanser.client.service.LogResponse;
 import com.preferanser.shared.domain.entity.Deal;
 
-import java.util.Collection;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class OpenDialogPresenter extends PresenterWidget<OpenDialogPresenter.TheView> implements OpenDialogUiHandlers {
 
+    private static final Logger log = Logger.getLogger("OpenDialogPresenter");
+    private final DealService dealService;
     private List<Deal> deals;
+    private EditorPresenter editorPresenter;
 
     public interface TheView extends PopupView, HasUiHandlers<OpenDialogUiHandlers> {
-        void displayAvailableDeals(Collection<Deal> deals);
-    }
 
+        void displayAvailableDeals(List<Deal> deals);
+    }
     @Inject
-    public OpenDialogPresenter(EventBus eventBus, TheView view) {
+    public OpenDialogPresenter(EventBus eventBus, TheView view, DealService dealService) {
         super(eventBus, view);
+        this.dealService = dealService;
         getView().setUiHandlers(this);
     }
 
@@ -53,4 +60,21 @@ public class OpenDialogPresenter extends PresenterWidget<OpenDialogPresenter.The
         this.deals = deals;
     }
 
+    @Override
+    public void onDealOpenClicked(Deal deal) {
+        this.editorPresenter.onDealOpenClicked(deal);
+        getView().hide();
+    }
+
+    public void setEditorPresenter(EditorPresenter editorPresenter) {
+        this.editorPresenter = editorPresenter;
+    }
+
+    @Override
+    public void deleteDeal(Deal deal) {
+        deals.remove(deal);
+        getView().displayAvailableDeals(deals);
+        // TODO: handle error
+        dealService.delete(deal.getId(), new LogResponse<Void>(log, "Deal " + deal.getId() + " deleted"));
+    }
 }

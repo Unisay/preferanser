@@ -61,22 +61,22 @@ public class EditorPresenter extends Presenter<EditorPresenter.EditorView, Edito
     private static final Logger log = Logger.getLogger("EditorPresenter");
 
     public interface EditorView extends HasUiHandlers<EditorUiHandlers>, TableView {
+
         void hideCardinalTricks();
     }
-
     private Optional<Game> maybeGame;
+
     private GameBuilder gameBuilder;
     private final PlaceManager placeManager;
     private final DealService dealService;
     private final PreferanserConstants constants;
     private final EditorDialogs editorDialogs;
-
     @ProxyStandard
     @NameToken(NameTokens.GAME_EDITOR)
     @UseGatekeeper(LoggedInGatekeeper.class)
     public interface Proxy extends ProxyPlace<EditorPresenter> {
-    }
 
+    }
     @Inject
     public EditorPresenter(PlaceManager placeManager,
                            EventBus eventBus,
@@ -164,18 +164,31 @@ public class EditorPresenter extends Presenter<EditorPresenter.EditorView, Edito
     }
 
     @Override
-    public void saveDeal() {
+    public void onDealSaveClicked() {
         editorDialogs.showInputDialog(constants.save(), constants.saveDescription());
     }
 
     @Override
-    public void openDeal() {
+    public void onDealOpenClicked() {
         dealService.load(new Response<List<Deal>>() {
             @Override
             protected void handle(List<Deal> deals) {
                 editorDialogs.showOpenDialog(deals);
             }
         });
+    }
+
+    public void onDealOpenClicked(Deal deal) {
+        // TODO: move to gameBuilder, init center cards
+        gameBuilder.setFirstTurn(deal.getFirstTurn());
+        gameBuilder.setCardinalContract(Cardinal.NORTH, deal.getNorthContract());
+        gameBuilder.setCardinalContract(Cardinal.EAST, deal.getEastContract());
+        gameBuilder.setCardinalContract(Cardinal.SOUTH, deal.getSouthContract());
+        gameBuilder.setCardinalContract(Cardinal.WEST, deal.getWestContract());
+        gameBuilder.putCards(Cardinal.NORTH, deal.getNorthCards());
+        gameBuilder.putCards(Cardinal.EAST, deal.getEastCards());
+        gameBuilder.putCards(Cardinal.SOUTH, deal.getSouthCards());
+        gameBuilder.putCards(Cardinal.WEST, deal.getWestCards());
     }
 
     @Override

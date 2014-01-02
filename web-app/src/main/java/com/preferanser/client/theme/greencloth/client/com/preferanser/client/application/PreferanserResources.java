@@ -22,6 +22,7 @@ package com.preferanser.client.theme.greencloth.client.com.preferanser.client.ap
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.user.cellview.client.DataGrid;
 
 /**
  * GWT Resources
@@ -45,8 +46,19 @@ public interface PreferanserResources extends ClientBundle {
         String statusPanel();
     }
 
+    interface DataGridResources extends DataGrid.Resources {
+
+        interface DataGridStyle extends DataGrid.Style { }
+
+        @Override
+        @Source({DataGrid.Style.DEFAULT_CSS, "DataGrid.css"})
+        DataGridStyle dataGridStyle();
+    }
+
     @Source("green_cloth.css")
     Style css();
+
+    DataGridResources dataGrid();
 
     @Source("images/arrow_right.png")
     @ImageResource.ImageOptions(height = 32, width = 32) ImageResource arrowRight();

@@ -24,13 +24,10 @@ import com.preferanser.shared.domain.entity.Deal;
 import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.RestService;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
+import javax.ws.rs.*;
 import java.util.List;
 
-import static com.preferanser.client.restygwt.RequestIdValue.LOAD_DEALS;
-import static com.preferanser.client.restygwt.RequestIdValue.SAVE_DEAL;
+import static com.preferanser.client.restygwt.RequestIdValue.*;
 
 /**
  * Client rest-client service responsible for deal persistence
@@ -47,4 +44,8 @@ public interface DealService extends RestService {
     @RequestId(LOAD_DEALS)
     void load(MethodCallback<List<Deal>> callback);
 
+    @DELETE
+    @Path("/{dealId}")
+    @RequestId(DELETE_DEAL)
+    void delete(@PathParam("dealId") Long dealId, MethodCallback<Void> callback);
 }

@@ -237,15 +237,12 @@ public class GameBuilder {
     private boolean hasConflictingContracts() {
         int numOfContracts = 0;
         int numOfPlayingContracts = 0;
-        int numOfWhists = 0;
         int numOfPasses = 0;
         for (Contract contract : cardinalContracts.values()) {
             if (contract != null) {
                 numOfContracts++;
                 if (contract.isPlaying())
                     numOfPlayingContracts++;
-                if (contract == Contract.WHIST)
-                    numOfWhists++;
                 if (contract == Contract.PASS)
                     numOfPasses++;
             }

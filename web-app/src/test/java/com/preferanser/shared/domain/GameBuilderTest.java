@@ -192,6 +192,19 @@ public class GameBuilderTest {
     }
 
     @Test
+    public void testValidate_HasConflictingContractsAllPasses() throws Exception {
+        try {
+            builder.setCardinalContract(NORTH, Contract.PASS)
+                .setCardinalContract(EAST, Contract.PASS)
+                .setCardinalContract(WEST, Contract.PASS)
+                .build();
+        } catch (GameBuilderException e) {
+            List<? extends GameBuilderValidationError> expectedErrors = newArrayList(new HasConflictingContractsValidationError());
+            assertReflectionEquals(expectedErrors, e.getBuilderErrors());
+        }
+    }
+
+    @Test
     public void testValidate_HasConflictingContractsAllWhists() throws Exception {
         try {
             builder.setCardinalContract(NORTH, Contract.WHIST)

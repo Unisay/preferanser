@@ -68,7 +68,7 @@ public class GameBuilderTest {
             .setFirstTurn(NORTH);
 
         deal = new Deal();
-        deal.setGamePlayers(GamePlayers.THREE);
+        deal.setPlayers(Players.THREE);
         deal.setFirstTurn(NORTH);
         deal.setCreated(Clock.getNow());
         deal.setName("name");
@@ -84,13 +84,13 @@ public class GameBuilderTest {
     @Test
     public void testBuild_ThreePlayerGame() throws Exception {
         Game game = builder.setThreePlayers().build();
-        assertThat(game.getGamePlayers(), equalTo(GamePlayers.THREE));
+        assertThat(game.getPlayers(), equalTo(Players.THREE));
     }
 
     @Test
     public void testBuild_FourPlayerGame() throws Exception {
         Game game = builder.setFourPlayers().build();
-        assertThat(game.getGamePlayers(), equalTo(GamePlayers.FOUR));
+        assertThat(game.getPlayers(), equalTo(Players.FOUR));
     }
 
     @Test

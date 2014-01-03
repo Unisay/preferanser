@@ -40,20 +40,20 @@ import static com.google.common.collect.Maps.newLinkedHashMap;
  */
 public class Game {
 
-    private final GamePlayers gamePlayers;
+    private final Players players;
     private final EnumRotator<Cardinal> turnRotator;
     private final Map<Cardinal, Contract> cardinalContracts;
     private final Multimap<Cardinal, Card> cardinalCardMultimap;
     private final Map<Cardinal, Integer> cardinalTricks = Maps.newHashMapWithExpectedSize(Cardinal.values().length);
     private final LinkedHashMap<Card, Cardinal> centerCardCardinalMap;  // order is important
 
-    Game(GamePlayers gamePlayers,
+    Game(Players players,
          Map<Cardinal, Contract> cardinalContracts,
          EnumRotator<Cardinal> turnRotator,
          Multimap<Cardinal, Card> cardinalCardMultimap,
          Map<Card, Cardinal> centerCardCardinalMap
     ) {
-        this.gamePlayers = gamePlayers;
+        this.players = players;
         this.cardinalContracts = cardinalContracts;
         this.turnRotator = turnRotator;
         this.cardinalCardMultimap = cardinalCardMultimap;
@@ -115,7 +115,7 @@ public class Game {
         if (centerCardCardinalMap.containsValue(fromCardinal))
             throw new DuplicateGameTurnException(centerCardCardinalMap, fromCardinal);
 
-        if (centerCardCardinalMap.size() == gamePlayers.getNumPlayers())
+        if (centerCardCardinalMap.size() == players.getNumPlayers())
             throw new NoTurnsAllowedException(centerCardCardinalMap);
 
         validateCardinalTurn(fromCardinal, card);
@@ -162,7 +162,7 @@ public class Game {
     }
 
     public boolean isTrickComplete() {
-        return centerCardCardinalMap.size() == gamePlayers.getNumPlayers();
+        return centerCardCardinalMap.size() == players.getNumPlayers();
     }
 
     public boolean sluffTrick() {
@@ -177,7 +177,7 @@ public class Game {
     }
 
     private Cardinal determineTrickWinner() {
-        assert (centerCardCardinalMap.size() == gamePlayers.getNumPlayers());
+        assert (centerCardCardinalMap.size() == players.getNumPlayers());
         Iterator<Card> cardIterator = centerCardCardinalMap.keySet().iterator();
         Card maxCard = cardIterator.next();
         Optional<Suit> optionalTrump = getTrump();
@@ -201,8 +201,8 @@ public class Game {
             return turnRotator.current();
     }
 
-    public GamePlayers getGamePlayers() {
-        return gamePlayers;
+    public Players getPlayers() {
+        return players;
     }
 
 }

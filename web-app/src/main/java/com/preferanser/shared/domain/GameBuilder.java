@@ -44,7 +44,7 @@ public class GameBuilder {
     private static final int NUM_OF_CONTRACTS = 3;
     private Widow widow;
 
-    private GamePlayers gamePlayers;
+    private Players players;
 
     private Cardinal firstTurn;
 
@@ -59,7 +59,7 @@ public class GameBuilder {
 
     public GameBuilder setDeal(Deal deal) {
         firstTurn = deal.getFirstTurn();
-        gamePlayers = deal.getGamePlayers();
+        players = deal.getPlayers();
         widow = deal.getWidow();
         setCardinalDealContracts(deal);
         setCardinalDealCards(deal);
@@ -113,12 +113,12 @@ public class GameBuilder {
     }
 
     public GameBuilder setThreePlayers() {
-        gamePlayers = GamePlayers.THREE;
+        players = Players.THREE;
         return this;
     }
 
     public GameBuilder setFourPlayers() {
-        gamePlayers = GamePlayers.FOUR;
+        players = Players.FOUR;
         return this;
     }
 
@@ -168,7 +168,7 @@ public class GameBuilder {
             centerCardCardinalMap.remove(card);
             cardinalCardMultimap.get(GameUtils.tableLocationToCardinal(newLocation)).add(card);
         } else if (CENTER == newLocation) { // moving card to center
-            if (centerCardCardinalMap.size() == gamePlayers.getNumPlayers()) {
+            if (centerCardCardinalMap.size() == players.getNumPlayers()) {
                 return false;
             }
             Cardinal oldCardinal = GameUtils.tableLocationToCardinal(oldLocation);
@@ -189,7 +189,7 @@ public class GameBuilder {
     private Optional<List<GameBuilderValidationError>> validate() {
         List<GameBuilderValidationError> errors = newArrayList();
 
-        if (gamePlayers == null)
+        if (players == null)
             errors.add(new NumPlayersNotSpecifiedValidationError());
 
         if (firstTurn == null)
@@ -228,8 +228,8 @@ public class GameBuilder {
     }
 
     private boolean wrongFirstTurn() {
-        return gamePlayers != null
-            && gamePlayers == GamePlayers.THREE
+        return players != null
+            && players == Players.THREE
             && firstTurn != null
             && cardinalContracts.get(firstTurn) == null;
     }
@@ -286,7 +286,7 @@ public class GameBuilder {
         cardinalRotator.setSkipValues(getWidowCardinal());
 
         return new Game(
-            gamePlayers,
+            players,
             cardinalContracts,
             cardinalRotator,
             cardinalCardMultimap,
@@ -299,7 +299,7 @@ public class GameBuilder {
         deal.setCreated(Clock.getNow());
         deal.setFirstTurn(firstTurn);
         deal.setName(name);
-        deal.setGamePlayers(gamePlayers);
+        deal.setPlayers(players);
         deal.setWidow(widow);
         initContracts(deal);
         initCardinalCards(deal);

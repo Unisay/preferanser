@@ -19,13 +19,13 @@
 
 package com.preferanser.shared.domain;
 
-public enum GamePlayers {
+public enum Players {
 
     THREE(3), FOUR(4);
 
     private final int numPlayers;
 
-    GamePlayers(int numPlayers) {
+    Players(int numPlayers) {
         this.numPlayers = numPlayers;
     }
 

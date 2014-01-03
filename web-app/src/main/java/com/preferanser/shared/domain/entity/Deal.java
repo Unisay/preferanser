@@ -50,7 +50,7 @@ public class Deal extends BaseEntity implements Dto {
 
     private Cardinal firstTurn;
 
-    private GamePlayers gamePlayers;
+    private Players players;
 
     private Contract northContract;
     private Contract eastContract;
@@ -105,12 +105,12 @@ public class Deal extends BaseEntity implements Dto {
         this.created = created;
     }
 
-    public GamePlayers getGamePlayers() {
-        return gamePlayers;
+    public Players getPlayers() {
+        return players;
     }
 
-    public void setGamePlayers(GamePlayers gamePlayers) {
-        this.gamePlayers = gamePlayers;
+    public void setPlayers(Players players) {
+        this.players = players;
     }
 
     public Cardinal getFirstTurn() {
@@ -242,7 +242,7 @@ public class Deal extends BaseEntity implements Dto {
         if (eastCards != null ? !eastCards.equals(deal.eastCards) : deal.eastCards != null) return false;
         if (eastContract != deal.eastContract) return false;
         if (firstTurn != deal.firstTurn) return false;
-        if (gamePlayers != deal.gamePlayers) return false;
+        if (players != deal.players) return false;
         if (name != null ? !name.equals(deal.name) : deal.name != null) return false;
         if (northCards != null ? !northCards.equals(deal.northCards) : deal.northCards != null) return false;
         if (northContract != deal.northContract) return false;
@@ -264,7 +264,7 @@ public class Deal extends BaseEntity implements Dto {
         result = 31 * result + (userId != null ? userId.hashCode() : 0);
         result = 31 * result + (created != null ? created.hashCode() : 0);
         result = 31 * result + (firstTurn != null ? firstTurn.hashCode() : 0);
-        result = 31 * result + (gamePlayers != null ? gamePlayers.hashCode() : 0);
+        result = 31 * result + (players != null ? players.hashCode() : 0);
         result = 31 * result + (northContract != null ? northContract.hashCode() : 0);
         result = 31 * result + (eastContract != null ? eastContract.hashCode() : 0);
         result = 31 * result + (southContract != null ? southContract.hashCode() : 0);
@@ -288,7 +288,7 @@ public class Deal extends BaseEntity implements Dto {
             .add("userId", userId)
             .add("created", created)
             .add("firstTurn", firstTurn)
-            .add("gamePlayers", gamePlayers)
+            .add("players", players)
             .add("northContract", northContract)
             .add("eastContract", eastContract)
             .add("southContract", southContract)

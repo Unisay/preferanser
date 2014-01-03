@@ -51,7 +51,6 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
     private static final Logger log = Logger.getLogger("PlayerPresenter");
 
     public interface PlayerView extends View, HasUiHandlers<PlayerUiHandlers> {
-        void hideTurn();
         void displayTurn(Cardinal turn);
         void displayContracts(Map<Cardinal, Contract> cardinalContracts);
         void displayCardinalTricks(Map<Cardinal, Integer> cardinalTricks);
@@ -126,7 +125,7 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
     }
 
     @Override public void reset() {
-        throw new UnsupportedOperationException("Resetting editor is not implemented");
+        throw new UnsupportedOperationException("Resetting editor is not implemented"); // TODO implement resetting editor
     }
 
     private void refreshView() {

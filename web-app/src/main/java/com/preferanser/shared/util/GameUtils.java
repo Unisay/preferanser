@@ -36,6 +36,10 @@ public abstract class GameUtils {
     private GameUtils() {
     }
 
+    public static TableLocation cardinalToTableLocation(Cardinal cardinal) {
+        return TableLocation.valueOf(cardinal.name());
+    }
+
     public static Cardinal tableLocationToCardinal(TableLocation location) {
         switch (location) {
             case NORTH:
@@ -53,19 +57,29 @@ public abstract class GameUtils {
 
     public static Map<TableLocation, Collection<Card>> copyDefensive(Multimap<Cardinal, Card> cardinalCardMultimap) {
         ImmutableMap.Builder<TableLocation, Collection<Card>> builder = ImmutableMap.builder();
-        if (cardinalCardMultimap.containsKey(Cardinal.NORTH)) {
+
+        if (cardinalCardMultimap.containsKey(Cardinal.NORTH))
             builder.put(NORTH, ImmutableList.copyOf(cardinalCardMultimap.get(Cardinal.NORTH)));
-        }
-        if (cardinalCardMultimap.containsKey(Cardinal.EAST)) {
+        else
+            builder.put(NORTH, ImmutableList.<Card>of());
+
+        if (cardinalCardMultimap.containsKey(Cardinal.EAST))
             builder.put(EAST, ImmutableList.copyOf(cardinalCardMultimap.get(Cardinal.EAST)));
-        }
-        if (cardinalCardMultimap.containsKey(Cardinal.SOUTH)) {
+        else
+            builder.put(EAST, ImmutableList.<Card>of());
+
+        if (cardinalCardMultimap.containsKey(Cardinal.SOUTH))
             builder.put(SOUTH, ImmutableList.copyOf(cardinalCardMultimap.get(Cardinal.SOUTH)));
-        }
-        if (cardinalCardMultimap.containsKey(Cardinal.WEST)) {
+        else
+            builder.put(SOUTH, ImmutableList.<Card>of());
+
+        if (cardinalCardMultimap.containsKey(Cardinal.WEST))
             builder.put(WEST, ImmutableList.copyOf(cardinalCardMultimap.get(Cardinal.WEST)));
-        }
+        else
+            builder.put(WEST, ImmutableList.<Card>of());
+
+        builder.put(CENTER, ImmutableList.<Card>of());
+
         return builder.build();
     }
-
 }

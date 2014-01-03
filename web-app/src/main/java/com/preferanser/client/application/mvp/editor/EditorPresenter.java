@@ -48,8 +48,6 @@ import com.preferanser.shared.domain.exception.GameException;
 import java.util.List;
 import java.util.logging.Logger;
 
-import static com.google.common.collect.Lists.newArrayList;
-
 
 /**
  * Table presenter
@@ -60,22 +58,20 @@ public class EditorPresenter extends Presenter<EditorPresenter.EditorView, Edito
     private static final Logger log = Logger.getLogger("EditorPresenter");
 
     public interface EditorView extends HasUiHandlers<EditorUiHandlers>, TableView {
-
         void hideCardinalTricks();
     }
-    private Optional<Game> maybeGame;
 
+    private Optional<Game> maybeGame;
     private GameBuilder gameBuilder;
     private final PlaceManager placeManager;
     private final DealService dealService;
     private final PreferanserConstants constants;
     private final EditorDialogs editorDialogs;
+
     @ProxyStandard
     @NameToken(NameTokens.GAME_EDITOR)
     @UseGatekeeper(LoggedInGatekeeper.class)
-    public interface Proxy extends ProxyPlace<EditorPresenter> {
-
-    }
+    public interface Proxy extends ProxyPlace<EditorPresenter> {}
 
     @Inject
     public EditorPresenter(PlaceManager placeManager,
@@ -103,17 +99,11 @@ public class EditorPresenter extends Presenter<EditorPresenter.EditorView, Edito
 
     @Override
     public void reset() {
-        // TODO: remove deal initialization once deal loading is done
         maybeGame = Optional.absent();
         gameBuilder = new GameBuilder()
             .setThreePlayers()
             .setFirstTurn(Cardinal.NORTH)
-            .setCardinalContract(Cardinal.NORTH, Contract.SEVEN_SPADE)
-            .setCardinalContract(Cardinal.EAST, Contract.WHIST)
-            .setCardinalContract(Cardinal.WEST, Contract.PASS)
-            .putCards(Cardinal.NORTH, newArrayList(Card.values()).subList(0, 10))
-            .putCards(Cardinal.EAST, newArrayList(Card.values()).subList(10, 20))
-            .putCards(Cardinal.WEST, newArrayList(Card.values()).subList(20, 30));
+            .putCards(Cardinal.NORTH, Card.values());
         refreshView();
     }
 

@@ -24,18 +24,21 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.*;
 import com.google.inject.Inject;
 import com.preferanser.client.application.i18n.I18nHelper;
 import com.preferanser.client.application.i18n.PreferanserConstants;
 import com.preferanser.client.application.mvp.BaseTableView;
+import com.preferanser.client.application.widgets.CardWidget;
 import com.preferanser.client.application.widgets.TurnPointer;
 import com.preferanser.client.theme.greencloth.client.com.preferanser.client.application.PreferanserResources;
+import com.preferanser.shared.domain.Card;
 import com.preferanser.shared.domain.Cardinal;
 import com.preferanser.shared.domain.Contract;
+import com.preferanser.shared.domain.TableLocation;
 
+import java.util.Collection;
+import java.util.Map;
 import java.util.logging.Logger;
 
 public class PlayerView extends BaseTableView<PlayerUiHandlers> implements PlayerPresenter.PlayerView {
@@ -58,18 +61,17 @@ public class PlayerView extends BaseTableView<PlayerUiHandlers> implements Playe
         installCenterPanelClickHandler();
     }
 
+    @Override public void displayTableCards(Map<TableLocation, Collection<Card>> tableCards, Map<Card, Cardinal> centerCards) {
+        super.displayTableCards(tableCards, centerCards);
+        hideEmptyPanel();
+    }
+
     @Override
     protected void displayCardinalTurnPointer(Cardinal cardinal, TurnPointer turnPointer, Cardinal turn) {
         super.displayCardinalTurnPointer(cardinal, turnPointer, turn);
-        if (turnPointer.isActive()) {
+        if (turnPointer.isActive())
             turnPointer.removeStyleName(tableStyle.notDisplayed());
-        } else {
-            turnPointer.addStyleName(tableStyle.notDisplayed());
-        }
-    }
-
-    @Override public void hideTurn() {
-        for (TurnPointer turnPointer : cardinalTurnPointerMap.values())
+        else
             turnPointer.addStyleName(tableStyle.notDisplayed());
     }
 
@@ -93,6 +95,24 @@ public class PlayerView extends BaseTableView<PlayerUiHandlers> implements Playe
 
     @Override protected void displayNoContract(Cardinal cardinal) {
         getCardinalContractTextHolder(cardinal).setVisible(false);
+    }
+
+    private void hideEmptyPanel() {
+        for (Map.Entry<TableLocation, FlowPanel> entry : table.locationPanelMap.entrySet()) {
+            FlowPanel panel = entry.getValue();
+            int panelCards = countCardWidgets(panel);
+            if (TableLocation.CENTER != entry.getKey() && 0 == panelCards)
+                table.hideLocation(entry.getKey());
+        }
+    }
+
+    private int countCardWidgets(HasWidgets hasWidgets) {
+        int panelCards = 0;
+        for (Widget widget : hasWidgets) {
+            if (widget instanceof CardWidget)
+                panelCards++;
+        }
+        return panelCards;
     }
 
     private Label getCardinalContractTextHolder(Cardinal cardinal) {

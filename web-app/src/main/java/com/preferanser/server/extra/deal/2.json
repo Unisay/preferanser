@@ -2,7 +2,7 @@
     "name": "Этюд №2.",
     "description": "Предложите план розыгрыша за вистующих.",
     "firstTurn": "WEST",
-    "gamePlayers": "THREE",
+    "players": "THREE",
     "eastContract": "WHIST",
     "southContract": "SIX_CLUB",
     "westContract": "WHIST",

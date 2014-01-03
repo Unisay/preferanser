@@ -30,7 +30,6 @@ import com.google.gwt.uibinder.client.UiChild;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.*;
 import com.preferanser.client.application.mvp.editor.layout.*;
-import com.preferanser.client.application.mvp.editor.style.TableStyle;
 import com.preferanser.client.theme.greencloth.client.com.preferanser.client.application.PreferanserResources;
 import com.preferanser.shared.domain.TableLocation;
 
@@ -46,30 +45,28 @@ public class TablePanel extends Composite {
     public interface Binder extends UiBinder<VerticalPanel, TablePanel> {}
 
     private static Binder uiBinder = GWT.create(Binder.class);
-    protected PreferanserResources resources = GWT.create(PreferanserResources.class);
 
+    protected PreferanserResources resources = GWT.create(PreferanserResources.class);
     @UiField HorizontalPanel northPanelHeader;
+
     @UiField HorizontalPanel eastPanelHeader;
     @UiField HorizontalPanel southPanelHeader;
     @UiField HorizontalPanel westPanelHeader;
     @UiField HorizontalPanel centerPanelHeader;
     @UiField HorizontalPanel headerPanel;
-
     @UiField public FlowPanel northPanel;
+
     @UiField public FlowPanel eastPanel;
     @UiField public FlowPanel southPanel;
     @UiField public FlowPanel westPanel;
     @UiField public FlowPanel centerPanel;
-
-    private TableStyle style;
-
     // TODO: consider replacing all public usages with methods
     public final BiMap<TableLocation, FlowPanel> locationPanelMap = EnumHashBiMap.create(TableLocation.class);
+
     private final BiMap<TableLocation, Layout<CardWidget>> locationLayoutMap = EnumHashBiMap.create(TableLocation.class);
     private CenterLayout centerCardLayout;
 
-    public TablePanel(TableStyle style) {
-        this.style = style;
+    public TablePanel() {
         initWidget(uiBinder.createAndBindUi(this));
 
         locationPanelMap.put(NORTH, northPanel);
@@ -140,13 +137,17 @@ public class TablePanel extends Composite {
         Layout<CardWidget> layout = locationLayoutMap.get(location);
         Collection<CardWidget> cardWidgets = newArrayList(transform(panel, new Function<Widget, CardWidget>() {
             @Nullable @Override public CardWidget apply(@Nullable Widget widget) {
-                if (widget instanceof CardWidget) {
-                    return (CardWidget) widget;
-                }
-                return null;
+                return widget instanceof CardWidget
+                    ? (CardWidget) widget
+                    : null;
             }
         }));
+        assert layout != null : "Layout for " + location + " is null";
         layout.apply(cardWidgets);
+    }
+
+    public void hideLocation(TableLocation tableLocation) {
+        locationPanelMap.get(tableLocation).getParent().setVisible(false);
     }
 
     public void addCenterPanelClickHandler(ClickHandler clickHandler) {

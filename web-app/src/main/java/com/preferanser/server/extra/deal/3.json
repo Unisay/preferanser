@@ -2,7 +2,7 @@
     "name": "Этюд №3. Комбинация Капустина.",
     "description": "Составить план розыгрыша за играющего и вистующих. Из коллекции Игоря Ковалькова.",
     "firstTurn": "EAST",
-    "gamePlayers": "THREE",
+    "players": "THREE",
     "eastContract": "WHIST",
     "southContract": "SIX_HEART",
     "westContract": "WHIST",

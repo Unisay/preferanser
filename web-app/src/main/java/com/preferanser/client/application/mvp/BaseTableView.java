@@ -42,6 +42,7 @@ import com.preferanser.shared.domain.Card;
 import com.preferanser.shared.domain.Cardinal;
 import com.preferanser.shared.domain.Contract;
 import com.preferanser.shared.domain.TableLocation;
+import com.preferanser.shared.util.GameUtils;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
@@ -101,14 +102,19 @@ abstract public class BaseTableView<U extends TableUiHandlers> extends ViewWithU
     }
 
     public void displayTableCards(Map<TableLocation, Collection<Card>> tableCards, Map<Card, Cardinal> centerCards) {
-        for (CardWidget cardWidget : cardWidgetBiMap.values()) {
-            cardWidget.removeFromParent();
-        }
-
-        for (Map.Entry<TableLocation, Collection<Card>> entry : tableCards.entrySet()) {
-            displayCards(entry.getKey(), entry.getValue());
-        }
+        detachCardWidgets();
+        displayCardinalCards(tableCards);
         displayCenterCards(centerCards);
+    }
+
+    private void displayCardinalCards(Map<TableLocation, Collection<Card>> tableCards) {
+        for (Cardinal cardinal : Cardinal.values())
+            displayCardinalCards(cardinal, tableCards.get(GameUtils.cardinalToTableLocation(cardinal)));
+    }
+
+    private void detachCardWidgets() {
+        for (CardWidget cardWidget : cardWidgetBiMap.values())
+            cardWidget.removeFromParent();
     }
 
     private void displayCenterCards(Map<Card, Cardinal> centerCards) {
@@ -126,11 +132,11 @@ abstract public class BaseTableView<U extends TableUiHandlers> extends ViewWithU
         table.addCardinalCardsToCenter(newArrayList(transform(centerCards.entrySet(), func)));
     }
 
-    private void displayCards(TableLocation location, Iterable<Card> cards) {
+    private void displayCardinalCards(Cardinal cardinal, Iterable<Card> cards) {
+        TableLocation location = GameUtils.cardinalToTableLocation(cardinal);
         HasWidgets panel = table.locationPanelMap.get(location);
-        for (Card card : cards) {
+        for (Card card : cards)
             displayCard(panel, card);
-        }
         table.layoutLocation(location);
     }
 
@@ -147,11 +153,10 @@ abstract public class BaseTableView<U extends TableUiHandlers> extends ViewWithU
 
     public void displayContracts(Map<Cardinal, Contract> cardinalContracts) {
         for (Cardinal cardinal : Cardinal.values()) {
-            if (cardinalContracts.containsKey(cardinal)) {
+            if (cardinalContracts.containsKey(cardinal))
                 displayCardinalContract(cardinal, cardinalContracts.get(cardinal));
-            } else {
+            else
                 displayNoContract(cardinal);
-            }
         }
     }
 
@@ -159,9 +164,8 @@ abstract public class BaseTableView<U extends TableUiHandlers> extends ViewWithU
     protected abstract void displayNoContract(Cardinal cardinal);
 
     public void displayCardinalTricks(Map<Cardinal, Integer> cardinalTricks) {
-        for (Map.Entry<Cardinal, Integer> entry : cardinalTricks.entrySet()) {
+        for (Map.Entry<Cardinal, Integer> entry : cardinalTricks.entrySet())
             cardinalTricksCountMap.get(entry.getKey()).setText("" + entry.getValue());
-        }
     }
 
     public void displayTurn(Cardinal turn) {
@@ -195,9 +199,8 @@ abstract public class BaseTableView<U extends TableUiHandlers> extends ViewWithU
     private void installMouseUpHandler(RootPanel rootPanel) {
         rootPanel.addDomHandler(new MouseUpHandler() {
             @Override public void onMouseUp(MouseUpEvent event) {
-                if (imageDragController.isDrag()) {
+                if (imageDragController.isDrag())
                     imageDragController.stopDrag();
-                }
             }
         }, MouseUpEvent.getType());
     }
@@ -206,17 +209,17 @@ abstract public class BaseTableView<U extends TableUiHandlers> extends ViewWithU
         for (final FlowPanel sourcePanel : panels) {
             sourcePanel.addDomHandler(new MouseUpHandler() {
                 @Override public void onMouseUp(MouseUpEvent event) {
-                    if (imageDragController.isDrag()) {
-                        Point cardCenter = Rect.FromWidget(imageDragController.getCardWidget()).center();
-                        for (final FlowPanel targetPanel : panels) {
-                            if (Rect.FromWidget(targetPanel).contains(cardCenter)) {
-                                Card card = cardWidgetBiMap.inverse().get(imageDragController.getCardWidget());
-                                TableLocation oldLocation = table.locationPanelMap.inverse().get(sourcePanel);
-                                TableLocation newLocation = table.locationPanelMap.inverse().get(targetPanel);
-                                getLog().finer("Card newLocation change: " + card + ": " + oldLocation + " -> " + newLocation);
-                                getUiHandlers().changeCardLocation(card, oldLocation, newLocation);
-                                return;
-                            }
+                    if (!imageDragController.isDrag())
+                        return;
+                    Point cardCenter = Rect.FromWidget(imageDragController.getCardWidget()).center();
+                    for (final FlowPanel targetPanel : panels) {
+                        if (Rect.FromWidget(targetPanel).contains(cardCenter)) {
+                            Card card = cardWidgetBiMap.inverse().get(imageDragController.getCardWidget());
+                            TableLocation oldLocation = table.locationPanelMap.inverse().get(sourcePanel);
+                            TableLocation newLocation = table.locationPanelMap.inverse().get(targetPanel);
+                            getLog().finer("Card newLocation change: " + card + ": " + oldLocation + " -> " + newLocation);
+                            getUiHandlers().changeCardLocation(card, oldLocation, newLocation);
+                            return;
                         }
                     }
                 }
@@ -237,9 +240,8 @@ abstract public class BaseTableView<U extends TableUiHandlers> extends ViewWithU
             } catch (NumberFormatException e) {
                 zIndex = 0;
             }
-            if (maxZIndex < zIndex) {
+            if (maxZIndex < zIndex)
                 maxZIndex = zIndex;
-            }
         }
         return maxZIndex;
     }
@@ -282,6 +284,6 @@ abstract public class BaseTableView<U extends TableUiHandlers> extends ViewWithU
     }
 
     public @UiFactory TablePanel tablePanel() {
-        return new TablePanel(tableStyle);
+        return new TablePanel();
     }
 }

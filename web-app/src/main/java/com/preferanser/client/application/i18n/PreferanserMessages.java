@@ -33,7 +33,7 @@ public interface PreferanserMessages extends Messages {
     @DefaultMessage("There are conflicting contracts") String hasConflictingContracts();
     @DefaultMessage("Fist turn not specified") String firstTurnNotSpecified();
     @DefaultMessage("First turn specified incorrectly") String wrongFirstTurn();
-    @DefaultMessage("Cards dealt incorrectly") String wrongNumCardsPerCardinal(String join);
+    @DefaultMessage("Cards dealt incorrectly: {0}") String wrongNumCardsPerCardinal(String join);
     @DefaultMessage("Number of players not specified") String numPlayersNotSpecified();
-    @DefaultMessage("Has duplicate cards") String hasDuplicateCards(String join);
+    @DefaultMessage("Has duplicate cards: {0}") String hasDuplicateCards(String join);
 }

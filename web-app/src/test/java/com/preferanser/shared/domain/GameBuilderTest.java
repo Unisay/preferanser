@@ -23,6 +23,7 @@ import com.google.appengine.labs.repackaged.com.google.common.collect.ImmutableM
 import com.preferanser.shared.domain.entity.Deal;
 import com.preferanser.shared.domain.exception.GameBuilderException;
 import com.preferanser.shared.domain.exception.validation.GameBuilderValidationError;
+import com.preferanser.shared.domain.exception.validation.HasConflictingContractsValidationError;
 import com.preferanser.shared.domain.exception.validation.HasDuplicateCardsValidationError;
 import com.preferanser.shared.domain.exception.validation.WrongNumCardsPerCardinalValidationError;
 import com.preferanser.shared.util.Clock;
@@ -190,13 +191,45 @@ public class GameBuilderTest {
             .build();
     }
 
-    @Test(expectedExceptions = GameBuilderException.class,
-        expectedExceptionsMessageRegExp = ".*HasConflictingContractsValidationError$")
+    @Test
     public void testValidate_HasConflictingContractsAllWhists() throws Exception {
-        builder.setCardinalContract(NORTH, Contract.WHIST)
-            .setCardinalContract(EAST, Contract.WHIST)
-            .setCardinalContract(WEST, Contract.WHIST)
-            .build();
+        try {
+            builder.setCardinalContract(NORTH, Contract.WHIST)
+                .setCardinalContract(EAST, Contract.WHIST)
+                .setCardinalContract(WEST, Contract.WHIST)
+                .build();
+        } catch (GameBuilderException e) {
+            List<? extends GameBuilderValidationError> expectedErrors = newArrayList(new HasConflictingContractsValidationError());
+            assertReflectionEquals(expectedErrors, e.getBuilderErrors());
+        }
+    }
+
+    @Test
+    public void testValidate_HasConflictingContractsPassPassWhist() throws Exception {
+        try {
+            builder.setCardinalContract(NORTH, Contract.PASS)
+                .setCardinalContract(EAST, Contract.PASS)
+                .setCardinalContract(WEST, Contract.WHIST)
+                .build();
+            fail("GameBuilderException expected");
+        } catch (GameBuilderException e) {
+            List<? extends GameBuilderValidationError> expectedErrors = newArrayList(new HasConflictingContractsValidationError());
+            assertReflectionEquals(expectedErrors, e.getBuilderErrors());
+        }
+    }
+
+    @Test
+    public void testValidate_HasConflictingContractsPassWhistWhist() throws Exception {
+        try {
+            builder.setCardinalContract(NORTH, Contract.PASS)
+                .setCardinalContract(EAST, Contract.WHIST)
+                .setCardinalContract(WEST, Contract.WHIST)
+                .build();
+            fail("GameBuilderException expected");
+        } catch (GameBuilderException e) {
+            List<? extends GameBuilderValidationError> expectedErrors = newArrayList(new HasConflictingContractsValidationError());
+            assertReflectionEquals(expectedErrors, e.getBuilderErrors());
+        }
     }
 
     @Test(expectedExceptions = GameBuilderException.class,

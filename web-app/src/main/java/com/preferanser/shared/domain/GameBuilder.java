@@ -238,6 +238,7 @@ public class GameBuilder {
         int numOfContracts = 0;
         int numOfPlayingContracts = 0;
         int numOfWhists = 0;
+        int numOfPasses = 0;
         for (Contract contract : cardinalContracts.values()) {
             if (contract != null) {
                 numOfContracts++;
@@ -245,9 +246,11 @@ public class GameBuilder {
                     numOfPlayingContracts++;
                 if (contract == Contract.WHIST)
                     numOfWhists++;
+                if (contract == Contract.PASS)
+                    numOfPasses++;
             }
         }
-        return numOfContracts != 0 && (numOfPlayingContracts > 1 || numOfWhists == numOfContracts);
+        return numOfContracts != 0 && numOfPlayingContracts != 1 && numOfPasses != numOfContracts;
     }
 
     private Set<Card> findDuplicateCards() {

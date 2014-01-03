@@ -12,7 +12,7 @@
     },
     "eastCards": [
         "SPADE_ACE", "SPADE_QUEEN",
-        "DIAMOND_SEVEN", "DIAMOND_NINE",
+        "DIAMOND_SEVEN", "DIAMOND_JACK",
         "CLUB_NINE", "CLUB_TEN", "CLUB_JACK",
         "HEART_SEVEN", "HEART_QUEEN", "HEART_KING"
     ],

@@ -23,9 +23,11 @@ import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import com.preferanser.shared.domain.entity.Deal;
 import com.preferanser.shared.domain.exception.DuplicateGameTurnException;
 import com.preferanser.shared.domain.exception.GameBuilderException;
+import com.preferanser.shared.domain.exception.validation.*;
 import com.preferanser.shared.util.Clock;
 import com.preferanser.shared.util.EnumRotator;
 import com.preferanser.shared.util.GameUtils;
@@ -41,15 +43,6 @@ public class GameBuilder {
     private static final int NUM_OF_CARDS_PER_CARDINAL = 10;
     private static final int NUM_OF_CONTRACTS = 3;
     private Widow widow;
-
-    public static enum Error {
-        WRONG_FIRST_TURN,
-        WRONG_CARDINAL_CARDS,
-        FIRST_TURN_NOT_SPECIFIED,
-        NUM_PLAYERS_NOT_SPECIFIED,
-        HAS_CONFLICTING_CONTRACTS,
-        WRONG_NUMBER_OF_CONTRACTS
-    }
 
     private GamePlayers gamePlayers;
 
@@ -91,11 +84,11 @@ public class GameBuilder {
     }
 
     private void setCardinalDealCards(Deal deal) {
-        cardinalCardMultimap.clear();
-        cardinalCardMultimap.putAll(Cardinal.NORTH, deal.getNorthCards());
-        cardinalCardMultimap.putAll(Cardinal.EAST, deal.getEastCards());
-        cardinalCardMultimap.putAll(Cardinal.SOUTH, deal.getSouthCards());
-        cardinalCardMultimap.putAll(Cardinal.WEST, deal.getWestCards());
+        clearCards();
+        putCards(Cardinal.NORTH, deal.getNorthCards());
+        putCards(Cardinal.EAST, deal.getEastCards());
+        putCards(Cardinal.SOUTH, deal.getSouthCards());
+        putCards(Cardinal.WEST, deal.getWestCards());
     }
 
     private void setCenterDealCards(Deal deal) {
@@ -193,26 +186,30 @@ public class GameBuilder {
         return true;
     }
 
-    private Optional<List<Error>> validate() {
-        List<Error> errors = newArrayList();
+    private Optional<List<GameBuilderValidationError>> validate() {
+        List<GameBuilderValidationError> errors = newArrayList();
 
         if (gamePlayers == null)
-            errors.add(Error.NUM_PLAYERS_NOT_SPECIFIED);
+            errors.add(new NumPlayersNotSpecifiedValidationError());
 
         if (firstTurn == null)
-            errors.add(Error.FIRST_TURN_NOT_SPECIFIED);
+            errors.add(new FirstTurnNotSpecifiedValidationError());
 
         if (wrongNumberOfContracts())
-            errors.add(Error.WRONG_NUMBER_OF_CONTRACTS);
+            errors.add(new WrongNumberOfContractsValidationError());
 
         if (wrongFirstTurn())
-            errors.add(Error.WRONG_FIRST_TURN);
+            errors.add(new WrongFirstTurnValidationError());
 
-        if (hasConflictingContracts())
-            errors.add(Error.HAS_CONFLICTING_CONTRACTS);
+        if (hasConflictingContracts()) // TODO: which contracts conflict
+            errors.add(new HasConflictingContractsValidationError());
 
-        if (wrongCardinalCards())
-            errors.add(Error.WRONG_CARDINAL_CARDS);
+        Set<Card> duplicateCards = findDuplicateCards();
+        if (!duplicateCards.isEmpty())
+            errors.add(new HasDuplicateCardsValidationError(duplicateCards));
+
+        if (wrongNumberOfCardsPerCardinal()) // TODO: which cardinal contains wrong number of cards
+            errors.add(new WrongNumCardsPerCardinalValidationError());
 
         if (errors.isEmpty())
             return Optional.absent();
@@ -252,7 +249,18 @@ public class GameBuilder {
         return numOfContracts != 0 && (numOfPlayingContracts > 1 || numOfWhists == numOfContracts);
     }
 
-    private boolean wrongCardinalCards() {
+    private Set<Card> findDuplicateCards() {
+        Set<Card> cardSet = Sets.newHashSet();
+        Set<Card> duplicateCardSet = Sets.newHashSet();
+        for (Card card : cardinalCardMultimap.values()) {
+            if (!cardSet.add(card)) {
+                duplicateCardSet.add(card);
+            }
+        }
+        return duplicateCardSet;
+    }
+
+    private boolean wrongNumberOfCardsPerCardinal() {
         for (Cardinal cardinal : Cardinal.values())
             if (cardinalContracts.get(cardinal) != null && cardinalCardMultimap.get(cardinal).size() != NUM_OF_CARDS_PER_CARDINAL)
                 return true;
@@ -260,7 +268,7 @@ public class GameBuilder {
     }
 
     public Game build() throws GameBuilderException {
-        Optional<List<Error>> validationErrors = validate();
+        Optional<List<GameBuilderValidationError>> validationErrors = validate();
         if (validationErrors.isPresent())
             throw new GameBuilderException(validationErrors.get());
 
@@ -282,7 +290,7 @@ public class GameBuilder {
         deal.setFirstTurn(firstTurn);
         deal.setName(name);
         deal.setGamePlayers(gamePlayers);
-        //deal.setWidow(widow);
+        deal.setWidow(widow);
         initContracts(deal);
         initCardinalCards(deal);
         initCenterCards(deal);

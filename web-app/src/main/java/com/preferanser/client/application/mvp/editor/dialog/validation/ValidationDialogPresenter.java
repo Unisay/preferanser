@@ -24,16 +24,16 @@ import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.PopupView;
 import com.gwtplatform.mvp.client.PresenterWidget;
-import com.preferanser.shared.domain.GameBuilder;
+import com.preferanser.shared.domain.exception.validation.GameBuilderValidationError;
 
 import java.util.Collection;
 
 public class ValidationDialogPresenter extends PresenterWidget<ValidationDialogPresenter.TheView> implements ValidationDialogUiHandlers {
 
-    private Collection<GameBuilder.Error> validationErrors;
+    private Collection<GameBuilderValidationError> validationErrors;
 
     public interface TheView extends PopupView, HasUiHandlers<ValidationDialogUiHandlers> {
-        void displayValidationErrors(Collection<GameBuilder.Error> validationErrors);
+        void displayValidationErrors(Collection<GameBuilderValidationError> validationErrors);
     }
 
     @Inject
@@ -48,7 +48,7 @@ public class ValidationDialogPresenter extends PresenterWidget<ValidationDialogP
         getView().displayValidationErrors(this.validationErrors);
     }
 
-    public void setValidationErrors(Collection<GameBuilder.Error> validationErrors) {
+    public void setValidationErrors(Collection<GameBuilderValidationError> validationErrors) {
         this.validationErrors = validationErrors;
     }
 

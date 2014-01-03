@@ -75,7 +75,7 @@ public class Widow implements Serializable {
     }
 
     public static Widow fromArray(Card[] cards) {
-        Preconditions.checkArgument(cards.length != 2, "Expected array of exactly 2 cards");
+        Preconditions.checkArgument(cards.length == 2, "Expected array of exactly 2 cards");
         Preconditions.checkNotNull(cards[0], "Card 1 is null, can't create Widow");
         Preconditions.checkNotNull(cards[1], "Card 2 is null, can't create Widow");
         return new Widow(cards[0], cards[1]);

@@ -21,14 +21,14 @@ package com.preferanser.shared.domain;
 
 import com.preferanser.shared.domain.entity.Deal;
 import com.preferanser.shared.domain.exception.GameBuilderException;
+import com.preferanser.shared.domain.exception.validation.GameBuilderValidationError;
+import com.preferanser.shared.domain.exception.validation.HasDuplicateCardsValidationError;
 import com.preferanser.shared.util.Clock;
 import org.apache.commons.lang.ArrayUtils;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import java.util.Collection;
-import java.util.Date;
-import java.util.Map;
+import java.util.*;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Maps.newHashMap;
@@ -36,8 +36,7 @@ import static com.preferanser.shared.domain.Card.CLUB_ACE;
 import static com.preferanser.shared.domain.Cardinal.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.*;
 import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
 
 public class GameBuilderTest {
@@ -96,7 +95,7 @@ public class GameBuilderTest {
         assertThat(builder.setFirstTurn(EAST).build().getTurn(), equalTo(EAST));
     }
 
-    @Test(expectedExceptions = GameBuilderException.class, expectedExceptionsMessageRegExp = ".*: WRONG_FIRST_TURN$")
+    @Test(expectedExceptions = GameBuilderException.class, expectedExceptionsMessageRegExp = ".*WrongFirstTurnValidationError$")
     public void testFirstTurn_Wrong() throws Exception {
         builder.setFirstTurn(SOUTH).build();
     }
@@ -123,7 +122,7 @@ public class GameBuilderTest {
         assertThat(game.getCardsByCardinal(SOUTH), empty());
     }
 
-    @Test(expectedExceptions = GameBuilderException.class, expectedExceptionsMessageRegExp = ".*: WRONG_CARDINAL_CARDS$")
+    @Test(expectedExceptions = GameBuilderException.class, expectedExceptionsMessageRegExp = ".*WrongNumCardsPerCardinalValidationError$")
     public void testClearCards() throws Exception {
         builder.clearCards(TableLocation.NORTH);
         Map<TableLocation, Collection<Card>> tableCards = builder.getTableCards();
@@ -143,7 +142,7 @@ public class GameBuilderTest {
         assertTrue(game.getCenterCards().isEmpty(), "No cards in TableLocation.CENTER expected");
     }
 
-    @Test(expectedExceptions = GameBuilderException.class, expectedExceptionsMessageRegExp = ".*: WRONG_CARDINAL_CARDS$")
+    @Test(expectedExceptions = GameBuilderException.class, expectedExceptionsMessageRegExp = ".*WrongNumCardsPerCardinalValidationError$")
     public void testClearCards_All() throws Exception {
         builder.clearCards();
         assertTrue(builder.getTableCards().isEmpty());
@@ -151,13 +150,13 @@ public class GameBuilderTest {
     }
 
     @Test(expectedExceptions = GameBuilderException.class, expectedExceptionsMessageRegExp
-        = ".*: NUM_PLAYERS_NOT_SPECIFIED, FIRST_TURN_NOT_SPECIFIED, WRONG_NUMBER_OF_CONTRACTS$")
+        = ".*NumPlayersNotSpecifiedValidationError.+FirstTurnNotSpecifiedValidationError.+WrongNumberOfContractsValidationError$")
     public void testValidate_NoPlayersNoTurnNoContracts() throws Exception {
         new GameBuilder().build();
     }
 
     @Test(expectedExceptions = GameBuilderException.class, expectedExceptionsMessageRegExp
-        = ".*: FIRST_TURN_NOT_SPECIFIED, WRONG_NUMBER_OF_CONTRACTS$")
+        = ".*FirstTurnNotSpecifiedValidationError.+WrongNumberOfContractsValidationError$")
     public void testValidate_NoTurnNoContracts() throws Exception {
         new GameBuilder()
             .setFourPlayers()
@@ -165,7 +164,7 @@ public class GameBuilderTest {
     }
 
     @Test(expectedExceptions = GameBuilderException.class,
-        expectedExceptionsMessageRegExp = ".*: WRONG_NUMBER_OF_CONTRACTS$")
+        expectedExceptionsMessageRegExp = ".*WrongNumberOfContractsValidationError$")
     public void testValidate_NoContracts() throws Exception {
         new GameBuilder()
             .setFourPlayers()
@@ -174,7 +173,7 @@ public class GameBuilderTest {
     }
 
     @Test(expectedExceptions = GameBuilderException.class,
-        expectedExceptionsMessageRegExp = ".*WRONG_NUMBER_OF_CONTRACTS.*")
+        expectedExceptionsMessageRegExp = ".*WrongNumberOfContractsValidationError.*")
     public void testValidate_WrongNumberContracts() throws Exception {
         new GameBuilder()
             .setThreePlayers()
@@ -190,7 +189,7 @@ public class GameBuilderTest {
     }
 
     @Test(expectedExceptions = GameBuilderException.class,
-        expectedExceptionsMessageRegExp = ".*: HAS_CONFLICTING_CONTRACTS$")
+        expectedExceptionsMessageRegExp = ".*HasConflictingContractsValidationError$")
     public void testValidate_HasConflictingContractsAllWhists() throws Exception {
         builder.setCardinalContract(NORTH, Contract.WHIST)
             .setCardinalContract(EAST, Contract.WHIST)
@@ -199,7 +198,7 @@ public class GameBuilderTest {
     }
 
     @Test(expectedExceptions = GameBuilderException.class,
-        expectedExceptionsMessageRegExp = ".*: HAS_CONFLICTING_CONTRACTS$")
+        expectedExceptionsMessageRegExp = ".*HasConflictingContractsValidationError$")
     public void testValidate_HasConflictingContracts() throws Exception {
         builder.setCardinalContract(NORTH, Contract.SIX_DIAMOND)
             .setCardinalContract(EAST, Contract.SEVEN_CLUB)
@@ -208,7 +207,7 @@ public class GameBuilderTest {
     }
 
     @Test(expectedExceptions = GameBuilderException.class,
-        expectedExceptionsMessageRegExp = ".*: WRONG_CARDINAL_CARDS$")
+        expectedExceptionsMessageRegExp = ".*WrongNumCardsPerCardinalValidationError$")
     public void testValidate_WrongCardinalCards() throws Exception {
         new GameBuilder()
             .setFourPlayers()
@@ -220,7 +219,7 @@ public class GameBuilderTest {
     }
 
     @Test(expectedExceptions = GameBuilderException.class,
-        expectedExceptionsMessageRegExp = ".*: WRONG_CARDINAL_CARDS$")
+        expectedExceptionsMessageRegExp = ".*WrongNumCardsPerCardinalValidationError$")
     public void testValidate_WrongCardinalCards2() throws Exception {
         new GameBuilder()
             .setFourPlayers()
@@ -232,6 +231,29 @@ public class GameBuilderTest {
             .setCardinalContract(EAST, Contract.PASS)
             .setCardinalContract(WEST, Contract.WHIST)
             .build();
+    }
+
+    @Test
+    public void testValidate_DuplicateCards() throws Exception {
+        northCards[0] = eastCards[0];
+        try {
+            new GameBuilder()
+                .setFourPlayers()
+                .setFirstTurn(NORTH)
+                .putCards(NORTH, northCards)
+                .putCards(EAST, eastCards)
+                .putCards(WEST, westCards)
+                .setCardinalContract(NORTH, Contract.SIX_DIAMOND)
+                .setCardinalContract(EAST, Contract.PASS)
+                .setCardinalContract(WEST, Contract.WHIST)
+                .build();
+            fail("HasDuplicateCardsValidationError expected");
+        } catch (GameBuilderException e) {
+            List<? extends GameBuilderValidationError> expectedErrors = newArrayList(
+                new HasDuplicateCardsValidationError(Collections.singleton(eastCards[0]))
+            );
+            assertReflectionEquals(expectedErrors, e.getBuilderErrors());
+        }
     }
 
     @Test

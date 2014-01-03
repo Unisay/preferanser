@@ -26,7 +26,9 @@ import com.google.gwt.i18n.client.ConstantsWithLookup;
  * <p/>
  * See <a href="http://www.gwtproject.org/doc/latest/DevGuideI18n.html">GWT i18n doc</a>
  */
+@SuppressWarnings("ClassWithTooManyMethods")
 public interface PreferanserConstants extends ConstantsWithLookup {
+
     @DefaultStringValue("Preferanser") String preferanser();
     @DefaultStringValue("Pass") String pass();
     @DefaultStringValue("Whist") String whist();
@@ -64,8 +66,7 @@ public interface PreferanserConstants extends ConstantsWithLookup {
     @DefaultStringValue("There are conflicting contracts") String HAS_CONFLICTING_CONTRACTS();
     @DefaultStringValue("Fist turn not specified") String FIRST_TURN_NOT_SPECIFIED();
     @DefaultStringValue("First turn specified incorrectly") String WRONG_FIRST_TURN();
-    @DefaultStringValue("Cards dealt incorrectly") String WRONG_CARDINAL_CARDS();
-
+    @DefaultStringValue("Cards dealt incorrectly") String WRONG_NUM_CARDS_PER_CARDINAL();
     @DefaultStringValue("Number of players not specified") String NUM_PLAYERS_NOT_SPECIFIED();
-
+    @DefaultStringValue("Has duplicate cards") String HAS_DUPLICATE_CARDS();
 }

@@ -28,8 +28,8 @@ import com.preferanser.client.application.mvp.editor.dialog.contract.ContractDia
 import com.preferanser.client.application.mvp.editor.dialog.open.OpenDialogPresenter;
 import com.preferanser.client.application.mvp.editor.dialog.validation.ValidationDialogPresenter;
 import com.preferanser.shared.domain.Cardinal;
-import com.preferanser.shared.domain.GameBuilder;
 import com.preferanser.shared.domain.entity.Deal;
+import com.preferanser.shared.domain.exception.validation.GameBuilderValidationError;
 
 import java.util.Collection;
 import java.util.List;
@@ -76,7 +76,7 @@ public class EditorDialogs {
         editorPresenterProvider.get().addToPopupSlot(inputDialog);
     }
 
-    public void showValidationDialog(Collection<GameBuilder.Error> errors) {
+    public void showValidationDialog(Collection<GameBuilderValidationError> errors) {
         validationDialog.setValidationErrors(errors);
         editorPresenterProvider.get().addToPopupSlot(validationDialog);
     }

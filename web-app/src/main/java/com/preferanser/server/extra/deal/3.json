@@ -1,0 +1,31 @@
+{
+    "name": "Этюд №3. Комбинация Капустина.",
+    "description": "Составить план розыгрыша за играющего и вистующих. Из коллекции Игоря Ковалькова.",
+    "firstTurn": "EAST",
+    "gamePlayers": "THREE",
+    "eastContract": "WHIST",
+    "southContract": "SIX_HEART",
+    "westContract": "WHIST",
+    "widow": {
+        "card1": "DIAMOND_9",
+        "card2": "DIAMOND_10"
+    },
+    "eastCards": [
+        "SPADE_ACE", "SPADE_10", "SPADE_8", "SPADE_7",
+        "DIAMOND_KING",
+        "CLUB_QUEEN", "CLUB_10", "CLUB_7",
+        "HEART_ACE", "HEART_10"
+    ],
+    "southCards": [
+        "SPADE_KING", "SPADE_QUEEN",
+        "CLUB_ACE", "CLUB_JACK", "CLUB_9",
+        "DIAMOND_ACE",
+        "HEART_KING", "HEART_QUEEN", "HEART_8", "HEART_7"
+    ],
+    "westCards": [
+        "SPADE_JACK", "SPADE_9",
+        "CLUB_KING", "CLUB_8",
+        "DIAMOND_QUEEN", "DIAMOND_JACK", "DIAMOND_8", "DIAMOND_7",
+        "HEART_JACK", "HEART_9"
+    ]
+}

@@ -19,36 +19,30 @@
 
 package com.preferanser.shared.domain;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
-
-import java.util.List;
-import java.util.Set;
-
 /**
  * Playing Card
  */
 public enum Card {
 
-    SPADE_SEVEN(Suit.SPADE, Rank.SEVEN),
-    CLUB_SEVEN(Suit.CLUB, Rank.SEVEN),
-    DIAMOND_SEVEN(Suit.DIAMOND, Rank.SEVEN),
-    HEART_SEVEN(Suit.HEART, Rank.SEVEN),
+    SPADE_7(Suit.SPADE, Rank.SEVEN),
+    CLUB_7(Suit.CLUB, Rank.SEVEN),
+    DIAMOND_7(Suit.DIAMOND, Rank.SEVEN),
+    HEART_7(Suit.HEART, Rank.SEVEN),
 
-    SPADE_EIGHT(Suit.SPADE, Rank.EIGHT),
-    CLUB_EIGHT(Suit.CLUB, Rank.EIGHT),
-    DIAMOND_EIGHT(Suit.DIAMOND, Rank.EIGHT),
-    HEART_EIGHT(Suit.HEART, Rank.EIGHT),
+    SPADE_8(Suit.SPADE, Rank.EIGHT),
+    CLUB_8(Suit.CLUB, Rank.EIGHT),
+    DIAMOND_8(Suit.DIAMOND, Rank.EIGHT),
+    HEART_8(Suit.HEART, Rank.EIGHT),
 
-    SPADE_NINE(Suit.SPADE, Rank.NINE),
-    CLUB_NINE(Suit.CLUB, Rank.NINE),
-    DIAMOND_NINE(Suit.DIAMOND, Rank.NINE),
-    HEART_NINE(Suit.HEART, Rank.NINE),
+    SPADE_9(Suit.SPADE, Rank.NINE),
+    CLUB_9(Suit.CLUB, Rank.NINE),
+    DIAMOND_9(Suit.DIAMOND, Rank.NINE),
+    HEART_9(Suit.HEART, Rank.NINE),
 
-    SPADE_TEN(Suit.SPADE, Rank.TEN),
-    CLUB_TEN(Suit.CLUB, Rank.TEN),
-    DIAMOND_TEN(Suit.DIAMOND, Rank.TEN),
-    HEART_TEN(Suit.HEART, Rank.TEN),
+    SPADE_10(Suit.SPADE, Rank.TEN),
+    CLUB_10(Suit.CLUB, Rank.TEN),
+    DIAMOND_10(Suit.DIAMOND, Rank.TEN),
+    HEART_10(Suit.HEART, Rank.TEN),
 
     SPADE_JACK(Suit.SPADE, Rank.JACK),
     CLUB_JACK(Suit.CLUB, Rank.JACK),
@@ -76,14 +70,6 @@ public enum Card {
     private Card(Suit suit, Rank rank) {
         this.suit = suit;
         this.rank = rank;
-    }
-
-    public static List<Card> valuesAsList() {
-        return Lists.newArrayList(values());
-    }
-
-    public static Set<Card> valuesAsSet() {
-        return Sets.newHashSet(values());
     }
 
     public Suit getSuit() {

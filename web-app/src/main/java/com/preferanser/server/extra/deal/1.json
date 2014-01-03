@@ -1,29 +1,29 @@
 {
-    "name": "Этюд №1",
-    "description": "Сколько взяток возьмут вистующие? Составьте оптимальный план розыгрыша для вистующих.",
+    "name": "Этюд №1.",
+    "description": "Сколько взяток возьмут вистующие? Составьте оптимальный план розыгрыша для вистующих. Из коллекции Игоря Ковалькова.",
     "firstTurn": "SOUTH",
     "gamePlayers": "THREE",
     "eastContract": "WHIST",
     "southContract": "WHIST",
     "westContract": "SIX_SPADE",
     "widow": {
-        "card1": "HEART_TEN",
-        "card2": "CLUB_SEVEN"
+        "card1": "HEART_10",
+        "card2": "CLUB_7"
     },
     "eastCards": [
         "SPADE_ACE", "SPADE_QUEEN",
-        "DIAMOND_SEVEN", "DIAMOND_JACK",
-        "CLUB_NINE", "CLUB_TEN", "CLUB_JACK",
-        "HEART_SEVEN", "HEART_QUEEN", "HEART_KING"
+        "DIAMOND_7", "DIAMOND_JACK",
+        "CLUB_9", "CLUB_10", "CLUB_JACK",
+        "HEART_7", "HEART_QUEEN", "HEART_KING"
     ],
     "southCards": [
         "SPADE_JACK", "SPADE_KING",
-        "CLUB_EIGHT", "CLUB_ACE",
-        "DIAMOND_EIGHT", "DIAMOND_NINE", "DIAMOND_TEN",
-        "HEART_EIGHT", "HEART_NINE", "HEART_JACK"
+        "CLUB_8", "CLUB_ACE",
+        "DIAMOND_8", "DIAMOND_9", "DIAMOND_10",
+        "HEART_8", "HEART_9", "HEART_JACK"
     ],
     "westCards": [
-        "SPADE_SEVEN", "SPADE_EIGHT", "SPADE_NINE", "SPADE_TEN",
+        "SPADE_7", "SPADE_8", "SPADE_9", "SPADE_10",
         "DIAMOND_ACE", "DIAMOND_KING", "DIAMOND_QUEEN",
         "CLUB_KING", "CLUB_QUEEN",
         "HEART_ACE"

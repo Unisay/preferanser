@@ -38,55 +38,55 @@ class CardImageResourceRetriever {
 
     ImageResource getByCard(Card card) {
         switch (card) {
-            case SPADE_SEVEN:
+            case SPADE_7:
                 return resources.s7();
 
-            case CLUB_SEVEN:
+            case CLUB_7:
                 return resources.c7();
 
-            case DIAMOND_SEVEN:
+            case DIAMOND_7:
                 return resources.d7();
 
-            case HEART_SEVEN:
+            case HEART_7:
                 return resources.h7();
 
 
-            case SPADE_EIGHT:
+            case SPADE_8:
                 return resources.s8();
 
-            case CLUB_EIGHT:
+            case CLUB_8:
                 return resources.c8();
 
-            case DIAMOND_EIGHT:
+            case DIAMOND_8:
                 return resources.d8();
 
-            case HEART_EIGHT:
+            case HEART_8:
                 return resources.h8();
 
 
-            case SPADE_NINE:
+            case SPADE_9:
                 return resources.s9();
 
-            case CLUB_NINE:
+            case CLUB_9:
                 return resources.c9();
 
-            case DIAMOND_NINE:
+            case DIAMOND_9:
                 return resources.d9();
 
-            case HEART_NINE:
+            case HEART_9:
                 return resources.h9();
 
 
-            case SPADE_TEN:
+            case SPADE_10:
                 return resources.s10();
 
-            case CLUB_TEN:
+            case CLUB_10:
                 return resources.c10();
 
-            case DIAMOND_TEN:
+            case DIAMOND_10:
                 return resources.d10();
 
-            case HEART_TEN:
+            case HEART_10:
                 return resources.h10();
 
 

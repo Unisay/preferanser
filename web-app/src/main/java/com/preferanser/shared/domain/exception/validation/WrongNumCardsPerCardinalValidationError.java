@@ -19,12 +19,34 @@
 
 package com.preferanser.shared.domain.exception.validation;
 
+import com.google.common.base.Joiner;
 import com.preferanser.client.application.i18n.PreferanserConstants;
+import com.preferanser.client.application.i18n.PreferanserMessages;
+import com.preferanser.shared.domain.Cardinal;
+
+import java.util.List;
+import java.util.Map;
+
+import static com.google.common.collect.Lists.newArrayList;
 
 public class WrongNumCardsPerCardinalValidationError extends GameBuilderValidationError {
 
-    @Override public String formatLocalMessage(PreferanserConstants constants) {
-        return constants.WRONG_NUM_CARDS_PER_CARDINAL();
+    private Map<Cardinal, Integer> wrongCardinals;
+
+    @SuppressWarnings("unused")
+    public WrongNumCardsPerCardinalValidationError() {
+        // for serialization
+    }
+
+    public WrongNumCardsPerCardinalValidationError(Map<Cardinal, Integer> wrongCardinals) {
+        this.wrongCardinals = wrongCardinals;
+    }
+
+    @Override public String formatLocalMessage(PreferanserConstants constants, PreferanserMessages messages) {
+        List<String> params = newArrayList();
+        for (Map.Entry<Cardinal, Integer> entry : wrongCardinals.entrySet())
+            params.add(constants.getString(entry.getKey().name()).toLowerCase() + " ‒ " + entry.getValue());
+        return messages.wrongNumCardsPerCardinal(Joiner.on(", ").join(params));
     }
 
 }

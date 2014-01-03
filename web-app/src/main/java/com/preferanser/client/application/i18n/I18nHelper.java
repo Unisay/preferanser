@@ -21,14 +21,9 @@ package com.preferanser.client.application.i18n;
 
 import com.google.common.base.Optional;
 import com.google.inject.Inject;
-import com.preferanser.shared.domain.Cardinal;
 import com.preferanser.shared.domain.Contract;
 import com.preferanser.shared.domain.Suit;
 
-/**
- * @author Yuriy Lazarev <ylazarev@groupon.com>
- * @todo write a javadoc
- */
 public class I18nHelper {
 
     private PreferanserConstants constants;
@@ -59,18 +54,4 @@ public class I18nHelper {
         }
     }
 
-    public String getCardinalName(Cardinal cardinal) {
-        switch (cardinal) {
-            case NORTH:
-                return constants.north();
-            case EAST:
-                return constants.east();
-            case SOUTH:
-                return constants.south();
-            case WEST:
-                return constants.west();
-            default:
-                throw new IllegalStateException("Unknown Cardinal constant: " + cardinal);
-        }
-    }
 }

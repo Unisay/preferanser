@@ -19,10 +19,15 @@
 
 package com.preferanser.shared.domain.exception.validation;
 
+import com.google.common.base.Joiner;
 import com.preferanser.client.application.i18n.PreferanserConstants;
+import com.preferanser.client.application.i18n.PreferanserMessages;
 import com.preferanser.shared.domain.Card;
 
+import java.util.List;
 import java.util.Set;
+
+import static com.google.common.collect.Lists.newArrayList;
 
 public class HasDuplicateCardsValidationError extends GameBuilderValidationError {
 
@@ -37,7 +42,11 @@ public class HasDuplicateCardsValidationError extends GameBuilderValidationError
         this.duplicateCards = duplicateCards;
     }
 
-    @Override public String formatLocalMessage(PreferanserConstants constants) {
-        return constants.HAS_DUPLICATE_CARDS(); // TODO display dup cards
+    @Override public String formatLocalMessage(PreferanserConstants constants, PreferanserMessages messages) {
+        List<String> cardNames = newArrayList();
+        for (Card card : duplicateCards)
+            cardNames.add(constants.getString(card.name()));
+        return messages.hasDuplicateCards(Joiner.on(", ").join(cardNames));
     }
+
 }

@@ -176,14 +176,6 @@
             <version>${jersey.version}</version>
         </dependency>
 
-        <!-- TODO get it working
-        <dependency>
-            <groupId>org.glassfish.jersey.ext</groupId>
-            <artifactId>jersey-bean-validation</artifactId>
-            <version>${jersey.version}</version>
-        </dependency>
-        -->
-
         <dependency>
             <groupId>com.sun.jersey.contribs</groupId>
             <artifactId>jersey-guice</artifactId>

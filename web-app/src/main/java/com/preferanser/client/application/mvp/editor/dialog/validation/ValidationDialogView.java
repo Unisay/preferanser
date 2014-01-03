@@ -28,6 +28,7 @@ import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.PopupViewWithUiHandlers;
 import com.preferanser.client.application.i18n.PreferanserConstants;
+import com.preferanser.client.application.i18n.PreferanserMessages;
 import com.preferanser.client.application.widgets.UlListPanel;
 import com.preferanser.shared.domain.exception.validation.GameBuilderValidationError;
 
@@ -36,15 +37,17 @@ import java.util.Collection;
 public class ValidationDialogView extends PopupViewWithUiHandlers<ValidationDialogUiHandlers> implements ValidationDialogPresenter.TheView {
 
     private final PreferanserConstants constants;
+    private final PreferanserMessages messages;
 
     interface Binder extends UiBinder<PopupPanel, ValidationDialogView> {}
 
     @UiField UlListPanel listPanel;
 
     @Inject
-    protected ValidationDialogView(Binder uiBinder, EventBus eventBus, PreferanserConstants constants) {
+    protected ValidationDialogView(Binder uiBinder, EventBus eventBus, PreferanserConstants constants, PreferanserMessages messages) {
         super(eventBus);
         this.constants = constants;
+        this.messages = messages;
         initWidget(uiBinder.createAndBindUi(this));
     }
 
@@ -52,7 +55,7 @@ public class ValidationDialogView extends PopupViewWithUiHandlers<ValidationDial
     public void displayValidationErrors(Collection<GameBuilderValidationError> validationErrors) {
         listPanel.clear();
         for (GameBuilderValidationError validationError : validationErrors)
-            displayValidationError(validationError.formatLocalMessage(constants));
+            displayValidationError(validationError.formatLocalMessage(constants, messages));
     }
 
     private void displayValidationError(String errorMessage) {

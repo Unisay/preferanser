@@ -201,15 +201,16 @@ public class GameBuilder {
         if (wrongFirstTurn())
             errors.add(new WrongFirstTurnValidationError());
 
-        if (hasConflictingContracts()) // TODO: which contracts conflict
+        if (hasConflictingContracts())
             errors.add(new HasConflictingContractsValidationError());
 
         Set<Card> duplicateCards = findDuplicateCards();
         if (!duplicateCards.isEmpty())
             errors.add(new HasDuplicateCardsValidationError(duplicateCards));
 
-        if (wrongNumberOfCardsPerCardinal()) // TODO: which cardinal contains wrong number of cards
-            errors.add(new WrongNumCardsPerCardinalValidationError());
+        Map<Cardinal, Integer> wrongCardinals = wrongNumberOfCardsPerCardinal();
+        if (!wrongCardinals.isEmpty())
+            errors.add(new WrongNumCardsPerCardinalValidationError(wrongCardinals));
 
         if (errors.isEmpty())
             return Optional.absent();
@@ -260,11 +261,17 @@ public class GameBuilder {
         return duplicateCardSet;
     }
 
-    private boolean wrongNumberOfCardsPerCardinal() {
-        for (Cardinal cardinal : Cardinal.values())
-            if (cardinalContracts.get(cardinal) != null && cardinalCardMultimap.get(cardinal).size() != NUM_OF_CARDS_PER_CARDINAL)
-                return true;
-        return false;
+    private Map<Cardinal, Integer> wrongNumberOfCardsPerCardinal() {
+        Map<Cardinal, Integer> wrongCardinals = Maps.newHashMap();
+        for (Cardinal cardinal : Cardinal.values()) {
+            Contract contract = cardinalContracts.get(cardinal);
+            if (contract != null) {
+                int numberOfCards = cardinalCardMultimap.get(cardinal).size();
+                if (numberOfCards != NUM_OF_CARDS_PER_CARDINAL)
+                    wrongCardinals.put(cardinal, numberOfCards);
+            }
+        }
+        return wrongCardinals;
     }
 
     public Game build() throws GameBuilderException {

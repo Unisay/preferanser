@@ -48,10 +48,10 @@ public class HorizontalCardLayoutTest extends GwtTestWithMockito {
 
     @Before
     public void setUp() throws Exception {
-        cards = newArrayList(CLUB_ACE, CLUB_TEN, SPADE_ACE, HEART_TEN, HEART_ACE);
+        cards = newArrayList(CLUB_ACE, CLUB_10, SPADE_ACE, HEART_10, HEART_ACE);
         clubAce = new CardWidget(CLUB_ACE);
         spadeAce = new CardWidget(SPADE_ACE);
-        clubTen = new CardWidget(CLUB_TEN);
+        clubTen = new CardWidget(CLUB_10);
 
         FlowPanel panel = new FlowPanel();
         layout = new HorizontalLayout(panel, 40);

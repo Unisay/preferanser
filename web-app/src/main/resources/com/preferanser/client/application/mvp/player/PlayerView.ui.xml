@@ -38,28 +38,28 @@
 
         <p:northheader>
             <p:Widgets>
-                <g:Label ui:field="titleNorth" text="{constants.north}" addStyleNames="{tableStyle.titleNorth}"/>
+                <g:Label ui:field="titleNorth" text="{constants.NORTH}" addStyleNames="{tableStyle.titleNorth}"/>
                 <g:Label ui:field="trickCountNorth" addStyleNames="{tableStyle.trickCountNorth}"/>
             </p:Widgets>
         </p:northheader>
 
         <p:westheader>
             <p:Widgets>
-                <g:Label ui:field="titleWest" text="{constants.west}" addStyleNames="{tableStyle.titleWest}"/>
+                <g:Label ui:field="titleWest" text="{constants.WEST}" addStyleNames="{tableStyle.titleWest}"/>
                 <g:Label ui:field="trickCountWest" addStyleNames="{tableStyle.trickCountWest}"/>
             </p:Widgets>
         </p:westheader>
 
         <p:southheader>
             <p:Widgets>
-                <g:Label ui:field="titleSouth" text="{constants.south}" addStyleNames="{tableStyle.titleSouth}"/>
+                <g:Label ui:field="titleSouth" text="{constants.SOUTH}" addStyleNames="{tableStyle.titleSouth}"/>
                 <g:Label ui:field="trickCountSouth" addStyleNames="{tableStyle.trickCountSouth}"/>
             </p:Widgets>
         </p:southheader>
 
         <p:eastheader>
             <p:Widgets>
-                <g:Label ui:field="titleEast" text="{constants.east}" addStyleNames="{tableStyle.titleEast}"/>
+                <g:Label ui:field="titleEast" text="{constants.EAST}" addStyleNames="{tableStyle.titleEast}"/>
                 <g:Label ui:field="trickCountEast" addStyleNames="{tableStyle.trickCountEast}"/>
             </p:Widgets>
         </p:eastheader>

@@ -19,10 +19,12 @@
 
 package com.preferanser.shared.domain;
 
+import com.google.appengine.labs.repackaged.com.google.common.collect.ImmutableMap;
 import com.preferanser.shared.domain.entity.Deal;
 import com.preferanser.shared.domain.exception.GameBuilderException;
 import com.preferanser.shared.domain.exception.validation.GameBuilderValidationError;
 import com.preferanser.shared.domain.exception.validation.HasDuplicateCardsValidationError;
+import com.preferanser.shared.domain.exception.validation.WrongNumCardsPerCardinalValidationError;
 import com.preferanser.shared.util.Clock;
 import org.apache.commons.lang.ArrayUtils;
 import org.testng.annotations.BeforeMethod;
@@ -206,31 +208,45 @@ public class GameBuilderTest {
             .build();
     }
 
-    @Test(expectedExceptions = GameBuilderException.class,
-        expectedExceptionsMessageRegExp = ".*WrongNumCardsPerCardinalValidationError$")
+    @Test
     public void testValidate_WrongCardinalCards() throws Exception {
-        new GameBuilder()
-            .setFourPlayers()
-            .setFirstTurn(NORTH)
-            .setCardinalContract(NORTH, Contract.SIX_DIAMOND)
-            .setCardinalContract(EAST, Contract.PASS)
-            .setCardinalContract(WEST, Contract.WHIST)
-            .build();
+        try {
+            new GameBuilder()
+                .setFourPlayers()
+                .setFirstTurn(NORTH)
+                .setCardinalContract(NORTH, Contract.SIX_DIAMOND)
+                .setCardinalContract(EAST, Contract.PASS)
+                .setCardinalContract(WEST, Contract.WHIST)
+                .build();
+            fail("WrongNumCardsPerCardinalValidationError expected");
+        } catch (GameBuilderException e) {
+            List<? extends GameBuilderValidationError> expectedErrors = newArrayList(
+                new WrongNumCardsPerCardinalValidationError(ImmutableMap.of(NORTH, 0, EAST, 0, WEST, 0))
+            );
+            assertReflectionEquals(expectedErrors, e.getBuilderErrors());
+        }
     }
 
-    @Test(expectedExceptions = GameBuilderException.class,
-        expectedExceptionsMessageRegExp = ".*WrongNumCardsPerCardinalValidationError$")
+    @Test
     public void testValidate_WrongCardinalCards2() throws Exception {
-        new GameBuilder()
-            .setFourPlayers()
-            .setFirstTurn(NORTH)
-            .putCards(NORTH, (Card[]) ArrayUtils.subarray(northCards, 0, 9))
-            .putCards(EAST, eastCards)
-            .putCards(WEST, westCards)
-            .setCardinalContract(NORTH, Contract.SIX_DIAMOND)
-            .setCardinalContract(EAST, Contract.PASS)
-            .setCardinalContract(WEST, Contract.WHIST)
-            .build();
+        try {
+            new GameBuilder()
+                .setFourPlayers()
+                .setFirstTurn(NORTH)
+                .putCards(NORTH, (Card[]) ArrayUtils.subarray(northCards, 0, 9))
+                .putCards(EAST, eastCards)
+                .putCards(WEST, westCards)
+                .setCardinalContract(NORTH, Contract.SIX_DIAMOND)
+                .setCardinalContract(EAST, Contract.PASS)
+                .setCardinalContract(WEST, Contract.WHIST)
+                .build();
+            fail("WrongNumCardsPerCardinalValidationError expected");
+        } catch (GameBuilderException e) {
+            List<? extends GameBuilderValidationError> expectedErrors = newArrayList(
+                new WrongNumCardsPerCardinalValidationError(ImmutableMap.of(NORTH, 9))
+            );
+            assertReflectionEquals(expectedErrors, e.getBuilderErrors());
+        }
     }
 
     @Test
@@ -258,21 +274,21 @@ public class GameBuilderTest {
 
     @Test
     public void testMoveCard() throws Exception {
-        assertThat(builder.getTableCards().get(TableLocation.NORTH), hasItem(Card.SPADE_SEVEN));
-        assertTrue(builder.moveCard(Card.SPADE_SEVEN, TableLocation.NORTH, TableLocation.SOUTH));
-        assertThat(builder.getTableCards().get(TableLocation.NORTH), not(hasItem(Card.SPADE_SEVEN)));
-        assertThat(builder.getTableCards().get(TableLocation.SOUTH), hasItem(Card.SPADE_SEVEN));
-        assertTrue(builder.moveCard(Card.SPADE_SEVEN, TableLocation.SOUTH, TableLocation.CENTER));
-        assertThat(builder.getTableCards().get(TableLocation.SOUTH), not(hasItem(Card.SPADE_SEVEN)));
-        assertThat(builder.getCenterCards(), hasKey(Card.SPADE_SEVEN));
-        assertThat(builder.getCenterCards().get(Card.SPADE_SEVEN), equalTo(Cardinal.SOUTH));
-        assertTrue(builder.moveCard(Card.SPADE_SEVEN, TableLocation.CENTER, TableLocation.WEST));
-        assertThat(builder.getCenterCards(), not(hasKey(Card.SPADE_SEVEN)));
-        assertThat(builder.getTableCards().get(TableLocation.WEST), hasItem(Card.SPADE_SEVEN));
-        assertTrue(builder.moveCard(Card.DIAMOND_NINE, TableLocation.EAST, TableLocation.CENTER));
+        assertThat(builder.getTableCards().get(TableLocation.NORTH), hasItem(Card.SPADE_7));
+        assertTrue(builder.moveCard(Card.SPADE_7, TableLocation.NORTH, TableLocation.SOUTH));
+        assertThat(builder.getTableCards().get(TableLocation.NORTH), not(hasItem(Card.SPADE_7)));
+        assertThat(builder.getTableCards().get(TableLocation.SOUTH), hasItem(Card.SPADE_7));
+        assertTrue(builder.moveCard(Card.SPADE_7, TableLocation.SOUTH, TableLocation.CENTER));
+        assertThat(builder.getTableCards().get(TableLocation.SOUTH), not(hasItem(Card.SPADE_7)));
+        assertThat(builder.getCenterCards(), hasKey(Card.SPADE_7));
+        assertThat(builder.getCenterCards().get(Card.SPADE_7), equalTo(Cardinal.SOUTH));
+        assertTrue(builder.moveCard(Card.SPADE_7, TableLocation.CENTER, TableLocation.WEST));
+        assertThat(builder.getCenterCards(), not(hasKey(Card.SPADE_7)));
+        assertThat(builder.getTableCards().get(TableLocation.WEST), hasItem(Card.SPADE_7));
+        assertTrue(builder.moveCard(Card.DIAMOND_9, TableLocation.EAST, TableLocation.CENTER));
         assertTrue(builder.moveCard(Card.SPADE_QUEEN, TableLocation.WEST, TableLocation.CENTER));
-        assertTrue(builder.moveCard(Card.CLUB_SEVEN, TableLocation.NORTH, TableLocation.CENTER));
-        assertFalse(builder.moveCard(Card.DIAMOND_SEVEN, TableLocation.NORTH, TableLocation.CENTER));
+        assertTrue(builder.moveCard(Card.CLUB_7, TableLocation.NORTH, TableLocation.CENTER));
+        assertFalse(builder.moveCard(Card.DIAMOND_7, TableLocation.NORTH, TableLocation.CENTER));
     }
 
     @Test

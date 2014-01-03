@@ -87,7 +87,7 @@ public class PlayerView extends BaseTableView<PlayerUiHandlers> implements Playe
 
     @Override protected void displayCardinalContract(Cardinal cardinal, Contract contract) {
         Label label = getCardinalContractTextHolder(cardinal);
-        label.setText(i18nHelper.getCardinalName(cardinal) + " – " + i18nHelper.getContractName(contract).toLowerCase());
+        label.setText(constants.getString(cardinal.name()) + " – " + i18nHelper.getContractName(contract).toLowerCase());
         label.setVisible(true);
     }
 

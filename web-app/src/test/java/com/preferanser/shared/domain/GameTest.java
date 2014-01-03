@@ -179,7 +179,7 @@ public class GameTest {
         game = new Game(GamePlayers.THREE, cardinalContractMap, turnRotator, cardinalCardMultimap, centerCardCardinalMap);
 
         game.makeTurn(NORTH, CLUB_ACE);
-        game.makeTurn(EAST, CLUB_EIGHT);
+        game.makeTurn(EAST, CLUB_8);
         game.makeTurn(WEST, CLUB_JACK);
         try {
             game.makeTurn(NORTH, CLUB_KING);
@@ -196,7 +196,7 @@ public class GameTest {
         game = new Game(GamePlayers.THREE, cardinalContractMap, turnRotator, cardinalCardMultimap, centerCardCardinalMap);
 
         game.makeTurn(NORTH, CLUB_ACE);
-        game.makeTurn(EAST, CLUB_EIGHT);
+        game.makeTurn(EAST, CLUB_8);
         game.makeTurn(SOUTH, CLUB_KING);
         try {
             game.makeTurn(WEST, CLUB_JACK);
@@ -211,7 +211,7 @@ public class GameTest {
         game = new Game(GamePlayers.FOUR, cardinalContractMap, turnRotator, cardinalCardMultimap, centerCardCardinalMap);
 
         game.makeTurn(NORTH, CLUB_ACE);
-        game.makeTurn(EAST, CLUB_EIGHT);
+        game.makeTurn(EAST, CLUB_8);
         assertEquals(game.getTurn(), WEST, "Next turn is expected to be WEST, as SOUTH is skipped (widow)");
     }
 
@@ -266,7 +266,7 @@ public class GameTest {
         assertThat(game.getTurn(), equalTo(NORTH));
         game.makeTurn(NORTH, CLUB_ACE);
         assertThat(game.getTurn(), equalTo(EAST));
-        game.makeTurn(EAST, CLUB_EIGHT);
+        game.makeTurn(EAST, CLUB_8);
         assertThat(game.getTurn(), equalTo(WEST));
         game.makeTurn(WEST, CLUB_JACK);
         assertThat(game.getTurn(), equalTo(NORTH));
@@ -302,7 +302,7 @@ public class GameTest {
         assertFalse(game.sluffTrick());
         game.makeTurn(NORTH, CLUB_ACE);
         assertFalse(game.sluffTrick());
-        game.makeTurn(EAST, CLUB_EIGHT);
+        game.makeTurn(EAST, CLUB_8);
         assertFalse(game.sluffTrick());
         game.makeTurn(WEST, CLUB_JACK);
         assertTrue(game.sluffTrick());
@@ -334,11 +334,11 @@ public class GameTest {
         LinkedHashMultimap<Cardinal, Card> multimap = LinkedHashMultimap.create();
         multimap.put(NORTH, CLUB_ACE);
         multimap.put(NORTH, CLUB_KING);
-        multimap.put(EAST, CLUB_EIGHT);
-        multimap.put(EAST, SPADE_EIGHT);
+        multimap.put(EAST, CLUB_8);
+        multimap.put(EAST, SPADE_8);
         multimap.put(SOUTH, CLUB_KING);
         multimap.put(WEST, CLUB_JACK);
-        multimap.put(WEST, CLUB_NINE);
+        multimap.put(WEST, CLUB_9);
         multimap.put(WEST, HEART_JACK);
         return multimap;
     }

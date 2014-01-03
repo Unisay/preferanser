@@ -1,5 +1,5 @@
 {
-    "name": "Этюд №2",
+    "name": "Этюд №2.",
     "description": "Предложите план розыгрыша за вистующих.",
     "firstTurn": "WEST",
     "gamePlayers": "THREE",
@@ -8,22 +8,22 @@
     "westContract": "WHIST",
     "widow": {
         "card1": "DIAMOND_KING",
-        "card2": "DIAMOND_SEVEN"
+        "card2": "DIAMOND_7"
     },
     "eastCards": [
-        "SPADE_SEVEN",
-        "DIAMOND_ACE", "DIAMOND_QUEEN", "DIAMOND_NINE", "DIAMOND_EIGHT",
-        "CLUB_KING", "CLUB_QUEEN", "CLUB_TEN",
-        "HEART_QUEEN", "HEART_SEVEN"
+        "SPADE_7",
+        "DIAMOND_ACE", "DIAMOND_QUEEN", "DIAMOND_9", "DIAMOND_8",
+        "CLUB_KING", "CLUB_QUEEN", "CLUB_10",
+        "HEART_QUEEN", "HEART_7"
     ],
     "southCards": [
-        "SPADE_QUEEN", "SPADE_JACK", "SPADE_TEN",
-        "CLUB_ACE", "CLUB_JACK", "CLUB_NINE", "CLUB_EIGHT", "CLUB_SEVEN",
-        "HEART_ACE", "HEART_EIGHT"
+        "SPADE_QUEEN", "SPADE_JACK", "SPADE_10",
+        "CLUB_ACE", "CLUB_JACK", "CLUB_9", "CLUB_8", "CLUB_7",
+        "HEART_ACE", "HEART_8"
     ],
     "westCards": [
-        "SPADE_ACE", "SPADE_KING", "SPADE_NINE", "SPADE_EIGHT",
-        "DIAMOND_JACK", "DIAMOND_TEN",
-        "HEART_KING", "HEART_JACK", "HEART_TEN", "HEART_NINE"
+        "SPADE_ACE", "SPADE_KING", "SPADE_9", "SPADE_8",
+        "DIAMOND_JACK", "DIAMOND_10",
+        "HEART_KING", "HEART_JACK", "HEART_10", "HEART_9"
     ]
 }

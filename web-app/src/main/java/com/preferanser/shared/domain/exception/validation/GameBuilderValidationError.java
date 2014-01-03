@@ -20,12 +20,13 @@
 package com.preferanser.shared.domain.exception.validation;
 
 import com.preferanser.client.application.i18n.PreferanserConstants;
+import com.preferanser.client.application.i18n.PreferanserMessages;
 
 import java.io.Serializable;
 
 public abstract class GameBuilderValidationError implements Serializable {
 
-    public abstract String formatLocalMessage(PreferanserConstants constants);
+    public abstract String formatLocalMessage(PreferanserConstants constants, PreferanserMessages messages);
 
     @Override public String toString() {
         return getClass().getName();

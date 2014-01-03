@@ -46,10 +46,6 @@ public interface PreferanserConstants extends ConstantsWithLookup {
     @DefaultStringValue("Enter") String enter();
 
     @DefaultStringValue("Edit") String edit();
-    @DefaultStringValue("North") String north();
-    @DefaultStringValue("East") String east();
-    @DefaultStringValue("South") String south();
-    @DefaultStringValue("West") String west();
     @DefaultStringValue("To sluff") String toSluff();
     @DefaultStringValue("Deal") String deal();
     @DefaultStringValue("Save") String save();
@@ -62,11 +58,37 @@ public interface PreferanserConstants extends ConstantsWithLookup {
 
     @DefaultStringValue("Please choose name for the deal") String saveDescription();
     @DefaultStringValue("Choose contract") String chooseContract();
-    @DefaultStringValue("Wrong number of contracts") String WRONG_NUMBER_OF_CONTRACTS();
-    @DefaultStringValue("There are conflicting contracts") String HAS_CONFLICTING_CONTRACTS();
-    @DefaultStringValue("Fist turn not specified") String FIRST_TURN_NOT_SPECIFIED();
-    @DefaultStringValue("First turn specified incorrectly") String WRONG_FIRST_TURN();
-    @DefaultStringValue("Cards dealt incorrectly") String WRONG_NUM_CARDS_PER_CARDINAL();
-    @DefaultStringValue("Number of players not specified") String NUM_PLAYERS_NOT_SPECIFIED();
-    @DefaultStringValue("Has duplicate cards") String HAS_DUPLICATE_CARDS();
+
+    String SPADE_7();
+    String CLUB_7();
+    String DIAMOND_7();
+    String HEART_7();
+    String SPADE_8();
+    String CLUB_8();
+    String DIAMOND_8();
+    String HEART_8();
+    String SPADE_9();
+    String CLUB_9();
+    String DIAMOND_9();
+    String HEART_9();
+    String SPADE_10();
+    String CLUB_10();
+    String DIAMOND_10();
+    String HEART_10();
+    String SPADE_JACK();
+    String CLUB_JACK();
+    String DIAMOND_JACK();
+    String HEART_JACK();
+    String SPADE_QUEEN();
+    String CLUB_QUEEN();
+    String DIAMOND_QUEEN();
+    String HEART_QUEEN();
+    String SPADE_KING();
+    String CLUB_KING();
+    String DIAMOND_KING();
+    String HEART_KING();
+    String SPADE_ACE();
+    String CLUB_ACE();
+    String DIAMOND_ACE();
+    String HEART_ACE();
 }

@@ -23,5 +23,11 @@ package com.preferanser.shared.domain;
  * Table locations
  */
 public enum TableLocation {
-    NORTH, EAST, SOUTH, WEST, CENTER
+
+    NORTH, EAST, SOUTH, WEST, CENTER;
+
+    public static TableLocation valueOf(Cardinal cardinal) {
+        return TableLocation.valueOf(cardinal.name());
+    }
+
 }

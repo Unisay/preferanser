@@ -36,25 +36,6 @@ public abstract class GameUtils {
     private GameUtils() {
     }
 
-    public static TableLocation cardinalToTableLocation(Cardinal cardinal) {
-        return TableLocation.valueOf(cardinal.name());
-    }
-
-    public static Cardinal tableLocationToCardinal(TableLocation location) {
-        switch (location) {
-            case NORTH:
-                return Cardinal.NORTH;
-            case EAST:
-                return Cardinal.EAST;
-            case SOUTH:
-                return Cardinal.SOUTH;
-            case WEST:
-                return Cardinal.WEST;
-            default:
-                throw new IllegalArgumentException("TableLocation " + location + " doesn't have a corresponding Cardinal!");
-        }
-    }
-
     public static Map<TableLocation, Collection<Card>> copyDefensive(Multimap<Cardinal, Card> cardinalCardMultimap) {
         ImmutableMap.Builder<TableLocation, Collection<Card>> builder = ImmutableMap.builder();
 

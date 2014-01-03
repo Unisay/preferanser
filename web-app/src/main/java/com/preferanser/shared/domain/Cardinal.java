@@ -20,5 +20,21 @@
 package com.preferanser.shared.domain;
 
 public enum Cardinal {
-    NORTH, EAST, SOUTH, WEST
+    NORTH, EAST, SOUTH, WEST;
+
+    public static Cardinal valueOf(TableLocation tableLocation) {
+        switch (tableLocation) {
+            case NORTH:
+                return Cardinal.NORTH;
+            case EAST:
+                return Cardinal.EAST;
+            case SOUTH:
+                return Cardinal.SOUTH;
+            case WEST:
+                return Cardinal.WEST;
+            default:
+                throw new IllegalArgumentException("TableLocation " + tableLocation + " doesn't have a corresponding Cardinal!");
+        }
+    }
+
 }

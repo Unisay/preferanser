@@ -17,8 +17,9 @@
  *     along with this program.  If not, see [http://www.gnu.org/licenses/].
  */
 
-package com.preferanser.server.extra;
+package com.preferanser.server.client;
 
+import com.google.common.collect.Lists;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.entity.ContentType;
@@ -34,8 +35,6 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.List;
 
-import static com.google.common.collect.Lists.newArrayList;
-
 /**
  * Creates predefined deals on the backend
  */
@@ -50,7 +49,7 @@ public class DealUploader {
     public DealUploader(String url, String authCookie, String jsonDealsPath) throws IOException {
         this.url = url;
         this.authCookie = authCookie;
-        jsonFiles = newArrayList();
+        jsonFiles = Lists.newArrayList();
 
         Files.walkFileTree(new File(jsonDealsPath).toPath(), new SimpleFileVisitor<Path>() {
             @Override public FileVisitResult visitFile(Path path, BasicFileAttributes attrs) throws IOException {

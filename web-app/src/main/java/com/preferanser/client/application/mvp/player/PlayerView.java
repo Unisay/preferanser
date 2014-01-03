@@ -24,21 +24,19 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.ui.*;
+import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.preferanser.client.application.i18n.I18nHelper;
 import com.preferanser.client.application.i18n.PreferanserConstants;
 import com.preferanser.client.application.mvp.BaseTableView;
-import com.preferanser.client.application.widgets.CardWidget;
 import com.preferanser.client.application.widgets.TurnPointer;
 import com.preferanser.client.theme.greencloth.client.com.preferanser.client.application.PreferanserResources;
-import com.preferanser.shared.domain.Card;
 import com.preferanser.shared.domain.Cardinal;
 import com.preferanser.shared.domain.Contract;
 import com.preferanser.shared.domain.TableLocation;
 
-import java.util.Collection;
-import java.util.Map;
 import java.util.logging.Logger;
 
 public class PlayerView extends BaseTableView<PlayerUiHandlers> implements PlayerPresenter.PlayerView {
@@ -59,11 +57,6 @@ public class PlayerView extends BaseTableView<PlayerUiHandlers> implements Playe
     @Override protected void init() {
         super.init();
         installCenterPanelClickHandler();
-    }
-
-    @Override public void displayTableCards(Map<TableLocation, Collection<Card>> tableCards, Map<Card, Cardinal> centerCards) {
-        super.displayTableCards(tableCards, centerCards);
-        hideEmptyPanel();
     }
 
     @Override
@@ -97,22 +90,9 @@ public class PlayerView extends BaseTableView<PlayerUiHandlers> implements Playe
         getCardinalContractTextHolder(cardinal).setVisible(false);
     }
 
-    private void hideEmptyPanel() {
-        for (Map.Entry<TableLocation, FlowPanel> entry : table.locationPanelMap.entrySet()) {
-            FlowPanel panel = entry.getValue();
-            int panelCards = countCardWidgets(panel);
-            if (TableLocation.CENTER != entry.getKey() && 0 == panelCards)
-                table.hideLocation(entry.getKey());
-        }
-    }
-
-    private int countCardWidgets(HasWidgets hasWidgets) {
-        int panelCards = 0;
-        for (Widget widget : hasWidgets) {
-            if (widget instanceof CardWidget)
-                panelCards++;
-        }
-        return panelCards;
+    @Override
+    public void hideCardinal(Cardinal cardinal) {
+        table.hideLocation(TableLocation.valueOf(cardinal));
     }
 
     private Label getCardinalContractTextHolder(Cardinal cardinal) {

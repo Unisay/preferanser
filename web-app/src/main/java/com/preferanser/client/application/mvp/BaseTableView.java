@@ -42,7 +42,6 @@ import com.preferanser.shared.domain.Card;
 import com.preferanser.shared.domain.Cardinal;
 import com.preferanser.shared.domain.Contract;
 import com.preferanser.shared.domain.TableLocation;
-import com.preferanser.shared.util.GameUtils;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
@@ -109,7 +108,7 @@ abstract public class BaseTableView<U extends TableUiHandlers> extends ViewWithU
 
     private void displayCardinalCards(Map<TableLocation, Collection<Card>> tableCards) {
         for (Cardinal cardinal : Cardinal.values())
-            displayCardinalCards(cardinal, tableCards.get(GameUtils.cardinalToTableLocation(cardinal)));
+            displayCardinalCards(cardinal, tableCards.get(TableLocation.valueOf(cardinal)));
     }
 
     private void detachCardWidgets() {
@@ -133,7 +132,7 @@ abstract public class BaseTableView<U extends TableUiHandlers> extends ViewWithU
     }
 
     private void displayCardinalCards(Cardinal cardinal, Iterable<Card> cards) {
-        TableLocation location = GameUtils.cardinalToTableLocation(cardinal);
+        TableLocation location = TableLocation.valueOf(cardinal);
         HasWidgets panel = table.locationPanelMap.get(location);
         for (Card card : cards)
             displayCard(panel, card);

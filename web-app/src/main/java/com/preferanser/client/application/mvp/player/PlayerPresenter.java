@@ -36,7 +36,6 @@ import com.preferanser.client.application.mvp.GameBuiltEvent;
 import com.preferanser.client.gwtp.NameTokens;
 import com.preferanser.shared.domain.*;
 import com.preferanser.shared.domain.exception.GameException;
-import com.preferanser.shared.util.GameUtils;
 
 import java.util.Collection;
 import java.util.Map;
@@ -46,11 +45,13 @@ import java.util.logging.Logger;
 /**
  * Presenter for the mvp page
  */
-public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, PlayerPresenter.Proxy> implements PlayerUiHandlers, GameBuiltEvent.GameBuiltHandler {
+public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, PlayerPresenter.Proxy> implements
+        PlayerUiHandlers, GameBuiltEvent.GameBuiltHandler {
 
     private static final Logger log = Logger.getLogger("PlayerPresenter");
 
     public interface PlayerView extends View, HasUiHandlers<PlayerUiHandlers> {
+        void hideCardinal(Cardinal cardinal);
         void displayTurn(Cardinal turn);
         void displayContracts(Map<Cardinal, Contract> cardinalContracts);
         void displayCardinalTricks(Map<Cardinal, Integer> cardinalTricks);
@@ -78,13 +79,26 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
 
     @Override protected void onReveal() {
         super.onReveal();
-        if (!gameOptional.isPresent())
+        if (!gameOptional.isPresent()) {
             switchToEditor();
-        else
+        } else {
+            hideEmptyCardinals(gameOptional.get());
             refreshView();
+        }
     }
 
-    @Override public void onGameBuilt(GameBuiltEvent gameBuiltEvent) {
+    private void hideEmptyCardinals(Game game) {
+        Map<TableLocation, Collection<Card>> cardinalCards = game.getCardinalCards();
+        for (Cardinal cardinal : Cardinal.values()) {
+            if (cardinalCards.get(TableLocation.valueOf(cardinal)).isEmpty()) {
+                getView().hideCardinal(cardinal);
+                return;
+            }
+        }
+    }
+
+    @Override
+    public void onGameBuilt(GameBuiltEvent gameBuiltEvent) {
         Game game = gameBuiltEvent.getGame();
         Preconditions.checkNotNull(game, "PlayerPresenter.onGameBuilt(gameBuiltEvent.getGame() is null)");
         gameOptional = Optional.of(game);
@@ -110,7 +124,7 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
         }
 
         try {
-            gameOptional.get().makeTurn(GameUtils.tableLocationToCardinal(oldLocation), card);
+            gameOptional.get().makeTurn(Cardinal.valueOf(oldLocation), card);
         } catch (GameException e) {
             log.finer(e.getMessage());
             refreshCards();
@@ -124,8 +138,11 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
         placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.GAME_EDITOR).build());
     }
 
+    /**
+     * @todo implement resetting editor
+     */
     @Override public void reset() {
-        throw new UnsupportedOperationException("Resetting editor is not implemented"); // TODO implement resetting editor
+        throw new UnsupportedOperationException("Resetting editor is not implemented");
     }
 
     private void refreshView() {

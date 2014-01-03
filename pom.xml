@@ -31,6 +31,7 @@
     <modules>
         <module>web-app</module>
         <module>web-test</module>
+        <module>backend-client</module>
     </modules>
 
     <packaging>pom</packaging>
@@ -160,6 +161,10 @@
     </dependencyManagement>
 
     <dependencies>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+        </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>

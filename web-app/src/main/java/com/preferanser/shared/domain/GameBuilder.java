@@ -155,7 +155,7 @@ public class GameBuilder {
                         centerCardCardinalMap.clear();
                         break;
                     default:
-                        cardinalCardMultimap.get(GameUtils.tableLocationToCardinal(tableLocation)).clear();
+                        cardinalCardMultimap.get(Cardinal.valueOf(tableLocation)).clear();
                 }
             }
         }
@@ -166,19 +166,19 @@ public class GameBuilder {
         if (CENTER == oldLocation) { // moving card out of center
             checkArgument(centerCardCardinalMap.containsKey(card), "There is no %s in TableLocation.CENTER", card);
             centerCardCardinalMap.remove(card);
-            cardinalCardMultimap.get(GameUtils.tableLocationToCardinal(newLocation)).add(card);
+            cardinalCardMultimap.get(Cardinal.valueOf(newLocation)).add(card);
         } else if (CENTER == newLocation) { // moving card to center
             if (centerCardCardinalMap.size() == players.getNumPlayers()) {
                 return false;
             }
-            Cardinal oldCardinal = GameUtils.tableLocationToCardinal(oldLocation);
+            Cardinal oldCardinal = Cardinal.valueOf(oldLocation);
             if (centerCardCardinalMap.containsValue(oldCardinal))
                 throw new DuplicateGameTurnException(centerCardCardinalMap, oldCardinal);
             cardinalCardMultimap.get(oldCardinal).remove(card);
             centerCardCardinalMap.put(card, oldCardinal);
         } else {
-            Cardinal oldCardinal = GameUtils.tableLocationToCardinal(oldLocation);
-            Cardinal newCardinal = GameUtils.tableLocationToCardinal(newLocation);
+            Cardinal oldCardinal = Cardinal.valueOf(oldLocation);
+            Cardinal newCardinal = Cardinal.valueOf(newLocation);
             checkArgument(cardinalCardMultimap.get(oldCardinal).contains(card), "There is no %s in Cardinal.%s", card, oldCardinal);
             cardinalCardMultimap.get(oldCardinal).remove(card);
             cardinalCardMultimap.get(newCardinal).add(card);

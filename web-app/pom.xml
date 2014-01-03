@@ -136,11 +136,6 @@
 
         <dependency>
             <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.google.guava</groupId>
             <artifactId>guava-gwt</artifactId>
             <version>${guava.version}</version>
             <scope>provided</scope>
@@ -155,11 +150,6 @@
         <dependency>
             <groupId>commons-collections</groupId>
             <artifactId>commons-collections</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>fluent-hc</artifactId>
         </dependency>
 
         <dependency>

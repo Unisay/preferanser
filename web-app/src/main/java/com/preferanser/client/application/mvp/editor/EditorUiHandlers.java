@@ -20,7 +20,7 @@
 package com.preferanser.client.application.mvp.editor;
 
 import com.preferanser.client.application.mvp.TableUiHandlers;
-import com.preferanser.shared.domain.Cardinal;
+import com.preferanser.shared.domain.Hand;
 
 /**
  * Game builder UI handlers
@@ -28,18 +28,18 @@ import com.preferanser.shared.domain.Cardinal;
 public interface EditorUiHandlers extends TableUiHandlers {
 
     /**
-     * User chose contract for cardinal
+     * User chose contract for hand
      *
-     * @param cardinal for which contract is chosen
+     * @param hand for which contract is chosen
      */
-    void chooseContract(Cardinal cardinal);
+    void chooseContract(Hand hand);
 
     /**
      * User chose first turn
      *
-     * @param cardinal who turns first
+     * @param hand who turns first
      */
-    void chooseTurn(Cardinal cardinal);
+    void chooseTurn(Hand hand);
 
     /**
      * Switch to player page

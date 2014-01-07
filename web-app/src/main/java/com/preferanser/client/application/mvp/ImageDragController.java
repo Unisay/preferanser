@@ -21,16 +21,17 @@ package com.preferanser.client.application.mvp;
 
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Style;
-import com.google.gwt.event.dom.client.MouseEvent;
+import com.google.gwt.event.dom.client.*;
 import com.preferanser.client.application.widgets.CardWidget;
 import com.preferanser.client.geom.Point;
 
-public class ImageDragController {
+public class ImageDragController implements MouseMoveHandler, MouseUpHandler {
 
     private static final String STYLE_DRAGGING = "dragging";
     private CardWidget cardWidget;
     private Point clickOffset;
     private Point parentOffset;
+    private boolean down = false;
     private boolean drag = false;
     private final Document doc;
 
@@ -38,23 +39,31 @@ public class ImageDragController {
         this.doc = doc;
     }
 
-    public void startDrag(CardWidget cardWidget, MouseEvent event) {
-        this.cardWidget = cardWidget;
+    public void onCardWidgetMouseDown(CardWidget cardWidget, MouseDownEvent event) {
+        down = true;
         this.parentOffset = Point.FromWidgetLeftTop(cardWidget.getParent());
         this.clickOffset = Point.FromMouseEventRelative(event);
-        // noinspection GWTStyleCheck
-        cardWidget.addStyleName(STYLE_DRAGGING);
-        drag = true;
+        this.cardWidget = cardWidget;
     }
 
-    public void stopDrag() {
-        // noinspection GWTStyleCheck
-        cardWidget.removeStyleName(STYLE_DRAGGING);
-        drag = false;
+    @Override public void onMouseMove(MouseMoveEvent event) {
+        if (down) {
+            // noinspection GWTStyleCheck
+            cardWidget.addStyleName(STYLE_DRAGGING);
+            drag = true;
+        }
+        if (drag)
+            updateImagePosition(Point.FromMouseEvent(event, doc).minus(clickOffset).minus(parentOffset));
     }
 
-    public void updateImagePosition(MouseEvent event) {
-        updateImagePosition(Point.FromMouseEvent(event, doc).minus(clickOffset).minus(parentOffset));
+    @Override public void onMouseUp(MouseUpEvent event) {
+        if (drag) {
+            // noinspection GWTStyleCheck
+            cardWidget.removeStyleName(STYLE_DRAGGING);
+            this.cardWidget = null;
+            drag = false;
+        }
+        down = false;
     }
 
     private void updateImagePosition(Point point) {

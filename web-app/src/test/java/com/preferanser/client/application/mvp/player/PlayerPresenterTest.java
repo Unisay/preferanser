@@ -53,39 +53,39 @@ public class PlayerPresenterTest {
     private Game game;
 
     @Mock
-    private Map<Cardinal, Contract> cardinalContracts;
+    private Map<Hand, Contract> handContracts;
 
     @Mock
-    private Map<TableLocation, Collection<Card>> cardinalCards;
+    private Map<TableLocation, Collection<Card>> handCards;
 
     @Mock
-    private Map<Card, Cardinal> centerCards;
+    private Map<Card, Hand> centerCards;
 
     @Mock
-    private Map<Cardinal, Integer> cardinalTricks;
+    private Map<Hand, Integer> handTricks;
 
-    private Cardinal turn;
+    private Hand turn;
 
     @BeforeMethod
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         presenter = new PlayerPresenter(placeManager, eventBus, view, proxy);
         presenter.onGameBuilt(new GameBuiltEvent(game));
-        turn = Cardinal.EAST;
+        turn = Hand.EAST;
 
         verify(view).setUiHandlers(presenter);
     }
 
     @Test
     public void testChangeCardLocation_NotToCenter() throws Exception {
-        when(game.getCardinalCards()).thenReturn(cardinalCards);
+        when(game.getHandCards()).thenReturn(handCards);
         when(game.getCenterCards()).thenReturn(centerCards);
 
         presenter.changeCardLocation(Card.CLUB_ACE, TableLocation.WEST, TableLocation.EAST);
 
-        verify(game).getCardinalCards();
+        verify(game).getHandCards();
         verify(game).getCenterCards();
-        verify(view).displayTableCards(cardinalCards, centerCards);
+        verify(view).displayTableCards(handCards, centerCards);
         verifyNoMoreInteractions(view);
         verifyNoMoreInteractions(game);
     }
@@ -93,17 +93,17 @@ public class PlayerPresenterTest {
     @Test
     public void testChangeCardLocation() throws Exception {
         when(game.getTurn()).thenReturn(turn);
-        when(game.getCardinalContracts()).thenReturn(cardinalContracts);
-        when(game.getCardinalCards()).thenReturn(cardinalCards);
+        when(game.getHandContracts()).thenReturn(handContracts);
+        when(game.getHandCards()).thenReturn(handCards);
         when(game.getCenterCards()).thenReturn(centerCards);
-        when(game.getCardinalTricks()).thenReturn(cardinalTricks);
+        when(game.getHandTricks()).thenReturn(handTricks);
 
         presenter.changeCardLocation(Card.CLUB_ACE, TableLocation.EAST, TableLocation.CENTER);
 
         verify(view).displayTurn(turn);
-        verify(view).displayContracts(cardinalContracts);
-        verify(view).displayTableCards(cardinalCards, centerCards);
-        verify(view).displayCardinalTricks(cardinalTricks);
+        verify(view).displayContracts(handContracts);
+        verify(view).displayTableCards(handCards, centerCards);
+        verify(view).displayHandTricks(handTricks);
         verifyNoMoreInteractions(view);
     }
 
@@ -111,17 +111,17 @@ public class PlayerPresenterTest {
     public void testChangeCardLocation_CompleteTrick() throws Exception {
         when(game.isTrickComplete()).thenReturn(true);
         when(game.getTurn()).thenReturn(turn);
-        when(game.getCardinalContracts()).thenReturn(cardinalContracts);
-        when(game.getCardinalCards()).thenReturn(cardinalCards);
+        when(game.getHandContracts()).thenReturn(handContracts);
+        when(game.getHandCards()).thenReturn(handCards);
         when(game.getCenterCards()).thenReturn(centerCards);
-        when(game.getCardinalTricks()).thenReturn(cardinalTricks);
+        when(game.getHandTricks()).thenReturn(handTricks);
 
         presenter.changeCardLocation(Card.CLUB_ACE, TableLocation.EAST, TableLocation.CENTER);
 
         verify(view).displayTurn(turn);
-        verify(view).displayContracts(cardinalContracts);
-        verify(view).displayTableCards(cardinalCards, centerCards);
-        verify(view).displayCardinalTricks(cardinalTricks);
+        verify(view).displayContracts(handContracts);
+        verify(view).displayTableCards(handCards, centerCards);
+        verify(view).displayHandTricks(handTricks);
         verifyNoMoreInteractions(view);
     }
 

@@ -30,8 +30,8 @@ import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.PopupViewWithUiHandlers;
 import com.preferanser.client.application.i18n.PreferanserConstants;
 import com.preferanser.client.application.i18n.PreferanserMessages;
-import com.preferanser.shared.domain.Cardinal;
 import com.preferanser.shared.domain.Contract;
+import com.preferanser.shared.domain.Hand;
 
 public class ContractDialogView extends PopupViewWithUiHandlers<ContractDialogUiHandlers> implements ContractDialogPresenter.TheView {
 
@@ -49,8 +49,8 @@ public class ContractDialogView extends PopupViewWithUiHandlers<ContractDialogUi
     }
 
     @Override
-    public void setCardinal(Cardinal cardinal) {
-        dialog.setText(messages.cardinalChoosesContract(constants.getString(cardinal.name())));
+    public void setHand(Hand hand) {
+        dialog.setText(messages.handChoosesContract(constants.getString(hand.name())));
     }
 
     @UiHandler("sixSpadeButton") void onSixSpadeClicked(@SuppressWarnings("unused") ClickEvent event) {

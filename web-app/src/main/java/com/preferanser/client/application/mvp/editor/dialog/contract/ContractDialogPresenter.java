@@ -24,17 +24,17 @@ import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.PopupView;
 import com.gwtplatform.mvp.client.PresenterWidget;
-import com.preferanser.client.application.mvp.editor.HasCardinalContracts;
-import com.preferanser.shared.domain.Cardinal;
+import com.preferanser.client.application.mvp.editor.HasHandContracts;
 import com.preferanser.shared.domain.Contract;
+import com.preferanser.shared.domain.Hand;
 
 public class ContractDialogPresenter extends PresenterWidget<ContractDialogPresenter.TheView> implements ContractDialogUiHandlers {
 
-    private Cardinal cardinal;
-    private HasCardinalContracts hasCardinalContracts;
+    private Hand hand;
+    private HasHandContracts hasHandContracts;
 
     public interface TheView extends PopupView, HasUiHandlers<ContractDialogUiHandlers> {
-        void setCardinal(Cardinal cardinal);
+        void setHand(Hand hand);
     }
 
     @Inject
@@ -46,20 +46,20 @@ public class ContractDialogPresenter extends PresenterWidget<ContractDialogPrese
     @Override
     protected void onReveal() {
         super.onReveal();
-        getView().setCardinal(this.cardinal);
+        getView().setHand(this.hand);
     }
 
     @Override
     public boolean setContract(Contract contract) {
-        return hasCardinalContracts.setCardinalContract(cardinal, contract);
+        return hasHandContracts.setHandContract(hand, contract);
     }
 
-    public void setHasCardinalContracts(HasCardinalContracts hasCardinalContracts) {
-        this.hasCardinalContracts = hasCardinalContracts;
+    public void setHasHandContracts(HasHandContracts hasHandContracts) {
+        this.hasHandContracts = hasHandContracts;
     }
 
-    public void setCardinal(Cardinal cardinal) {
-        this.cardinal = cardinal;
+    public void setHand(Hand hand) {
+        this.hand = hand;
     }
 
 }

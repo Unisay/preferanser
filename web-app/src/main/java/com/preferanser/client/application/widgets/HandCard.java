@@ -21,20 +21,20 @@ package com.preferanser.client.application.widgets;
 
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
-import com.preferanser.shared.domain.Cardinal;
+import com.preferanser.shared.domain.Hand;
 
-public class CardinalCard implements IsWidget {
+public class HandCard implements IsWidget {
 
-    private Cardinal cardinal;
+    private Hand hand;
     private CardWidget cardWidget;
 
-    public CardinalCard(Cardinal cardinal, CardWidget cardWidget) {
-        this.cardinal = cardinal;
+    public HandCard(Hand hand, CardWidget cardWidget) {
+        this.hand = hand;
         this.cardWidget = cardWidget;
     }
 
-    public Cardinal getCardinal() {
-        return cardinal;
+    public Hand getHand() {
+        return hand;
     }
 
     public CardWidget getCardWidget() {

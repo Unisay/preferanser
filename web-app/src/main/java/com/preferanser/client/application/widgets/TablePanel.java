@@ -47,19 +47,18 @@ public class TablePanel extends Composite {
     private static Binder uiBinder = GWT.create(Binder.class);
 
     protected PreferanserResources resources = GWT.create(PreferanserResources.class);
-    @UiField HorizontalPanel northPanelHeader;
 
     @UiField HorizontalPanel eastPanelHeader;
     @UiField HorizontalPanel southPanelHeader;
     @UiField HorizontalPanel westPanelHeader;
     @UiField HorizontalPanel centerPanelHeader;
     @UiField HorizontalPanel headerPanel;
-    @UiField public FlowPanel northPanel;
 
     @UiField public FlowPanel eastPanel;
     @UiField public FlowPanel southPanel;
     @UiField public FlowPanel westPanel;
     @UiField public FlowPanel centerPanel;
+
     // TODO: consider replacing all public usages with methods
     public final BiMap<TableLocation, FlowPanel> locationPanelMap = EnumHashBiMap.create(TableLocation.class);
 
@@ -69,7 +68,6 @@ public class TablePanel extends Composite {
     public TablePanel() {
         initWidget(uiBinder.createAndBindUi(this));
 
-        locationPanelMap.put(NORTH, northPanel);
         locationPanelMap.put(EAST, eastPanel);
         locationPanelMap.put(SOUTH, southPanel);
         locationPanelMap.put(WEST, westPanel);
@@ -78,7 +76,6 @@ public class TablePanel extends Composite {
         int cardWidth = resources.c7().getWidth();
         int cardHeight = resources.c7().getHeight();
         centerCardLayout = new CenterLayout(centerPanel, cardWidth, cardHeight);
-        locationLayoutMap.put(NORTH, new HorizontalLayout(northPanel, cardWidth));
         locationLayoutMap.put(EAST, new EastLayout(eastPanel, cardWidth, cardHeight));
         locationLayoutMap.put(SOUTH, new HorizontalLayout(southPanel, cardWidth));
         locationLayoutMap.put(WEST, new WestLayout(westPanel, cardWidth, cardHeight));
@@ -88,12 +85,6 @@ public class TablePanel extends Composite {
     public void addHeader(HasWidgets hasWidgets) {
         for (Widget widget : newArrayList(hasWidgets))
             headerPanel.add(widget);
-    }
-
-    @UiChild
-    public void addNorthHeader(HasWidgets hasWidgets) {
-        for (Widget widget : newArrayList(hasWidgets))
-            northPanelHeader.add(widget);
     }
 
     @UiChild
@@ -126,10 +117,10 @@ public class TablePanel extends Composite {
             centerPanel.add(widget);
     }
 
-    public void addCardinalCardsToCenter(Collection<CardinalCard> cardinalCards) {
-        for (CardinalCard cardinalCard : cardinalCards)
-            centerPanel.add(cardinalCard.getCardWidget());
-        centerCardLayout.apply(cardinalCards);
+    public void addHandCardsToCenter(Collection<HandCard> handCards) {
+        for (HandCard handCard : handCards)
+            centerPanel.add(handCard.getCardWidget());
+        centerCardLayout.apply(handCards);
     }
 
     public void layoutLocation(TableLocation location) {

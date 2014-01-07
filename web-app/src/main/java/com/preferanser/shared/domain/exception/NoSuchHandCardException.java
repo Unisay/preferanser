@@ -17,24 +17,34 @@
  *     along with this program.  If not, see [http://www.gnu.org/licenses/].
  */
 
-package com.preferanser.shared.domain;
+package com.preferanser.shared.domain.exception;
 
-public enum Cardinal {
-    NORTH, EAST, SOUTH, WEST;
+import com.preferanser.shared.domain.Card;
+import com.preferanser.shared.domain.Hand;
 
-    public static Cardinal valueOf(TableLocation tableLocation) {
-        switch (tableLocation) {
-            case NORTH:
-                return Cardinal.NORTH;
-            case EAST:
-                return Cardinal.EAST;
-            case SOUTH:
-                return Cardinal.SOUTH;
-            case WEST:
-                return Cardinal.WEST;
-            default:
-                throw new IllegalArgumentException("TableLocation " + tableLocation + " doesn't have a corresponding Cardinal!");
-        }
+public class NoSuchHandCardException extends GameException {
+
+    private Hand hand;
+    private Card card;
+
+    @SuppressWarnings("unused") // required for serialization
+    public NoSuchHandCardException() {
     }
 
+    public NoSuchHandCardException(Hand hand, Card card) {
+        this.hand = hand;
+        this.card = card;
+    }
+
+    @Override public String getMessage() {
+        return "Can't make turn because there is no " + card + " at " + hand;
+    }
+
+    public Hand getHand() {
+        return hand;
+    }
+
+    public Card getCard() {
+        return card;
+    }
 }

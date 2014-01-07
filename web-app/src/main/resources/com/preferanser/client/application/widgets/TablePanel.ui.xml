@@ -39,16 +39,16 @@
             height: 100%;
         }
 
-        .northDock, .eastDock, .southDock, .westDock, .centerDock {
+        .eastDock, .southDock, .westDock, .centerDock {
             position: relative;
         }
 
-        .northVPanel, .eastVPanel, .southVPanel, .westVPanel, .centerVPanel {
+        .eastVPanel, .southVPanel, .westVPanel, .centerVPanel {
             position: relative;
             width: 100%;
         }
 
-        .northHPanel, .southHPanel, .eastHPanel, .westHPanel, .centerHPanel {
+        .southHPanel, .eastHPanel, .westHPanel, .centerHPanel {
             width: 100%;
             line-height: 20px;
             padding: 0 10px 0 10px;
@@ -68,14 +68,14 @@
             white-space: nowrap;
         }
 
-        .northFlowPanel, .eastFlowPanel, .southFlowPanel, .westFlowPanel, .centerFlowPanel {
+        .eastFlowPanel, .southFlowPanel, .westFlowPanel, .centerFlowPanel {
             width: 100%;
             position: relative;
             background-color: rgba(0, 0, 0, 0.1);
             border-radius: 7px;
         }
 
-        .northDock, .southDock {
+        .southDock {
             width: 1164px;
         }
 
@@ -83,7 +83,7 @@
             width: 297px;
         }
 
-        .northFlowPanel, .southFlowPanel {
+        .southFlowPanel {
             height: 184px;
         }
 
@@ -107,12 +107,6 @@
     <g:VerticalPanel addStyleNames="{style.verticalPanel}" spacing="0">
         <g:HorizontalPanel ui:field="headerPanel" addStyleNames="{style.buttonsPanel}" spacing="10"/>
         <g:DockPanel debugId="dlp" addStyleNames="{style.dockPanel}" spacing="10">
-            <g:Dock direction="NORTH" addStyleNames="{style.northDock}">
-                <g:VerticalPanel addStyleNames="{style.northVPanel}">
-                    <g:FlowPanel ui:field="northPanel" addStyleNames="{style.northFlowPanel}" debugId="NORTH"/>
-                    <g:HorizontalPanel ui:field="northPanelHeader" addStyleNames="{style.handTitle} {style.northHPanel}"/>
-                </g:VerticalPanel>
-            </g:Dock>
             <g:Dock direction="SOUTH" addStyleNames="{style.southDock}">
                 <g:VerticalPanel addStyleNames="{style.southVPanel}">
                     <g:FlowPanel ui:field="southPanel" addStyleNames="{style.southFlowPanel}" debugId="SOUTH"/>

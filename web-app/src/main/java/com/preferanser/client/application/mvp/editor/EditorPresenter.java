@@ -53,12 +53,12 @@ import java.util.logging.Logger;
  * Table presenter
  */
 public class EditorPresenter extends Presenter<EditorPresenter.EditorView, EditorPresenter.Proxy>
-    implements EditorUiHandlers, HasCardinalContracts, InputDialogPresenter.InputResultHandler {
+    implements EditorUiHandlers, HasHandContracts, InputDialogPresenter.InputResultHandler {
 
     private static final Logger log = Logger.getLogger("EditorPresenter");
 
     public interface EditorView extends HasUiHandlers<EditorUiHandlers>, TableView {
-        void hideCardinalTricks();
+        void hideHandTricks();
     }
 
     private Optional<Game> maybeGame;
@@ -102,19 +102,19 @@ public class EditorPresenter extends Presenter<EditorPresenter.EditorView, Edito
         maybeGame = Optional.absent();
         gameBuilder = new GameBuilder()
             .setThreePlayers()
-            .setFirstTurn(Cardinal.NORTH)
-            .putCards(Cardinal.NORTH, Card.values());
+            .setFirstTurn(Hand.SOUTH)
+            .putCards(Hand.SOUTH, Card.values());
         refreshView();
     }
 
     @Override
-    public void chooseContract(Cardinal cardinal) {
-        editorDialogs.showContractDialog(cardinal);
+    public void chooseContract(Hand hand) {
+        editorDialogs.showContractDialog(hand);
     }
 
     @Override
-    public void chooseTurn(Cardinal cardinal) {
-        gameBuilder.setFirstTurn(cardinal);
+    public void chooseTurn(Hand hand) {
+        gameBuilder.setFirstTurn(hand);
         getView().displayTurn(gameBuilder.getFirstTurn());
     }
 
@@ -135,8 +135,8 @@ public class EditorPresenter extends Presenter<EditorPresenter.EditorView, Edito
     }
 
     @Override
-    public boolean setCardinalContract(Cardinal cardinal, Contract contract) {
-        gameBuilder.setCardinalContract(cardinal, contract);
+    public boolean setHandContract(Hand hand, Contract contract) {
+        gameBuilder.setHandContract(hand, contract);
         refreshContracts();
         return true;
     }
@@ -183,7 +183,7 @@ public class EditorPresenter extends Presenter<EditorPresenter.EditorView, Edito
         refreshTurn();
         refreshContracts();
         refreshCards();
-        refreshCardinalTricks();
+        refreshHandTricks();
     }
 
     private void refreshTurn() {
@@ -191,15 +191,15 @@ public class EditorPresenter extends Presenter<EditorPresenter.EditorView, Edito
     }
 
     private void refreshContracts() {
-        getView().displayContracts(gameBuilder.getCardinalContracts());
+        getView().displayContracts(gameBuilder.getHandContracts());
     }
 
     private void refreshCards() {
         getView().displayTableCards(gameBuilder.getTableCards(), gameBuilder.getCenterCards());
     }
 
-    private void refreshCardinalTricks() {
-        getView().hideCardinalTricks();
+    private void refreshHandTricks() {
+        getView().hideHandTricks();
     }
 
 }

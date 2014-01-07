@@ -48,26 +48,23 @@ public class Deal extends BaseEntity implements Dto {
     @Index
     private Date created;
 
-    private Cardinal firstTurn;
+    private Hand firstTurn;
 
     private Players players;
 
-    private Contract northContract;
     private Contract eastContract;
     private Contract southContract;
     private Contract westContract;
     private Widow widow;
-    private List<Card> northCards;
     private List<Card> eastCards;
     private List<Card> southCards;
     private List<Card> westCards;
-    private Card centerNorthCard;
+    private Card centerWidowCard;
     private Card centerEastCard;
     private Card centerSouthCard;
     private Card centerWestCard;
 
     public Deal() {
-        northCards = new ArrayList<Card>();
         eastCards = new ArrayList<Card>();
         southCards = new ArrayList<Card>();
         westCards = new ArrayList<Card>();
@@ -113,20 +110,12 @@ public class Deal extends BaseEntity implements Dto {
         this.players = players;
     }
 
-    public Cardinal getFirstTurn() {
+    public Hand getFirstTurn() {
         return firstTurn;
     }
 
-    public void setFirstTurn(Cardinal firstTurn) {
+    public void setFirstTurn(Hand firstTurn) {
         this.firstTurn = firstTurn;
-    }
-
-    public Contract getNorthContract() {
-        return northContract;
-    }
-
-    public void setNorthContract(Contract northContract) {
-        this.northContract = northContract;
     }
 
     public Contract getEastContract() {
@@ -161,14 +150,6 @@ public class Deal extends BaseEntity implements Dto {
         this.widow = widow;
     }
 
-    public List<Card> getNorthCards() {
-        return northCards;
-    }
-
-    public void setNorthCards(List<Card> northCards) {
-        this.northCards = northCards;
-    }
-
     public List<Card> getEastCards() {
         return eastCards;
     }
@@ -193,12 +174,12 @@ public class Deal extends BaseEntity implements Dto {
         this.westCards = westCards;
     }
 
-    public Card getCenterNorthCard() {
-        return centerNorthCard;
+    public Card getCenterWidowCard() {
+        return centerWidowCard;
     }
 
-    public void setCenterNorthCard(Card centerNorthCard) {
-        this.centerNorthCard = centerNorthCard;
+    public void setCenterWidowCard(Card centerWidowCard) {
+        this.centerWidowCard = centerWidowCard;
     }
 
     public Card getCenterEastCard() {
@@ -233,8 +214,8 @@ public class Deal extends BaseEntity implements Dto {
 
         Deal deal = (Deal) o;
 
+        if (centerWidowCard != deal.centerWidowCard) return false;
         if (centerEastCard != deal.centerEastCard) return false;
-        if (centerNorthCard != deal.centerNorthCard) return false;
         if (centerSouthCard != deal.centerSouthCard) return false;
         if (centerWestCard != deal.centerWestCard) return false;
         if (created != null ? !created.equals(deal.created) : deal.created != null) return false;
@@ -244,14 +225,12 @@ public class Deal extends BaseEntity implements Dto {
         if (firstTurn != deal.firstTurn) return false;
         if (players != deal.players) return false;
         if (name != null ? !name.equals(deal.name) : deal.name != null) return false;
-        if (northCards != null ? !northCards.equals(deal.northCards) : deal.northCards != null) return false;
-        if (northContract != deal.northContract) return false;
         if (southCards != null ? !southCards.equals(deal.southCards) : deal.southCards != null) return false;
         if (southContract != deal.southContract) return false;
         if (userId != null ? !userId.equals(deal.userId) : deal.userId != null) return false;
         if (westCards != null ? !westCards.equals(deal.westCards) : deal.westCards != null) return false;
         if (westContract != deal.westContract) return false;
-        //if (widow != null ? !widow.equals(deal.widow) : deal.widow != null) return false;
+        if (widow != null ? !widow.equals(deal.widow) : deal.widow != null) return false;
 
         return true;
     }
@@ -265,16 +244,14 @@ public class Deal extends BaseEntity implements Dto {
         result = 31 * result + (created != null ? created.hashCode() : 0);
         result = 31 * result + (firstTurn != null ? firstTurn.hashCode() : 0);
         result = 31 * result + (players != null ? players.hashCode() : 0);
-        result = 31 * result + (northContract != null ? northContract.hashCode() : 0);
         result = 31 * result + (eastContract != null ? eastContract.hashCode() : 0);
         result = 31 * result + (southContract != null ? southContract.hashCode() : 0);
         result = 31 * result + (westContract != null ? westContract.hashCode() : 0);
         result = 31 * result + (widow != null ? widow.hashCode() : 0);
-        result = 31 * result + (northCards != null ? northCards.hashCode() : 0);
         result = 31 * result + (eastCards != null ? eastCards.hashCode() : 0);
         result = 31 * result + (southCards != null ? southCards.hashCode() : 0);
         result = 31 * result + (westCards != null ? westCards.hashCode() : 0);
-        result = 31 * result + (centerNorthCard != null ? centerNorthCard.hashCode() : 0);
+        result = 31 * result + (centerWidowCard != null ? centerWidowCard.hashCode() : 0);
         result = 31 * result + (centerEastCard != null ? centerEastCard.hashCode() : 0);
         result = 31 * result + (centerSouthCard != null ? centerSouthCard.hashCode() : 0);
         result = 31 * result + (centerWestCard != null ? centerWestCard.hashCode() : 0);
@@ -289,16 +266,14 @@ public class Deal extends BaseEntity implements Dto {
             .add("created", created)
             .add("firstTurn", firstTurn)
             .add("players", players)
-            .add("northContract", northContract)
             .add("eastContract", eastContract)
             .add("southContract", southContract)
             .add("westContract", westContract)
             .add("widow", widow)
-            .add("northCards", northCards)
             .add("eastCards", eastCards)
             .add("southCards", southCards)
             .add("westCards", westCards)
-            .add("centerNorthCard", centerNorthCard)
+            .add("centerWidowCard", centerWidowCard)
             .add("centerEastCard", centerEastCard)
             .add("centerSouthCard", centerSouthCard)
             .add("centerWestCard", centerWestCard)

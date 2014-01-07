@@ -41,54 +41,54 @@ import static com.google.common.collect.Maps.newLinkedHashMap;
 public class Game {
 
     private final Players players;
-    private final EnumRotator<Cardinal> turnRotator;
-    private final Map<Cardinal, Contract> cardinalContracts;
-    private final Multimap<Cardinal, Card> cardinalCardMultimap;
-    private final Map<Cardinal, Integer> cardinalTricks = Maps.newHashMapWithExpectedSize(Cardinal.values().length);
-    private final LinkedHashMap<Card, Cardinal> centerCardCardinalMap;  // order is important
+    private final EnumRotator<Hand> turnRotator;
+    private final Map<Hand, Contract> handContracts;
+    private final Multimap<Hand, Card> handCardMultimap;
+    private final Map<Hand, Integer> handTricks = Maps.newHashMapWithExpectedSize(Hand.values().length);
+    private final LinkedHashMap<Card, Hand> centerCardHandMap;  // order is important
 
     Game(Players players,
-         Map<Cardinal, Contract> cardinalContracts,
-         EnumRotator<Cardinal> turnRotator,
-         Multimap<Cardinal, Card> cardinalCardMultimap,
-         Map<Card, Cardinal> centerCardCardinalMap
+         Map<Hand, Contract> handContracts,
+         EnumRotator<Hand> turnRotator,
+         Multimap<Hand, Card> handCardMultimap,
+         Map<Card, Hand> centerCardHandMap
     ) {
         this.players = players;
-        this.cardinalContracts = cardinalContracts;
+        this.handContracts = handContracts;
         this.turnRotator = turnRotator;
-        this.cardinalCardMultimap = cardinalCardMultimap;
-        this.centerCardCardinalMap = newLinkedHashMap(centerCardCardinalMap);  // order is important
-        initCardinalTricks();
+        this.handCardMultimap = handCardMultimap;
+        this.centerCardHandMap = newLinkedHashMap(centerCardHandMap);  // order is important
+        initHandTricks();
     }
 
-    private void initCardinalTricks() {
-        for (Cardinal cardinal : Cardinal.values()) {
-            cardinalTricks.put(cardinal, 0);
+    private void initHandTricks() {
+        for (Hand hand : Hand.values()) {
+            handTricks.put(hand, 0);
         }
     }
 
-    public Map<TableLocation, Collection<Card>> getCardinalCards() {
-        return GameUtils.copyDefensive(cardinalCardMultimap);
+    public Map<TableLocation, Collection<Card>> getHandCards() {
+        return GameUtils.copyDefensive(handCardMultimap);
     }
 
-    public Collection<Card> getCardsByCardinal(Cardinal cardinal) {
-        return ImmutableList.copyOf(cardinalCardMultimap.get(cardinal));
+    public Collection<Card> getCardsByHand(Hand hand) {
+        return ImmutableList.copyOf(handCardMultimap.get(hand));
     }
 
-    public Map<Card, Cardinal> getCenterCards() {
-        return ImmutableMap.copyOf(centerCardCardinalMap);
+    public Map<Card, Hand> getCenterCards() {
+        return ImmutableMap.copyOf(centerCardHandMap);
     }
 
-    public Map<Cardinal, Integer> getCardinalTricks() {
-        return ImmutableMap.copyOf(cardinalTricks);
+    public Map<Hand, Integer> getHandTricks() {
+        return ImmutableMap.copyOf(handTricks);
     }
 
-    public Map<Cardinal, Contract> getCardinalContracts() {
-        return ImmutableMap.copyOf(cardinalContracts);
+    public Map<Hand, Contract> getHandContracts() {
+        return ImmutableMap.copyOf(handContracts);
     }
 
     private Optional<Contract> getPlayingContract() {
-        for (Contract contract : cardinalContracts.values()) {
+        for (Contract contract : handContracts.values()) {
             if (contract.isPlaying()) {
                 return Optional.of(contract);
             }
@@ -105,29 +105,29 @@ public class Game {
         return Optional.absent();
     }
 
-    public void makeTurn(Cardinal fromCardinal, Card card) throws GameException {
-        if (fromCardinal != turnRotator.current())
-            throw new NotInTurnException(turnRotator.current(), fromCardinal);
+    public void makeTurn(Hand fromHand, Card card) throws GameException {
+        if (fromHand != turnRotator.current())
+            throw new NotInTurnException(turnRotator.current(), fromHand);
 
-        if (!cardinalCardMultimap.containsEntry(fromCardinal, card))
-            throw new NoSuchCardinalCardException(fromCardinal, card);
+        if (!handCardMultimap.containsEntry(fromHand, card))
+            throw new NoSuchHandCardException(fromHand, card);
 
-        if (centerCardCardinalMap.containsValue(fromCardinal))
-            throw new DuplicateGameTurnException(centerCardCardinalMap, fromCardinal);
+        if (centerCardHandMap.containsValue(fromHand))
+            throw new DuplicateGameTurnException(centerCardHandMap, fromHand);
 
-        if (centerCardCardinalMap.size() == players.getNumPlayers())
-            throw new NoTurnsAllowedException(centerCardCardinalMap);
+        if (centerCardHandMap.size() == players.getNumPlayers())
+            throw new NoTurnsAllowedException(centerCardHandMap);
 
-        validateCardinalTurn(fromCardinal, card);
+        validateHandTurn(fromHand, card);
 
-        boolean removed = cardinalCardMultimap.get(fromCardinal).remove(card);
-        assert removed : "Failed to remove " + card + " from " + fromCardinal;
+        boolean removed = handCardMultimap.get(fromHand).remove(card);
+        assert removed : "Failed to remove " + card + " from " + fromHand;
 
-        centerCardCardinalMap.put(card, fromCardinal);
+        centerCardHandMap.put(card, fromHand);
         turnRotator.next();
     }
 
-    public void validateCardinalTurn(Cardinal cardinal, Card card) throws IllegalSuitException {
+    public void validateHandTurn(Hand hand, Card card) throws IllegalSuitException {
         Optional<Suit> maybeTrickSuit = getTrickSuit();
         if (!maybeTrickSuit.isPresent())
             return;
@@ -136,7 +136,7 @@ public class Game {
         if (trickSuit == card.getSuit())
             return;
 
-        if (cardinalHasSuit(cardinal, trickSuit))
+        if (handHasSuit(hand, trickSuit))
             throw new IllegalSuitException(trickSuit, card.getSuit());
 
         Optional<Suit> maybeTrump = getTrump();
@@ -144,41 +144,41 @@ public class Game {
             return;
 
         Suit trump = maybeTrump.get();
-        if (card.getSuit() != trump && cardinalHasSuit(cardinal, trump))
+        if (card.getSuit() != trump && handHasSuit(hand, trump))
             throw new IllegalSuitException(trump, card.getSuit());
     }
 
-    private boolean cardinalHasSuit(Cardinal cardinal, Suit suit) {
-        for (Card card : cardinalCardMultimap.get(cardinal))
+    private boolean handHasSuit(Hand hand, Suit suit) {
+        for (Card card : handCardMultimap.get(hand))
             if (card.getSuit() == suit)
                 return true;
         return false;
     }
 
     private Optional<Suit> getTrickSuit() {
-        if (centerCardCardinalMap.isEmpty())
+        if (centerCardHandMap.isEmpty())
             return Optional.absent();
-        return Optional.of(centerCardCardinalMap.entrySet().iterator().next().getKey().getSuit());
+        return Optional.of(centerCardHandMap.entrySet().iterator().next().getKey().getSuit());
     }
 
     public boolean isTrickComplete() {
-        return centerCardCardinalMap.size() == players.getNumPlayers();
+        return centerCardHandMap.size() == players.getNumPlayers();
     }
 
     public boolean sluffTrick() {
         if (!isTrickComplete())
             return false;
 
-        Cardinal turn = determineTrickWinner();
-        cardinalTricks.put(turn, cardinalTricks.get(turn) + 1); // Non-atomic increment!
+        Hand turn = determineTrickWinner();
+        handTricks.put(turn, handTricks.get(turn) + 1); // Non-atomic increment!
         turnRotator.setCurrent(turn);
-        centerCardCardinalMap.clear();
+        centerCardHandMap.clear();
         return true;
     }
 
-    private Cardinal determineTrickWinner() {
-        assert (centerCardCardinalMap.size() == players.getNumPlayers());
-        Iterator<Card> cardIterator = centerCardCardinalMap.keySet().iterator();
+    private Hand determineTrickWinner() {
+        assert (centerCardHandMap.size() == players.getNumPlayers());
+        Iterator<Card> cardIterator = centerCardHandMap.keySet().iterator();
         Card maxCard = cardIterator.next();
         Optional<Suit> optionalTrump = getTrump();
         while (cardIterator.hasNext()) {
@@ -191,10 +191,10 @@ public class Game {
                 }
             }
         }
-        return centerCardCardinalMap.get(maxCard);
+        return centerCardHandMap.get(maxCard);
     }
 
-    public Cardinal getTurn() {
+    public Hand getTurn() {
         if (isTrickComplete())
             return determineTrickWinner();
         else

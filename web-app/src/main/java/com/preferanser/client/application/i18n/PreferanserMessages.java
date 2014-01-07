@@ -27,13 +27,13 @@ import com.google.gwt.i18n.client.Messages;
  * See <a href="http://www.gwtproject.org/doc/latest/DevGuideI18n.html">GWT i18n doc</a>
  */
 public interface PreferanserMessages extends Messages {
-    @DefaultMessage("{0} chooses contract") String cardinalChoosesContract(String who);
+    @DefaultMessage("{0} chooses contract") String handChoosesContract(String who);
     @DefaultMessage("Deal") String deal();
     @DefaultMessage("Wrong number of contracts") String wrongNumberOfContracts();
     @DefaultMessage("There are conflicting contracts") String hasConflictingContracts();
     @DefaultMessage("Fist turn not specified") String firstTurnNotSpecified();
     @DefaultMessage("First turn specified incorrectly") String wrongFirstTurn();
-    @DefaultMessage("Cards dealt incorrectly: {0}") String wrongNumCardsPerCardinal(String join);
+    @DefaultMessage("Cards dealt incorrectly: {0}") String wrongNumCardsPerHand(String join);
     @DefaultMessage("Number of players not specified") String numPlayersNotSpecified();
     @DefaultMessage("Has duplicate cards: {0}") String hasDuplicateCards(String join);
 }

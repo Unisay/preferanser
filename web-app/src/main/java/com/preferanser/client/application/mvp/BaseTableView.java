@@ -32,15 +32,15 @@ import com.preferanser.client.application.i18n.I18nHelper;
 import com.preferanser.client.application.i18n.PreferanserConstants;
 import com.preferanser.client.application.mvp.editor.style.TableStyle;
 import com.preferanser.client.application.widgets.CardWidget;
-import com.preferanser.client.application.widgets.CardinalCard;
+import com.preferanser.client.application.widgets.HandCard;
 import com.preferanser.client.application.widgets.TablePanel;
 import com.preferanser.client.application.widgets.TurnPointer;
 import com.preferanser.client.geom.Point;
 import com.preferanser.client.geom.Rect;
 import com.preferanser.client.theme.greencloth.client.com.preferanser.client.application.PreferanserResources;
 import com.preferanser.shared.domain.Card;
-import com.preferanser.shared.domain.Cardinal;
 import com.preferanser.shared.domain.Contract;
+import com.preferanser.shared.domain.Hand;
 import com.preferanser.shared.domain.TableLocation;
 
 import javax.annotation.Nullable;
@@ -52,37 +52,40 @@ import static com.google.common.collect.Iterables.transform;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Maps.newHashMapWithExpectedSize;
 
-abstract public class BaseTableView<U extends TableUiHandlers> extends ViewWithUiHandlers<U> implements TableView, CardWidget.Handlers {
+abstract public class BaseTableView<U extends TableUiHandlers> extends ViewWithUiHandlers<U> implements TableView,
+        CardWidget.Handlers {
 
-    protected final Map<Cardinal, Label> cardinalTricksCountMap = newHashMapWithExpectedSize(Cardinal.values().length);
+    protected final Map<Hand, Label> handTricksCountMap = newHashMapWithExpectedSize(Hand.values().length);
 
-    public final Map<Cardinal, TurnPointer> cardinalTurnPointerMap = newHashMapWithExpectedSize(Cardinal.values().length);
+    public final Map<Hand, TurnPointer> handTurnPointerMap = newHashMapWithExpectedSize(Hand.PLAYING_HANDS.size());
     private final BiMap<Card, CardWidget> cardWidgetBiMap = EnumHashBiMap.create(Card.class);
-    private final Map<Cardinal, Label> cardinalTitleMap = newHashMapWithExpectedSize(Cardinal.values().length);
+    private final Map<Hand, Label> handTitleMap = newHashMapWithExpectedSize(Hand.PLAYING_HANDS.size());
     private final ImageDragController imageDragController = new ImageDragController(Document.get());
 
     protected final I18nHelper i18nHelper;
     protected final PreferanserResources resources;
     protected final CardImageResourceRetriever cardImageResourceRetriever;
 
-    @UiField(provided = true) public PreferanserConstants constants;
-    @UiField public TableStyle tableStyle;
-    @UiField public TablePanel table;
+    @UiField(provided = true)
+    public PreferanserConstants constants;
+    @UiField
+    public TableStyle tableStyle;
+    @UiField
+    public TablePanel table;
 
-    @UiField public TurnPointer turnPointerNorth;
-    @UiField public TurnPointer turnPointerEast;
-    @UiField public TurnPointer turnPointerSouth;
-    @UiField public TurnPointer turnPointerWest;
+    @UiField
+    public TurnPointer turnPointerEast;
+    @UiField
+    public TurnPointer turnPointerSouth;
+    @UiField
+    public TurnPointer turnPointerWest;
 
-    @UiField public Label trickCountNorth;
-    @UiField public Label trickCountEast;
-    @UiField public Label trickCountSouth;
-    @UiField public Label trickCountWest;
-
-    @UiField public Label titleNorth;
-    @UiField public Label titleEast;
-    @UiField public Label titleSouth;
-    @UiField public Label titleWest;
+    @UiField
+    public Label titleEast;
+    @UiField
+    public Label titleSouth;
+    @UiField
+    public Label titleWest;
 
     public BaseTableView(PreferanserConstants constants, PreferanserResources resources, I18nHelper i18nHelper) {
         cardImageResourceRetriever = new CardImageResourceRetriever(resources);
@@ -95,20 +98,19 @@ abstract public class BaseTableView<U extends TableUiHandlers> extends ViewWithU
         installMouseUpHandler(RootPanel.get());
         installMouseUpHandler(table.locationPanelMap.values());
         installMouseMoveHandler(RootPanel.get());
-        populateCardinalTrickCounts();
-        populateCardinalTitles();
-        populateCardinalTurnPointers();
+        populateHandTitles();
+        populateHandTurnPointers();
     }
 
-    public void displayTableCards(Map<TableLocation, Collection<Card>> tableCards, Map<Card, Cardinal> centerCards) {
+    public void displayTableCards(Map<TableLocation, Collection<Card>> tableCards, Map<Card, Hand> centerCards) {
         detachCardWidgets();
-        displayCardinalCards(tableCards);
+        displayHandCards(tableCards);
         displayCenterCards(centerCards);
     }
 
-    private void displayCardinalCards(Map<TableLocation, Collection<Card>> tableCards) {
-        for (Cardinal cardinal : Cardinal.values())
-            displayCardinalCards(cardinal, tableCards.get(TableLocation.valueOf(cardinal)));
+    private void displayHandCards(Map<TableLocation, Collection<Card>> tableCards) {
+        for (Hand hand : Hand.PLAYING_HANDS)
+            displayHandCards(hand, tableCards.get(TableLocation.valueOf(hand)));
     }
 
     private void detachCardWidgets() {
@@ -116,23 +118,23 @@ abstract public class BaseTableView<U extends TableUiHandlers> extends ViewWithU
             cardWidget.removeFromParent();
     }
 
-    private void displayCenterCards(Map<Card, Cardinal> centerCards) {
-        Function<Map.Entry<Card, Cardinal>, CardinalCard> func = new Function<Map.Entry<Card, Cardinal>, CardinalCard>() {
-            @Nullable @Override public CardinalCard apply(Map.Entry<Card, Cardinal> entry) {
+    private void displayCenterCards(Map<Card, Hand> centerCards) {
+        Function<Map.Entry<Card, Hand>, HandCard> func = new Function<Map.Entry<Card, Hand>, HandCard>() {
+            @Nullable @Override public HandCard apply(Map.Entry<Card, Hand> entry) {
                 Card card = entry.getKey();
                 CardWidget cardWidget = cardWidgetBiMap.get(card);
                 if (null == cardWidget) {
                     cardWidget = createCardWidget(card);
                     cardWidgetBiMap.put(card, cardWidget);
                 }
-                return new CardinalCard(entry.getValue(), cardWidget);
+                return new HandCard(entry.getValue(), cardWidget);
             }
         };
-        table.addCardinalCardsToCenter(newArrayList(transform(centerCards.entrySet(), func)));
+        table.addHandCardsToCenter(newArrayList(transform(centerCards.entrySet(), func)));
     }
 
-    private void displayCardinalCards(Cardinal cardinal, Iterable<Card> cards) {
-        TableLocation location = TableLocation.valueOf(cardinal);
+    private void displayHandCards(Hand hand, Iterable<Card> cards) {
+        TableLocation location = TableLocation.valueOf(hand);
         HasWidgets panel = table.locationPanelMap.get(location);
         for (Card card : cards)
             displayCard(panel, card);
@@ -150,34 +152,34 @@ abstract public class BaseTableView<U extends TableUiHandlers> extends ViewWithU
         panel.add(cardWidget);
     }
 
-    public void displayContracts(Map<Cardinal, Contract> cardinalContracts) {
-        for (Cardinal cardinal : Cardinal.values()) {
-            if (cardinalContracts.containsKey(cardinal))
-                displayCardinalContract(cardinal, cardinalContracts.get(cardinal));
+    public void displayContracts(Map<Hand, Contract> handContracts) {
+        for (Hand hand : Hand.PLAYING_HANDS) {
+            if (handContracts.containsKey(hand))
+                displayHandContract(hand, handContracts.get(hand));
             else
-                displayNoContract(cardinal);
+                displayNoContract(hand);
         }
     }
 
-    protected abstract void displayCardinalContract(Cardinal cardinal, Contract contract);
-    protected abstract void displayNoContract(Cardinal cardinal);
+    protected abstract void displayHandContract(Hand hand, Contract contract);
+    protected abstract void displayNoContract(Hand hand);
 
-    public void displayCardinalTricks(Map<Cardinal, Integer> cardinalTricks) {
-        for (Map.Entry<Cardinal, Integer> entry : cardinalTricks.entrySet())
-            cardinalTricksCountMap.get(entry.getKey()).setText("" + entry.getValue());
+    public void displayHandTricks(Map<Hand, Integer> handTricks) {
+        for (Map.Entry<Hand, Integer> entry : handTricks.entrySet())
+            handTricksCountMap.get(entry.getKey()).setText("" + entry.getValue());
     }
 
-    public void displayTurn(Cardinal turn) {
-        for (Map.Entry<Cardinal, TurnPointer> entry : cardinalTurnPointerMap.entrySet())
-            displayCardinalTurnPointer(entry.getKey(), entry.getValue(), turn);
+    public void displayTurn(Hand turn) {
+        for (Map.Entry<Hand, TurnPointer> entry : handTurnPointerMap.entrySet())
+            displayHandTurnPointer(entry.getKey(), entry.getValue(), turn);
     }
 
-    protected void displayCardinalTurnPointer(Cardinal cardinal, TurnPointer turnPointer, Cardinal turn) {
-        turnPointer.setActive(cardinal == turn);
+    protected void displayHandTurnPointer(Hand hand, TurnPointer turnPointer, Hand turn) {
+        turnPointer.setActive(hand == turn);
     }
 
     public void onCardMouseDown(CardWidget cardWidget, MouseDownEvent event) {
-        imageDragController.startDrag(cardWidget, event);
+        imageDragController.onCardWidgetMouseDown(cardWidget, event);
         putCardImageOnTop(cardWidget);
     }
 
@@ -187,21 +189,11 @@ abstract public class BaseTableView<U extends TableUiHandlers> extends ViewWithU
     }
 
     private void installMouseMoveHandler(RootPanel rootPanel) {
-        rootPanel.addDomHandler(new MouseMoveHandler() {
-            @Override public void onMouseMove(MouseMoveEvent event) {
-                if (imageDragController.isDrag())
-                    imageDragController.updateImagePosition(event);
-            }
-        }, MouseMoveEvent.getType());
+        rootPanel.addDomHandler(imageDragController, MouseMoveEvent.getType());
     }
 
     private void installMouseUpHandler(RootPanel rootPanel) {
-        rootPanel.addDomHandler(new MouseUpHandler() {
-            @Override public void onMouseUp(MouseUpEvent event) {
-                if (imageDragController.isDrag())
-                    imageDragController.stopDrag();
-            }
-        }, MouseUpEvent.getType());
+        rootPanel.addDomHandler(imageDragController, MouseUpEvent.getType());
     }
 
     private void installMouseUpHandler(final Collection<FlowPanel> panels) {
@@ -216,7 +208,7 @@ abstract public class BaseTableView<U extends TableUiHandlers> extends ViewWithU
                             Card card = cardWidgetBiMap.inverse().get(imageDragController.getCardWidget());
                             TableLocation oldLocation = table.locationPanelMap.inverse().get(sourcePanel);
                             TableLocation newLocation = table.locationPanelMap.inverse().get(targetPanel);
-                            getLog().finer("Card newLocation change: " + card + ": " + oldLocation + " -> " + newLocation);
+                            getLog().finer("Card dragged: " + card + ": " + oldLocation + " -> " + newLocation);
                             getUiHandlers().changeCardLocation(card, oldLocation, newLocation);
                             return;
                         }
@@ -245,7 +237,7 @@ abstract public class BaseTableView<U extends TableUiHandlers> extends ViewWithU
         return maxZIndex;
     }
 
-    private CardWidget createCardWidget(Card card) {
+    protected CardWidget createCardWidget(Card card) {
         CardWidget cardWidget = new CardWidget(card);
         cardWidget.setResource(cardImageResourceRetriever.getByCard(card));
         cardWidget.setHandlers(this);
@@ -254,25 +246,16 @@ abstract public class BaseTableView<U extends TableUiHandlers> extends ViewWithU
         return cardWidget;
     }
 
-    private void populateCardinalTrickCounts() {
-        cardinalTricksCountMap.put(Cardinal.NORTH, trickCountNorth);
-        cardinalTricksCountMap.put(Cardinal.EAST, trickCountEast);
-        cardinalTricksCountMap.put(Cardinal.SOUTH, trickCountSouth);
-        cardinalTricksCountMap.put(Cardinal.WEST, trickCountWest);
+    private void populateHandTitles() {
+        handTitleMap.put(Hand.EAST, titleEast);
+        handTitleMap.put(Hand.SOUTH, titleSouth);
+        handTitleMap.put(Hand.WEST, titleWest);
     }
 
-    private void populateCardinalTitles() {
-        cardinalTitleMap.put(Cardinal.NORTH, titleNorth);
-        cardinalTitleMap.put(Cardinal.EAST, titleEast);
-        cardinalTitleMap.put(Cardinal.SOUTH, titleSouth);
-        cardinalTitleMap.put(Cardinal.WEST, titleWest);
-    }
-
-    protected void populateCardinalTurnPointers() {
-        cardinalTurnPointerMap.put(Cardinal.NORTH, turnPointerNorth);
-        cardinalTurnPointerMap.put(Cardinal.EAST, turnPointerEast);
-        cardinalTurnPointerMap.put(Cardinal.SOUTH, turnPointerSouth);
-        cardinalTurnPointerMap.put(Cardinal.WEST, turnPointerWest);
+    protected void populateHandTurnPointers() {
+        handTurnPointerMap.put(Hand.EAST, turnPointerEast);
+        handTurnPointerMap.put(Hand.SOUTH, turnPointerSouth);
+        handTurnPointerMap.put(Hand.WEST, turnPointerWest);
     }
 
     abstract protected Logger getLog();

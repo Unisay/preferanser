@@ -26,11 +26,11 @@
     vertical-align: middle ! important;
 }
 
-.titleNorth, .titleEast, .titleSouth, .titleWest, .handHeaderLeftPanel {
+.titleEast, .titleSouth, .titleWest, .handHeaderLeftPanel {
     float: left;
 }
 
-.trickCountNorth, .trickCountEast, .trickCountSouth, .trickCountWest {
+.trickCountWidow, .trickCountEast, .trickCountSouth, .trickCountWest {
     float: right;
 }
 
@@ -75,14 +75,6 @@
 .turnPointerActive, .turnPointer:hover {
     opacity: 1;
     cursor: pointer;
-}
-
-@external .turnPointerNorth;
-.turnPointerNorth {
-    top: 25px;
-    transform: rotate(270deg);
-    -ms-transform: rotate(270deg);
-    -webkit-transform: rotate(270deg);
 }
 
 @external .turnPointerEast;

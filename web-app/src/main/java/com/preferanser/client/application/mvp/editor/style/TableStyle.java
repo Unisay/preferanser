@@ -32,9 +32,9 @@ public interface TableStyle extends CssResource, TurnPointerStyle {
 
     String dragging();
 
-    String trickCountNorth();
-
     @ClassName("not-visible") String notVisible();
+
+    String trickCountWidow();
 
     String trickCountWest();
 

@@ -37,7 +37,7 @@ public class EditorModule extends AbstractPresenterModule {
 
     @Override
     protected void configure() {
-        bind(HasCardinalContracts.class).to(EditorPresenter.class).in(Singleton.class);
+        bind(HasHandContracts.class).to(EditorPresenter.class).in(Singleton.class);
         bindSingletonPresenterWidget(OpenDialogPresenter.class, OpenDialogPresenter.TheView.class, OpenDialogView.class);
         bindSingletonPresenterWidget(ContractDialogPresenter.class, ContractDialogPresenter.TheView.class, ContractDialogView.class);
         bindSingletonPresenterWidget(ValidationDialogPresenter.class, ValidationDialogPresenter.TheView.class, ValidationDialogView.class);

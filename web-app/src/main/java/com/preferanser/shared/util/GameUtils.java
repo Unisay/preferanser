@@ -23,7 +23,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Multimap;
 import com.preferanser.shared.domain.Card;
-import com.preferanser.shared.domain.Cardinal;
+import com.preferanser.shared.domain.Hand;
 import com.preferanser.shared.domain.TableLocation;
 
 import java.util.Collection;
@@ -36,26 +36,21 @@ public abstract class GameUtils {
     private GameUtils() {
     }
 
-    public static Map<TableLocation, Collection<Card>> copyDefensive(Multimap<Cardinal, Card> cardinalCardMultimap) {
+    public static Map<TableLocation, Collection<Card>> copyDefensive(Multimap<Hand, Card> handCardMultimap) {
         ImmutableMap.Builder<TableLocation, Collection<Card>> builder = ImmutableMap.builder();
 
-        if (cardinalCardMultimap.containsKey(Cardinal.NORTH))
-            builder.put(NORTH, ImmutableList.copyOf(cardinalCardMultimap.get(Cardinal.NORTH)));
-        else
-            builder.put(NORTH, ImmutableList.<Card>of());
-
-        if (cardinalCardMultimap.containsKey(Cardinal.EAST))
-            builder.put(EAST, ImmutableList.copyOf(cardinalCardMultimap.get(Cardinal.EAST)));
+        if (handCardMultimap.containsKey(Hand.EAST))
+            builder.put(EAST, ImmutableList.copyOf(handCardMultimap.get(Hand.EAST)));
         else
             builder.put(EAST, ImmutableList.<Card>of());
 
-        if (cardinalCardMultimap.containsKey(Cardinal.SOUTH))
-            builder.put(SOUTH, ImmutableList.copyOf(cardinalCardMultimap.get(Cardinal.SOUTH)));
+        if (handCardMultimap.containsKey(Hand.SOUTH))
+            builder.put(SOUTH, ImmutableList.copyOf(handCardMultimap.get(Hand.SOUTH)));
         else
             builder.put(SOUTH, ImmutableList.<Card>of());
 
-        if (cardinalCardMultimap.containsKey(Cardinal.WEST))
-            builder.put(WEST, ImmutableList.copyOf(cardinalCardMultimap.get(Cardinal.WEST)));
+        if (handCardMultimap.containsKey(Hand.WEST))
+            builder.put(WEST, ImmutableList.copyOf(handCardMultimap.get(Hand.WEST)));
         else
             builder.put(WEST, ImmutableList.<Card>of());
 

@@ -21,8 +21,8 @@ package com.preferanser.webtest.steps;
 
 import com.google.common.base.Optional;
 import com.preferanser.shared.domain.Card;
-import com.preferanser.shared.domain.Cardinal;
 import com.preferanser.shared.domain.Contract;
+import com.preferanser.shared.domain.Hand;
 import com.preferanser.shared.domain.TableLocation;
 import com.preferanser.webtest.pages.TablePage;
 import net.thucydides.core.annotations.Step;
@@ -109,9 +109,9 @@ public class EndUserSteps extends ScenarioSteps {
     }
 
     @Step
-    public EndUserSteps specifiesContract(Cardinal cardinal, Contract contract) {
+    public EndUserSteps specifiesContract(Hand hand, Contract contract) {
         TablePage tablePage = getTablePage();
-        tablePage.getContractLink(cardinal).click();
+        tablePage.getContractLink(hand).click();
         tablePage.getContractButton(contract).click();
         return this;
     }
@@ -124,16 +124,16 @@ public class EndUserSteps extends ScenarioSteps {
     }
 
     @Step
-    public EndUserSteps canSeeContract(Cardinal cardinal, String contractName) {
+    public EndUserSteps canSeeContract(Hand hand, String contractName) {
         TablePage tablePage = getTablePage();
-        assertThat(tablePage.getContractLabel(cardinal).getTextValue(), containsString(" — " + contractName));
+        assertThat(tablePage.getContractLabel(hand).getTextValue(), containsString(" — " + contractName));
         return this;
     }
 
     @Step
-    public EndUserSteps canSeeNoContract(Cardinal cardinal) {
+    public EndUserSteps canSeeNoContract(Hand hand) {
         TablePage tablePage = getTablePage();
-        assertThat(tablePage.getContractLabel(cardinal).getTextValue(), equalTo(""));
+        assertThat(tablePage.getContractLabel(hand).getTextValue(), equalTo(""));
         return this;
     }
 

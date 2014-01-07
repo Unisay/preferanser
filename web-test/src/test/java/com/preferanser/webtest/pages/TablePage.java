@@ -21,8 +21,8 @@ package com.preferanser.webtest.pages;
 
 import com.google.common.base.Optional;
 import com.preferanser.shared.domain.Card;
-import com.preferanser.shared.domain.Cardinal;
 import com.preferanser.shared.domain.Contract;
+import com.preferanser.shared.domain.Hand;
 import com.preferanser.shared.domain.TableLocation;
 import net.thucydides.core.annotations.At;
 import net.thucydides.core.pages.WebElementFacade;
@@ -91,19 +91,19 @@ public class TablePage extends GwtPage {
         return gwtElementById("reset");
     }
 
-    public WebElementFacade getContractLink(Cardinal cardinal) {
-        return element(By.xpath(format("//div[@id='gwt-debug-contract-link-%s']//a", cardinal.name())));
+    public WebElementFacade getContractLink(Hand hand) {
+        return element(By.xpath(format("//div[@id='gwt-debug-contract-link-%s']//a", hand.name())));
     }
 
-    public WebElementFacade getContractLabel(Cardinal cardinal) {
-        return element(By.xpath(format("//div[@id='gwt-debug-contract-link-%s']/div[@id='gwt-debug-contract-label']", cardinal.name())));
+    public WebElementFacade getContractLabel(Hand hand) {
+        return element(By.xpath(format("//div[@id='gwt-debug-contract-link-%s']/div[@id='gwt-debug-contract-label']", hand.name())));
     }
 
     public WebElementFacade getContractButton(Contract contract) {
         return element(By.id(format("gwt-debug-%s", contract.name())));
     }
 
-    public WebElementFacade getCardinalTurnPointer(Cardinal cardinal) {
-        return element(By.id(format("gwt-debug-turn-pointer-%s", cardinal.name())));
+    public WebElementFacade getHandTurnPointer(Hand hand) {
+        return element(By.id(format("gwt-debug-turn-pointer-%s", hand.name())));
     }
 }

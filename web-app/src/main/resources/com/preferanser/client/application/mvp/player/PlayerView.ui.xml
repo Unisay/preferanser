@@ -23,11 +23,6 @@
     <ui:with field="constants" type="com.preferanser.client.application.i18n.PreferanserConstants"/>
 
     <ui:style src="../table.css" field="tableStyle" type="com.preferanser.client.application.mvp.editor.style.TableStyle"/>
-    <ui:style>
-        .dashSeparator {
-            margin: 0 .5em;
-        }
-    </ui:style>
     <p:TablePanel ui:field="table">
 
         <p:header>
@@ -35,13 +30,6 @@
                 <g:Button ui:field="editButton" text="{constants.edit}" debugId="edit"/>
             </p:Widgets>
         </p:header>
-
-        <p:northheader>
-            <p:Widgets>
-                <g:Label ui:field="titleNorth" text="{constants.NORTH}" addStyleNames="{tableStyle.titleNorth}"/>
-                <g:Label ui:field="trickCountNorth" addStyleNames="{tableStyle.trickCountNorth}"/>
-            </p:Widgets>
-        </p:northheader>
 
         <p:westheader>
             <p:Widgets>
@@ -64,9 +52,14 @@
             </p:Widgets>
         </p:eastheader>
 
+        <p:centerheader>
+            <p:Widgets>
+                <g:Label ui:field="trickCountWidow" addStyleNames="{tableStyle.trickCountWidow}"/>
+            </p:Widgets>
+        </p:centerheader>
+
         <p:center>
             <p:Widgets>
-                <p:TurnPointer ui:field="turnPointerNorth" turn="NORTH"/>
                 <p:TurnPointer ui:field="turnPointerEast" turn="EAST"/>
                 <p:TurnPointer ui:field="turnPointerSouth" turn="SOUTH"/>
                 <p:TurnPointer ui:field="turnPointerWest" turn="WEST"/>

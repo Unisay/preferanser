@@ -20,33 +20,33 @@
 package com.preferanser.shared.domain.exception;
 
 import com.preferanser.shared.domain.Card;
-import com.preferanser.shared.domain.Cardinal;
+import com.preferanser.shared.domain.Hand;
 
 import java.util.Map;
 
 public class DuplicateGameTurnException extends GameException {
 
-    private Map<Card, Cardinal> centerCardCardinalMap;
-    private Cardinal fromCardinal;
+    private Map<Card, Hand> centerCardHandMap;
+    private Hand fromHand;
 
     @SuppressWarnings("unused") // required for serialization
     public DuplicateGameTurnException() {
     }
 
-    public DuplicateGameTurnException(Map<Card, Cardinal> centerCardCardinalMap, Cardinal fromCardinal) {
-        this.centerCardCardinalMap = centerCardCardinalMap;
-        this.fromCardinal = fromCardinal;
+    public DuplicateGameTurnException(Map<Card, Hand> centerCardHandMap, Hand fromHand) {
+        this.centerCardHandMap = centerCardHandMap;
+        this.fromHand = fromHand;
     }
 
     @Override public String getMessage() {
-        return getFromCardinal() + " made its turn already: " + getCenterCardCardinalMap();
+        return getFromHand() + " made its turn already: " + getCenterCardHandMap();
     }
 
-    public Map<Card, Cardinal> getCenterCardCardinalMap() {
-        return centerCardCardinalMap;
+    public Map<Card, Hand> getCenterCardHandMap() {
+        return centerCardHandMap;
     }
 
-    public Cardinal getFromCardinal() {
-        return fromCardinal;
+    public Hand getFromHand() {
+        return fromHand;
     }
 }

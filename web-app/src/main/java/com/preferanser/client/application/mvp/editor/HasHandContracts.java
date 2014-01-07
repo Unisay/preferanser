@@ -20,11 +20,11 @@
 package com.preferanser.client.application.mvp.editor;
 
 
-import com.preferanser.shared.domain.Cardinal;
 import com.preferanser.shared.domain.Contract;
+import com.preferanser.shared.domain.Hand;
 
-public interface HasCardinalContracts {
+public interface HasHandContracts {
 
-    boolean setCardinalContract(Cardinal cardinal, Contract contract);
+    boolean setHandContract(Hand hand, Contract contract);
 
 }

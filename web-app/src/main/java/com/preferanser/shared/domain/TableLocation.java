@@ -24,10 +24,10 @@ package com.preferanser.shared.domain;
  */
 public enum TableLocation {
 
-    NORTH, EAST, SOUTH, WEST, CENTER;
+    EAST, SOUTH, WEST, CENTER;
 
-    public static TableLocation valueOf(Cardinal cardinal) {
-        return TableLocation.valueOf(cardinal.name());
+    public static TableLocation valueOf(Hand hand) {
+        return TableLocation.valueOf(hand.name());
     }
 
 }

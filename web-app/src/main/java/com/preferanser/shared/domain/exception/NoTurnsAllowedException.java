@@ -20,27 +20,27 @@
 package com.preferanser.shared.domain.exception;
 
 import com.preferanser.shared.domain.Card;
-import com.preferanser.shared.domain.Cardinal;
+import com.preferanser.shared.domain.Hand;
 
 import java.util.Map;
 
 public class NoTurnsAllowedException extends GameException {
 
-    private Map<Card, Cardinal> centerCardCardinalMap;
+    private Map<Card, Hand> centerCardHandMap;
 
     @SuppressWarnings("unused") // required for serialization
     public NoTurnsAllowedException() {
     }
 
-    public NoTurnsAllowedException(Map<Card, Cardinal> centerCardCardinalMap) {
-        this.centerCardCardinalMap = centerCardCardinalMap;
+    public NoTurnsAllowedException(Map<Card, Hand> centerCardHandMap) {
+        this.centerCardHandMap = centerCardHandMap;
     }
 
     @Override public String getMessage() {
-        return "No more turns allowed: " + centerCardCardinalMap;
+        return "No more turns allowed: " + centerCardHandMap;
     }
 
-    public Map<Card, Cardinal> getCenterCardCardinalMap() {
-        return centerCardCardinalMap;
+    public Map<Card, Hand> getCenterCardHandMap() {
+        return centerCardHandMap;
     }
 }

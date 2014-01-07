@@ -40,74 +40,67 @@ import static com.preferanser.shared.domain.TableLocation.CENTER;
 
 public class GameBuilder {
 
-    private static final int NUM_OF_CARDS_PER_CARDINAL = 10;
+    private static final int NUM_OF_CARDS_PER_HAND = 10;
     private static final int NUM_OF_CONTRACTS = 3;
     private Widow widow;
 
     private Players players;
 
-    private Cardinal firstTurn;
+    private Hand firstTurn;
 
-    private Map<Cardinal, Contract> cardinalContracts
-        = Maps.newHashMapWithExpectedSize(Cardinal.values().length);
+    private Map<Hand, Contract> handContracts
+        = Maps.newHashMapWithExpectedSize(Hand.PLAYING_HANDS.size());
 
-    private LinkedHashMultimap<Cardinal, Card> cardinalCardMultimap
+    private LinkedHashMultimap<Hand, Card> handCardMultimap
         = LinkedHashMultimap.create(TableLocation.values().length, Card.values().length);
 
-    private Map<Card, Cardinal> centerCardCardinalMap
+    private Map<Card, Hand> centerCardHandMap
         = Maps.newLinkedHashMap(); // order is important
 
     public GameBuilder setDeal(Deal deal) {
         firstTurn = deal.getFirstTurn();
         players = deal.getPlayers();
         widow = deal.getWidow();
-        setCardinalDealContracts(deal);
-        setCardinalDealCards(deal);
+        setHandDealContracts(deal);
+        setHandDealCards(deal);
         setCenterDealCards(deal);
         return this;
     }
 
-    private void setCardinalDealContracts(Deal deal) {
-        cardinalContracts.clear();
-
-        if (deal.getNorthContract() != null)
-            cardinalContracts.put(Cardinal.NORTH, deal.getNorthContract());
+    private void setHandDealContracts(Deal deal) {
+        handContracts.clear();
 
         if (deal.getEastContract() != null)
-            cardinalContracts.put(Cardinal.EAST, deal.getEastContract());
+            handContracts.put(Hand.EAST, deal.getEastContract());
 
         if (deal.getSouthContract() != null)
-            cardinalContracts.put(Cardinal.SOUTH, deal.getSouthContract());
+            handContracts.put(Hand.SOUTH, deal.getSouthContract());
 
         if (deal.getWestContract() != null)
-            cardinalContracts.put(Cardinal.WEST, deal.getWestContract());
+            handContracts.put(Hand.WEST, deal.getWestContract());
     }
 
-    private void setCardinalDealCards(Deal deal) {
+    private void setHandDealCards(Deal deal) {
         clearCards();
-        putCards(Cardinal.NORTH, deal.getNorthCards());
-        putCards(Cardinal.EAST, deal.getEastCards());
-        putCards(Cardinal.SOUTH, deal.getSouthCards());
-        putCards(Cardinal.WEST, deal.getWestCards());
+        putCards(Hand.EAST, deal.getEastCards());
+        putCards(Hand.SOUTH, deal.getSouthCards());
+        putCards(Hand.WEST, deal.getWestCards());
     }
 
     private void setCenterDealCards(Deal deal) {
-        centerCardCardinalMap.clear();
-
-        if (deal.getCenterNorthCard() != null)
-            centerCardCardinalMap.put(deal.getCenterNorthCard(), Cardinal.NORTH);
+        centerCardHandMap.clear();
 
         if (deal.getCenterEastCard() != null)
-            centerCardCardinalMap.put(deal.getCenterEastCard(), Cardinal.EAST);
+            centerCardHandMap.put(deal.getCenterEastCard(), Hand.EAST);
 
         if (deal.getCenterSouthCard() != null)
-            centerCardCardinalMap.put(deal.getCenterSouthCard(), Cardinal.SOUTH);
+            centerCardHandMap.put(deal.getCenterSouthCard(), Hand.SOUTH);
 
         if (deal.getCenterWestCard() != null)
-            centerCardCardinalMap.put(deal.getCenterWestCard(), Cardinal.WEST);
+            centerCardHandMap.put(deal.getCenterWestCard(), Hand.WEST);
     }
 
-    public GameBuilder setFirstTurn(Cardinal firstTurn) {
+    public GameBuilder setFirstTurn(Hand firstTurn) {
         this.firstTurn = firstTurn;
         return this;
     }
@@ -128,34 +121,34 @@ public class GameBuilder {
         return this;
     }
 
-    public GameBuilder setCardinalContract(Cardinal cardinal, Contract contract) {
-        Preconditions.checkNotNull(cardinal);
+    public GameBuilder setHandContract(Hand hand, Contract contract) {
+        Preconditions.checkNotNull(hand);
         Preconditions.checkNotNull(contract);
-        cardinalContracts.put(cardinal, contract);
+        handContracts.put(hand, contract);
         return this;
     }
 
-    public GameBuilder putCards(Cardinal cardinal, Collection<Card> cards) {
-        cardinalCardMultimap.putAll(cardinal, cards);
+    public GameBuilder putCards(Hand hand, Collection<Card> cards) {
+        handCardMultimap.putAll(hand, cards);
         return this;
     }
 
-    public GameBuilder putCards(Cardinal cardinal, Card... cards) {
-        putCards(cardinal, newArrayList(cards));
+    public GameBuilder putCards(Hand hand, Card... cards) {
+        putCards(hand, newArrayList(cards));
         return this;
     }
 
     public GameBuilder clearCards(TableLocation... tableLocations) {
         if (tableLocations.length == 0) {
-            cardinalCardMultimap.clear();
+            handCardMultimap.clear();
         } else {
             for (TableLocation tableLocation : tableLocations) {
                 switch (tableLocation) {
                     case CENTER:
-                        centerCardCardinalMap.clear();
+                        centerCardHandMap.clear();
                         break;
                     default:
-                        cardinalCardMultimap.get(Cardinal.valueOf(tableLocation)).clear();
+                        handCardMultimap.get(Hand.valueOf(tableLocation)).clear();
                 }
             }
         }
@@ -164,24 +157,24 @@ public class GameBuilder {
 
     public boolean moveCard(Card card, TableLocation oldLocation, TableLocation newLocation) throws DuplicateGameTurnException {
         if (CENTER == oldLocation) { // moving card out of center
-            checkArgument(centerCardCardinalMap.containsKey(card), "There is no %s in TableLocation.CENTER", card);
-            centerCardCardinalMap.remove(card);
-            cardinalCardMultimap.get(Cardinal.valueOf(newLocation)).add(card);
+            checkArgument(centerCardHandMap.containsKey(card), "There is no %s in TableLocation.CENTER", card);
+            centerCardHandMap.remove(card);
+            handCardMultimap.get(Hand.valueOf(newLocation)).add(card);
         } else if (CENTER == newLocation) { // moving card to center
-            if (centerCardCardinalMap.size() == players.getNumPlayers()) {
+            if (centerCardHandMap.size() == players.getNumPlayers()) {
                 return false;
             }
-            Cardinal oldCardinal = Cardinal.valueOf(oldLocation);
-            if (centerCardCardinalMap.containsValue(oldCardinal))
-                throw new DuplicateGameTurnException(centerCardCardinalMap, oldCardinal);
-            cardinalCardMultimap.get(oldCardinal).remove(card);
-            centerCardCardinalMap.put(card, oldCardinal);
+            Hand oldHand = Hand.valueOf(oldLocation);
+            if (centerCardHandMap.containsValue(oldHand))
+                throw new DuplicateGameTurnException(centerCardHandMap, oldHand);
+            handCardMultimap.get(oldHand).remove(card);
+            centerCardHandMap.put(card, oldHand);
         } else {
-            Cardinal oldCardinal = Cardinal.valueOf(oldLocation);
-            Cardinal newCardinal = Cardinal.valueOf(newLocation);
-            checkArgument(cardinalCardMultimap.get(oldCardinal).contains(card), "There is no %s in Cardinal.%s", card, oldCardinal);
-            cardinalCardMultimap.get(oldCardinal).remove(card);
-            cardinalCardMultimap.get(newCardinal).add(card);
+            Hand oldHand = Hand.valueOf(oldLocation);
+            Hand newHand = Hand.valueOf(newLocation);
+            checkArgument(handCardMultimap.get(oldHand).contains(card), "There is no %s in Hand.%s", card, oldHand);
+            handCardMultimap.get(oldHand).remove(card);
+            handCardMultimap.get(newHand).add(card);
         }
         return true;
     }
@@ -208,9 +201,9 @@ public class GameBuilder {
         if (!duplicateCards.isEmpty())
             errors.add(new HasDuplicateCardsValidationError(duplicateCards));
 
-        Map<Cardinal, Integer> wrongCardinals = wrongNumberOfCardsPerCardinal();
-        if (!wrongCardinals.isEmpty())
-            errors.add(new WrongNumCardsPerCardinalValidationError(wrongCardinals));
+        Map<Hand, Integer> wrongHands = wrongNumberOfCardsPerHand();
+        if (!wrongHands.isEmpty())
+            errors.add(new WrongNumCardsPerHandValidationError(wrongHands));
 
         if (errors.isEmpty())
             return Optional.absent();
@@ -220,7 +213,7 @@ public class GameBuilder {
 
     private boolean wrongNumberOfContracts() {
         int count = 0;
-        for (Map.Entry<Cardinal, Contract> entry : cardinalContracts.entrySet()) {
+        for (Map.Entry<Hand, Contract> entry : handContracts.entrySet()) {
             if (entry.getValue() != null)
                 count++;
         }
@@ -231,14 +224,14 @@ public class GameBuilder {
         return players != null
             && players == Players.THREE
             && firstTurn != null
-            && cardinalContracts.get(firstTurn) == null;
+            && handContracts.get(firstTurn) == null;
     }
 
     private boolean hasConflictingContracts() {
         int numOfContracts = 0;
         int numOfPlayingContracts = 0;
         int numOfPasses = 0;
-        for (Contract contract : cardinalContracts.values()) {
+        for (Contract contract : handContracts.values()) {
             if (contract != null) {
                 numOfContracts++;
                 if (contract.isPlaying())
@@ -253,7 +246,7 @@ public class GameBuilder {
     private Set<Card> findDuplicateCards() {
         Set<Card> cardSet = Sets.newHashSet();
         Set<Card> duplicateCardSet = Sets.newHashSet();
-        for (Card card : cardinalCardMultimap.values()) {
+        for (Card card : handCardMultimap.values()) {
             if (!cardSet.add(card)) {
                 duplicateCardSet.add(card);
             }
@@ -261,17 +254,17 @@ public class GameBuilder {
         return duplicateCardSet;
     }
 
-    private Map<Cardinal, Integer> wrongNumberOfCardsPerCardinal() {
-        Map<Cardinal, Integer> wrongCardinals = Maps.newHashMap();
-        for (Cardinal cardinal : Cardinal.values()) {
-            Contract contract = cardinalContracts.get(cardinal);
+    private Map<Hand, Integer> wrongNumberOfCardsPerHand() {
+        Map<Hand, Integer> wrongHands = Maps.newHashMap();
+        for (Hand hand : Hand.PLAYING_HANDS) {
+            Contract contract = handContracts.get(hand);
             if (contract != null) {
-                int numberOfCards = cardinalCardMultimap.get(cardinal).size();
-                if (numberOfCards != NUM_OF_CARDS_PER_CARDINAL)
-                    wrongCardinals.put(cardinal, numberOfCards);
+                int numberOfCards = handCardMultimap.get(hand).size();
+                if (numberOfCards != NUM_OF_CARDS_PER_HAND)
+                    wrongHands.put(hand, numberOfCards);
             }
         }
-        return wrongCardinals;
+        return wrongHands;
     }
 
     public Game build() throws GameBuilderException {
@@ -279,15 +272,15 @@ public class GameBuilder {
         if (validationErrors.isPresent())
             throw new GameBuilderException(validationErrors.get());
 
-        EnumRotator<Cardinal> cardinalRotator = new EnumRotator<Cardinal>(Cardinal.values(), firstTurn);
-        cardinalRotator.setSkipValues(getWidowCardinal());
+        EnumRotator<Hand> handRotator = new EnumRotator<Hand>(Hand.values(), firstTurn);
+        handRotator.setSkipValues(Hand.WIDOW);
 
         return new Game(
             players,
-            cardinalContracts,
-            cardinalRotator,
-            cardinalCardMultimap,
-            centerCardCardinalMap
+            handContracts,
+            handRotator,
+            handCardMultimap,
+            centerCardHandMap
         );
     }
 
@@ -299,50 +292,45 @@ public class GameBuilder {
         deal.setPlayers(players);
         deal.setWidow(widow);
         initContracts(deal);
-        initCardinalCards(deal);
+        initHandCards(deal);
         initCenterCards(deal);
         return deal;
     }
 
     private void initCenterCards(Deal dto) {
-        Map<Card, Cardinal> centerCards = getCenterCards();
-        for (Map.Entry<Card, Cardinal> cardCardinalEntry : centerCards.entrySet()) {
-            switch (cardCardinalEntry.getValue()) {
-                case NORTH:
-                    dto.setCenterNorthCard(cardCardinalEntry.getKey());
-                    break;
+        Map<Card, Hand> centerCards = getCenterCards();
+        for (Map.Entry<Card, Hand> cardHandEntry : centerCards.entrySet()) {
+            switch (cardHandEntry.getValue()) {
                 case EAST:
-                    dto.setCenterEastCard(cardCardinalEntry.getKey());
+                    dto.setCenterEastCard(cardHandEntry.getKey());
                     break;
                 case SOUTH:
-                    dto.setCenterSouthCard(cardCardinalEntry.getKey());
+                    dto.setCenterSouthCard(cardHandEntry.getKey());
                     break;
                 case WEST:
-                    dto.setCenterWestCard(cardCardinalEntry.getKey());
+                    dto.setCenterWestCard(cardHandEntry.getKey());
                     break;
                 default:
-                    throw new IllegalStateException("Invalid Cardinal constant: " + cardCardinalEntry.getValue());
+                    throw new IllegalStateException("Invalid Hand constant: " + cardHandEntry.getValue());
             }
         }
     }
 
-    private void initCardinalCards(Deal dto) {
+    private void initHandCards(Deal dto) {
         Map<TableLocation, Collection<Card>> tableCards = getTableCards();
-        dto.setNorthCards(getCardinalCards(tableCards, TableLocation.NORTH));
-        dto.setEastCards(getCardinalCards(tableCards, TableLocation.EAST));
-        dto.setSouthCards(getCardinalCards(tableCards, TableLocation.SOUTH));
-        dto.setWestCards(getCardinalCards(tableCards, TableLocation.WEST));
+        dto.setEastCards(getHandCards(tableCards, TableLocation.EAST));
+        dto.setSouthCards(getHandCards(tableCards, TableLocation.SOUTH));
+        dto.setWestCards(getHandCards(tableCards, TableLocation.WEST));
     }
 
     private void initContracts(Deal dto) {
-        Map<Cardinal, Contract> cardinalContracts = getCardinalContracts();
-        dto.setNorthContract(cardinalContracts.get(Cardinal.NORTH));
-        dto.setEastContract(cardinalContracts.get(Cardinal.EAST));
-        dto.setSouthContract(cardinalContracts.get(Cardinal.SOUTH));
-        dto.setWestContract(cardinalContracts.get(Cardinal.WEST));
+        Map<Hand, Contract> handContracts = getHandContracts();
+        dto.setEastContract(handContracts.get(Hand.EAST));
+        dto.setSouthContract(handContracts.get(Hand.SOUTH));
+        dto.setWestContract(handContracts.get(Hand.WEST));
     }
 
-    private List<Card> getCardinalCards(Map<TableLocation, Collection<Card>> tableCards, TableLocation location) {
+    private List<Card> getHandCards(Map<TableLocation, Collection<Card>> tableCards, TableLocation location) {
         Collection<Card> cardsCollection = tableCards.get(location);
         List<Card> cards = newArrayList();
         if (cardsCollection == null) {
@@ -353,28 +341,20 @@ public class GameBuilder {
         return cards;
     }
 
-    private Cardinal getWidowCardinal() {
-        for (Cardinal cardinal : Cardinal.values())
-            if (!cardinalContracts.containsKey(cardinal))
-                return cardinal;
-
-        throw new IllegalStateException("Failed to determine widow cardinal");
-    }
-
-    public Cardinal getFirstTurn() {
+    public Hand getFirstTurn() {
         return firstTurn;
     }
 
-    public Map<Cardinal, Contract> getCardinalContracts() {
-        return cardinalContracts;
+    public Map<Hand, Contract> getHandContracts() {
+        return handContracts;
     }
 
     public Map<TableLocation, Collection<Card>> getTableCards() {
-        return GameUtils.copyDefensive(cardinalCardMultimap);
+        return GameUtils.copyDefensive(handCardMultimap);
     }
 
-    public Map<Card, Cardinal> getCenterCards() {
-        return new LinkedHashMap<Card, Cardinal>(centerCardCardinalMap);
+    public Map<Card, Hand> getCenterCards() {
+        return new LinkedHashMap<Card, Hand>(centerCardHandMap);
     }
 
 

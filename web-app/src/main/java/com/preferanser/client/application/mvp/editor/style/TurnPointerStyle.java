@@ -23,8 +23,6 @@ public interface TurnPointerStyle {
 
     String turnPointer();
 
-    String turnPointerNorth();
-
     String turnPointerEast();
 
     String turnPointerSouth();

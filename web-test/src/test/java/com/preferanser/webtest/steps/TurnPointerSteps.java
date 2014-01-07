@@ -19,7 +19,7 @@
 
 package com.preferanser.webtest.steps;
 
-import com.preferanser.shared.domain.Cardinal;
+import com.preferanser.shared.domain.Hand;
 import com.preferanser.webtest.pages.TablePage;
 import net.thucydides.core.annotations.Step;
 import net.thucydides.core.steps.ScenarioSteps;
@@ -43,30 +43,30 @@ public class TurnPointerSteps extends ScenarioSteps {
     }
 
     @Step
-    public TurnPointerSteps activatesTurnPointer(Cardinal cardinal) {
-        getTablePage().getCardinalTurnPointer(cardinal).click();
+    public TurnPointerSteps activatesTurnPointer(Hand hand) {
+        getTablePage().getHandTurnPointer(hand).click();
         return this;
     }
 
     @Step
-    public TurnPointerSteps canSeeOnlyTurnPointerActive(Cardinal cardinal) {
+    public TurnPointerSteps canSeeOnlyTurnPointerActive(Hand hand) {
         TablePage page = getTablePage();
         Matcher<String> isActive = containsString("turnPointerActive");
-        for (Cardinal currentCardinal : Cardinal.values()) {
-            Matcher<String> matcher = currentCardinal == cardinal ? isActive : not(isActive);
-            assertThat(page.getCardinalTurnPointer(currentCardinal).getAttribute("class"), matcher);
+        for (Hand currentHand : Hand.PLAYING_HANDS) {
+            Matcher<String> matcher = currentHand == hand ? isActive : not(isActive);
+            assertThat(page.getHandTurnPointer(currentHand).getAttribute("class"), matcher);
         }
         return this;
     }
 
     @Step
-    public TurnPointerSteps canSeeOnlyTurnPointer(Cardinal cardinal) {
+    public TurnPointerSteps canSeeOnlyTurnPointer(Hand hand) {
         TablePage page = getTablePage();
         Matcher<String> isActive = containsString("turnPointerActive");
         Matcher<String> notDisplayed = containsString("not-displayed");
-        for (Cardinal currentCardinal : Cardinal.values()) {
-            Matcher<String> matcher = currentCardinal == cardinal ? isActive : notDisplayed;
-            assertThat(page.getCardinalTurnPointer(currentCardinal).getAttribute("class"), matcher);
+        for (Hand currentHand : Hand.PLAYING_HANDS) {
+            Matcher<String> matcher = currentHand == hand ? isActive : notDisplayed;
+            assertThat(page.getHandTurnPointer(currentHand).getAttribute("class"), matcher);
         }
         return this;
     }

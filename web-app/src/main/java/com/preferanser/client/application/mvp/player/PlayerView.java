@@ -21,20 +21,25 @@ package com.preferanser.client.application.mvp.player;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.DoubleClickEvent;
+import com.google.gwt.event.dom.client.DoubleClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.preferanser.client.application.i18n.I18nHelper;
 import com.preferanser.client.application.i18n.PreferanserConstants;
 import com.preferanser.client.application.mvp.BaseTableView;
+import com.preferanser.client.application.widgets.CardWidget;
 import com.preferanser.client.application.widgets.TurnPointer;
 import com.preferanser.client.theme.greencloth.client.com.preferanser.client.application.PreferanserResources;
-import com.preferanser.shared.domain.Cardinal;
+import com.preferanser.shared.domain.Card;
 import com.preferanser.shared.domain.Contract;
+import com.preferanser.shared.domain.Hand;
 import com.preferanser.shared.domain.TableLocation;
 
 import java.util.logging.Logger;
@@ -46,6 +51,10 @@ public class PlayerView extends BaseTableView<PlayerUiHandlers> implements Playe
     public interface Binder extends UiBinder<Widget, PlayerView> {}
 
     @UiField Button editButton;
+    @UiField Label trickCountWidow;
+    @UiField Label trickCountEast;
+    @UiField Label trickCountSouth;
+    @UiField Label trickCountWest;
 
     @Inject
     public PlayerView(Binder uiBinder, PreferanserResources resources, PreferanserConstants constants, I18nHelper i18nHelper) {
@@ -56,12 +65,14 @@ public class PlayerView extends BaseTableView<PlayerUiHandlers> implements Playe
 
     @Override protected void init() {
         super.init();
+        populateHandTrickCounts();
         installCenterPanelClickHandler();
     }
 
+
     @Override
-    protected void displayCardinalTurnPointer(Cardinal cardinal, TurnPointer turnPointer, Cardinal turn) {
-        super.displayCardinalTurnPointer(cardinal, turnPointer, turn);
+    protected void displayHandTurnPointer(Hand hand, TurnPointer turnPointer, Hand turn) {
+        super.displayHandTurnPointer(hand, turnPointer, turn);
         if (turnPointer.isActive())
             turnPointer.removeStyleName(tableStyle.notDisplayed());
         else
@@ -80,25 +91,37 @@ public class PlayerView extends BaseTableView<PlayerUiHandlers> implements Playe
         });
     }
 
-    @Override protected void displayCardinalContract(Cardinal cardinal, Contract contract) {
-        Label label = getCardinalContractTextHolder(cardinal);
-        label.setText(constants.getString(cardinal.name()) + " – " + i18nHelper.getContractName(contract).toLowerCase());
+    @Override protected CardWidget createCardWidget(final Card card) {
+        final CardWidget cardWidget = super.createCardWidget(card);
+        cardWidget.addDoubleClickHandler(new DoubleClickHandler() {
+            @Override public void onDoubleClick(DoubleClickEvent event) {
+                FlowPanel parent = (FlowPanel) cardWidget.getParent();
+                TableLocation oldLocation = table.locationPanelMap.inverse().get(parent);
+                TableLocation newLocation = TableLocation.CENTER;
+                getLog().finer("Card location change: " + card + ": " + oldLocation + " -> " + newLocation);
+                getUiHandlers().changeCardLocation(card, oldLocation, newLocation);
+            }
+        });
+        return cardWidget;
+    }
+
+    @Override protected void displayHandContract(Hand hand, Contract contract) {
+        Label label = getHandContractTextHolder(hand);
+        label.setText(constants.getString(hand.name()) + " – " + i18nHelper.getContractName(contract).toLowerCase());
         label.setVisible(true);
     }
 
-    @Override protected void displayNoContract(Cardinal cardinal) {
-        getCardinalContractTextHolder(cardinal).setVisible(false);
+    @Override protected void displayNoContract(Hand hand) {
+        getHandContractTextHolder(hand).setVisible(false);
     }
 
     @Override
-    public void hideCardinal(Cardinal cardinal) {
-        table.hideLocation(TableLocation.valueOf(cardinal));
+    public void hideHand(Hand hand) {
+        table.hideLocation(TableLocation.valueOf(hand));
     }
 
-    private Label getCardinalContractTextHolder(Cardinal cardinal) {
-        switch (cardinal) {
-            case NORTH:
-                return titleNorth;
+    private Label getHandContractTextHolder(Hand hand) {
+        switch (hand) {
             case EAST:
                 return titleEast;
             case SOUTH:
@@ -106,8 +129,15 @@ public class PlayerView extends BaseTableView<PlayerUiHandlers> implements Playe
             case WEST:
                 return titleWest;
             default:
-                throw new IllegalStateException("No contract label for the cardinal: " + cardinal);
+                throw new IllegalStateException("No contract label for the hand: " + hand);
         }
+    }
+
+    private void populateHandTrickCounts() {
+        handTricksCountMap.put(Hand.WIDOW, trickCountWidow);
+        handTricksCountMap.put(Hand.EAST, trickCountEast);
+        handTricksCountMap.put(Hand.SOUTH, trickCountSouth);
+        handTricksCountMap.put(Hand.WEST, trickCountWest);
     }
 
     @Override protected Logger getLog() {

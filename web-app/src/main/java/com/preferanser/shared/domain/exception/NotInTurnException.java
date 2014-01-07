@@ -19,31 +19,31 @@
 
 package com.preferanser.shared.domain.exception;
 
-import com.preferanser.shared.domain.Cardinal;
+import com.preferanser.shared.domain.Hand;
 
 public class NotInTurnException extends GameException {
 
-    private Cardinal current;
-    private Cardinal fromCardinal;
+    private Hand current;
+    private Hand fromHand;
 
     @SuppressWarnings("unused") // required for serialization
     public NotInTurnException() {
     }
 
-    public NotInTurnException(Cardinal current, Cardinal fromCardinal) {
+    public NotInTurnException(Hand current, Hand fromHand) {
         this.current = current;
-        this.fromCardinal = fromCardinal;
+        this.fromHand = fromHand;
     }
 
     @Override public String getMessage() {
-        return fromCardinal + " attempted to make turn while current turn does " + current;
+        return fromHand + " attempted to make turn while current turn does " + current;
     }
 
-    public Cardinal getCurrentCardinal() {
+    public Hand getCurrentHand() {
         return current;
     }
 
-    public Cardinal getFromCardinal() {
-        return fromCardinal;
+    public Hand getFromHand() {
+        return fromHand;
     }
 }

@@ -27,7 +27,7 @@ import com.preferanser.client.application.mvp.editor.EditorPresenter;
 import com.preferanser.client.application.mvp.editor.dialog.contract.ContractDialogPresenter;
 import com.preferanser.client.application.mvp.editor.dialog.open.OpenDialogPresenter;
 import com.preferanser.client.application.mvp.editor.dialog.validation.ValidationDialogPresenter;
-import com.preferanser.shared.domain.Cardinal;
+import com.preferanser.shared.domain.Hand;
 import com.preferanser.shared.domain.entity.Deal;
 import com.preferanser.shared.domain.exception.validation.GameBuilderValidationError;
 
@@ -55,10 +55,10 @@ public class EditorDialogs {
         this.validationDialog = validationDialog;
     }
 
-    public void showContractDialog(Cardinal cardinal) {
+    public void showContractDialog(Hand hand) {
         EditorPresenter editorPresenter = editorPresenterProvider.get();
-        contractDialog.setCardinal(cardinal);
-        contractDialog.setHasCardinalContracts(editorPresenter);
+        contractDialog.setHand(hand);
+        contractDialog.setHasHandContracts(editorPresenter);
         editorPresenter.addToPopupSlot(contractDialog);
     }
 

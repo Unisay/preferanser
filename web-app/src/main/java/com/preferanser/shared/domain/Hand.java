@@ -17,34 +17,29 @@
  *     along with this program.  If not, see [http://www.gnu.org/licenses/].
  */
 
-package com.preferanser.shared.domain.exception;
+package com.preferanser.shared.domain;
 
-import com.preferanser.shared.domain.Card;
-import com.preferanser.shared.domain.Cardinal;
 
-public class NoSuchCardinalCardException extends GameException {
+import com.google.common.collect.ImmutableList;
 
-    private Cardinal cardinal;
-    private Card card;
+public enum Hand {
 
-    @SuppressWarnings("unused") // required for serialization
-    public NoSuchCardinalCardException() {
+    WIDOW, EAST, SOUTH, WEST;
+
+    public static ImmutableList<Hand> PLAYING_HANDS = ImmutableList.of(EAST, SOUTH, WEST);
+
+    public static Hand valueOf(TableLocation tableLocation) {
+        switch (tableLocation) {
+            case EAST:
+                return Hand.EAST;
+            case SOUTH:
+                return Hand.SOUTH;
+            case WEST:
+                return Hand.WEST;
+            default:
+                throw new IllegalArgumentException("TableLocation " + tableLocation + " doesn't have a corresponding " +
+                        "Hand!");
+        }
     }
 
-    public NoSuchCardinalCardException(Cardinal cardinal, Card card) {
-        this.cardinal = cardinal;
-        this.card = card;
-    }
-
-    @Override public String getMessage() {
-        return "Can't make turn because there is no " + card + " at " + cardinal;
-    }
-
-    public Cardinal getCardinal() {
-        return cardinal;
-    }
-
-    public Card getCard() {
-        return card;
-    }
 }

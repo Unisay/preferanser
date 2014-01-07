@@ -51,11 +51,11 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
     private static final Logger log = Logger.getLogger("PlayerPresenter");
 
     public interface PlayerView extends View, HasUiHandlers<PlayerUiHandlers> {
-        void hideCardinal(Cardinal cardinal);
-        void displayTurn(Cardinal turn);
-        void displayContracts(Map<Cardinal, Contract> cardinalContracts);
-        void displayCardinalTricks(Map<Cardinal, Integer> cardinalTricks);
-        void displayTableCards(Map<TableLocation, Collection<Card>> tableCards, Map<Card, Cardinal> centerCards);
+        void hideHand(Hand hand);
+        void displayTurn(Hand turn);
+        void displayContracts(Map<Hand, Contract> handContracts);
+        void displayHandTricks(Map<Hand, Integer> handTricks);
+        void displayTableCards(Map<TableLocation, Collection<Card>> tableCards, Map<Card, Hand> centerCards);
     }
 
     private PlaceManager placeManager;
@@ -82,18 +82,7 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
         if (!gameOptional.isPresent()) {
             switchToEditor();
         } else {
-            hideEmptyCardinals(gameOptional.get());
             refreshView();
-        }
-    }
-
-    private void hideEmptyCardinals(Game game) {
-        Map<TableLocation, Collection<Card>> cardinalCards = game.getCardinalCards();
-        for (Cardinal cardinal : Cardinal.values()) {
-            if (cardinalCards.get(TableLocation.valueOf(cardinal)).isEmpty()) {
-                getView().hideCardinal(cardinal);
-                return;
-            }
         }
     }
 
@@ -124,7 +113,7 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
         }
 
         try {
-            gameOptional.get().makeTurn(Cardinal.valueOf(oldLocation), card);
+            gameOptional.get().makeTurn(Hand.valueOf(oldLocation), card);
         } catch (GameException e) {
             log.finer(e.getMessage());
             refreshCards();
@@ -149,7 +138,7 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
         refreshTurn();
         refreshContracts();
         refreshCards();
-        refreshCardinalTricks();
+        refreshHandTricks();
     }
 
     private void refreshTurn() {
@@ -159,17 +148,17 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
 
     private void refreshContracts() {
         Preconditions.checkState(gameOptional.isPresent(), "PlayerPresenter.refreshContracts(game is null)");
-        getView().displayContracts(gameOptional.get().getCardinalContracts());
+        getView().displayContracts(gameOptional.get().getHandContracts());
     }
 
     private void refreshCards() {
         Preconditions.checkState(gameOptional.isPresent(), "PlayerPresenter.refreshCards(game is null)");
         Game game = gameOptional.get();
-        getView().displayTableCards(game.getCardinalCards(), game.getCenterCards());
+        getView().displayTableCards(game.getHandCards(), game.getCenterCards());
     }
 
-    private void refreshCardinalTricks() {
-        Preconditions.checkState(gameOptional.isPresent(), "PlayerPresenter.refreshCardinalTricks(game is null)");
-        getView().displayCardinalTricks(gameOptional.get().getCardinalTricks());
+    private void refreshHandTricks() {
+        Preconditions.checkState(gameOptional.isPresent(), "PlayerPresenter.refreshHandTricks(game is null)");
+        getView().displayHandTricks(gameOptional.get().getHandTricks());
     }
 }

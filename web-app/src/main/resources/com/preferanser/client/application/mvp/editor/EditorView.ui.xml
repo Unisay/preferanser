@@ -22,7 +22,6 @@
              xmlns:p="urn:import:com.preferanser.client.application.widgets">
     <ui:with field="constants" type="com.preferanser.client.application.i18n.PreferanserConstants"/>
     <ui:style src="../table.css" field="tableStyle" type="com.preferanser.client.application.mvp.editor.style.TableStyle"/>
-
     <p:TablePanel ui:field="table">
 
         <p:header>
@@ -73,5 +72,6 @@
         </p:center>
 
     </p:TablePanel>
+
 
 </ui:UiBinder>

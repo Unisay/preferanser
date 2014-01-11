@@ -80,6 +80,7 @@
 @external .turnPointerEast;
 .turnPointerEast {
     left: 515px;
+    top: 200px;
     transform: rotate(0);
     -ms-transform: rotate(0);
     -webkit-transform: rotate(0);
@@ -96,6 +97,7 @@
 @external .turnPointerWest;
 .turnPointerWest {
     left: 5px;
+    top: 200px;
     transform: rotate(180deg);
     -ms-transform: rotate(180deg);
     -webkit-transform: rotate(180deg);

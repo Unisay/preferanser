@@ -43,6 +43,8 @@ public interface PreferanserConstants extends ConstantsWithLookup {
     @DefaultStringValue("♥") String HEART_char();
     @DefaultStringValue("Play") String play();
     @DefaultStringValue("Enter") String enter();
+    @DefaultStringValue("Table") String table();
+    @DefaultStringValue("Widow") String widow();
 
     @DefaultStringValue("Edit") String edit();
     @DefaultStringValue("To sluff") String toSluff();

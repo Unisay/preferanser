@@ -51,7 +51,7 @@ public class PlayerView extends BaseTableView<PlayerUiHandlers> implements Playe
     public interface Binder extends UiBinder<Widget, PlayerView> {}
 
     @UiField Button editButton;
-    @UiField Label trickCountWidow;
+    // @UiField Label trickCountWidow;
     @UiField Label trickCountEast;
     @UiField Label trickCountSouth;
     @UiField Label trickCountWest;
@@ -96,7 +96,7 @@ public class PlayerView extends BaseTableView<PlayerUiHandlers> implements Playe
         cardWidget.addDoubleClickHandler(new DoubleClickHandler() {
             @Override public void onDoubleClick(DoubleClickEvent event) {
                 FlowPanel parent = (FlowPanel) cardWidget.getParent();
-                TableLocation oldLocation = table.locationPanelMap.inverse().get(parent);
+                TableLocation oldLocation = table.getPanelLocations().get(parent);
                 TableLocation newLocation = TableLocation.CENTER;
                 getLog().finer("Card location change: " + card + ": " + oldLocation + " -> " + newLocation);
                 getUiHandlers().changeCardLocation(card, oldLocation, newLocation);
@@ -134,7 +134,7 @@ public class PlayerView extends BaseTableView<PlayerUiHandlers> implements Playe
     }
 
     private void populateHandTrickCounts() {
-        handTricksCountMap.put(Hand.WIDOW, trickCountWidow);
+        //handTricksCountMap.put(Hand.WIDOW, trickCountWidow);
         handTricksCountMap.put(Hand.EAST, trickCountEast);
         handTricksCountMap.put(Hand.SOUTH, trickCountSouth);
         handTricksCountMap.put(Hand.WEST, trickCountWest);

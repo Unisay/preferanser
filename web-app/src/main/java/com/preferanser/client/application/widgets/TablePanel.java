@@ -22,6 +22,7 @@ package com.preferanser.client.application.widgets;
 import com.google.common.base.Function;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.EnumHashBiMap;
+import com.google.common.collect.ImmutableMap;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -35,6 +36,7 @@ import com.preferanser.shared.domain.TableLocation;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
+import java.util.Map;
 
 import static com.google.common.collect.Iterables.transform;
 import static com.google.common.collect.Lists.newArrayList;
@@ -48,37 +50,47 @@ public class TablePanel extends Composite {
 
     protected PreferanserResources resources = GWT.create(PreferanserResources.class);
 
-    @UiField HorizontalPanel eastPanelHeader;
-    @UiField HorizontalPanel southPanelHeader;
-    @UiField HorizontalPanel westPanelHeader;
-    @UiField HorizontalPanel centerPanelHeader;
-    @UiField HorizontalPanel headerPanel;
+    @UiField
+    HorizontalPanel eastPanelHeader;
+    @UiField
+    HorizontalPanel southPanelHeader;
+    @UiField
+    HorizontalPanel westPanelHeader;
+    @UiField
+    HorizontalPanel headerPanel;
+    @UiField
+    FlowPanel eastCardsPanel;
+    @UiField
+    FlowPanel southCardsPanel;
+    @UiField
+    FlowPanel westCardsPanel;
+    @UiField
+    TabPanel centerTabPanel;
+    @UiField
+    SimplePanel widowPanel;
+    @UiField
+    FlowPanel centerCardsPanel;
 
-    @UiField public FlowPanel eastPanel;
-    @UiField public FlowPanel southPanel;
-    @UiField public FlowPanel westPanel;
-    @UiField public FlowPanel centerPanel;
-
-    // TODO: consider replacing all public usages with methods
-    public final BiMap<TableLocation, FlowPanel> locationPanelMap = EnumHashBiMap.create(TableLocation.class);
-
+    private final BiMap<TableLocation, FlowPanel> locationPanelMap = EnumHashBiMap.create(TableLocation.class);
     private final BiMap<TableLocation, Layout<CardWidget>> locationLayoutMap = EnumHashBiMap.create(TableLocation.class);
+
     private CenterLayout centerCardLayout;
 
     public TablePanel() {
         initWidget(uiBinder.createAndBindUi(this));
+        centerTabPanel.selectTab(0);
 
-        locationPanelMap.put(EAST, eastPanel);
-        locationPanelMap.put(SOUTH, southPanel);
-        locationPanelMap.put(WEST, westPanel);
-        locationPanelMap.put(CENTER, centerPanel);
+        locationPanelMap.put(EAST, eastCardsPanel);
+        locationPanelMap.put(SOUTH, southCardsPanel);
+        locationPanelMap.put(WEST, westCardsPanel);
+        locationPanelMap.put(CENTER, centerCardsPanel);
 
         int cardWidth = resources.c7().getWidth();
         int cardHeight = resources.c7().getHeight();
-        centerCardLayout = new CenterLayout(centerPanel, cardWidth, cardHeight);
-        locationLayoutMap.put(EAST, new EastLayout(eastPanel, cardWidth, cardHeight));
-        locationLayoutMap.put(SOUTH, new HorizontalLayout(southPanel, cardWidth));
-        locationLayoutMap.put(WEST, new WestLayout(westPanel, cardWidth, cardHeight));
+        centerCardLayout = new CenterLayout(centerCardsPanel, cardWidth, cardHeight);
+        locationLayoutMap.put(EAST, new EastLayout(eastCardsPanel, cardWidth, cardHeight));
+        locationLayoutMap.put(SOUTH, new HorizontalLayout(southCardsPanel, cardWidth));
+        locationLayoutMap.put(WEST, new WestLayout(westCardsPanel, cardWidth, cardHeight));
     }
 
     @UiChild
@@ -106,20 +118,14 @@ public class TablePanel extends Composite {
     }
 
     @UiChild
-    public void addCenterHeader(HasWidgets hasWidgets) {
-        for (Widget widget : newArrayList(hasWidgets))
-            centerPanelHeader.add(widget);
-    }
-
-    @UiChild
     public void addCenter(HasWidgets hasWidgets) {
         for (Widget widget : newArrayList(hasWidgets))
-            centerPanel.add(widget);
+            centerCardsPanel.add(widget);
     }
 
     public void addHandCardsToCenter(Collection<HandCard> handCards) {
         for (HandCard handCard : handCards)
-            centerPanel.add(handCard.getCardWidget());
+            centerCardsPanel.add(handCard.getCardWidget());
         centerCardLayout.apply(handCards);
     }
 
@@ -129,8 +135,8 @@ public class TablePanel extends Composite {
         Collection<CardWidget> cardWidgets = newArrayList(transform(panel, new Function<Widget, CardWidget>() {
             @Nullable @Override public CardWidget apply(@Nullable Widget widget) {
                 return widget instanceof CardWidget
-                    ? (CardWidget) widget
-                    : null;
+                        ? (CardWidget) widget
+                        : null;
             }
         }));
         assert layout != null : "Layout for " + location + " is null";
@@ -142,7 +148,31 @@ public class TablePanel extends Composite {
     }
 
     public void addCenterPanelClickHandler(ClickHandler clickHandler) {
-        centerPanel.addDomHandler(clickHandler, ClickEvent.getType());
+        centerCardsPanel.addDomHandler(clickHandler, ClickEvent.getType());
+    }
+
+    public Map<FlowPanel, TableLocation> getPanelLocations() {
+        return ImmutableMap.of(
+                centerCardsPanel, CENTER,
+                eastCardsPanel, EAST,
+                westCardsPanel, WEST,
+                southCardsPanel, SOUTH
+        );
+    }
+
+    public FlowPanel getLocationWidgetsContainer(TableLocation location) {
+        switch (location) {
+            case CENTER:
+                return centerCardsPanel;
+            case WEST:
+                return westCardsPanel;
+            case EAST:
+                return eastCardsPanel;
+            case SOUTH:
+                return southCardsPanel;
+            default:
+                throw new IllegalArgumentException("There is no panel for the location: " + location);
+        }
     }
 
 }

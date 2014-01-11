@@ -96,7 +96,7 @@ abstract public class BaseTableView<U extends TableUiHandlers> extends ViewWithU
 
     protected void init() {
         installMouseUpHandler(RootPanel.get());
-        installMouseUpHandler(table.locationPanelMap.values());
+        installMouseUpHandler();
         installMouseMoveHandler(RootPanel.get());
         populateHandTitles();
         populateHandTurnPointers();
@@ -135,7 +135,7 @@ abstract public class BaseTableView<U extends TableUiHandlers> extends ViewWithU
 
     private void displayHandCards(Hand hand, Iterable<Card> cards) {
         TableLocation location = TableLocation.valueOf(hand);
-        HasWidgets panel = table.locationPanelMap.get(location);
+        HasWidgets panel = table.getLocationWidgetsContainer(location);
         for (Card card : cards)
             displayCard(panel, card);
         table.layoutLocation(location);
@@ -196,18 +196,20 @@ abstract public class BaseTableView<U extends TableUiHandlers> extends ViewWithU
         rootPanel.addDomHandler(imageDragController, MouseUpEvent.getType());
     }
 
-    private void installMouseUpHandler(final Collection<FlowPanel> panels) {
-        for (final FlowPanel sourcePanel : panels) {
+    private void installMouseUpHandler() {
+        final Map<FlowPanel, TableLocation> panels = table.getPanelLocations();
+        for (final Map.Entry<FlowPanel, TableLocation> entry : panels.entrySet()) {
+            final Panel sourcePanel = entry.getKey();
             sourcePanel.addDomHandler(new MouseUpHandler() {
                 @Override public void onMouseUp(MouseUpEvent event) {
                     if (!imageDragController.isDrag())
                         return;
                     Point cardCenter = Rect.FromWidget(imageDragController.getCardWidget()).center();
-                    for (final FlowPanel targetPanel : panels) {
+                    for (FlowPanel targetPanel : panels.keySet()) {
                         if (Rect.FromWidget(targetPanel).contains(cardCenter)) {
                             Card card = cardWidgetBiMap.inverse().get(imageDragController.getCardWidget());
-                            TableLocation oldLocation = table.locationPanelMap.inverse().get(sourcePanel);
-                            TableLocation newLocation = table.locationPanelMap.inverse().get(targetPanel);
+                            TableLocation oldLocation = entry.getValue();
+                            TableLocation newLocation = panels.get(targetPanel);
                             getLog().finer("Card dragged: " + card + ": " + oldLocation + " -> " + newLocation);
                             getUiHandlers().changeCardLocation(card, oldLocation, newLocation);
                             return;

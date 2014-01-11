@@ -52,11 +52,11 @@
             </p:Widgets>
         </p:eastheader>
 
-        <p:centerheader>
+<!--        <p:centerheader>
             <p:Widgets>
                 <g:Label ui:field="trickCountWidow" addStyleNames="{tableStyle.trickCountWidow}"/>
             </p:Widgets>
-        </p:centerheader>
+        </p:centerheader>-->
 
         <p:center>
             <p:Widgets>

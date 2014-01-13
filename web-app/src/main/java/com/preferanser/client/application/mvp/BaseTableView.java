@@ -38,14 +38,11 @@ import com.preferanser.client.application.widgets.TurnPointer;
 import com.preferanser.client.geom.Point;
 import com.preferanser.client.geom.Rect;
 import com.preferanser.client.theme.greencloth.client.com.preferanser.client.application.PreferanserResources;
-import com.preferanser.shared.domain.Card;
-import com.preferanser.shared.domain.Contract;
-import com.preferanser.shared.domain.Hand;
-import com.preferanser.shared.domain.TableLocation;
+import com.preferanser.shared.domain.*;
 
 import javax.annotation.Nullable;
-import java.util.Collection;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Logger;
 
 import static com.google.common.collect.Iterables.transform;
@@ -102,15 +99,11 @@ abstract public class BaseTableView<U extends TableUiHandlers> extends ViewWithU
         populateHandTurnPointers();
     }
 
-    public void displayTableCards(Map<TableLocation, Collection<Card>> tableCards, Map<Card, Hand> centerCards) {
+    public void displayCards(Map<Hand, Set<Card>> handCards, Map<Card, Hand> centerCards, Widow widow) {
         detachCardWidgets();
-        displayHandCards(tableCards);
+        displayHandCards(handCards);
         displayCenterCards(centerCards);
-    }
-
-    private void displayHandCards(Map<TableLocation, Collection<Card>> tableCards) {
-        for (Hand hand : Hand.PLAYING_HANDS)
-            displayHandCards(hand, tableCards.get(TableLocation.valueOf(hand)));
+        displayWidow(widow);
     }
 
     private void detachCardWidgets() {
@@ -118,9 +111,23 @@ abstract public class BaseTableView<U extends TableUiHandlers> extends ViewWithU
             cardWidget.removeFromParent();
     }
 
+    private void displayHandCards(Map<Hand, Set<Card>> handCards) {
+        for (Hand hand : Hand.PLAYING_HANDS)
+            displayHandCards(hand, handCards.get(hand));
+    }
+
+    private void displayWidow(Widow widow) {
+        Panel widowPanel = table.getLocationWidgetsContainer(TableLocation.WIDOW);
+        for (Card card : widow)
+            displayCard(widowPanel, card);
+        table.layoutLocation(TableLocation.WIDOW);
+    }
+
     private void displayCenterCards(Map<Card, Hand> centerCards) {
         Function<Map.Entry<Card, Hand>, HandCard> func = new Function<Map.Entry<Card, Hand>, HandCard>() {
-            @Nullable @Override public HandCard apply(Map.Entry<Card, Hand> entry) {
+            @Nullable
+            @Override
+            public HandCard apply(Map.Entry<Card, Hand> entry) {
                 Card card = entry.getKey();
                 CardWidget cardWidget = cardWidgetBiMap.get(card);
                 if (null == cardWidget) {
@@ -162,11 +169,12 @@ abstract public class BaseTableView<U extends TableUiHandlers> extends ViewWithU
     }
 
     protected abstract void displayHandContract(Hand hand, Contract contract);
+
     protected abstract void displayNoContract(Hand hand);
 
     public void displayHandTricks(Map<Hand, Integer> handTricks) {
-        for (Map.Entry<Hand, Integer> entry : handTricks.entrySet())
-            handTricksCountMap.get(entry.getKey()).setText("" + entry.getValue());
+        for (Hand hand : Hand.PLAYING_HANDS)
+            handTricksCountMap.get(hand).setText(handTricks.get(hand).toString());
     }
 
     public void displayTurn(Hand turn) {
@@ -197,15 +205,16 @@ abstract public class BaseTableView<U extends TableUiHandlers> extends ViewWithU
     }
 
     private void installMouseUpHandler() {
-        final Map<FlowPanel, TableLocation> panels = table.getPanelLocations();
-        for (final Map.Entry<FlowPanel, TableLocation> entry : panels.entrySet()) {
+        final Map<Panel, TableLocation> panels = table.getPanelLocations();
+        for (final Map.Entry<Panel, TableLocation> entry : panels.entrySet()) {
             final Panel sourcePanel = entry.getKey();
             sourcePanel.addDomHandler(new MouseUpHandler() {
-                @Override public void onMouseUp(MouseUpEvent event) {
+                @Override
+                public void onMouseUp(MouseUpEvent event) {
                     if (!imageDragController.isDrag())
                         return;
                     Point cardCenter = Rect.FromWidget(imageDragController.getCardWidget()).center();
-                    for (FlowPanel targetPanel : panels.keySet()) {
+                    for (Panel targetPanel : panels.keySet()) {
                         if (Rect.FromWidget(targetPanel).contains(cardCenter)) {
                             Card card = cardWidgetBiMap.inverse().get(imageDragController.getCardWidget());
                             TableLocation oldLocation = entry.getValue();
@@ -263,11 +272,15 @@ abstract public class BaseTableView<U extends TableUiHandlers> extends ViewWithU
     abstract protected Logger getLog();
 
 
-    public @UiFactory TurnPointer turnPointer() {
+    public
+    @UiFactory
+    TurnPointer turnPointer() {
         return new TurnPointer(tableStyle, resources.arrowRight());
     }
 
-    public @UiFactory TablePanel tablePanel() {
+    public
+    @UiFactory
+    TablePanel tablePanel() {
         return new TablePanel();
     }
 }

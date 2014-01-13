@@ -23,7 +23,6 @@ import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 import com.preferanser.shared.domain.entity.Deal;
 import com.preferanser.shared.domain.exception.DuplicateGameTurnException;
 import com.preferanser.shared.domain.exception.GameBuilderException;
@@ -36,31 +35,33 @@ import java.util.*;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.collect.Lists.newArrayList;
+import static com.google.common.collect.Sets.newHashSet;
 import static com.preferanser.shared.domain.TableLocation.CENTER;
+import static com.preferanser.shared.domain.TableLocation.WIDOW;
 
 public class GameBuilder {
 
     private static final int NUM_OF_CARDS_PER_HAND = 10;
     private static final int NUM_OF_CONTRACTS = 3;
-    private Widow widow;
+    private Widow widow = new Widow();
 
     private Players players;
 
     private Hand firstTurn;
 
     private Map<Hand, Contract> handContracts
-        = Maps.newHashMapWithExpectedSize(Hand.PLAYING_HANDS.size());
+            = Maps.newHashMapWithExpectedSize(Hand.PLAYING_HANDS.size());
 
     private LinkedHashMultimap<Hand, Card> handCardMultimap
-        = LinkedHashMultimap.create(TableLocation.values().length, Card.values().length);
+            = LinkedHashMultimap.create(TableLocation.values().length, Card.values().length);
 
     private Map<Card, Hand> centerCardHandMap
-        = Maps.newLinkedHashMap(); // order is important
+            = Maps.newLinkedHashMap(); // order is important
 
     public GameBuilder setDeal(Deal deal) {
         firstTurn = deal.getFirstTurn();
         players = deal.getPlayers();
-        widow = deal.getWidow();
+        widow = deal.getWidow() == null ? new Widow() : deal.getWidow();
         setHandDealContracts(deal);
         setHandDealCards(deal);
         setCenterDealCards(deal);
@@ -121,6 +122,10 @@ public class GameBuilder {
         return this;
     }
 
+    public Widow getWidow() {
+        return widow;
+    }
+
     public GameBuilder setHandContract(Hand hand, Contract contract) {
         Preconditions.checkNotNull(hand);
         Preconditions.checkNotNull(contract);
@@ -155,6 +160,7 @@ public class GameBuilder {
         return this;
     }
 
+    // TODO optimize and test this method
     public boolean moveCard(Card card, TableLocation oldLocation, TableLocation newLocation) throws DuplicateGameTurnException {
         if (CENTER == oldLocation) { // moving card out of center
             checkArgument(centerCardHandMap.containsKey(card), "There is no %s in TableLocation.CENTER", card);
@@ -169,6 +175,25 @@ public class GameBuilder {
                 throw new DuplicateGameTurnException(centerCardHandMap, oldHand);
             handCardMultimap.get(oldHand).remove(card);
             centerCardHandMap.put(card, oldHand);
+        } else if (WIDOW == newLocation) {
+            if (widow.card1 == null) {
+                widow.card1 = card;
+            } else if (widow.card2 == null) {
+                widow.card2 = card;
+            } else {
+                return false;
+            }
+            handCardMultimap.get(Hand.valueOf(oldLocation)).remove(card);
+            handCardMultimap.get(Hand.NORTH).clear();
+            handCardMultimap.putAll(Hand.NORTH, widow.asSet());
+        } else if (WIDOW == oldLocation) {
+            if (widow.card1 == card)
+                widow.card1 = null;
+            else if (widow.card2 == card)
+                widow.card2 = null;
+            handCardMultimap.get(Hand.NORTH).clear();
+            handCardMultimap.putAll(Hand.NORTH, widow.asSet());
+            handCardMultimap.get(Hand.valueOf(newLocation)).add(card);
         } else {
             Hand oldHand = Hand.valueOf(oldLocation);
             Hand newHand = Hand.valueOf(newLocation);
@@ -184,6 +209,9 @@ public class GameBuilder {
 
         if (players == null)
             errors.add(new NumPlayersNotSpecifiedValidationError());
+
+        if (!widow.hasTwoCards())
+            errors.add(new WidowNotSpecifiedValidationError()); // TODO: unit test this check
 
         if (firstTurn == null)
             errors.add(new FirstTurnNotSpecifiedValidationError());
@@ -222,9 +250,9 @@ public class GameBuilder {
 
     private boolean wrongFirstTurn() {
         return players != null
-            && players == Players.THREE
-            && firstTurn != null
-            && handContracts.get(firstTurn) == null;
+                && players == Players.THREE
+                && firstTurn != null
+                && handContracts.get(firstTurn) == null;
     }
 
     private boolean hasConflictingContracts() {
@@ -244,8 +272,8 @@ public class GameBuilder {
     }
 
     private Set<Card> findDuplicateCards() {
-        Set<Card> cardSet = Sets.newHashSet();
-        Set<Card> duplicateCardSet = Sets.newHashSet();
+        Set<Card> cardSet = newHashSet();
+        Set<Card> duplicateCardSet = newHashSet();
         for (Card card : handCardMultimap.values()) {
             if (!cardSet.add(card)) {
                 duplicateCardSet.add(card);
@@ -273,14 +301,15 @@ public class GameBuilder {
             throw new GameBuilderException(validationErrors.get());
 
         EnumRotator<Hand> handRotator = new EnumRotator<Hand>(Hand.values(), firstTurn);
-        handRotator.setSkipValues(Hand.WIDOW);
+        handRotator.setSkipValues(Hand.NORTH);
 
         return new Game(
-            players,
-            handContracts,
-            handRotator,
-            handCardMultimap,
-            centerCardHandMap
+                players,
+                widow,
+                handContracts,
+                handRotator,
+                handCardMultimap,
+                centerCardHandMap
         );
     }
 
@@ -317,10 +346,10 @@ public class GameBuilder {
     }
 
     private void initHandCards(Deal dto) {
-        Map<TableLocation, Collection<Card>> tableCards = getTableCards();
-        dto.setEastCards(getHandCards(tableCards, TableLocation.EAST));
-        dto.setSouthCards(getHandCards(tableCards, TableLocation.SOUTH));
-        dto.setWestCards(getHandCards(tableCards, TableLocation.WEST));
+        Map<Hand, Set<Card>> tableCards = getHandCards();
+        dto.setEastCards(getHandCards(tableCards, Hand.EAST));
+        dto.setSouthCards(getHandCards(tableCards, Hand.SOUTH));
+        dto.setWestCards(getHandCards(tableCards, Hand.WEST));
     }
 
     private void initContracts(Deal dto) {
@@ -330,11 +359,11 @@ public class GameBuilder {
         dto.setWestContract(handContracts.get(Hand.WEST));
     }
 
-    private List<Card> getHandCards(Map<TableLocation, Collection<Card>> tableCards, TableLocation location) {
-        Collection<Card> cardsCollection = tableCards.get(location);
-        List<Card> cards = newArrayList();
+    private Set<Card> getHandCards(Map<Hand, Set<Card>> handCards, Hand hand) {
+        Set<Card> cardsCollection = handCards.get(hand);
+        Set<Card> cards = newHashSet();
         if (cardsCollection == null) {
-            cards = Collections.emptyList();
+            cards = Collections.emptySet();
         } else {
             cards.addAll(cardsCollection);
         }
@@ -349,7 +378,7 @@ public class GameBuilder {
         return handContracts;
     }
 
-    public Map<TableLocation, Collection<Card>> getTableCards() {
+    public Map<Hand, Set<Card>> getHandCards() {
         return GameUtils.copyDefensive(handCardMultimap);
     }
 

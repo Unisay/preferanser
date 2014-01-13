@@ -24,7 +24,7 @@ import com.google.common.collect.ImmutableList;
 
 public enum Hand {
 
-    WIDOW, EAST, SOUTH, WEST;
+    EAST, SOUTH, WEST, NORTH;
 
     public static ImmutableList<Hand> PLAYING_HANDS = ImmutableList.of(EAST, SOUTH, WEST);
 
@@ -36,6 +36,8 @@ public enum Hand {
                 return Hand.SOUTH;
             case WEST:
                 return Hand.WEST;
+            case WIDOW:
+                return Hand.NORTH;
             default:
                 throw new IllegalArgumentException("TableLocation " + tableLocation + " doesn't have a corresponding " +
                         "Hand!");

@@ -27,9 +27,9 @@ import com.preferanser.shared.domain.*;
 import com.preferanser.shared.dto.Dto;
 
 import javax.validation.constraints.Size;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @SuppressWarnings({"unused", "ClassWithTooManyFields", "ClassWithTooManyMethods"})
@@ -56,18 +56,19 @@ public class Deal extends BaseEntity implements Dto {
     private Contract southContract;
     private Contract westContract;
     private Widow widow;
-    private List<Card> eastCards;
-    private List<Card> southCards;
-    private List<Card> westCards;
+    private Set<Card> eastCards;
+    private Set<Card> southCards;
+    private Set<Card> westCards;
     private Card centerWidowCard;
     private Card centerEastCard;
     private Card centerSouthCard;
     private Card centerWestCard;
 
     public Deal() {
-        eastCards = new ArrayList<Card>();
-        southCards = new ArrayList<Card>();
-        westCards = new ArrayList<Card>();
+        widow = new Widow();
+        eastCards = new HashSet<Card>();
+        southCards = new HashSet<Card>();
+        westCards = new HashSet<Card>();
     }
 
     public String getUserId() {
@@ -150,27 +151,27 @@ public class Deal extends BaseEntity implements Dto {
         this.widow = widow;
     }
 
-    public List<Card> getEastCards() {
+    public Set<Card> getEastCards() {
         return eastCards;
     }
 
-    public void setEastCards(List<Card> eastCards) {
+    public void setEastCards(Set<Card> eastCards) {
         this.eastCards = eastCards;
     }
 
-    public List<Card> getSouthCards() {
+    public Set<Card> getSouthCards() {
         return southCards;
     }
 
-    public void setSouthCards(List<Card> southCards) {
+    public void setSouthCards(Set<Card> southCards) {
         this.southCards = southCards;
     }
 
-    public List<Card> getWestCards() {
+    public Set<Card> getWestCards() {
         return westCards;
     }
 
-    public void setWestCards(List<Card> westCards) {
+    public void setWestCards(Set<Card> westCards) {
         this.westCards = westCards;
     }
 
@@ -258,25 +259,26 @@ public class Deal extends BaseEntity implements Dto {
         return result;
     }
 
-    @Override public String toString() {
+    @Override
+    public String toString() {
         return Objects.toStringHelper(this)
-            .add("name", name)
-            .add("description", description)
-            .add("userId", userId)
-            .add("created", created)
-            .add("firstTurn", firstTurn)
-            .add("players", players)
-            .add("eastContract", eastContract)
-            .add("southContract", southContract)
-            .add("westContract", westContract)
-            .add("widow", widow)
-            .add("eastCards", eastCards)
-            .add("southCards", southCards)
-            .add("westCards", westCards)
-            .add("centerWidowCard", centerWidowCard)
-            .add("centerEastCard", centerEastCard)
-            .add("centerSouthCard", centerSouthCard)
-            .add("centerWestCard", centerWestCard)
-            .toString();
+                .add("name", name)
+                .add("description", description)
+                .add("userId", userId)
+                .add("created", created)
+                .add("firstTurn", firstTurn)
+                .add("players", players)
+                .add("eastContract", eastContract)
+                .add("southContract", southContract)
+                .add("westContract", westContract)
+                .add("widow", widow)
+                .add("eastCards", eastCards)
+                .add("southCards", southCards)
+                .add("westCards", westCards)
+                .add("centerWidowCard", centerWidowCard)
+                .add("centerEastCard", centerEastCard)
+                .add("centerSouthCard", centerSouthCard)
+                .add("centerWestCard", centerWestCard)
+                .toString();
     }
 }

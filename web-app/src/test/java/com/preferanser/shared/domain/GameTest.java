@@ -46,6 +46,7 @@ import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEqua
 public class GameTest {
 
     private Game game;
+    private Widow widow;
     private Map<Hand, Contract> handContractMap;
     private EnumRotator<Hand> turnRotator;
     private LinkedHashMultimap<Hand, Card> handCardMultimap;
@@ -53,15 +54,16 @@ public class GameTest {
 
     @BeforeMethod
     public void setUp() throws Exception {
+        widow = new Widow();
         handContractMap = createHandContractMap();
-        turnRotator = createTurnRotator(SOUTH, WIDOW);
+        turnRotator = createTurnRotator(SOUTH, NORTH);
         handCardMultimap = createHandCardMultimap();
         centerCardHandMap = createCenterCardHandMap();
     }
 
     @Test
     public void testMakeTurn_FromHandWrongCard() throws Exception {
-        game = new Game(Players.THREE, handContractMap, turnRotator, handCardMultimap, centerCardHandMap);
+        game = new Game(Players.THREE, widow, handContractMap, turnRotator, handCardMultimap, centerCardHandMap);
 
         try {
             game.makeTurn(SOUTH, DIAMOND_ACE);
@@ -75,7 +77,7 @@ public class GameTest {
 
     @Test
     public void testMakeTurn_NotInTurn() throws Exception {
-        game = new Game(Players.THREE, handContractMap, turnRotator, handCardMultimap, centerCardHandMap);
+        game = new Game(Players.THREE, widow, handContractMap, turnRotator, handCardMultimap, centerCardHandMap);
 
         try {
             game.makeTurn(WEST, CLUB_JACK);
@@ -94,7 +96,7 @@ public class GameTest {
         handCardMultimap.put(WEST, HEART_ACE);
         handCardMultimap.put(WEST, CLUB_KING);
 
-        game = new Game(Players.THREE, handContractMap, turnRotator, handCardMultimap, centerCardHandMap);
+        game = new Game(Players.THREE, widow, handContractMap, turnRotator, handCardMultimap, centerCardHandMap);
 
         game.makeTurn(SOUTH, CLUB_ACE);
         try {
@@ -114,7 +116,7 @@ public class GameTest {
         handCardMultimap.put(WEST, HEART_ACE);
         handCardMultimap.put(WEST, SPADE_ACE);
 
-        game = new Game(Players.THREE, handContractMap, turnRotator, handCardMultimap, centerCardHandMap);
+        game = new Game(Players.THREE, widow, handContractMap, turnRotator, handCardMultimap, centerCardHandMap);
 
         game.makeTurn(SOUTH, CLUB_ACE);
         try {
@@ -133,7 +135,7 @@ public class GameTest {
         handCardMultimap.put(WEST, HEART_ACE);
         handCardMultimap.put(WEST, SPADE_ACE);
 
-        game = new Game(Players.THREE, handContractMap, turnRotator, handCardMultimap, centerCardHandMap);
+        game = new Game(Players.THREE, widow, handContractMap, turnRotator, handCardMultimap, centerCardHandMap);
 
         game.makeTurn(SOUTH, CLUB_ACE);
         try {
@@ -152,7 +154,7 @@ public class GameTest {
         handCardMultimap.put(WEST, HEART_ACE);
         handCardMultimap.put(WEST, DIAMOND_ACE);
 
-        game = new Game(Players.THREE, handContractMap, turnRotator, handCardMultimap, centerCardHandMap);
+        game = new Game(Players.THREE, widow, handContractMap, turnRotator, handCardMultimap, centerCardHandMap);
 
         game.makeTurn(SOUTH, CLUB_ACE);
         game.makeTurn(WEST, HEART_ACE);
@@ -161,9 +163,9 @@ public class GameTest {
     @Test
     public void testMakeTurn_OtherSuitWhenNoTrumpGame() throws Exception {
         handContractMap = ImmutableMap.of(
-            EAST, Contract.PASS,
-            SOUTH, Contract.SIX_NO_TRUMP,
-            WEST, Contract.WHIST
+                EAST, Contract.PASS,
+                SOUTH, Contract.SIX_NO_TRUMP,
+                WEST, Contract.WHIST
         );
 
         handCardMultimap = LinkedHashMultimap.create();
@@ -171,7 +173,7 @@ public class GameTest {
         handCardMultimap.put(WEST, HEART_ACE);
         handCardMultimap.put(WEST, SPADE_ACE);
 
-        game = new Game(Players.THREE, handContractMap, turnRotator, handCardMultimap, centerCardHandMap);
+        game = new Game(Players.THREE, widow, handContractMap, turnRotator, handCardMultimap, centerCardHandMap);
 
         game.makeTurn(SOUTH, CLUB_ACE);
         game.makeTurn(WEST, HEART_ACE);
@@ -179,7 +181,7 @@ public class GameTest {
 
     @Test
     public void testMakeTurn_DuplicateGameTurn() throws Exception {
-        game = new Game(Players.THREE, handContractMap, turnRotator, handCardMultimap, centerCardHandMap);
+        game = new Game(Players.THREE, widow, handContractMap, turnRotator, handCardMultimap, centerCardHandMap);
 
         game.makeTurn(SOUTH, CLUB_ACE);
         game.makeTurn(WEST, CLUB_9);
@@ -200,14 +202,14 @@ public class GameTest {
         centerCardHandMap.put(DIAMOND_QUEEN, WEST);
         centerCardHandMap.put(DIAMOND_KING, EAST);
 
-        game = new Game(Players.THREE, handContractMap, turnRotator, handCardMultimap, centerCardHandMap);
+        game = new Game(Players.THREE, widow, handContractMap, turnRotator, handCardMultimap, centerCardHandMap);
 
         assertTrue(game.isTrickComplete());
     }
 
     @Test
     public void testIsTrickComplete_ThreePlayers_Negative() throws Exception {
-        game = new Game(Players.THREE, handContractMap, turnRotator, handCardMultimap, centerCardHandMap);
+        game = new Game(Players.THREE, widow, handContractMap, turnRotator, handCardMultimap, centerCardHandMap);
 
         assertFalse(game.isTrickComplete());
     }
@@ -215,13 +217,13 @@ public class GameTest {
     @Test
     public void testIsTrickComplete_FourPlayers_Positive() throws Exception {
         centerCardHandMap.clear();
-        centerCardHandMap.put(DIAMOND_ACE, WIDOW);
+        centerCardHandMap.put(DIAMOND_ACE, NORTH);
         centerCardHandMap.put(DIAMOND_KING, EAST);
         centerCardHandMap.put(DIAMOND_JACK, SOUTH);
         centerCardHandMap.put(DIAMOND_QUEEN, WEST);
 
-        turnRotator = createTurnRotator(SOUTH);
-        game = new Game(Players.FOUR, handContractMap, turnRotator, handCardMultimap, centerCardHandMap);
+        turnRotator = createTurnRotator(SOUTH, NORTH);
+        game = new Game(Players.FOUR, widow, handContractMap, turnRotator, handCardMultimap, centerCardHandMap);
 
         assertTrue(game.isTrickComplete());
     }
@@ -233,14 +235,14 @@ public class GameTest {
         centerCardHandMap.put(DIAMOND_ACE, SOUTH);
         centerCardHandMap.put(DIAMOND_QUEEN, WEST);
 
-        game = new Game(Players.FOUR, handContractMap, turnRotator, handCardMultimap, centerCardHandMap);
+        game = new Game(Players.FOUR, widow, handContractMap, turnRotator, handCardMultimap, centerCardHandMap);
 
         assertFalse(game.isTrickComplete());
     }
 
     @Test
     public void testGetTurn() throws Exception {
-        game = new Game(Players.THREE, handContractMap, turnRotator, handCardMultimap, centerCardHandMap);
+        game = new Game(Players.THREE, widow, handContractMap, turnRotator, handCardMultimap, centerCardHandMap);
         assertThat(game.getTurn(), equalTo(SOUTH));
         game.makeTurn(SOUTH, CLUB_ACE);
         assertThat(game.getTurn(), equalTo(WEST));
@@ -252,7 +254,7 @@ public class GameTest {
 
     @Test
     public void testGetTrump() throws Exception {
-        game = new Game(Players.THREE, handContractMap, turnRotator, handCardMultimap, centerCardHandMap);
+        game = new Game(Players.THREE, widow, handContractMap, turnRotator, handCardMultimap, centerCardHandMap);
 
         assertTrue(game.getTrump().isPresent());
         assertThat(game.getTrump().get(), equalTo(Suit.SPADE));
@@ -261,7 +263,7 @@ public class GameTest {
     @Test
     public void testGetTrump_NoTrumpPlayingContract() throws Exception {
         handContractMap = ImmutableMap.of(SOUTH, Contract.SIX_NO_TRUMP, EAST, Contract.PASS, WEST, Contract.WHIST);
-        game = new Game(Players.THREE, handContractMap, turnRotator, handCardMultimap, centerCardHandMap);
+        game = new Game(Players.THREE, widow, handContractMap, turnRotator, handCardMultimap, centerCardHandMap);
 
         assertFalse(game.getTrump().isPresent());
     }
@@ -269,14 +271,14 @@ public class GameTest {
     @Test
     public void testGetTrump_NoTrumpNotPlayingContract() throws Exception {
         handContractMap = ImmutableMap.of(SOUTH, Contract.PASS, EAST, Contract.PASS, WEST, Contract.PASS);
-        game = new Game(Players.THREE, handContractMap, turnRotator, handCardMultimap, centerCardHandMap);
+        game = new Game(Players.THREE, widow, handContractMap, turnRotator, handCardMultimap, centerCardHandMap);
 
         assertFalse(game.getTrump().isPresent());
     }
 
     @Test
     public void testSluffTrick() throws Exception {
-        game = new Game(Players.THREE, handContractMap, turnRotator, handCardMultimap, centerCardHandMap);
+        game = new Game(Players.THREE, widow, handContractMap, turnRotator, handCardMultimap, centerCardHandMap);
         assertFalse(game.sluffTrick());
         game.makeTurn(SOUTH, CLUB_ACE);
         assertFalse(game.sluffTrick());
@@ -287,7 +289,7 @@ public class GameTest {
 
         assertTrue(game.getCenterCards().isEmpty());
         assertThat(turnRotator.current(), equalTo(SOUTH));
-        assertReflectionEquals(ImmutableMap.of(SOUTH, 1, EAST, 0, WEST, 0, WIDOW, 0), game.getHandTricks());
+        assertReflectionEquals(ImmutableMap.of(SOUTH, 1, EAST, 0, WEST, 0, NORTH, 0), game.getHandTricks());
     }
 
     private EnumRotator<Hand> createTurnRotator(Hand curValue, Hand... valuesToSkip) {
@@ -298,9 +300,9 @@ public class GameTest {
 
     private Map<Hand, Contract> createHandContractMap() {
         return ImmutableMap.of(
-            EAST, Contract.PASS,
-            SOUTH, Contract.SIX_SPADE,
-            WEST, Contract.WHIST
+                EAST, Contract.PASS,
+                SOUTH, Contract.SIX_SPADE,
+                WEST, Contract.WHIST
         );
     }
 

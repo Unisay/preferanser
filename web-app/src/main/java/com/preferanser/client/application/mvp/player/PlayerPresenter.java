@@ -25,7 +25,6 @@ import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.Presenter;
-import com.gwtplatform.mvp.client.View;
 import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.ProxyStandard;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
@@ -33,14 +32,15 @@ import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.preferanser.client.application.ApplicationPresenter;
 import com.preferanser.client.application.mvp.GameBuiltEvent;
+import com.preferanser.client.application.mvp.TableView;
 import com.preferanser.client.gwtp.NameTokens;
-import com.preferanser.shared.domain.*;
+import com.preferanser.shared.domain.Card;
+import com.preferanser.shared.domain.Game;
+import com.preferanser.shared.domain.Hand;
+import com.preferanser.shared.domain.TableLocation;
 import com.preferanser.shared.domain.exception.GameException;
 
-import java.util.Collection;
-import java.util.Map;
 import java.util.logging.Logger;
-
 
 /**
  * Presenter for the mvp page
@@ -50,12 +50,7 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
 
     private static final Logger log = Logger.getLogger("PlayerPresenter");
 
-    public interface PlayerView extends View, HasUiHandlers<PlayerUiHandlers> {
-        void hideHand(Hand hand);
-        void displayTurn(Hand turn);
-        void displayContracts(Map<Hand, Contract> handContracts);
-        void displayHandTricks(Map<Hand, Integer> handTricks);
-        void displayTableCards(Map<TableLocation, Collection<Card>> tableCards, Map<Card, Hand> centerCards);
+    public interface PlayerView extends TableView, HasUiHandlers<PlayerUiHandlers> {
     }
 
     private PlaceManager placeManager;
@@ -63,7 +58,8 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
 
     @ProxyStandard
     @NameToken(NameTokens.GAME_PLAYER)
-    public interface Proxy extends ProxyPlace<PlayerPresenter> {}
+    public interface Proxy extends ProxyPlace<PlayerPresenter> {
+    }
 
     @Inject
     public PlayerPresenter(PlaceManager placeManager, EventBus eventBus, PlayerView view, Proxy proxy) {
@@ -72,12 +68,14 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
         getView().setUiHandlers(this);
     }
 
-    @Override protected void onBind() {
+    @Override
+    protected void onBind() {
         super.onBind();
         addRegisteredHandler(GameBuiltEvent.getType(), this);
     }
 
-    @Override protected void onReveal() {
+    @Override
+    protected void onReveal() {
         super.onReveal();
         if (!gameOptional.isPresent()) {
             switchToEditor();
@@ -93,13 +91,15 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
         gameOptional = Optional.of(game);
     }
 
-    @Override public void sluff() {
+    @Override
+    public void sluff() {
         Preconditions.checkState(gameOptional.isPresent(), "PlayerPresenter.sluff(game is null)");
         if (gameOptional.get().sluffTrick())
             refreshView();
     }
 
-    @Override public void changeCardLocation(Card card, TableLocation oldLocation, TableLocation newLocation) {
+    @Override
+    public void changeCardLocation(Card card, TableLocation oldLocation, TableLocation newLocation) {
         Preconditions.checkState(gameOptional.isPresent(), "PlayerPresenter.changeCardLocation(game is null)");
 
         if (oldLocation == newLocation) {
@@ -123,14 +123,16 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
         refreshView();
     }
 
-    @Override public void switchToEditor() {
+    @Override
+    public void switchToEditor() {
         placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.GAME_EDITOR).build());
     }
 
     /**
-     * @todo implement resetting editor
+     * TODO implement resetting editor
      */
-    @Override public void reset() {
+    @Override
+    public void reset() {
         throw new UnsupportedOperationException("Resetting editor is not implemented");
     }
 
@@ -154,7 +156,7 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
     private void refreshCards() {
         Preconditions.checkState(gameOptional.isPresent(), "PlayerPresenter.refreshCards(game is null)");
         Game game = gameOptional.get();
-        getView().displayTableCards(game.getHandCards(), game.getCenterCards());
+        getView().displayCards(game.getHandCards(), game.getCenterCards(), game.getWidow());
     }
 
     private void refreshHandTricks() {

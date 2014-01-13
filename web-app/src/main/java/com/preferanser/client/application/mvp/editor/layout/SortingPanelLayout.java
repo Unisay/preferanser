@@ -41,7 +41,7 @@ public abstract class SortingPanelLayout<T extends CardWidget> extends PanelLayo
     }
 
     @Override
-    public void apply(Collection<T> cardWidgets) {
+    public final void layoutPanelWidgets(Collection<T> cardWidgets) {
         if (cardWidgets == null || cardWidgets.isEmpty())
             return;
 
@@ -52,7 +52,8 @@ public abstract class SortingPanelLayout<T extends CardWidget> extends PanelLayo
 
     protected void sortCards(List<T> views) {
         sort(views, new Comparator<T>() {
-            @Override public int compare(T cardWidget1, T cardWidget2) {
+            @Override
+            public int compare(T cardWidget1, T cardWidget2) {
                 return compareCards(cardWidget1.getCard(), cardWidget2.getCard());
             }
         });
@@ -122,7 +123,9 @@ public abstract class SortingPanelLayout<T extends CardWidget> extends PanelLayo
     }
 
     protected class CardWidgetCardTransformer implements Function<CardWidget, Card> {
-        @Nullable @Override public Card apply(@Nullable CardWidget input) {
+        @Nullable
+        @Override
+        public Card apply(@Nullable CardWidget input) {
             assert input != null;
             return input.getCard();
         }

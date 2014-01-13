@@ -17,17 +17,16 @@
  *     along with this program.  If not, see [http://www.gnu.org/licenses/].
  */
 
-package com.preferanser.shared.domain;
+package com.preferanser.shared.domain.exception.validation;
 
-/**
- * Table locations
- */
-public enum TableLocation {
+import com.preferanser.client.application.i18n.PreferanserConstants;
+import com.preferanser.client.application.i18n.PreferanserMessages;
 
-    EAST, SOUTH, WEST, CENTER, WIDOW;
+public class WidowNotSpecifiedValidationError extends GameBuilderValidationError {
 
-    public static TableLocation valueOf(Hand hand) {
-        return TableLocation.valueOf(hand.name());
+    @Override
+    public String formatLocalMessage(PreferanserConstants constants, PreferanserMessages messages) {
+        return messages.widowNotSpecified();
     }
 
 }

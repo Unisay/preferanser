@@ -24,6 +24,8 @@ import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Panel;
 import com.preferanser.client.application.widgets.CardWidget;
 
+import java.util.Collection;
+
 public abstract class PanelLayout<T extends IsWidget> implements Layout<T> {
 
     protected static final int PADDING = 10;
@@ -32,6 +34,14 @@ public abstract class PanelLayout<T extends IsWidget> implements Layout<T> {
     protected PanelLayout(Panel panel) {
         this.panel = panel;
     }
+
+    @Override
+    public final void apply(Collection<T> widgets) {
+        if (panel.isVisible())
+            layoutPanelWidgets(widgets);
+    }
+
+    protected abstract void layoutPanelWidgets(Collection<T> widgets);
 
     protected int getStartX() {
         return PADDING;
@@ -63,4 +73,5 @@ public abstract class PanelLayout<T extends IsWidget> implements Layout<T> {
         style.setTop(y, Style.Unit.PX);
         style.setZIndex(z);
     }
+
 }

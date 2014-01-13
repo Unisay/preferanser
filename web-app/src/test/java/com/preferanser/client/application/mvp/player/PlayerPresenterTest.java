@@ -28,8 +28,8 @@ import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import java.util.Collection;
 import java.util.Map;
+import java.util.Set;
 
 import static org.mockito.Mockito.*;
 
@@ -52,11 +52,12 @@ public class PlayerPresenterTest {
     @Mock
     private Game game;
 
+
     @Mock
     private Map<Hand, Contract> handContracts;
 
     @Mock
-    private Map<TableLocation, Collection<Card>> handCards;
+    private Map<Hand, Set<Card>> handCards;
 
     @Mock
     private Map<Card, Hand> centerCards;
@@ -65,6 +66,7 @@ public class PlayerPresenterTest {
     private Map<Hand, Integer> handTricks;
 
     private Hand turn;
+    private Widow widow;
 
     @BeforeMethod
     public void setUp() throws Exception {
@@ -72,12 +74,14 @@ public class PlayerPresenterTest {
         presenter = new PlayerPresenter(placeManager, eventBus, view, proxy);
         presenter.onGameBuilt(new GameBuiltEvent(game));
         turn = Hand.EAST;
+        widow = new Widow();
 
         verify(view).setUiHandlers(presenter);
     }
 
     @Test
     public void testChangeCardLocation_NotToCenter() throws Exception {
+        when(game.getWidow()).thenReturn(widow);
         when(game.getHandCards()).thenReturn(handCards);
         when(game.getCenterCards()).thenReturn(centerCards);
 
@@ -85,7 +89,7 @@ public class PlayerPresenterTest {
 
         verify(game).getHandCards();
         verify(game).getCenterCards();
-        verify(view).displayTableCards(handCards, centerCards);
+        verify(view).displayCards(handCards, centerCards, widow);
         verifyNoMoreInteractions(view);
         verifyNoMoreInteractions(game);
     }
@@ -93,6 +97,7 @@ public class PlayerPresenterTest {
     @Test
     public void testChangeCardLocation() throws Exception {
         when(game.getTurn()).thenReturn(turn);
+        when(game.getWidow()).thenReturn(widow);
         when(game.getHandContracts()).thenReturn(handContracts);
         when(game.getHandCards()).thenReturn(handCards);
         when(game.getCenterCards()).thenReturn(centerCards);
@@ -102,7 +107,7 @@ public class PlayerPresenterTest {
 
         verify(view).displayTurn(turn);
         verify(view).displayContracts(handContracts);
-        verify(view).displayTableCards(handCards, centerCards);
+        verify(view).displayCards(handCards, centerCards, widow);
         verify(view).displayHandTricks(handTricks);
         verifyNoMoreInteractions(view);
     }
@@ -111,6 +116,7 @@ public class PlayerPresenterTest {
     public void testChangeCardLocation_CompleteTrick() throws Exception {
         when(game.isTrickComplete()).thenReturn(true);
         when(game.getTurn()).thenReturn(turn);
+        when(game.getWidow()).thenReturn(widow);
         when(game.getHandContracts()).thenReturn(handContracts);
         when(game.getHandCards()).thenReturn(handCards);
         when(game.getCenterCards()).thenReturn(centerCards);
@@ -120,7 +126,7 @@ public class PlayerPresenterTest {
 
         verify(view).displayTurn(turn);
         verify(view).displayContracts(handContracts);
-        verify(view).displayTableCards(handCards, centerCards);
+        verify(view).displayCards(handCards, centerCards, widow);
         verify(view).displayHandTricks(handTricks);
         verifyNoMoreInteractions(view);
     }

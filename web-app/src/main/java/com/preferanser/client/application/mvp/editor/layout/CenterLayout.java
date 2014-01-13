@@ -37,7 +37,7 @@ public class CenterLayout extends PanelLayout<HandCard> {
     }
 
     @Override
-    public void apply(Collection<HandCard> handCards) {
+    public void layoutPanelWidgets(Collection<HandCard> handCards) {
         Preconditions.checkArgument(handCards.size() < 5, "Not more than 4 cards can be placed in center!");
         int z = 0;
         for (HandCard handCard : handCards) {
@@ -48,7 +48,7 @@ public class CenterLayout extends PanelLayout<HandCard> {
     private void positionCardWidget(HandCard handCard, int z) {
         int x, y;
         switch (handCard.getHand()) {
-            case WIDOW:
+            case NORTH:
                 x = (getWidth() - imageWidth) / 2;
                 y = (getHeight() - imageHeight - imageHeight) / 2;
                 positionWidget(handCard.getCardWidget(), x, y, z);

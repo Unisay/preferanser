@@ -36,6 +36,10 @@ body {
     white-space: nowrap;
 }
 
+.gwt-TabBar :focus {
+    outline: 0 !important;
+}
+
 .gwt-TabBarItem {
     font-weight: bold;
     padding-left: 0.5em;
@@ -60,7 +64,7 @@ body {
 }
 
 .gwt-TabBarItem .gwt-Label {
-    color: lightgrey;
+    color: white;
 }
 
 .gwt-TabBarItem-selected {
@@ -68,7 +72,7 @@ body {
 }
 
 .gwt-TabBarItem-selected .gwt-Label {
-    color: white;
+    color: #ffa200;
 }
 
 .gwt-TabPanelBottom {

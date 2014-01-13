@@ -89,11 +89,6 @@ public class EditorPresenter extends Presenter<EditorPresenter.EditorView, Edito
         this.constants = constants;
         this.editorDialogs = editorDialogs;
         getView().setUiHandlers(this);
-    }
-
-    @Override
-    protected void onReveal() {
-        super.onReveal();
         reset();
     }
 
@@ -195,7 +190,7 @@ public class EditorPresenter extends Presenter<EditorPresenter.EditorView, Edito
     }
 
     private void refreshCards() {
-        getView().displayTableCards(gameBuilder.getTableCards(), gameBuilder.getCenterCards());
+        getView().displayCards(gameBuilder.getHandCards(), gameBuilder.getCenterCards(), gameBuilder.getWidow());
     }
 
     private void refreshHandTricks() {

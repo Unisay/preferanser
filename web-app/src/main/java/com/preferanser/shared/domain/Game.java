@@ -28,10 +28,7 @@ import com.preferanser.shared.domain.exception.*;
 import com.preferanser.shared.util.EnumRotator;
 import com.preferanser.shared.util.GameUtils;
 
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 import static com.google.common.collect.Maps.newLinkedHashMap;
 
@@ -41,6 +38,7 @@ import static com.google.common.collect.Maps.newLinkedHashMap;
 public class Game {
 
     private final Players players;
+    private final Widow widow;
     private final EnumRotator<Hand> turnRotator;
     private final Map<Hand, Contract> handContracts;
     private final Multimap<Hand, Card> handCardMultimap;
@@ -48,12 +46,14 @@ public class Game {
     private final LinkedHashMap<Card, Hand> centerCardHandMap;  // order is important
 
     Game(Players players,
+         Widow widow,
          Map<Hand, Contract> handContracts,
          EnumRotator<Hand> turnRotator,
          Multimap<Hand, Card> handCardMultimap,
          Map<Card, Hand> centerCardHandMap
     ) {
         this.players = players;
+        this.widow = widow;
         this.handContracts = handContracts;
         this.turnRotator = turnRotator;
         this.handCardMultimap = handCardMultimap;
@@ -67,7 +67,7 @@ public class Game {
         }
     }
 
-    public Map<TableLocation, Collection<Card>> getHandCards() {
+    public Map<Hand, Set<Card>> getHandCards() {
         return GameUtils.copyDefensive(handCardMultimap);
     }
 
@@ -205,4 +205,7 @@ public class Game {
         return players;
     }
 
+    public Widow getWidow() {
+        return widow;
+    }
 }

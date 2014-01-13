@@ -34,6 +34,7 @@ import org.testng.annotations.Test;
 import java.util.*;
 
 import static com.google.common.collect.Lists.newArrayList;
+import static com.google.common.collect.Sets.newHashSet;
 import static com.preferanser.shared.domain.Card.CLUB_ACE;
 import static com.preferanser.shared.domain.Hand.*;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -72,9 +73,9 @@ public class GameBuilderTest {
         deal.setCreated(Clock.getNow());
         deal.setName("name");
         deal.setWidow(Widow.fromArray((Card[]) ArrayUtils.subarray(Card.values(), 30, 32)));
-        deal.setSouthCards(newArrayList(southCards));
-        deal.setEastCards(newArrayList(eastCards));
-        deal.setWestCards(newArrayList(westCards));
+        deal.setSouthCards(newHashSet(southCards));
+        deal.setEastCards(newHashSet(eastCards));
+        deal.setWestCards(newHashSet(westCards));
         deal.setSouthContract(Contract.SIX_SPADE);
         deal.setEastContract(Contract.WHIST);
         deal.setWestContract(Contract.PASS);
@@ -122,10 +123,10 @@ public class GameBuilderTest {
             ".*WrongNumCardsPerHandValidationError$")
     public void testClearCards() throws Exception {
         builder.clearCards(TableLocation.SOUTH);
-        Map<TableLocation, Collection<Card>> tableCards = builder.getTableCards();
-        assertThat(tableCards.get(TableLocation.SOUTH), empty());
-        assertThat(tableCards.get(TableLocation.EAST), not(empty()));
-        assertThat(tableCards.get(TableLocation.WEST), not(empty()));
+        Map<Hand, Set<Card>> tableCards = builder.getHandCards();
+        assertThat(tableCards.get(Hand.SOUTH), empty());
+        assertThat(tableCards.get(Hand.EAST), not(empty()));
+        assertThat(tableCards.get(Hand.WEST), not(empty()));
         builder.build();
     }
 
@@ -143,11 +144,10 @@ public class GameBuilderTest {
     public void testClearCards_All() throws Exception {
         builder.clearCards();
         assertReflectionEquals(ImmutableMap.of(
-                TableLocation.CENTER, Collections.emptyList(),
-                TableLocation.EAST, Collections.emptyList(),
-                TableLocation.SOUTH, Collections.emptyList(),
-                TableLocation.WEST, Collections.emptyList()
-        ), builder.getTableCards());
+                Hand.EAST, Collections.emptyList(),
+                Hand.SOUTH, Collections.emptyList(),
+                Hand.WEST, Collections.emptyList()
+        ), builder.getHandCards());
         builder.build();
     }
 
@@ -322,17 +322,17 @@ public class GameBuilderTest {
 
     @Test
     public void testMoveCard() throws Exception {
-        assertThat(builder.getTableCards().get(TableLocation.SOUTH), hasItem(Card.SPADE_7));
+        assertThat(builder.getHandCards().get(Hand.SOUTH), hasItem(Card.SPADE_7));
         assertTrue(builder.moveCard(Card.SPADE_7, TableLocation.SOUTH, TableLocation.EAST));
-        assertThat(builder.getTableCards().get(TableLocation.SOUTH), not(hasItem(Card.SPADE_7)));
-        assertThat(builder.getTableCards().get(TableLocation.EAST), hasItem(Card.SPADE_7));
+        assertThat(builder.getHandCards().get(Hand.SOUTH), not(hasItem(Card.SPADE_7)));
+        assertThat(builder.getHandCards().get(Hand.EAST), hasItem(Card.SPADE_7));
         assertTrue(builder.moveCard(Card.SPADE_7, TableLocation.SOUTH, TableLocation.CENTER));
-        assertThat(builder.getTableCards().get(TableLocation.SOUTH), not(hasItem(Card.SPADE_7)));
+        assertThat(builder.getHandCards().get(Hand.SOUTH), not(hasItem(Card.SPADE_7)));
         assertThat(builder.getCenterCards(), hasKey(Card.SPADE_7));
         assertThat(builder.getCenterCards().get(Card.SPADE_7), equalTo(Hand.SOUTH));
         assertTrue(builder.moveCard(Card.SPADE_7, TableLocation.CENTER, TableLocation.WEST));
         assertThat(builder.getCenterCards(), not(hasKey(Card.SPADE_7)));
-        assertThat(builder.getTableCards().get(TableLocation.WEST), hasItem(Card.SPADE_7));
+        assertThat(builder.getHandCards().get(Hand.WEST), hasItem(Card.SPADE_7));
         assertTrue(builder.moveCard(Card.DIAMOND_9, TableLocation.EAST, TableLocation.CENTER));
         assertTrue(builder.moveCard(Card.SPADE_QUEEN, TableLocation.WEST, TableLocation.CENTER));
         assertTrue(builder.moveCard(Card.CLUB_7, TableLocation.SOUTH, TableLocation.CENTER));

@@ -20,12 +20,15 @@
 package com.preferanser.client.application.widgets;
 
 import com.google.common.base.Function;
+import com.google.common.base.Predicates;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.EnumHashBiMap;
 import com.google.common.collect.ImmutableMap;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiChild;
 import com.google.gwt.uibinder.client.UiField;
@@ -38,13 +41,15 @@ import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.Map;
 
+import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Iterables.transform;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.preferanser.shared.domain.TableLocation.*;
 
 public class TablePanel extends Composite {
 
-    public interface Binder extends UiBinder<VerticalPanel, TablePanel> {}
+    public interface Binder extends UiBinder<VerticalPanel, TablePanel> {
+    }
 
     private static Binder uiBinder = GWT.create(Binder.class);
 
@@ -67,23 +72,23 @@ public class TablePanel extends Composite {
     @UiField
     TabPanel centerTabPanel;
     @UiField
-    SimplePanel widowPanel;
+    FlowPanel widowPanel;
     @UiField
     FlowPanel centerCardsPanel;
 
-    private final BiMap<TableLocation, FlowPanel> locationPanelMap = EnumHashBiMap.create(TableLocation.class);
+    private final BiMap<TableLocation, Panel> locationPanelMap = EnumHashBiMap.create(TableLocation.class);
     private final BiMap<TableLocation, Layout<CardWidget>> locationLayoutMap = EnumHashBiMap.create(TableLocation.class);
 
     private CenterLayout centerCardLayout;
 
     public TablePanel() {
         initWidget(uiBinder.createAndBindUi(this));
-        centerTabPanel.selectTab(0);
 
         locationPanelMap.put(EAST, eastCardsPanel);
         locationPanelMap.put(SOUTH, southCardsPanel);
         locationPanelMap.put(WEST, westCardsPanel);
         locationPanelMap.put(CENTER, centerCardsPanel);
+        locationPanelMap.put(WIDOW, widowPanel);
 
         int cardWidth = resources.c7().getWidth();
         int cardHeight = resources.c7().getHeight();
@@ -91,6 +96,16 @@ public class TablePanel extends Composite {
         locationLayoutMap.put(EAST, new EastLayout(eastCardsPanel, cardWidth, cardHeight));
         locationLayoutMap.put(SOUTH, new HorizontalLayout(southCardsPanel, cardWidth));
         locationLayoutMap.put(WEST, new WestLayout(westCardsPanel, cardWidth, cardHeight));
+        locationLayoutMap.put(WIDOW, new WidowLayout(widowPanel, cardWidth, cardHeight));
+
+        centerTabPanel.selectTab(0);
+        centerTabPanel.addSelectionHandler(new SelectionHandler<Integer>() {
+            @Override
+            public void onSelection(SelectionEvent<Integer> event) {
+                layoutLocation(TableLocation.CENTER);
+                layoutLocation(TableLocation.WIDOW);
+            }
+        });
     }
 
     @UiChild
@@ -129,38 +144,49 @@ public class TablePanel extends Composite {
         centerCardLayout.apply(handCards);
     }
 
-    public void layoutLocation(TableLocation location) {
-        FlowPanel panel = locationPanelMap.get(location);
-        Layout<CardWidget> layout = locationLayoutMap.get(location);
-        Collection<CardWidget> cardWidgets = newArrayList(transform(panel, new Function<Widget, CardWidget>() {
-            @Nullable @Override public CardWidget apply(@Nullable Widget widget) {
-                return widget instanceof CardWidget
-                        ? (CardWidget) widget
-                        : null;
-            }
-        }));
-        assert layout != null : "Layout for " + location + " is null";
-        layout.apply(cardWidgets);
-    }
+    public void layoutLocation(final TableLocation location) {
+        if (CENTER == location) {
+            centerCardLayout.apply(newArrayList(filter(transform(centerCardsPanel, new Function<IsWidget, HandCard>() {
+                @Nullable
+                @Override
+                public HandCard apply(@Nullable IsWidget widget) {
+                    return widget instanceof HandCard ? (HandCard) widget : null;
+                }
+            }), Predicates.notNull())));
+        } else {
+            Panel panel = locationPanelMap.get(location);
+            assert panel != null : "Panel for " + location + " is null";
 
-    public void hideLocation(TableLocation tableLocation) {
-        locationPanelMap.get(tableLocation).getParent().setVisible(false);
+            Layout<CardWidget> layout = locationLayoutMap.get(location);
+            assert layout != null : "Layout for " + location + " is null";
+
+            Collection<CardWidget> cardWidgets = newArrayList(filter(transform(panel, new Function<Widget, CardWidget>() {
+                @Nullable
+                @Override
+                public CardWidget apply(@Nullable Widget widget) {
+                    return widget instanceof CardWidget ? (CardWidget) widget : null;
+                }
+            }), Predicates.notNull()));
+
+            layout.apply(cardWidgets);
+        }
     }
 
     public void addCenterPanelClickHandler(ClickHandler clickHandler) {
         centerCardsPanel.addDomHandler(clickHandler, ClickEvent.getType());
     }
 
-    public Map<FlowPanel, TableLocation> getPanelLocations() {
+    public Map<Panel, TableLocation> getPanelLocations() {
         return ImmutableMap.of(
-                centerCardsPanel, CENTER,
+                (Panel) centerCardsPanel, CENTER,
                 eastCardsPanel, EAST,
                 westCardsPanel, WEST,
-                southCardsPanel, SOUTH
+                southCardsPanel, SOUTH,
+                widowPanel, WIDOW
         );
     }
 
-    public FlowPanel getLocationWidgetsContainer(TableLocation location) {
+    public Panel getLocationWidgetsContainer(TableLocation location) {
         switch (location) {
             case CENTER:
                 return centerCardsPanel;
@@ -170,6 +196,8 @@ public class TablePanel extends Composite {
                 return eastCardsPanel;
             case SOUTH:
                 return southCardsPanel;
+            case WIDOW:
+                return widowPanel;
             default:
                 throw new IllegalArgumentException("There is no panel for the location: " + location);
         }

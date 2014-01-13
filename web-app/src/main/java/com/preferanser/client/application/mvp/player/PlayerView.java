@@ -48,13 +48,18 @@ public class PlayerView extends BaseTableView<PlayerUiHandlers> implements Playe
 
     private static final Logger log = Logger.getLogger("PlayerView");
 
-    public interface Binder extends UiBinder<Widget, PlayerView> {}
+    public interface Binder extends UiBinder<Widget, PlayerView> {
+    }
 
-    @UiField Button editButton;
+    @UiField
+    Button editButton;
     // @UiField Label trickCountWidow;
-    @UiField Label trickCountEast;
-    @UiField Label trickCountSouth;
-    @UiField Label trickCountWest;
+    @UiField
+    Label trickCountEast;
+    @UiField
+    Label trickCountSouth;
+    @UiField
+    Label trickCountWest;
 
     @Inject
     public PlayerView(Binder uiBinder, PreferanserResources resources, PreferanserConstants constants, I18nHelper i18nHelper) {
@@ -63,12 +68,12 @@ public class PlayerView extends BaseTableView<PlayerUiHandlers> implements Playe
         init();
     }
 
-    @Override protected void init() {
+    @Override
+    protected void init() {
         super.init();
         populateHandTrickCounts();
         installCenterPanelClickHandler();
     }
-
 
     @Override
     protected void displayHandTurnPointer(Hand hand, TurnPointer turnPointer, Hand turn) {
@@ -79,22 +84,26 @@ public class PlayerView extends BaseTableView<PlayerUiHandlers> implements Playe
             turnPointer.addStyleName(tableStyle.notDisplayed());
     }
 
-    @UiHandler("editButton") void onEditButtonClicked(@SuppressWarnings("unused") ClickEvent event) {
+    @UiHandler("editButton")
+    void onEditButtonClicked(@SuppressWarnings("unused") ClickEvent event) {
         getUiHandlers().switchToEditor();
     }
 
     protected void installCenterPanelClickHandler() {
         table.addCenterPanelClickHandler(new ClickHandler() {
-            @Override public void onClick(ClickEvent event) {
+            @Override
+            public void onClick(ClickEvent event) {
                 getUiHandlers().sluff();
             }
         });
     }
 
-    @Override protected CardWidget createCardWidget(final Card card) {
+    @Override
+    protected CardWidget createCardWidget(final Card card) {
         final CardWidget cardWidget = super.createCardWidget(card);
         cardWidget.addDoubleClickHandler(new DoubleClickHandler() {
-            @Override public void onDoubleClick(DoubleClickEvent event) {
+            @Override
+            public void onDoubleClick(DoubleClickEvent event) {
                 FlowPanel parent = (FlowPanel) cardWidget.getParent();
                 TableLocation oldLocation = table.getPanelLocations().get(parent);
                 TableLocation newLocation = TableLocation.CENTER;
@@ -105,19 +114,16 @@ public class PlayerView extends BaseTableView<PlayerUiHandlers> implements Playe
         return cardWidget;
     }
 
-    @Override protected void displayHandContract(Hand hand, Contract contract) {
+    @Override
+    protected void displayHandContract(Hand hand, Contract contract) {
         Label label = getHandContractTextHolder(hand);
         label.setText(constants.getString(hand.name()) + " – " + i18nHelper.getContractName(contract).toLowerCase());
         label.setVisible(true);
     }
 
-    @Override protected void displayNoContract(Hand hand) {
-        getHandContractTextHolder(hand).setVisible(false);
-    }
-
     @Override
-    public void hideHand(Hand hand) {
-        table.hideLocation(TableLocation.valueOf(hand));
+    protected void displayNoContract(Hand hand) {
+        getHandContractTextHolder(hand).setVisible(false);
     }
 
     private Label getHandContractTextHolder(Hand hand) {
@@ -134,13 +140,14 @@ public class PlayerView extends BaseTableView<PlayerUiHandlers> implements Playe
     }
 
     private void populateHandTrickCounts() {
-        //handTricksCountMap.put(Hand.WIDOW, trickCountWidow);
+        //handTricksCountMap.put(Hand.NORTH, trickCountWidow);
         handTricksCountMap.put(Hand.EAST, trickCountEast);
         handTricksCountMap.put(Hand.SOUTH, trickCountSouth);
         handTricksCountMap.put(Hand.WEST, trickCountWest);
     }
 
-    @Override protected Logger getLog() {
+    @Override
+    protected Logger getLog() {
         return log;
     }
 }

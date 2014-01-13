@@ -144,7 +144,7 @@
                                      addStyleNames="{style.centerCardsPanel}"/>
                     </g:Tab>
                     <g:Tab text="{constants.widow}">
-                        <g:SimplePanel ui:field="widowPanel" addStyleNames="{style.widowPanel}"/>
+                        <g:FlowPanel ui:field="widowPanel" addStyleNames="{style.widowPanel}"/>
                     </g:Tab>
                 </g:TabPanel>
             </g:Dock>

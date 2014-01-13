@@ -29,6 +29,56 @@ body {
     gwt-image: 'dialogBackground';
 }
 
+.gwt-TabBar {
+    line-height: 20px;
+    height: 20px;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.gwt-TabBar :focus {
+    outline: 0 !important;
+}
+
+.gwt-TabBarItem {
+    font-weight: bold;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+}
+
+.gwt-TabBarItem, .gwt-TabBarFirst, .gwt-TabBarRest {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.gwt-TabBarFirst {
+    width: 10px;
+    -webkit-border-top-left-radius: 7px;
+    -moz-border-radius-topleft: 7px;
+    border-top-left-radius: 7px;
+}
+
+.gwt-TabBarRest {
+    -webkit-border-top-right-radius: 7px;
+    -moz-border-radius-topright: 7px;
+    border-top-right-radius: 7px;
+}
+
+.gwt-TabBarItem .gwt-Label {
+    color: white;
+}
+
+.gwt-TabBarItem-selected {
+    background-color: rgba(0, 0, 0, 0);
+}
+
+.gwt-TabBarItem-selected .gwt-Label {
+    color: #ffa200;
+}
+
+.gwt-TabPanelBottom {
+    height: 100%;
+}
+
 .gwt-DialogBox {
     padding: 1em;
     border-radius: 7px;

@@ -23,8 +23,8 @@ import com.preferanser.webtest.requirements.Application;
 import net.thucydides.core.annotations.Story;
 import org.junit.Test;
 
-import static com.preferanser.shared.domain.Cardinal.*;
 import static com.preferanser.shared.domain.Contract.*;
+import static com.preferanser.shared.domain.Hand.*;
 
 @Story(Application.Table.Contracts.class)
 public class ContractsTest extends TableTest {
@@ -33,11 +33,11 @@ public class ContractsTest extends TableTest {
     public void userCanSpecifyContracts() {
         endUser.onTheTablePage()
             .editsNewDeal()
-            .specifiesContract(NORTH, SIX_SPADE)
+            .specifiesContract(SOUTH, SIX_SPADE)
             .specifiesContract(EAST, PASS)
             .specifiesContract(WEST, WHIST)
             .switchesToPlayMode()
-            .canSeeContract(NORTH, "6♠")
+            .canSeeContract(SOUTH, "6♠")
             .canSeeContract(EAST, "пас")
             .canSeeContract(WEST, "вист")
             .canSeeNoContract(SOUTH);

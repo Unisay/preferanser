@@ -22,12 +22,12 @@ package com.preferanser.client.application.widgets;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.Image;
 import com.preferanser.client.application.mvp.editor.style.TurnPointerStyle;
-import com.preferanser.shared.domain.Cardinal;
+import com.preferanser.shared.domain.Hand;
 
 public class TurnPointer extends Image {
 
     private final TurnPointerStyle style;
-    private Cardinal turn;
+    private Hand turn;
     private boolean active;
 
     public TurnPointer(TurnPointerStyle style, ImageResource imageResource) {
@@ -36,12 +36,9 @@ public class TurnPointer extends Image {
         setStylePrimaryName(style.turnPointer());
     }
 
-    public void setTurn(Cardinal turn) {
+    public void setTurn(Hand turn) {
         this.turn = turn;
         switch (turn) {
-            case NORTH:
-                addStyleName(style.turnPointerNorth());
-                break;
             case EAST:
                 addStyleName(style.turnPointerEast());
                 break;
@@ -55,7 +52,7 @@ public class TurnPointer extends Image {
         ensureDebugId("turn-pointer-" + turn.name());
     }
 
-    public Cardinal getTurn() {
+    public Hand getTurn() {
         return turn;
     }
 

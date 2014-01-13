@@ -28,8 +28,8 @@ import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import java.util.Collection;
 import java.util.Map;
+import java.util.Set;
 
 import static org.mockito.Mockito.*;
 
@@ -52,40 +52,44 @@ public class PlayerPresenterTest {
     @Mock
     private Game game;
 
-    @Mock
-    private Map<Cardinal, Contract> cardinalContracts;
 
     @Mock
-    private Map<TableLocation, Collection<Card>> cardinalCards;
+    private Map<Hand, Contract> handContracts;
 
     @Mock
-    private Map<Card, Cardinal> centerCards;
+    private Map<Hand, Set<Card>> handCards;
 
     @Mock
-    private Map<Cardinal, Integer> cardinalTricks;
+    private Map<Card, Hand> centerCards;
 
-    private Cardinal turn;
+    @Mock
+    private Map<Hand, Integer> handTricks;
+
+    private Hand turn;
+    private Widow widow;
 
     @BeforeMethod
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         presenter = new PlayerPresenter(placeManager, eventBus, view, proxy);
         presenter.onGameBuilt(new GameBuiltEvent(game));
-        turn = Cardinal.EAST;
+        turn = Hand.EAST;
+        widow = new Widow();
 
         verify(view).setUiHandlers(presenter);
     }
 
     @Test
     public void testChangeCardLocation_NotToCenter() throws Exception {
-        when(game.getCardinalCards()).thenReturn(cardinalCards);
+        when(game.getWidow()).thenReturn(widow);
+        when(game.getHandCards()).thenReturn(handCards);
         when(game.getCenterCards()).thenReturn(centerCards);
 
         presenter.changeCardLocation(Card.CLUB_ACE, TableLocation.WEST, TableLocation.EAST);
 
-        verify(game).getCardinalCards();
+        verify(game).getHandCards();
         verify(game).getCenterCards();
-        verify(view).displayTableCards(cardinalCards, centerCards);
+        verify(view).displayCards(handCards, centerCards, widow);
         verifyNoMoreInteractions(view);
         verifyNoMoreInteractions(game);
     }
@@ -93,17 +97,18 @@ public class PlayerPresenterTest {
     @Test
     public void testChangeCardLocation() throws Exception {
         when(game.getTurn()).thenReturn(turn);
-        when(game.getCardinalContracts()).thenReturn(cardinalContracts);
-        when(game.getCardinalCards()).thenReturn(cardinalCards);
+        when(game.getWidow()).thenReturn(widow);
+        when(game.getHandContracts()).thenReturn(handContracts);
+        when(game.getHandCards()).thenReturn(handCards);
         when(game.getCenterCards()).thenReturn(centerCards);
-        when(game.getCardinalTricks()).thenReturn(cardinalTricks);
+        when(game.getHandTricks()).thenReturn(handTricks);
 
         presenter.changeCardLocation(Card.CLUB_ACE, TableLocation.EAST, TableLocation.CENTER);
 
         verify(view).displayTurn(turn);
-        verify(view).displayContracts(cardinalContracts);
-        verify(view).displayTableCards(cardinalCards, centerCards);
-        verify(view).displayCardinalTricks(cardinalTricks);
+        verify(view).displayContracts(handContracts);
+        verify(view).displayCards(handCards, centerCards, widow);
+        verify(view).displayHandTricks(handTricks);
         verifyNoMoreInteractions(view);
     }
 
@@ -111,17 +116,18 @@ public class PlayerPresenterTest {
     public void testChangeCardLocation_CompleteTrick() throws Exception {
         when(game.isTrickComplete()).thenReturn(true);
         when(game.getTurn()).thenReturn(turn);
-        when(game.getCardinalContracts()).thenReturn(cardinalContracts);
-        when(game.getCardinalCards()).thenReturn(cardinalCards);
+        when(game.getWidow()).thenReturn(widow);
+        when(game.getHandContracts()).thenReturn(handContracts);
+        when(game.getHandCards()).thenReturn(handCards);
         when(game.getCenterCards()).thenReturn(centerCards);
-        when(game.getCardinalTricks()).thenReturn(cardinalTricks);
+        when(game.getHandTricks()).thenReturn(handTricks);
 
         presenter.changeCardLocation(Card.CLUB_ACE, TableLocation.EAST, TableLocation.CENTER);
 
         verify(view).displayTurn(turn);
-        verify(view).displayContracts(cardinalContracts);
-        verify(view).displayTableCards(cardinalCards, centerCards);
-        verify(view).displayCardinalTricks(cardinalTricks);
+        verify(view).displayContracts(handContracts);
+        verify(view).displayCards(handCards, centerCards, widow);
+        verify(view).displayHandTricks(handTricks);
         verifyNoMoreInteractions(view);
     }
 

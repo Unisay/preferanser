@@ -23,9 +23,13 @@ import com.google.common.base.Preconditions;
 import com.googlecode.objectify.annotation.Embed;
 
 import java.io.Serializable;
+import java.util.Iterator;
+import java.util.Set;
+
+import static com.google.common.collect.Sets.newHashSet;
 
 @Embed
-public class Widow implements Serializable {
+public class Widow implements Serializable, Iterable<Card> {
 
     public Card card1;
     public Card card2;
@@ -79,6 +83,24 @@ public class Widow implements Serializable {
         Preconditions.checkNotNull(cards[0], "Card 1 is null, can't create Widow");
         Preconditions.checkNotNull(cards[1], "Card 2 is null, can't create Widow");
         return new Widow(cards[0], cards[1]);
+    }
+
+    public Set<Card> asSet() {
+        Set<Card> cards = newHashSet();
+        if (card1 != null)
+            cards.add(card1);
+        if (card2 != null)
+            cards.add(card2);
+        return cards;
+    }
+
+    @Override
+    public Iterator<Card> iterator() {
+        return asSet().iterator();
+    }
+
+    public boolean hasTwoCards() {
+        return card1 != null && card2 != null;
     }
 
 }

@@ -22,7 +22,6 @@
              xmlns:p="urn:import:com.preferanser.client.application.widgets">
     <ui:with field="constants" type="com.preferanser.client.application.i18n.PreferanserConstants"/>
     <ui:style src="../table.css" field="tableStyle" type="com.preferanser.client.application.mvp.editor.style.TableStyle"/>
-
     <p:TablePanel ui:field="table">
 
         <p:header>
@@ -33,16 +32,6 @@
                 <g:Button ui:field="dealButton" text="{constants.deal}" debugId="deal"/>
             </p:Widgets>
         </p:header>
-
-        <p:northheader>
-            <p:Widgets>
-                <g:FlowPanel addStyleNames="{tableStyle.handHeaderLeftPanel}">
-                    <g:Label ui:field="titleNorth" text="{constants.NORTH}" addStyleNames="{tableStyle.titleNorth}"/>
-                    <g:Anchor ui:field="northContractAnchor" debugId="contract-link-NORTH" addStyleNames="{tableStyle.contractLink}"/>
-                </g:FlowPanel>
-                <g:Label ui:field="trickCountNorth" addStyleNames="{tableStyle.trickCountNorth}"/>
-            </p:Widgets>
-        </p:northheader>
 
         <p:westheader>
             <p:Widgets>
@@ -76,7 +65,6 @@
 
         <p:center>
             <p:Widgets>
-                <p:TurnPointer ui:field="turnPointerNorth" turn="NORTH"/>
                 <p:TurnPointer ui:field="turnPointerEast" turn="EAST"/>
                 <p:TurnPointer ui:field="turnPointerSouth" turn="SOUTH"/>
                 <p:TurnPointer ui:field="turnPointerWest" turn="WEST"/>
@@ -84,5 +72,6 @@
         </p:center>
 
     </p:TablePanel>
+
 
 </ui:UiBinder>

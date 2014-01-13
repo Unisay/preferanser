@@ -30,8 +30,8 @@ import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import java.util.Collection;
 import java.util.Map;
+import java.util.Set;
 
 import static org.mockito.Mockito.*;
 
@@ -64,42 +64,45 @@ public class EditorPresenterTest {
     private Game game;
 
     @Mock
-    private Map<Cardinal, Contract> cardinalContracts;
+    private Map<Hand, Contract> handContracts;
 
     @Mock
-    private Map<TableLocation, Collection<Card>> cardinalCards;
+    private Map<Hand, Set<Card>> handCards;
 
     @Mock
-    private Map<Card, Cardinal> centerCards;
+    private Map<Card, Hand> centerCards;
 
     @Mock
-    private Map<Cardinal, Integer> cardinalTricks;
+    private Map<Hand, Integer> handTricks;
 
     @Mock
     private PreferanserConstants preferanserConstants;
 
-    private Cardinal turn;
+    private Hand turn;
+    private Widow widow;
 
     @BeforeMethod
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         when(gameBuilder.build()).thenReturn(game);
-        presenter = new EditorPresenter(placeManager, eventBus, view, proxy, gameBuilder, dealService,  preferanserConstants, editorDialogs);
-        turn = Cardinal.EAST;
+        presenter = new EditorPresenter(placeManager, eventBus, view, proxy, gameBuilder, dealService, preferanserConstants, editorDialogs);
+        turn = Hand.EAST;
+        widow = new Widow();
 
         verify(view).setUiHandlers(presenter);
     }
 
     @Test
     public void testChangeCardLocation_EqualLocations() throws Exception {
-        when(gameBuilder.getTableCards()).thenReturn(cardinalCards);
+        when(gameBuilder.getWidow()).thenReturn(widow);
+        when(gameBuilder.getHandCards()).thenReturn(handCards);
         when(gameBuilder.getCenterCards()).thenReturn(centerCards);
 
         presenter.changeCardLocation(Card.CLUB_ACE, TableLocation.EAST, TableLocation.EAST);
 
-        verify(gameBuilder).getTableCards();
+        verify(gameBuilder).getHandCards();
         verify(gameBuilder).getCenterCards();
-        verify(view).displayTableCards(cardinalCards, centerCards);
+        verify(view).displayCards(handCards, centerCards, widow);
 
         verifyNoMoreInteractions(view);
         verifyNoMoreInteractions(game);
@@ -108,17 +111,18 @@ public class EditorPresenterTest {
 
     @Test
     public void testChangeCardLocation_EditMode() throws Exception {
+        when(gameBuilder.getWidow()).thenReturn(widow);
         when(gameBuilder.getFirstTurn()).thenReturn(turn);
-        when(gameBuilder.getCardinalContracts()).thenReturn(cardinalContracts);
-        when(gameBuilder.getTableCards()).thenReturn(cardinalCards);
+        when(gameBuilder.getHandContracts()).thenReturn(handContracts);
+        when(gameBuilder.getHandCards()).thenReturn(handCards);
         when(gameBuilder.getCenterCards()).thenReturn(centerCards);
 
         presenter.changeCardLocation(Card.CLUB_ACE, TableLocation.EAST, TableLocation.WEST);
 
         verify(view).displayTurn(turn);
-        verify(view).displayContracts(cardinalContracts);
-        verify(view).displayTableCards(cardinalCards, centerCards);
-        verify(view).hideCardinalTricks();
+        verify(view).displayContracts(handContracts);
+        verify(view).displayCards(handCards, centerCards, widow);
+        verify(view).hideHandTricks();
         verifyNoMoreInteractions(view);
     }
 
@@ -148,7 +152,7 @@ public class EditorPresenterTest {
     }
 
     @Test
-    public void testSetCardinalContract() throws Exception {
+    public void testSetHandContract() throws Exception {
 
     }
 

@@ -17,24 +17,14 @@
  *     along with this program.  If not, see [http://www.gnu.org/licenses/].
  */
 
-package com.preferanser.shared.domain;
+package com.preferanser.client.application.mvp.editor;
 
-public enum Cardinal {
-    NORTH, EAST, SOUTH, WEST;
 
-    public static Cardinal valueOf(TableLocation tableLocation) {
-        switch (tableLocation) {
-            case NORTH:
-                return Cardinal.NORTH;
-            case EAST:
-                return Cardinal.EAST;
-            case SOUTH:
-                return Cardinal.SOUTH;
-            case WEST:
-                return Cardinal.WEST;
-            default:
-                throw new IllegalArgumentException("TableLocation " + tableLocation + " doesn't have a corresponding Cardinal!");
-        }
-    }
+import com.preferanser.shared.domain.Contract;
+import com.preferanser.shared.domain.Hand;
+
+public interface HasHandContracts {
+
+    boolean setHandContract(Hand hand, Contract contract);
 
 }

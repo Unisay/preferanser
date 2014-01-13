@@ -22,31 +22,31 @@ package com.preferanser.shared.domain.exception.validation;
 import com.google.common.base.Joiner;
 import com.preferanser.client.application.i18n.PreferanserConstants;
 import com.preferanser.client.application.i18n.PreferanserMessages;
-import com.preferanser.shared.domain.Cardinal;
+import com.preferanser.shared.domain.Hand;
 
 import java.util.List;
 import java.util.Map;
 
 import static com.google.common.collect.Lists.newArrayList;
 
-public class WrongNumCardsPerCardinalValidationError extends GameBuilderValidationError {
+public class WrongNumCardsPerHandValidationError extends GameBuilderValidationError {
 
-    private Map<Cardinal, Integer> wrongCardinals;
+    private Map<Hand, Integer> wrongHands;
 
     @SuppressWarnings("unused")
-    public WrongNumCardsPerCardinalValidationError() {
+    public WrongNumCardsPerHandValidationError() {
         // for serialization
     }
 
-    public WrongNumCardsPerCardinalValidationError(Map<Cardinal, Integer> wrongCardinals) {
-        this.wrongCardinals = wrongCardinals;
+    public WrongNumCardsPerHandValidationError(Map<Hand, Integer> wrongHands) {
+        this.wrongHands = wrongHands;
     }
 
     @Override public String formatLocalMessage(PreferanserConstants constants, PreferanserMessages messages) {
         List<String> params = newArrayList();
-        for (Map.Entry<Cardinal, Integer> entry : wrongCardinals.entrySet())
+        for (Map.Entry<Hand, Integer> entry : wrongHands.entrySet())
             params.add(constants.getString(entry.getKey().name()).toLowerCase() + " ‒ " + entry.getValue());
-        return messages.wrongNumCardsPerCardinal(Joiner.on(", ").join(params));
+        return messages.wrongNumCardsPerHand(Joiner.on(", ").join(params));
     }
 
 }

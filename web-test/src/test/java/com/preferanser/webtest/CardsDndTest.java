@@ -34,22 +34,22 @@ public class CardsDndTest extends TableTest {
 
     @Test
     public void user_can_drag_card_to_east() {
-        user_can_drag_card_to_location(SPADE_ACE, NORTH, EAST);
+        user_can_drag_card_to_location(SPADE_ACE, SOUTH, EAST);
     }
 
     @Test
     public void user_can_drag_card_to_south() {
-        user_can_drag_card_to_location(CLUB_ACE, NORTH, SOUTH);
+        user_can_drag_card_to_location(CLUB_ACE, SOUTH, SOUTH);
     }
 
     @Test
     public void user_can_drag_card_to_west() {
-        user_can_drag_card_to_location(DIAMOND_ACE, NORTH, WEST);
+        user_can_drag_card_to_location(DIAMOND_ACE, SOUTH, WEST);
     }
 
     @Test
     public void user_can_drag_card_to_center() {
-        user_can_drag_card_to_location(HEART_ACE, NORTH, CENTER);
+        user_can_drag_card_to_location(HEART_ACE, SOUTH, CENTER);
     }
 
     private void user_can_drag_card_to_location(Card card, TableLocation fromLocation, TableLocation toLocation) {

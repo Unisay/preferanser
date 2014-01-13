@@ -17,14 +17,31 @@
  *     along with this program.  If not, see [http://www.gnu.org/licenses/].
  */
 
-package com.preferanser.client.application.mvp.editor;
+package com.preferanser.shared.domain;
 
 
-import com.preferanser.shared.domain.Cardinal;
-import com.preferanser.shared.domain.Contract;
+import com.google.common.collect.ImmutableList;
 
-public interface HasCardinalContracts {
+public enum Hand {
 
-    boolean setCardinalContract(Cardinal cardinal, Contract contract);
+    EAST, SOUTH, WEST, NORTH;
+
+    public static ImmutableList<Hand> PLAYING_HANDS = ImmutableList.of(EAST, SOUTH, WEST);
+
+    public static Hand valueOf(TableLocation tableLocation) {
+        switch (tableLocation) {
+            case EAST:
+                return Hand.EAST;
+            case SOUTH:
+                return Hand.SOUTH;
+            case WEST:
+                return Hand.WEST;
+            case WIDOW:
+                return Hand.NORTH;
+            default:
+                throw new IllegalArgumentException("TableLocation " + tableLocation + " doesn't have a corresponding " +
+                        "Hand!");
+        }
+    }
 
 }

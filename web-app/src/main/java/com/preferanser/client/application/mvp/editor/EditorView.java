@@ -37,8 +37,8 @@ import com.preferanser.client.application.widgets.RequestButton;
 import com.preferanser.client.application.widgets.TurnPointer;
 import com.preferanser.client.restygwt.RestyGwtDispatcher;
 import com.preferanser.client.theme.greencloth.client.com.preferanser.client.application.PreferanserResources;
-import com.preferanser.shared.domain.Cardinal;
 import com.preferanser.shared.domain.Contract;
+import com.preferanser.shared.domain.Hand;
 
 import java.util.Map;
 import java.util.logging.Logger;
@@ -57,7 +57,6 @@ public class EditorView extends BaseTableView<EditorUiHandlers> implements Edito
     @UiField(provided = true) RequestButton openButton;
     @UiField Button dealButton;
 
-    @UiField Anchor northContractAnchor;
     @UiField Anchor eastContractAnchor;
     @UiField Anchor southContractAnchor;
     @UiField Anchor westContractAnchor;
@@ -71,9 +70,9 @@ public class EditorView extends BaseTableView<EditorUiHandlers> implements Edito
         init();
     }
 
-    @Override protected void populateCardinalTurnPointers() {
-        super.populateCardinalTurnPointers();
-        for (final TurnPointer turnPointer : cardinalTurnPointerMap.values()) {
+    @Override protected void populateHandTurnPointers() {
+        super.populateHandTurnPointers();
+        for (final TurnPointer turnPointer : handTurnPointerMap.values()) {
             turnPointer.addClickHandler(new ClickHandler() {
                 @Override public void onClick(ClickEvent event) {
                     getUiHandlers().chooseTurn(turnPointer.getTurn());
@@ -82,18 +81,16 @@ public class EditorView extends BaseTableView<EditorUiHandlers> implements Edito
         }
     }
 
-    @Override protected void displayCardinalContract(Cardinal cardinal, Contract contract) {
-        getCardinalContractTextHolder(cardinal).setText(i18nHelper.getContractName(contract));
+    @Override protected void displayHandContract(Hand hand, Contract contract) {
+        getHandContractTextHolder(hand).setText(i18nHelper.getContractName(contract));
     }
 
-    @Override protected void displayNoContract(Cardinal cardinal) {
-        getCardinalContractTextHolder(cardinal).setText(constants.chooseContract());
+    @Override protected void displayNoContract(Hand hand) {
+        getHandContractTextHolder(hand).setText(constants.chooseContract());
     }
 
-    private Anchor getCardinalContractTextHolder(Cardinal cardinal) {
-        switch (cardinal) {
-            case NORTH:
-                return northContractAnchor;
+    private Anchor getHandContractTextHolder(Hand hand) {
+        switch (hand) {
             case EAST:
                 return eastContractAnchor;
             case SOUTH:
@@ -101,12 +98,12 @@ public class EditorView extends BaseTableView<EditorUiHandlers> implements Edito
             case WEST:
                 return westContractAnchor;
             default:
-                throw new IllegalStateException("No contract link for the cardinal: " + cardinal);
+                throw new IllegalStateException("No contract link for the hand: " + hand);
         }
     }
 
-    @Override public void hideCardinalTricks() {
-        for (Map.Entry<Cardinal, Label> entry : cardinalTricksCountMap.entrySet()) {
+    @Override public void hideHandTricks() {
+        for (Map.Entry<Hand, Label> entry : handTricksCountMap.entrySet()) {
             entry.getValue().setText("");
         }
     }
@@ -127,20 +124,16 @@ public class EditorView extends BaseTableView<EditorUiHandlers> implements Edito
         getUiHandlers().reset();
     }
 
-    @UiHandler("northContractAnchor") void onNorthContractLinkClicked(@SuppressWarnings("unused") ClickEvent event) {
-        getUiHandlers().chooseContract(Cardinal.NORTH);
-    }
-
     @UiHandler("eastContractAnchor") void onEastContractLinkClicked(@SuppressWarnings("unused") ClickEvent event) {
-        getUiHandlers().chooseContract(Cardinal.EAST);
+        getUiHandlers().chooseContract(Hand.EAST);
     }
 
     @UiHandler("southContractAnchor") void onSouthContractLinkClicked(@SuppressWarnings("unused") ClickEvent event) {
-        getUiHandlers().chooseContract(Cardinal.SOUTH);
+        getUiHandlers().chooseContract(Hand.SOUTH);
     }
 
     @UiHandler("westContractAnchor") void onWestContractLinkClicked(@SuppressWarnings("unused") ClickEvent event) {
-        getUiHandlers().chooseContract(Cardinal.WEST);
+        getUiHandlers().chooseContract(Hand.WEST);
     }
 
     @Override protected Logger getLog() {

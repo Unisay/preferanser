@@ -17,17 +17,33 @@
  *     along with this program.  If not, see [http://www.gnu.org/licenses/].
  */
 
-package com.preferanser.shared.domain;
+package com.preferanser.client.application.widgets;
 
-/**
- * Table locations
- */
-public enum TableLocation {
+import com.google.gwt.user.client.ui.IsWidget;
+import com.google.gwt.user.client.ui.Widget;
+import com.preferanser.shared.domain.Hand;
 
-    EAST, SOUTH, WEST, CENTER, WIDOW;
+public class HandCard implements IsWidget {
 
-    public static TableLocation valueOf(Hand hand) {
-        return TableLocation.valueOf(hand.name());
+    private Hand hand;
+    private CardWidget cardWidget;
+
+    public HandCard(Hand hand, CardWidget cardWidget) {
+        this.hand = hand;
+        this.cardWidget = cardWidget;
+    }
+
+    public Hand getHand() {
+        return hand;
+    }
+
+    public CardWidget getCardWidget() {
+        return cardWidget;
+    }
+
+    @Override
+    public Widget asWidget() {
+        return cardWidget;
     }
 
 }

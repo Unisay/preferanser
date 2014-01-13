@@ -23,7 +23,7 @@ import com.preferanser.webtest.requirements.Application;
 import net.thucydides.core.annotations.Story;
 import org.junit.Test;
 
-import static com.preferanser.shared.domain.Cardinal.*;
+import static com.preferanser.shared.domain.Hand.*;
 
 @Story(Application.Table.TurnPointer.Editing.class)
 public class TurnPointerTest extends TableTest {
@@ -34,7 +34,6 @@ public class TurnPointerTest extends TableTest {
             .editsNewDeal()
             .withTurnPointer()
             .canSeeNoActiveTurnPointer()
-            .activatesTurnPointer(NORTH).canSeeOnlyTurnPointerActive(NORTH)
             .activatesTurnPointer(EAST).canSeeOnlyTurnPointerActive(EAST)
             .activatesTurnPointer(SOUTH).canSeeOnlyTurnPointerActive(SOUTH)
             .activatesTurnPointer(WEST).canSeeOnlyTurnPointerActive(WEST)
@@ -49,11 +48,11 @@ public class TurnPointerTest extends TableTest {
         endUser.onTheTablePage()
             .editsNewDeal()
             .withTurnPointer()
-            .activatesTurnPointer(NORTH)
+            .activatesTurnPointer(SOUTH)
             .withTable()
             .switchesToPlayMode()
             .withTurnPointer()
-            .canSeeOnlyTurnPointer(NORTH);
+            .canSeeOnlyTurnPointer(SOUTH);
     }
 
 }

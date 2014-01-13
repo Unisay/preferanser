@@ -26,11 +26,11 @@
     vertical-align: middle ! important;
 }
 
-.titleNorth, .titleEast, .titleSouth, .titleWest, .handHeaderLeftPanel {
+.titleEast, .titleSouth, .titleWest, .handHeaderLeftPanel {
     float: left;
 }
 
-.trickCountNorth, .trickCountEast, .trickCountSouth, .trickCountWest {
+.trickCountWidow, .trickCountEast, .trickCountSouth, .trickCountWest {
     float: right;
 }
 
@@ -77,17 +77,9 @@
     cursor: pointer;
 }
 
-@external .turnPointerNorth;
-.turnPointerNorth {
-    top: 25px;
-    transform: rotate(270deg);
-    -ms-transform: rotate(270deg);
-    -webkit-transform: rotate(270deg);
-}
-
 @external .turnPointerEast;
 .turnPointerEast {
-    left: 515px;
+    left: 495px;
     transform: rotate(0);
     -ms-transform: rotate(0);
     -webkit-transform: rotate(0);
@@ -95,7 +87,7 @@
 
 @external .turnPointerSouth;
 .turnPointerSouth {
-    top: 406px;
+    top: 405px;
     transform: rotate(90deg);
     -ms-transform: rotate(90deg);
     -webkit-transform: rotate(90deg);

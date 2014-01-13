@@ -17,33 +17,34 @@
  *     along with this program.  If not, see [http://www.gnu.org/licenses/].
  */
 
-package com.preferanser.client.application.widgets;
+package com.preferanser.shared.domain.exception;
 
-import com.google.gwt.user.client.ui.IsWidget;
-import com.google.gwt.user.client.ui.Widget;
-import com.preferanser.shared.domain.Cardinal;
+import com.preferanser.shared.domain.Card;
+import com.preferanser.shared.domain.Hand;
 
-public class CardinalCard implements IsWidget {
+public class NoSuchHandCardException extends GameException {
 
-    private Cardinal cardinal;
-    private CardWidget cardWidget;
+    private Hand hand;
+    private Card card;
 
-    public CardinalCard(Cardinal cardinal, CardWidget cardWidget) {
-        this.cardinal = cardinal;
-        this.cardWidget = cardWidget;
+    @SuppressWarnings("unused") // required for serialization
+    public NoSuchHandCardException() {
     }
 
-    public Cardinal getCardinal() {
-        return cardinal;
+    public NoSuchHandCardException(Hand hand, Card card) {
+        this.hand = hand;
+        this.card = card;
     }
 
-    public CardWidget getCardWidget() {
-        return cardWidget;
+    @Override public String getMessage() {
+        return "Can't make turn because there is no " + card + " at " + hand;
     }
 
-    @Override
-    public Widget asWidget() {
-        return cardWidget;
+    public Hand getHand() {
+        return hand;
     }
 
+    public Card getCard() {
+        return card;
+    }
 }

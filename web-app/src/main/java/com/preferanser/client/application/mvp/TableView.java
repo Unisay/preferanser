@@ -21,18 +21,21 @@ package com.preferanser.client.application.mvp;
 
 import com.gwtplatform.mvp.client.View;
 import com.preferanser.shared.domain.Card;
-import com.preferanser.shared.domain.Cardinal;
 import com.preferanser.shared.domain.Contract;
-import com.preferanser.shared.domain.TableLocation;
+import com.preferanser.shared.domain.Hand;
+import com.preferanser.shared.domain.Widow;
 
-import java.util.Collection;
 import java.util.Map;
+import java.util.Set;
 
 public interface TableView extends View {
 
-    void displayTurn(Cardinal turn);
-    void displayContracts(Map<Cardinal, Contract> cardinalContracts);
-    void displayCardinalTricks(Map<Cardinal, Integer> cardinalTricks);
-    void displayTableCards(Map<TableLocation, Collection<Card>> tableCards, Map<Card, Cardinal> centerCards);
+    void displayTurn(Hand turn);
+
+    void displayContracts(Map<Hand, Contract> handContracts);
+
+    void displayHandTricks(Map<Hand, Integer> handTricks);
+
+    void displayCards(Map<Hand, Set<Card>> handCards, Map<Card, Hand> centerCards, Widow widow);
 
 }

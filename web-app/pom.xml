@@ -46,11 +46,6 @@
     </properties>
 
     <dependencies>
-        <dependency>
-            <groupId>com.preferanser</groupId>
-            <artifactId>domain</artifactId>
-            <version>${project.version}</version>
-        </dependency>
 
         <dependency>
             <groupId>com.google.appengine</groupId>

@@ -17,34 +17,16 @@
  *     along with this program.  If not, see [http://www.gnu.org/licenses/].
  */
 
-package com.preferanser.shared.domain.exception;
+package com.preferanser.shared.domain.exception.validation;
 
-import com.preferanser.shared.domain.Card;
-import com.preferanser.shared.domain.Cardinal;
+import com.preferanser.client.application.i18n.PreferanserConstants;
+import com.preferanser.client.application.i18n.PreferanserMessages;
 
-public class NoSuchCardinalCardException extends GameException {
+public class WidowNotSpecifiedValidationError extends GameBuilderValidationError {
 
-    private Cardinal cardinal;
-    private Card card;
-
-    @SuppressWarnings("unused") // required for serialization
-    public NoSuchCardinalCardException() {
+    @Override
+    public String formatLocalMessage(PreferanserConstants constants, PreferanserMessages messages) {
+        return messages.widowNotSpecified();
     }
 
-    public NoSuchCardinalCardException(Cardinal cardinal, Card card) {
-        this.cardinal = cardinal;
-        this.card = card;
-    }
-
-    @Override public String getMessage() {
-        return "Can't make turn because there is no " + card + " at " + cardinal;
-    }
-
-    public Cardinal getCardinal() {
-        return cardinal;
-    }
-
-    public Card getCard() {
-        return card;
-    }
 }

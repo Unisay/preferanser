@@ -103,6 +103,12 @@ public class EditorPresenter extends Presenter<EditorPresenter.EditorView, Edito
     }
 
     @Override
+    protected void onReveal() {
+        super.onReveal();
+        refreshView();
+    }
+
+    @Override
     public void chooseContract(Hand hand) {
         editorDialogs.showContractDialog(hand);
     }

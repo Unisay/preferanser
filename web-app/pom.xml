@@ -36,22 +36,15 @@
     <properties>
         <objectify.version>4.0b3</objectify.version>
         <appengine-api.version>1.8.8</appengine-api.version>
-        <jersey.version>2.5</jersey.version>
+        <jersey.version>1.18</jersey.version>
         <restygwt.version>1.3</restygwt.version>
         <jackson.version>2.0.0</jackson.version>
-        <jersey-guice.version>1.18</jersey-guice.version>
         <javax.el.version>3.0.0</javax.el.version>
         <hibernate-validator.version>4.3.1.Final</hibernate-validator.version>
         <juel.version>2.2.6</juel.version>
     </properties>
 
     <dependencies>
-
-        <dependency>
-            <groupId>com.google.appengine</groupId>
-            <artifactId>appengine-api-1.0-sdk</artifactId>
-            <version>${appengine-api.version}</version>
-        </dependency>
 
         <dependency>
             <groupId>com.googlecode.objectify</groupId>
@@ -148,23 +141,15 @@
         </dependency>
 
         <dependency>
-            <groupId>org.glassfish.jersey.containers</groupId>
-            <!-- if your container implements Servlet API older than 3.0, use "jersey-container-servlet-core"  -->
-            <artifactId>jersey-container-jetty-servlet</artifactId>
-            <version>${jersey.version}</version>
-        </dependency>
-
-        <!-- Required only when you are using JAX-RS Client -->
-        <dependency>
-            <groupId>org.glassfish.jersey.core</groupId>
-            <artifactId>jersey-client</artifactId>
+            <groupId>com.sun.jersey</groupId>
+            <artifactId>jersey-server</artifactId>
             <version>${jersey.version}</version>
         </dependency>
 
         <dependency>
             <groupId>com.sun.jersey.contribs</groupId>
             <artifactId>jersey-guice</artifactId>
-            <version>${jersey-guice.version}</version>
+            <version>${jersey.version}</version>
         </dependency>
 
         <dependency>

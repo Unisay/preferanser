@@ -77,7 +77,7 @@ public class DealUploader {
 
     public static void main(String[] args) throws IOException {
         if (args.length < 3) {
-            System.out.println("Usage: DealUploader <server-url> ('deal.json')+");
+            System.out.println("Usage: DealUploader <server-url> <auth-cookie> <json-dir>");
             System.exit(1);
         }
         DealUploader dealUploader = new DealUploader(args[0], args[1], args[2]);

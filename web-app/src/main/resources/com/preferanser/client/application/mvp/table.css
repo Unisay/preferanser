@@ -1,15 +1,14 @@
-@external .gwt-Label;
-@external .not-displayed, .not-visible, .dragging;
-@external .card;
-
+@external .not-displayed;
 .not-displayed {
     display: none;
 }
 
+@external .not-visible;
 .not-visible {
     visibility: hidden;
 }
 
+@external .card;
 .card {
     position: absolute;
     top: 0;
@@ -18,6 +17,14 @@
     cursor: url("img/cursor/open-hand.cur") 4 4, move;
 }
 
+@external .card-disabled;
+.card-disabled > img {
+    filter: brightness(.70);
+    -moz-filter: brightness(.70);
+    -webkit-filter: brightness(.70);
+}
+
+@external .dragging;
 .dragging {
     cursor: url("img/cursor/closed-hand.cur") 4 4, move;
 }
@@ -34,6 +41,7 @@
     float: right;
 }
 
+@external .gwt-Label;
 .gwt-Label, .contractLabel {
     color: white;
 }

@@ -32,12 +32,14 @@ import org.testng.annotations.Test;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import static com.google.appengine.labs.repackaged.com.google.common.collect.Sets.newHashSet;
 import static com.google.common.collect.Maps.newLinkedHashMap;
 import static com.preferanser.shared.domain.Card.*;
 import static com.preferanser.shared.domain.Hand.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.testng.Assert.*;
+import static org.unitils.reflectionassert.ReflectionAssert.assertLenientEquals;
 import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
 
 /**
@@ -163,9 +165,9 @@ public class GameTest {
     @Test
     public void testMakeTurn_OtherSuitWhenNoTrumpGame() throws Exception {
         handContractMap = ImmutableMap.of(
-                EAST, Contract.PASS,
-                SOUTH, Contract.SIX_NO_TRUMP,
-                WEST, Contract.WHIST
+            EAST, Contract.PASS,
+            SOUTH, Contract.SIX_NO_TRUMP,
+            WEST, Contract.WHIST
         );
 
         handCardMultimap = LinkedHashMultimap.create();
@@ -292,6 +294,14 @@ public class GameTest {
         assertReflectionEquals(ImmutableMap.of(SOUTH, 1, EAST, 0, WEST, 0, NORTH, 0), game.getHandTricks());
     }
 
+    @Test
+    public void testGetDisabledCards() throws Exception {
+        game = new Game(Players.THREE, widow, handContractMap, turnRotator, handCardMultimap, centerCardHandMap);
+        assertLenientEquals(newHashSet(CLUB_8, SPADE_8, CLUB_JACK, CLUB_9, HEART_JACK), game.getDisabledCards());
+        game.makeTurn(SOUTH, CLUB_ACE);
+        assertLenientEquals(newHashSet(CLUB_8, SPADE_8, CLUB_KING, HEART_JACK), game.getDisabledCards());
+    }
+
     private EnumRotator<Hand> createTurnRotator(Hand curValue, Hand... valuesToSkip) {
         EnumRotator<Hand> turnRotator = new EnumRotator<Hand>(Hand.values(), curValue);
         turnRotator.setSkipValues(valuesToSkip);
@@ -300,9 +310,9 @@ public class GameTest {
 
     private Map<Hand, Contract> createHandContractMap() {
         return ImmutableMap.of(
-                EAST, Contract.PASS,
-                SOUTH, Contract.SIX_SPADE,
-                WEST, Contract.WHIST
+            EAST, Contract.PASS,
+            SOUTH, Contract.SIX_SPADE,
+            WEST, Contract.WHIST
         );
     }
 

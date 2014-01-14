@@ -122,7 +122,6 @@ public class EditorPresenterTest {
         verify(view).displayTurn(turn);
         verify(view).displayContracts(handContracts);
         verify(view).displayCards(handCards, centerCards, widow);
-        verify(view).hideHandTricks();
         verifyNoMoreInteractions(view);
     }
 

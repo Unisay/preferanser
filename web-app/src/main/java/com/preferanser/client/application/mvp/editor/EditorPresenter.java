@@ -57,9 +57,7 @@ public class EditorPresenter extends Presenter<EditorPresenter.EditorView, Edito
 
     private static final Logger log = Logger.getLogger("EditorPresenter");
 
-    public interface EditorView extends HasUiHandlers<EditorUiHandlers>, TableView {
-        void hideHandTricks();
-    }
+    public interface EditorView extends HasUiHandlers<EditorUiHandlers>, TableView {}
 
     private Optional<Game> maybeGame;
     private GameBuilder gameBuilder;
@@ -184,7 +182,6 @@ public class EditorPresenter extends Presenter<EditorPresenter.EditorView, Edito
         refreshTurn();
         refreshContracts();
         refreshCards();
-        refreshHandTricks();
     }
 
     private void refreshTurn() {
@@ -197,10 +194,6 @@ public class EditorPresenter extends Presenter<EditorPresenter.EditorView, Edito
 
     private void refreshCards() {
         getView().displayCards(gameBuilder.getHandCards(), gameBuilder.getCenterCards(), gameBuilder.getWidow());
-    }
-
-    private void refreshHandTricks() {
-        getView().hideHandTricks();
     }
 
 }

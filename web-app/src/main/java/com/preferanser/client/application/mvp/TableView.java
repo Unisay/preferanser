@@ -34,8 +34,6 @@ public interface TableView extends View {
 
     void displayContracts(Map<Hand, Contract> handContracts);
 
-    void displayHandTricks(Map<Hand, Integer> handTricks);
-
     void displayCards(Map<Hand, Set<Card>> handCards, Map<Card, Hand> centerCards, Widow widow);
 
 }

@@ -31,6 +31,7 @@ import com.preferanser.shared.util.GameUtils;
 import java.util.*;
 
 import static com.google.common.collect.Maps.newLinkedHashMap;
+import static com.google.common.collect.Sets.newHashSet;
 
 /**
  * Represents game state
@@ -127,7 +128,8 @@ public class Game {
         turnRotator.next();
     }
 
-    public void validateHandTurn(Hand hand, Card card) throws IllegalSuitException {
+    // TODO instead of throwing exceptions - return validation errors
+    private void validateHandTurn(Hand hand, Card card) throws IllegalSuitException {
         Optional<Suit> maybeTrickSuit = getTrickSuit();
         if (!maybeTrickSuit.isPresent())
             return;
@@ -201,6 +203,23 @@ public class Game {
             return turnRotator.current();
     }
 
+    public Set<Card> getDisabledCards() {
+        Set<Card> disabledCards = newHashSet();
+        Hand turn = turnRotator.current();
+        for (Map.Entry<Hand, Card> entry : handCardMultimap.entries()) {
+            Hand hand = entry.getKey();
+            Card card = entry.getValue();
+            if (hand != turn)
+                disabledCards.add(card);
+            try {
+                validateHandTurn(turn, card);
+            } catch (IllegalSuitException e) {
+                disabledCards.add(card);
+            }
+        }
+        return disabledCards;
+    }
+
     public Players getPlayers() {
         return players;
     }
@@ -208,4 +227,5 @@ public class Game {
     public Widow getWidow() {
         return widow;
     }
+
 }

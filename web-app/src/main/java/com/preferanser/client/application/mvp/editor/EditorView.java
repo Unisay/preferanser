@@ -26,7 +26,6 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.preferanser.client.application.i18n.I18nHelper;
@@ -40,7 +39,6 @@ import com.preferanser.client.theme.greencloth.client.com.preferanser.client.app
 import com.preferanser.shared.domain.Contract;
 import com.preferanser.shared.domain.Hand;
 
-import java.util.Map;
 import java.util.logging.Logger;
 
 import static com.preferanser.client.restygwt.RequestIdValue.LOAD_DEALS;
@@ -99,12 +97,6 @@ public class EditorView extends BaseTableView<EditorUiHandlers> implements Edito
                 return westContractAnchor;
             default:
                 throw new IllegalStateException("No contract link for the hand: " + hand);
-        }
-    }
-
-    @Override public void hideHandTricks() {
-        for (Map.Entry<Hand, Label> entry : handTricksCountMap.entrySet()) {
-            entry.getValue().setText("");
         }
     }
 

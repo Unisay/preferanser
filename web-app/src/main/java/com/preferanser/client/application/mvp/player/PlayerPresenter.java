@@ -40,17 +40,21 @@ import com.preferanser.shared.domain.Hand;
 import com.preferanser.shared.domain.TableLocation;
 import com.preferanser.shared.domain.exception.GameException;
 
+import java.util.Map;
+import java.util.Set;
 import java.util.logging.Logger;
 
 /**
  * Presenter for the mvp page
  */
-public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, PlayerPresenter.Proxy> implements
-        PlayerUiHandlers, GameBuiltEvent.GameBuiltHandler {
+public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, PlayerPresenter.Proxy>
+    implements PlayerUiHandlers, GameBuiltEvent.GameBuiltHandler {
 
     private static final Logger log = Logger.getLogger("PlayerPresenter");
 
     public interface PlayerView extends TableView, HasUiHandlers<PlayerUiHandlers> {
+        void displayHandTricks(Map<Hand, Integer> handTricks);
+        void disableCards(Set<Card> cards);
     }
 
     private PlaceManager placeManager;
@@ -58,8 +62,7 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
 
     @ProxyStandard
     @NameToken(NameTokens.GAME_PLAYER)
-    public interface Proxy extends ProxyPlace<PlayerPresenter> {
-    }
+    public interface Proxy extends ProxyPlace<PlayerPresenter> {}
 
     @Inject
     public PlayerPresenter(PlaceManager placeManager, EventBus eventBus, PlayerView view, Proxy proxy) {
@@ -157,6 +160,7 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
         Preconditions.checkState(gameOptional.isPresent(), "PlayerPresenter.refreshCards(game is null)");
         Game game = gameOptional.get();
         getView().displayCards(game.getHandCards(), game.getCenterCards(), game.getWidow());
+        getView().disableCards(game.getDisabledCards());
     }
 
     private void refreshHandTricks() {

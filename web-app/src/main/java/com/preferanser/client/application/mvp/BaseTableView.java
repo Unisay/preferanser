@@ -50,12 +50,12 @@ import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Maps.newHashMapWithExpectedSize;
 
 abstract public class BaseTableView<U extends TableUiHandlers> extends ViewWithUiHandlers<U> implements TableView,
-        CardWidget.Handlers {
+    CardWidget.Handlers {
 
     protected final Map<Hand, Label> handTricksCountMap = newHashMapWithExpectedSize(Hand.values().length);
 
-    public final Map<Hand, TurnPointer> handTurnPointerMap = newHashMapWithExpectedSize(Hand.PLAYING_HANDS.size());
-    private final BiMap<Card, CardWidget> cardWidgetBiMap = EnumHashBiMap.create(Card.class);
+    protected final Map<Hand, TurnPointer> handTurnPointerMap = newHashMapWithExpectedSize(Hand.PLAYING_HANDS.size());
+    protected final BiMap<Card, CardWidget> cardWidgetBiMap = EnumHashBiMap.create(Card.class);
     private final Map<Hand, Label> handTitleMap = newHashMapWithExpectedSize(Hand.PLAYING_HANDS.size());
     private final ImageDragController imageDragController = new ImageDragController(Document.get());
 
@@ -186,14 +186,20 @@ abstract public class BaseTableView<U extends TableUiHandlers> extends ViewWithU
         turnPointer.setActive(hand == turn);
     }
 
+    @Override
     public void onCardMouseDown(CardWidget cardWidget, MouseDownEvent event) {
         imageDragController.onCardWidgetMouseDown(cardWidget, event);
         putCardImageOnTop(cardWidget);
     }
 
+    @Override
     public void onCardDragStart(CardWidget cardWidget, DragStartEvent event) {
         event.stopPropagation();
         event.preventDefault();
+    }
+
+    @Override
+    public void onCardDoubleClick(CardWidget cardWidget, DoubleClickEvent event) {
     }
 
     private void installMouseMoveHandler(RootPanel rootPanel) {
@@ -229,16 +235,16 @@ abstract public class BaseTableView<U extends TableUiHandlers> extends ViewWithU
         }
     }
 
-    private void putCardImageOnTop(Image image) {
+    private void putCardImageOnTop(Widget image) {
         image.getElement().getStyle().setZIndex(getMaxCardZIndex() + 1);
     }
 
     private int getMaxCardZIndex() {
         int maxZIndex = 0;
-        for (Image image : cardWidgetBiMap.values()) {
+        for (CardWidget cardWidget : cardWidgetBiMap.values()) {
             int zIndex;
             try {
-                zIndex = Integer.parseInt(image.getElement().getStyle().getZIndex());
+                zIndex = Integer.parseInt(cardWidget.getElement().getStyle().getZIndex());
             } catch (NumberFormatException e) {
                 zIndex = 0;
             }
@@ -273,14 +279,12 @@ abstract public class BaseTableView<U extends TableUiHandlers> extends ViewWithU
 
 
     public
-    @UiFactory
-    TurnPointer turnPointer() {
+    @UiFactory TurnPointer turnPointer() {
         return new TurnPointer(tableStyle, resources.arrowRight());
     }
 
     public
-    @UiFactory
-    TablePanel tablePanel() {
+    @UiFactory TablePanel tablePanel() {
         return new TablePanel();
     }
 }

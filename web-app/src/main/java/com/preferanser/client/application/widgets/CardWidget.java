@@ -19,35 +19,59 @@
 
 package com.preferanser.client.application.widgets;
 
-import com.google.gwt.event.dom.client.DragStartEvent;
-import com.google.gwt.event.dom.client.DragStartHandler;
-import com.google.gwt.event.dom.client.MouseDownEvent;
-import com.google.gwt.event.dom.client.MouseDownHandler;
+import com.google.gwt.event.dom.client.*;
+import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.preferanser.shared.domain.Card;
 
-public class CardWidget extends Image {
+public class CardWidget extends Composite {
+
+    private static final String CARD_DISABLED_CLASS_NAME = "card-disabled";
+    private final SimplePanel wrapper;
+    private final Image image;
 
     public interface Handlers {
         void onCardMouseDown(CardWidget cardWidget, MouseDownEvent event);
         void onCardDragStart(CardWidget cardWidget, DragStartEvent event);
+        void onCardDoubleClick(CardWidget cardWidget, DoubleClickEvent event);
     }
 
     private Card card;
 
     public CardWidget(Card card) {
         this.card = card;
+        image = new Image();
+        wrapper = new SimplePanel(image);
+        initWidget(wrapper);
+    }
+
+    public void setDisabled(boolean disabled) {
+        if (disabled)
+            wrapper.addStyleName(CARD_DISABLED_CLASS_NAME);
+        else
+            wrapper.removeStyleName(CARD_DISABLED_CLASS_NAME);
+    }
+
+    public void setResource(ImageResource imageResource) {
+        image.setResource(imageResource);
     }
 
     public void setHandlers(final Handlers handlers) {
-        addMouseDownHandler(new MouseDownHandler() {
+        image.addMouseDownHandler(new MouseDownHandler() {
             @Override public void onMouseDown(MouseDownEvent event) {
                 handlers.onCardMouseDown(CardWidget.this, event);
             }
         });
-        addDragStartHandler(new DragStartHandler() {
+        image.addDragStartHandler(new DragStartHandler() {
             @Override public void onDragStart(DragStartEvent event) {
                 handlers.onCardDragStart(CardWidget.this, event);
+            }
+        });
+        image.addDoubleClickHandler(new DoubleClickHandler() {
+            @Override public void onDoubleClick(DoubleClickEvent event) {
+                handlers.onCardDoubleClick(CardWidget.this, event);
             }
         });
     }

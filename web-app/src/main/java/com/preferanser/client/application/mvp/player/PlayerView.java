@@ -22,7 +22,6 @@ package com.preferanser.client.application.mvp.player;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.DoubleClickEvent;
-import com.google.gwt.event.dom.client.DoubleClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -42,24 +41,21 @@ import com.preferanser.shared.domain.Contract;
 import com.preferanser.shared.domain.Hand;
 import com.preferanser.shared.domain.TableLocation;
 
+import java.util.Map;
+import java.util.Set;
 import java.util.logging.Logger;
 
 public class PlayerView extends BaseTableView<PlayerUiHandlers> implements PlayerPresenter.PlayerView {
 
     private static final Logger log = Logger.getLogger("PlayerView");
 
-    public interface Binder extends UiBinder<Widget, PlayerView> {
-    }
+    public interface Binder extends UiBinder<Widget, PlayerView> {}
 
-    @UiField
-    Button editButton;
     // @UiField Label trickCountWidow;
-    @UiField
-    Label trickCountEast;
-    @UiField
-    Label trickCountSouth;
-    @UiField
-    Label trickCountWest;
+    @UiField Button editButton;
+    @UiField Label trickCountEast;
+    @UiField Label trickCountSouth;
+    @UiField Label trickCountWest;
 
     @Inject
     public PlayerView(Binder uiBinder, PreferanserResources resources, PreferanserConstants constants, I18nHelper i18nHelper) {
@@ -75,6 +71,11 @@ public class PlayerView extends BaseTableView<PlayerUiHandlers> implements Playe
         installCenterPanelClickHandler();
     }
 
+    @Override public void disableCards(Set<Card> cards) {
+        for (Map.Entry<Card, CardWidget> entry : cardWidgetBiMap.entrySet())
+            entry.getValue().setDisabled(cards.contains(entry.getKey()));
+    }
+
     @Override
     protected void displayHandTurnPointer(Hand hand, TurnPointer turnPointer, Hand turn) {
         super.displayHandTurnPointer(hand, turnPointer, turn);
@@ -84,8 +85,7 @@ public class PlayerView extends BaseTableView<PlayerUiHandlers> implements Playe
             turnPointer.addStyleName(tableStyle.notDisplayed());
     }
 
-    @UiHandler("editButton")
-    void onEditButtonClicked(@SuppressWarnings("unused") ClickEvent event) {
+    @UiHandler("editButton") void onEditButtonClicked(@SuppressWarnings("unused") ClickEvent event) {
         getUiHandlers().switchToEditor();
     }
 
@@ -99,19 +99,12 @@ public class PlayerView extends BaseTableView<PlayerUiHandlers> implements Playe
     }
 
     @Override
-    protected CardWidget createCardWidget(final Card card) {
-        final CardWidget cardWidget = super.createCardWidget(card);
-        cardWidget.addDoubleClickHandler(new DoubleClickHandler() {
-            @Override
-            public void onDoubleClick(DoubleClickEvent event) {
-                FlowPanel parent = (FlowPanel) cardWidget.getParent();
-                TableLocation oldLocation = table.getPanelLocations().get(parent);
-                TableLocation newLocation = TableLocation.CENTER;
-                getLog().finer("Card location change: " + card + ": " + oldLocation + " -> " + newLocation);
-                getUiHandlers().changeCardLocation(card, oldLocation, newLocation);
-            }
-        });
-        return cardWidget;
+    public void onCardDoubleClick(CardWidget cardWidget, DoubleClickEvent event) {
+        FlowPanel parent = (FlowPanel) cardWidget.getParent();
+        TableLocation oldLocation = table.getPanelLocations().get(parent);
+        TableLocation newLocation = TableLocation.CENTER;
+        getLog().finer("Card location change: " + cardWidget.getCard() + ": " + oldLocation + " -> " + newLocation);
+        getUiHandlers().changeCardLocation(cardWidget.getCard(), oldLocation, newLocation);
     }
 
     @Override

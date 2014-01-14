@@ -7,6 +7,7 @@
     <file type="gwt" url="file://$PROJECT_DIR$/web-app" />
     <file type="web" url="file://$PROJECT_DIR$/web-app" />
   </component>
+  <component name="IdProvider" IDEtalkID="818D47773A60FEA3E610B356CB428616" />
   <component name="MavenProjectsManager">
     <option name="originalFiles">
       <list>
@@ -15,7 +16,7 @@
     </option>
   </component>
   <component name="ProjectKey">
-    <option name="state" value="git@bitbucket.org:unisay/preferanser.git" />
+    <option name="state" value="ssh://git@bitbucket.org/unisay/preferanser.git" />
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_1_6" assert-keyword="true" jdk-15="true" project-jdk-name="1.7" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/out" />

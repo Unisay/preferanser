@@ -28,10 +28,8 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.FileVisitResult;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.SimpleFileVisitor;
+import java.net.URISyntaxException;
+import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.List;
 
@@ -46,20 +44,18 @@ public class DealUploader {
     private String url;
     private final String authCookie;
 
-    public DealUploader(String url, String authCookie, String jsonDealsPath) throws IOException {
+    public static void main(String[] args) throws IOException, URISyntaxException {
+        if (args.length < 3) {
+            System.out.println("Usage: DealUploader <server-url> <auth-cookie> <json-dir>");
+            System.exit(1);
+        }
+        new DealUploader(args[0], args[1], args[2]).start();
+    }
+
+    public DealUploader(String url, String authCookie, String jsonDealsPath) throws IOException, URISyntaxException {
         this.url = url;
         this.authCookie = authCookie;
-        jsonFiles = Lists.newArrayList();
-
-        Files.walkFileTree(new File(jsonDealsPath).toPath(), new SimpleFileVisitor<Path>() {
-            @Override public FileVisitResult visitFile(Path path, BasicFileAttributes attrs) throws IOException {
-                File file = path.toFile();
-                if (attrs.isRegularFile() && file.getName().endsWith(".json")) {
-                    jsonFiles.add(file);
-                }
-                return super.visitFile(path, attrs);
-            }
-        });
+        jsonFiles = discoverJsonFiles(jsonDealsPath);
     }
 
     private void start() throws IOException {
@@ -75,13 +71,18 @@ public class DealUploader {
         }
     }
 
-    public static void main(String[] args) throws IOException {
-        if (args.length < 3) {
-            System.out.println("Usage: DealUploader <server-url> <auth-cookie> <json-dir>");
-            System.exit(1);
-        }
-        DealUploader dealUploader = new DealUploader(args[0], args[1], args[2]);
-        dealUploader.start();
+    private List<File> discoverJsonFiles(String jsonDealsPath) throws URISyntaxException, IOException {
+        final List<File> jsonFiles = Lists.newArrayList();
+        Path path = Paths.get(DealUploader.class.getResource(jsonDealsPath).toURI());
+        Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
+            @Override public FileVisitResult visitFile(Path path, BasicFileAttributes attrs) throws IOException {
+                File file = path.toFile();
+                if (attrs.isRegularFile() && file.getName().endsWith(".json"))
+                    jsonFiles.add(file);
+                return super.visitFile(path, attrs);
+            }
+        });
+        return jsonFiles;
     }
 
 }

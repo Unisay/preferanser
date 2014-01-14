@@ -300,6 +300,10 @@ public class GameTest {
         assertLenientEquals(newHashSet(CLUB_8, SPADE_8, CLUB_JACK, CLUB_9, HEART_JACK), game.getDisabledCards());
         game.makeTurn(SOUTH, CLUB_ACE);
         assertLenientEquals(newHashSet(CLUB_8, SPADE_8, CLUB_KING, HEART_JACK), game.getDisabledCards());
+        game.makeTurn(WEST, CLUB_JACK);
+        assertLenientEquals(newHashSet(SPADE_8, CLUB_KING, HEART_JACK, CLUB_9), game.getDisabledCards());
+        game.makeTurn(EAST, CLUB_8);
+        assertLenientEquals(newHashSet(SPADE_8, CLUB_KING, CLUB_9, HEART_JACK), game.getDisabledCards());
     }
 
     private EnumRotator<Hand> createTurnRotator(Hand curValue, Hand... valuesToSkip) {

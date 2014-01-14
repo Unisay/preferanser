@@ -20,7 +20,10 @@
 package com.preferanser.shared.domain;
 
 import com.google.common.base.Optional;
-import com.google.common.collect.*;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Multimap;
 import com.preferanser.shared.domain.exception.*;
 import com.preferanser.shared.util.EnumRotator;
 import com.preferanser.shared.util.GameUtils;
@@ -201,11 +204,8 @@ public class Game {
     }
 
     public Set<Card> getDisabledCards() {
-        if (isTrickComplete()) {
-            HashSet<Card> disabledCards = Sets.newHashSet(Card.values());
-            disabledCards.removeAll(centerCardHandMap.keySet());
-            return disabledCards;
-        }
+        if (isTrickComplete())
+            return newHashSet(handCardMultimap.values());
         Set<Card> disabledCards = newHashSet();
         Hand turn = turnRotator.current();
         for (Map.Entry<Hand, Card> entry : handCardMultimap.entries()) {

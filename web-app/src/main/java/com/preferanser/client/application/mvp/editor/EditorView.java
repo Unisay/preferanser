@@ -113,7 +113,7 @@ public class EditorView extends BaseTableView<EditorUiHandlers> implements Edito
     }
 
     @UiHandler("dealButton") void onDealButtonClicked(@SuppressWarnings("unused") ClickEvent event) {
-        getUiHandlers().reset();
+        getUiHandlers().newDeal();
     }
 
     @UiHandler("eastContractAnchor") void onEastContractLinkClicked(@SuppressWarnings("unused") ClickEvent event) {

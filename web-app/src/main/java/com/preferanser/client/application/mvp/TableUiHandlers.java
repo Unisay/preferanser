@@ -25,8 +25,6 @@ import com.preferanser.shared.domain.TableLocation;
 
 public interface TableUiHandlers extends UiHandlers {
 
-    void reset();
-
     /**
      * User changed card location
      *

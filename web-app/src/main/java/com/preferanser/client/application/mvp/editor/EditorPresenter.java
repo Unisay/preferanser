@@ -87,11 +87,11 @@ public class EditorPresenter extends Presenter<EditorPresenter.EditorView, Edito
         this.constants = constants;
         this.editorDialogs = editorDialogs;
         getView().setUiHandlers(this);
-        reset();
+        newDeal();
     }
 
     @Override
-    public void reset() {
+    public void newDeal() {
         maybeGame = Optional.absent();
         gameBuilder = new GameBuilder()
             .setThreePlayers()

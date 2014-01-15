@@ -135,7 +135,7 @@
             </g:Dock>
             <g:Dock direction="CENTER" addStyleNames="{style.centerDock}">
                 <g:TabPanel ui:field="centerTabPanel" addStyleNames="{style.centerTabPanel}" debugId="centerTabPanel">
-                <g:Tab text="{constants.table}">
+                    <g:Tab text="{constants.game}">
                         <g:FlowPanel ui:field="centerCardsPanel" debugId="centerCardsPanel"
                                      addStyleNames="{style.centerCardsPanel}"/>
                     </g:Tab>

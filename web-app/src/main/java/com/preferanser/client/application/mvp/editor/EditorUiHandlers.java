@@ -55,4 +55,9 @@ public interface EditorUiHandlers extends TableUiHandlers {
      * Open deal
      */
     void onDealOpenClicked();
+
+    /**
+     * Create new deal
+     */
+    void newDeal();
 }

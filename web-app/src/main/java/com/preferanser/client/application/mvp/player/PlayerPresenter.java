@@ -54,6 +54,7 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
 
     public interface PlayerView extends TableView, HasUiHandlers<PlayerUiHandlers> {
         void displayHandTricks(Map<Hand, Integer> handTricks);
+
         void disableCards(Set<Card> cards);
     }
 
@@ -129,14 +130,6 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
     @Override
     public void switchToEditor() {
         placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.GAME_EDITOR).build());
-    }
-
-    /**
-     * TODO implement resetting editor
-     */
-    @Override
-    public void reset() {
-        throw new UnsupportedOperationException("Resetting editor is not implemented");
     }
 
     private void refreshView() {

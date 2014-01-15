@@ -55,26 +55,16 @@ public class TablePanel extends Composite {
 
     protected PreferanserResources resources = GWT.create(PreferanserResources.class);
 
-    @UiField
-    HorizontalPanel eastPanelHeader;
-    @UiField
-    HorizontalPanel southPanelHeader;
-    @UiField
-    HorizontalPanel westPanelHeader;
-    @UiField
-    HorizontalPanel headerPanel;
-    @UiField
-    FlowPanel eastCardsPanel;
-    @UiField
-    FlowPanel southCardsPanel;
-    @UiField
-    FlowPanel westCardsPanel;
-    @UiField
-    TabPanel centerTabPanel;
-    @UiField
-    FlowPanel widowPanel;
-    @UiField
-    FlowPanel centerCardsPanel;
+    @UiField HorizontalPanel eastPanelHeader;
+    @UiField HorizontalPanel southPanelHeader;
+    @UiField HorizontalPanel westPanelHeader;
+    @UiField HorizontalPanel headerPanel;
+    @UiField FlowPanel eastCardsPanel;
+    @UiField FlowPanel southCardsPanel;
+    @UiField FlowPanel westCardsPanel;
+    @UiField TabPanel centerTabPanel;
+    @UiField FlowPanel widowPanel;
+    @UiField FlowPanel centerCardsPanel;
 
     private final BiMap<TableLocation, Panel> locationPanelMap = EnumHashBiMap.create(TableLocation.class);
     private final BiMap<TableLocation, Layout<CardWidget>> locationLayoutMap = EnumHashBiMap.create(TableLocation.class);
@@ -178,11 +168,11 @@ public class TablePanel extends Composite {
 
     public Map<Panel, TableLocation> getPanelLocations() {
         return ImmutableMap.of(
-                (Panel) centerCardsPanel, CENTER,
-                eastCardsPanel, EAST,
-                westCardsPanel, WEST,
-                southCardsPanel, SOUTH,
-                widowPanel, WIDOW
+            (Panel) centerCardsPanel, CENTER,
+            eastCardsPanel, EAST,
+            westCardsPanel, WEST,
+            southCardsPanel, SOUTH,
+            widowPanel, WIDOW
         );
     }
 

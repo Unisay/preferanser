@@ -48,7 +48,7 @@ public class I18nHelper {
                     suit = constants.noTrump();
                 } else {
                     Suit trump = maybeTrump.get();
-                    suit = constants.getString(trump.name() + "_char");
+                    suit = constants.getString("OF_" + trump.name());
                 }
                 return contract.getTricksNumber() + " " + suit;
         }

@@ -45,6 +45,14 @@ public interface PreferanserConstants extends ConstantsWithLookup {
 
     @DefaultStringValue("West") String WEST();
 
+    @DefaultStringValue("spade") String OF_SPADE();
+
+    @DefaultStringValue("club") String OF_CLUB();
+
+    @DefaultStringValue("diamond") String OF_DIAMOND();
+
+    @DefaultStringValue("heart") String OF_HEART();
+
     @DefaultStringValue("♠") String SPADE_char();
 
     @DefaultStringValue("♣") String CLUB_char();
@@ -148,4 +156,5 @@ public interface PreferanserConstants extends ConstantsWithLookup {
     @DefaultStringValue("DIAMOND_ACE") String DIAMOND_ACE();
 
     @DefaultStringValue("HEART_ACE") String HEART_ACE();
+
 }

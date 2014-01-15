@@ -19,6 +19,7 @@
 
 package com.preferanser.shared.util;
 
+import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
 
 public class EnumRotator<E extends Enum<E>> {
@@ -41,6 +42,7 @@ public class EnumRotator<E extends Enum<E>> {
 
     public EnumRotator(EnumRotator<E> enumRotator) {
         this(enumRotator.values, enumRotator.current());
+        this.valuesToSkip = enumRotator.valuesToSkip;
     }
 
     public void setCurrent(E value) {
@@ -70,4 +72,20 @@ public class EnumRotator<E extends Enum<E>> {
         return result;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        EnumRotator that = (EnumRotator) o;
+
+        return Objects.equal(this.values, that.values) &&
+            Objects.equal(this.currentOrdinal, that.currentOrdinal) &&
+            Objects.equal(this.valuesToSkip, that.valuesToSkip);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(values, currentOrdinal, valuesToSkip);
+    }
 }

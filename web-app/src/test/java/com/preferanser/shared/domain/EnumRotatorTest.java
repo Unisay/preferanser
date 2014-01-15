@@ -24,6 +24,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
 public class EnumRotatorTest {
@@ -37,6 +38,14 @@ public class EnumRotatorTest {
     @Before
     public void setUp() throws Exception {
         enumRotator = new EnumRotator<TestEnum>(TestEnum.values());
+    }
+
+    @Test
+    public void testConstructor_Copying() throws Exception {
+        enumRotator.setSkipValues(TestEnum.B, TestEnum.C);
+        enumRotator.setCurrent(TestEnum.D);
+        EnumRotator<TestEnum> copy = new EnumRotator<TestEnum>(enumRotator);
+        assertEquals(copy, enumRotator);
     }
 
     @Test

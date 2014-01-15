@@ -208,14 +208,15 @@ public class Game {
             return newHashSet(handCardMultimap.values());
         Set<Card> disabledCards = newHashSet();
         Hand turn = turnRotator.current();
-        for (Map.Entry<Hand, Card> entry : handCardMultimap.entries()) {
-            Hand hand = entry.getKey();
-            Card card = entry.getValue();
-            if (hand != turn)
-                disabledCards.add(card);
-            try {
-                validateHandTurn(turn, card);
-            } catch (IllegalSuitException e) {
+        for (Map.Entry<Hand, Card> handCardEntry : handCardMultimap.entries()) {
+            Card card = handCardEntry.getValue();
+            if (handCardEntry.getKey() == turn) {
+                try {
+                    validateHandTurn(turn, card);
+                } catch (IllegalSuitException e) {
+                    disabledCards.add(card);
+                }
+            } else {
                 disabledCards.add(card);
             }
         }

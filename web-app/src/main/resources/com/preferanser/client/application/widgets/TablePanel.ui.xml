@@ -73,10 +73,6 @@
             border-radius: 7px;
         }
 
-        .centerFlowPanel {
-            width: 550px;
-        }
-
         .southDock {
             width: 1164px;
         }
@@ -103,10 +99,11 @@
         }
 
         .centerTabPanel {
-            width: 100%;
             position: relative;
             background-color: rgba(0, 0, 0, 0.1);
             border-radius: 7px;
+            width: 530px;
+            height: 100%;
         }
 
         .centerCardsPanel, .widowPanel {
@@ -137,9 +134,8 @@
                 </g:VerticalPanel>
             </g:Dock>
             <g:Dock direction="CENTER" addStyleNames="{style.centerDock}">
-                <g:TabPanel ui:field="centerTabPanel" addStyleNames="{style.centerTabPanel}"
-                            animationEnabled="false" width="100%" height="100%" debugId="centerTabPanel">
-                    <g:Tab text="{constants.table}">
+                <g:TabPanel ui:field="centerTabPanel" addStyleNames="{style.centerTabPanel}" debugId="centerTabPanel">
+                <g:Tab text="{constants.table}">
                         <g:FlowPanel ui:field="centerCardsPanel" debugId="centerCardsPanel"
                                      addStyleNames="{style.centerCardsPanel}"/>
                     </g:Tab>

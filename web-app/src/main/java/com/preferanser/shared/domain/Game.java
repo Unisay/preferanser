@@ -20,16 +20,14 @@
 package com.preferanser.shared.domain;
 
 import com.google.common.base.Optional;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Multimap;
+import com.google.common.collect.*;
 import com.preferanser.shared.domain.exception.*;
 import com.preferanser.shared.util.EnumRotator;
 import com.preferanser.shared.util.GameUtils;
 
 import java.util.*;
 
+import static com.google.common.collect.Maps.newHashMap;
 import static com.google.common.collect.Maps.newLinkedHashMap;
 import static com.google.common.collect.Sets.newHashSet;
 
@@ -54,10 +52,10 @@ public class Game {
          Map<Card, Hand> centerCardHandMap
     ) {
         this.players = players;
-        this.widow = widow;
-        this.handContracts = handContracts;
-        this.turnRotator = turnRotator;
-        this.handCardMultimap = handCardMultimap;
+        this.widow = new Widow(widow);
+        this.handContracts = newHashMap(handContracts);
+        this.turnRotator = new EnumRotator<Hand>(turnRotator);
+        this.handCardMultimap = LinkedHashMultimap.create(handCardMultimap);
         this.centerCardHandMap = newLinkedHashMap(centerCardHandMap);  // order is important
         initHandTricks();
     }

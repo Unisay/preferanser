@@ -39,6 +39,10 @@ public class EnumRotator<E extends Enum<E>> {
         currentOrdinal = startValue.ordinal();
     }
 
+    public EnumRotator(EnumRotator<E> enumRotator) {
+        this(enumRotator.values, enumRotator.current());
+    }
+
     public void setCurrent(E value) {
         currentOrdinal = value.ordinal();
     }

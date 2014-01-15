@@ -35,6 +35,7 @@ import java.util.*;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.collect.Lists.newArrayList;
+import static com.google.common.collect.Maps.newHashMap;
 import static com.google.common.collect.Sets.newHashSet;
 import static com.preferanser.shared.domain.TableLocation.CENTER;
 import static com.preferanser.shared.domain.TableLocation.WIDOW;
@@ -50,13 +51,13 @@ public class GameBuilder {
     private Hand firstTurn;
 
     private Map<Hand, Contract> handContracts
-            = Maps.newHashMapWithExpectedSize(Hand.PLAYING_HANDS.size());
+        = Maps.newHashMapWithExpectedSize(Hand.PLAYING_HANDS.size());
 
     private LinkedHashMultimap<Hand, Card> handCardMultimap
-            = LinkedHashMultimap.create(TableLocation.values().length, Card.values().length);
+        = LinkedHashMultimap.create(TableLocation.values().length, Card.values().length);
 
     private Map<Card, Hand> centerCardHandMap
-            = Maps.newLinkedHashMap(); // order is important
+        = Maps.newLinkedHashMap(); // order is important
 
     public GameBuilder setDeal(Deal deal) {
         firstTurn = deal.getFirstTurn();
@@ -250,9 +251,9 @@ public class GameBuilder {
 
     private boolean wrongFirstTurn() {
         return players != null
-                && players == Players.THREE
-                && firstTurn != null
-                && handContracts.get(firstTurn) == null;
+            && players == Players.THREE
+            && firstTurn != null
+            && handContracts.get(firstTurn) == null;
     }
 
     private boolean hasConflictingContracts() {
@@ -283,7 +284,7 @@ public class GameBuilder {
     }
 
     private Map<Hand, Integer> wrongNumberOfCardsPerHand() {
-        Map<Hand, Integer> wrongHands = Maps.newHashMap();
+        Map<Hand, Integer> wrongHands = newHashMap();
         for (Hand hand : Hand.PLAYING_HANDS) {
             Contract contract = handContracts.get(hand);
             if (contract != null) {
@@ -304,12 +305,12 @@ public class GameBuilder {
         handRotator.setSkipValues(Hand.NORTH);
 
         return new Game(
-                players,
-                widow,
-                handContracts,
-                handRotator,
-                handCardMultimap,
-                centerCardHandMap
+            players,
+            widow,
+            handContracts,
+            handRotator,
+            handCardMultimap,
+            centerCardHandMap
         );
     }
 

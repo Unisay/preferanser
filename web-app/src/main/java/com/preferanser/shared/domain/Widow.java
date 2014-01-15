@@ -42,6 +42,10 @@ public class Widow implements Serializable, Iterable<Card> {
         this.card2 = card2;
     }
 
+    public Widow(Widow widow) {
+        this(widow.card1, widow.card2);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

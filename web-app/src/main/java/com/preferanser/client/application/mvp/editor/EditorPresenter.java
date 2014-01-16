@@ -143,8 +143,7 @@ public class EditorPresenter extends Presenter<EditorPresenter.EditorView, Edito
     @Override
     public void switchToPlayer() {
         try {
-            if (!maybeGame.isPresent())
-                maybeGame = Optional.of(gameBuilder.build());
+            maybeGame = Optional.of(gameBuilder.build());
             placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.GAME_PLAYER).build());
             GameBuiltEvent.fire(this, maybeGame.get());
         } catch (GameBuilderException e) {

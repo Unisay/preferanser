@@ -21,34 +21,43 @@
              xmlns:g="urn:import:com.google.gwt.user.client.ui"
              xmlns:p="urn:import:com.preferanser.client.application.widgets">
     <ui:with field="constants" type="com.preferanser.client.application.i18n.PreferanserConstants"/>
-    <ui:style src="../table.css" field="tableStyle" type="com.preferanser.client.application.mvp.editor.style.TableStyle"/>
+    <ui:style src="../table.css" type="com.preferanser.client.application.mvp.editor.style.TableStyle"/>
 
-    <g:VerticalPanel addStyleNames="{tableStyle.verticalPanel}" spacing="0">
+    <g:VerticalPanel addStyleNames="{style.verticalPanel}" spacing="0">
 
-        <g:HorizontalPanel ui:field="headerPanel" spacing="10" height="60">
-            <g:Button ui:field="editButton" text="{constants.edit}" debugId="edit"/>
+        <g:HorizontalPanel height="60" spacing="10" width="100%">
+
+            <g:FlowPanel addStyleNames="{style.leftHeader}">
+                <g:Button ui:field="editButton" text="{constants.edit}" debugId="edit"/>
+            </g:FlowPanel>
+
+            <g:FlowPanel addStyleNames="{style.rightHeader}">
+                <g:Label ui:field="authLabel" addStyleNames="{style.authLabel}"/>
+            </g:FlowPanel>
+
         </g:HorizontalPanel>
+
 
         <p:TablePanel ui:field="table">
 
             <p:westheader>
                 <p:Widgets>
-                    <g:Label ui:field="titleWest" text="{constants.WEST}" addStyleNames="{tableStyle.titleWest}"/>
-                    <g:Label ui:field="trickCountWest" addStyleNames="{tableStyle.trickCountWest}"/>
+                    <g:Label ui:field="titleWest" text="{constants.WEST}" addStyleNames="{style.titleWest}"/>
+                    <g:Label ui:field="trickCountWest" addStyleNames="{style.trickCountWest}"/>
                 </p:Widgets>
             </p:westheader>
 
             <p:southheader>
                 <p:Widgets>
-                    <g:Label ui:field="titleSouth" text="{constants.SOUTH}" addStyleNames="{tableStyle.titleSouth}"/>
-                    <g:Label ui:field="trickCountSouth" addStyleNames="{tableStyle.trickCountSouth}"/>
+                    <g:Label ui:field="titleSouth" text="{constants.SOUTH}" addStyleNames="{style.titleSouth}"/>
+                    <g:Label ui:field="trickCountSouth" addStyleNames="{style.trickCountSouth}"/>
                 </p:Widgets>
             </p:southheader>
 
             <p:eastheader>
                 <p:Widgets>
-                    <g:Label ui:field="titleEast" text="{constants.EAST}" addStyleNames="{tableStyle.titleEast}"/>
-                    <g:Label ui:field="trickCountEast" addStyleNames="{tableStyle.trickCountEast}"/>
+                    <g:Label ui:field="titleEast" text="{constants.EAST}" addStyleNames="{style.titleEast}"/>
+                    <g:Label ui:field="trickCountEast" addStyleNames="{style.trickCountEast}"/>
                 </p:Widgets>
             </p:eastheader>
 

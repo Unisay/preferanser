@@ -25,6 +25,7 @@ import com.preferanser.client.application.i18n.PreferanserConstants;
 import com.preferanser.client.application.mvp.editor.dialog.EditorDialogs;
 import com.preferanser.client.service.DealService;
 import com.preferanser.shared.domain.*;
+import com.preferanser.shared.dto.CurrentUserDto;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
@@ -85,7 +86,17 @@ public class EditorPresenterTest {
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         when(gameBuilder.build()).thenReturn(game);
-        presenter = new EditorPresenter(placeManager, eventBus, view, proxy, gameBuilder, dealService, preferanserConstants, editorDialogs);
+        presenter = new EditorPresenter(
+            placeManager,
+            eventBus,
+            view,
+            proxy,
+            gameBuilder,
+            dealService,
+            preferanserConstants,
+            editorDialogs,
+            new CurrentUserDto());
+
         turn = Hand.EAST;
         widow = new Widow();
 

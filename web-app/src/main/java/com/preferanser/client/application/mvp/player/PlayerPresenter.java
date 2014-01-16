@@ -39,6 +39,7 @@ import com.preferanser.shared.domain.Game;
 import com.preferanser.shared.domain.Hand;
 import com.preferanser.shared.domain.TableLocation;
 import com.preferanser.shared.domain.exception.GameException;
+import com.preferanser.shared.dto.CurrentUserDto;
 
 import java.util.Map;
 import java.util.Set;
@@ -66,10 +67,11 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
     public interface Proxy extends ProxyPlace<PlayerPresenter> {}
 
     @Inject
-    public PlayerPresenter(PlaceManager placeManager, EventBus eventBus, PlayerView view, Proxy proxy) {
+    public PlayerPresenter(PlaceManager placeManager, EventBus eventBus, PlayerView view, Proxy proxy, CurrentUserDto currentUserDto) {
         super(eventBus, view, proxy, ApplicationPresenter.TYPE_SetMainContent);
         this.placeManager = placeManager;
         getView().setUiHandlers(this);
+        getView().displayAuthInfo(currentUserDto.nickname);
     }
 
     @Override

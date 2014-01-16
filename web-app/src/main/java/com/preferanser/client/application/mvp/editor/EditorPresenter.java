@@ -44,6 +44,7 @@ import com.preferanser.shared.domain.*;
 import com.preferanser.shared.domain.entity.Deal;
 import com.preferanser.shared.domain.exception.GameBuilderException;
 import com.preferanser.shared.domain.exception.GameException;
+import com.preferanser.shared.dto.CurrentUserDto;
 
 import java.util.List;
 import java.util.logging.Logger;
@@ -79,7 +80,8 @@ public class EditorPresenter extends Presenter<EditorPresenter.EditorView, Edito
                            GameBuilder gameBuilder,
                            DealService dealService,
                            PreferanserConstants constants,
-                           EditorDialogs editorDialogs) {
+                           EditorDialogs editorDialogs,
+                           CurrentUserDto currentUserDto) {
         super(eventBus, view, proxy, ApplicationPresenter.TYPE_SetMainContent);
         this.placeManager = placeManager;
         this.gameBuilder = gameBuilder;
@@ -87,6 +89,7 @@ public class EditorPresenter extends Presenter<EditorPresenter.EditorView, Edito
         this.constants = constants;
         this.editorDialogs = editorDialogs;
         getView().setUiHandlers(this);
+        getView().displayAuthInfo(currentUserDto.nickname);
         newDeal();
     }
 

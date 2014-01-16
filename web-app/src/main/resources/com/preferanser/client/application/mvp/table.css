@@ -113,3 +113,15 @@
     -ms-transform: rotate(180deg);
     -webkit-transform: rotate(180deg);
 }
+
+.leftHeader {
+    float: left;
+}
+
+.rightHeader {
+    float: right;
+}
+
+.authLabel {
+
+}

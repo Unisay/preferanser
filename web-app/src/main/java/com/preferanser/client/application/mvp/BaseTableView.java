@@ -65,8 +65,9 @@ abstract public class BaseTableView<U extends TableUiHandlers>
     protected final CardImageResourceRetriever cardImageResourceRetriever;
 
     @UiField(provided = true) public PreferanserConstants constants;
-    @UiField public TableStyle tableStyle;
+    @UiField public TableStyle style;
     @UiField public TablePanel table;
+    @UiField public Label authLabel;
 
     @UiField public TurnPointer turnPointerEast;
     @UiField public TurnPointer turnPointerSouth;
@@ -164,11 +165,12 @@ abstract public class BaseTableView<U extends TableUiHandlers>
 
     protected abstract void displayNoContract(Hand hand);
 
-    public void displayHandTricks(Map<Hand, Integer> handTricks) {
-        for (Hand hand : Hand.PLAYING_HANDS)
-            handTricksCountMap.get(hand).setText(handTricks.get(hand).toString());
+    @Override
+    public void displayAuthInfo(String authInfo) {
+        authLabel.setText(authInfo);
     }
 
+    @Override
     public void displayTurn(Hand turn) {
         for (Map.Entry<Hand, TurnPointer> entry : handTurnPointerMap.entrySet())
             displayHandTurnPointer(entry.getKey(), entry.getValue(), turn);
@@ -250,7 +252,7 @@ abstract public class BaseTableView<U extends TableUiHandlers>
         CardWidget cardWidget = new CardWidget(card);
         cardWidget.setResource(cardImageResourceRetriever.getByCard(card));
         cardWidget.setHandlers(this);
-        cardWidget.addStyleName(tableStyle.card());
+        cardWidget.addStyleName(style.card());
         cardWidget.ensureDebugId(card.name());
         return cardWidget;
     }
@@ -272,7 +274,7 @@ abstract public class BaseTableView<U extends TableUiHandlers>
 
     public
     @UiFactory TurnPointer turnPointer() {
-        return new TurnPointer(tableStyle, resources.arrowRight());
+        return new TurnPointer(style, resources.arrowRight());
     }
 
     public

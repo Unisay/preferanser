@@ -80,9 +80,9 @@ public class PlayerView extends BaseTableView<PlayerUiHandlers> implements Playe
     protected void displayHandTurnPointer(Hand hand, TurnPointer turnPointer, Hand turn) {
         super.displayHandTurnPointer(hand, turnPointer, turn);
         if (turnPointer.isActive())
-            turnPointer.removeStyleName(tableStyle.notDisplayed());
+            turnPointer.removeStyleName(style.notDisplayed());
         else
-            turnPointer.addStyleName(tableStyle.notDisplayed());
+            turnPointer.addStyleName(style.notDisplayed());
     }
 
     @UiHandler("editButton") void onEditButtonClicked(@SuppressWarnings("unused") ClickEvent event) {
@@ -105,6 +105,12 @@ public class PlayerView extends BaseTableView<PlayerUiHandlers> implements Playe
         TableLocation newLocation = TableLocation.CENTER;
         getLog().finer("Card location change: " + cardWidget.getCard() + ": " + oldLocation + " -> " + newLocation);
         getUiHandlers().changeCardLocation(cardWidget.getCard(), oldLocation, newLocation);
+    }
+
+    @Override
+    public void displayHandTricks(Map<Hand, Integer> handTricks) {
+        for (Hand hand : Hand.PLAYING_HANDS)
+            handTricksCountMap.get(hand).setText(handTricks.get(hand).toString());
     }
 
     @Override

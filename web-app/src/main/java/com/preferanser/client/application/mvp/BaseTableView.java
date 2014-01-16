@@ -49,8 +49,9 @@ import static com.google.common.collect.Iterables.transform;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Maps.newHashMapWithExpectedSize;
 
-abstract public class BaseTableView<U extends TableUiHandlers> extends ViewWithUiHandlers<U> implements TableView,
-    CardWidget.Handlers {
+abstract public class BaseTableView<U extends TableUiHandlers>
+    extends ViewWithUiHandlers<U>
+    implements TableView, CardWidget.Handlers {
 
     protected final Map<Hand, Label> handTricksCountMap = newHashMapWithExpectedSize(Hand.values().length);
 
@@ -63,26 +64,17 @@ abstract public class BaseTableView<U extends TableUiHandlers> extends ViewWithU
     protected final PreferanserResources resources;
     protected final CardImageResourceRetriever cardImageResourceRetriever;
 
-    @UiField(provided = true)
-    public PreferanserConstants constants;
-    @UiField
-    public TableStyle tableStyle;
-    @UiField
-    public TablePanel table;
+    @UiField(provided = true) public PreferanserConstants constants;
+    @UiField public TableStyle tableStyle;
+    @UiField public TablePanel table;
 
-    @UiField
-    public TurnPointer turnPointerEast;
-    @UiField
-    public TurnPointer turnPointerSouth;
-    @UiField
-    public TurnPointer turnPointerWest;
+    @UiField public TurnPointer turnPointerEast;
+    @UiField public TurnPointer turnPointerSouth;
+    @UiField public TurnPointer turnPointerWest;
 
-    @UiField
-    public Label titleEast;
-    @UiField
-    public Label titleSouth;
-    @UiField
-    public Label titleWest;
+    @UiField public Label titleEast;
+    @UiField public Label titleSouth;
+    @UiField public Label titleWest;
 
     public BaseTableView(PreferanserConstants constants, PreferanserResources resources, I18nHelper i18nHelper) {
         cardImageResourceRetriever = new CardImageResourceRetriever(resources);

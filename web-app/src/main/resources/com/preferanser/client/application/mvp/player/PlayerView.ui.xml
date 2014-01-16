@@ -21,51 +21,47 @@
              xmlns:g="urn:import:com.google.gwt.user.client.ui"
              xmlns:p="urn:import:com.preferanser.client.application.widgets">
     <ui:with field="constants" type="com.preferanser.client.application.i18n.PreferanserConstants"/>
-
     <ui:style src="../table.css" field="tableStyle" type="com.preferanser.client.application.mvp.editor.style.TableStyle"/>
-    <p:TablePanel ui:field="table">
 
-        <p:header>
-            <p:Widgets>
-                <g:Button ui:field="editButton" text="{constants.edit}" debugId="edit"/>
-            </p:Widgets>
-        </p:header>
+    <g:VerticalPanel addStyleNames="{tableStyle.verticalPanel}" spacing="0">
 
-        <p:westheader>
-            <p:Widgets>
-                <g:Label ui:field="titleWest" text="{constants.WEST}" addStyleNames="{tableStyle.titleWest}"/>
-                <g:Label ui:field="trickCountWest" addStyleNames="{tableStyle.trickCountWest}"/>
-            </p:Widgets>
-        </p:westheader>
+        <g:HorizontalPanel ui:field="headerPanel" spacing="10" height="60">
+            <g:Button ui:field="editButton" text="{constants.edit}" debugId="edit"/>
+        </g:HorizontalPanel>
 
-        <p:southheader>
-            <p:Widgets>
-                <g:Label ui:field="titleSouth" text="{constants.SOUTH}" addStyleNames="{tableStyle.titleSouth}"/>
-                <g:Label ui:field="trickCountSouth" addStyleNames="{tableStyle.trickCountSouth}"/>
-            </p:Widgets>
-        </p:southheader>
+        <p:TablePanel ui:field="table">
 
-        <p:eastheader>
-            <p:Widgets>
-                <g:Label ui:field="titleEast" text="{constants.EAST}" addStyleNames="{tableStyle.titleEast}"/>
-                <g:Label ui:field="trickCountEast" addStyleNames="{tableStyle.trickCountEast}"/>
-            </p:Widgets>
-        </p:eastheader>
+            <p:westheader>
+                <p:Widgets>
+                    <g:Label ui:field="titleWest" text="{constants.WEST}" addStyleNames="{tableStyle.titleWest}"/>
+                    <g:Label ui:field="trickCountWest" addStyleNames="{tableStyle.trickCountWest}"/>
+                </p:Widgets>
+            </p:westheader>
 
-<!--        <p:centerheader>
-            <p:Widgets>
-                <g:Label ui:field="trickCountWidow" addStyleNames="{tableStyle.trickCountWidow}"/>
-            </p:Widgets>
-        </p:centerheader>-->
+            <p:southheader>
+                <p:Widgets>
+                    <g:Label ui:field="titleSouth" text="{constants.SOUTH}" addStyleNames="{tableStyle.titleSouth}"/>
+                    <g:Label ui:field="trickCountSouth" addStyleNames="{tableStyle.trickCountSouth}"/>
+                </p:Widgets>
+            </p:southheader>
 
-        <p:center>
-            <p:Widgets>
-                <p:TurnPointer ui:field="turnPointerEast" turn="EAST"/>
-                <p:TurnPointer ui:field="turnPointerSouth" turn="SOUTH"/>
-                <p:TurnPointer ui:field="turnPointerWest" turn="WEST"/>
-            </p:Widgets>
-        </p:center>
+            <p:eastheader>
+                <p:Widgets>
+                    <g:Label ui:field="titleEast" text="{constants.EAST}" addStyleNames="{tableStyle.titleEast}"/>
+                    <g:Label ui:field="trickCountEast" addStyleNames="{tableStyle.trickCountEast}"/>
+                </p:Widgets>
+            </p:eastheader>
 
-    </p:TablePanel>
+            <p:center>
+                <p:Widgets>
+                    <p:TurnPointer ui:field="turnPointerEast" turn="EAST"/>
+                    <p:TurnPointer ui:field="turnPointerSouth" turn="SOUTH"/>
+                    <p:TurnPointer ui:field="turnPointerWest" turn="WEST"/>
+                </p:Widgets>
+            </p:center>
+
+        </p:TablePanel>
+
+    </g:VerticalPanel>
 
 </ui:UiBinder>

@@ -1,3 +1,8 @@
+.verticalPanel {
+    width: 1164px;
+    margin: 0 auto;
+}
+
 @external .not-displayed;
 .not-displayed {
     display: none;

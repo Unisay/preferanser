@@ -23,15 +23,6 @@
     <ui:with field="constants" type="com.preferanser.client.application.i18n.PreferanserConstants"/>
     <ui:style>
 
-        .verticalPanel {
-            width: 1164px;
-            margin: 0 auto;
-        }
-
-        .buttonsPanel {
-            height: 60px;
-        }
-
         .dockPanel {
             width: 100%;
             height: 100%;
@@ -111,39 +102,36 @@
             height: 100%;
         }
     </ui:style>
-    <g:VerticalPanel addStyleNames="{style.verticalPanel}" spacing="0">
-        <g:HorizontalPanel ui:field="headerPanel" addStyleNames="{style.buttonsPanel}" spacing="10"/>
-        <g:DockPanel debugId="dlp" addStyleNames="{style.dockPanel}" spacing="10">
-            <g:Dock direction="SOUTH" addStyleNames="{style.southDock}">
-                <g:VerticalPanel addStyleNames="{style.southVPanel}">
-                    <g:FlowPanel ui:field="southCardsPanel" addStyleNames="{style.southFlowPanel}" debugId="SOUTH"/>
-                    <g:HorizontalPanel ui:field="southPanelHeader"
-                                       addStyleNames="{style.handTitle} {style.southHPanel}"/>
-                </g:VerticalPanel>
-            </g:Dock>
-            <g:Dock direction="EAST" addStyleNames="{style.eastDock}">
-                <g:VerticalPanel addStyleNames="{style.eastVPanel}">
-                    <g:FlowPanel ui:field="eastCardsPanel" addStyleNames="{style.eastFlowPanel}" debugId="EAST"/>
-                    <g:HorizontalPanel ui:field="eastPanelHeader" addStyleNames="{style.handTitle} {style.eastHPanel}"/>
-                </g:VerticalPanel>
-            </g:Dock>
-            <g:Dock direction="WEST" addStyleNames="{style.westDock}">
-                <g:VerticalPanel addStyleNames="{style.westVPanel}">
-                    <g:FlowPanel ui:field="westCardsPanel" addStyleNames="{style.westFlowPanel}" debugId="WEST"/>
-                    <g:HorizontalPanel ui:field="westPanelHeader" addStyleNames="{style.handTitle} {style.westHPanel}"/>
-                </g:VerticalPanel>
-            </g:Dock>
-            <g:Dock direction="CENTER" addStyleNames="{style.centerDock}">
-                <g:TabPanel ui:field="centerTabPanel" addStyleNames="{style.centerTabPanel}" debugId="centerTabPanel">
-                    <g:Tab text="{constants.game}">
-                        <g:FlowPanel ui:field="centerCardsPanel" debugId="centerCardsPanel"
-                                     addStyleNames="{style.centerCardsPanel}"/>
-                    </g:Tab>
-                    <g:Tab text="{constants.widow}">
-                        <g:FlowPanel ui:field="widowPanel" addStyleNames="{style.widowPanel}"/>
-                    </g:Tab>
-                </g:TabPanel>
-            </g:Dock>
-        </g:DockPanel>
-    </g:VerticalPanel>
+
+    <g:DockPanel debugId="dlp" addStyleNames="{style.dockPanel}" spacing="10">
+        <g:Dock direction="SOUTH" addStyleNames="{style.southDock}">
+            <g:VerticalPanel addStyleNames="{style.southVPanel}">
+                <g:FlowPanel ui:field="southCardsPanel" addStyleNames="{style.southFlowPanel}" debugId="SOUTH"/>
+                <g:HorizontalPanel ui:field="southPanelHeader" addStyleNames="{style.handTitle} {style.southHPanel}"/>
+            </g:VerticalPanel>
+        </g:Dock>
+        <g:Dock direction="EAST" addStyleNames="{style.eastDock}">
+            <g:VerticalPanel addStyleNames="{style.eastVPanel}">
+                <g:FlowPanel ui:field="eastCardsPanel" addStyleNames="{style.eastFlowPanel}" debugId="EAST"/>
+                <g:HorizontalPanel ui:field="eastPanelHeader" addStyleNames="{style.handTitle} {style.eastHPanel}"/>
+            </g:VerticalPanel>
+        </g:Dock>
+        <g:Dock direction="WEST" addStyleNames="{style.westDock}">
+            <g:VerticalPanel addStyleNames="{style.westVPanel}">
+                <g:FlowPanel ui:field="westCardsPanel" addStyleNames="{style.westFlowPanel}" debugId="WEST"/>
+                <g:HorizontalPanel ui:field="westPanelHeader" addStyleNames="{style.handTitle} {style.westHPanel}"/>
+            </g:VerticalPanel>
+        </g:Dock>
+        <g:Dock direction="CENTER" addStyleNames="{style.centerDock}">
+            <g:TabPanel ui:field="centerTabPanel" addStyleNames="{style.centerTabPanel}" debugId="centerTabPanel">
+                <g:Tab text="{constants.game}">
+                    <g:FlowPanel ui:field="centerCardsPanel" debugId="centerCardsPanel" addStyleNames="{style.centerCardsPanel}"/>
+                </g:Tab>
+                <g:Tab text="{constants.widow}">
+                    <g:FlowPanel ui:field="widowPanel" addStyleNames="{style.widowPanel}"/>
+                </g:Tab>
+            </g:TabPanel>
+        </g:Dock>
+    </g:DockPanel>
+
 </ui:UiBinder>

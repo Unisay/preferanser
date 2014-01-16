@@ -48,8 +48,7 @@ import static com.preferanser.shared.domain.TableLocation.*;
 
 public class TablePanel extends Composite {
 
-    public interface Binder extends UiBinder<VerticalPanel, TablePanel> {
-    }
+    public interface Binder extends UiBinder<DockPanel, TablePanel> {}
 
     private static Binder uiBinder = GWT.create(Binder.class);
 
@@ -58,7 +57,6 @@ public class TablePanel extends Composite {
     @UiField HorizontalPanel eastPanelHeader;
     @UiField HorizontalPanel southPanelHeader;
     @UiField HorizontalPanel westPanelHeader;
-    @UiField HorizontalPanel headerPanel;
     @UiField FlowPanel eastCardsPanel;
     @UiField FlowPanel southCardsPanel;
     @UiField FlowPanel westCardsPanel;
@@ -96,12 +94,6 @@ public class TablePanel extends Composite {
                 layoutLocation(TableLocation.WIDOW);
             }
         });
-    }
-
-    @UiChild
-    public void addHeader(HasWidgets hasWidgets) {
-        for (Widget widget : newArrayList(hasWidgets))
-            headerPanel.add(widget);
     }
 
     @UiChild

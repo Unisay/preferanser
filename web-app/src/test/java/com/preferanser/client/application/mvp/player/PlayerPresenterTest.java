@@ -91,6 +91,8 @@ public class PlayerPresenterTest {
         when(game.getCenterCards()).thenReturn(centerCards);
         when(game.getHandTricks()).thenReturn(handTricks);
         when(game.isTrickComplete()).thenReturn(true);
+        when(game.hasUndoTurns()).thenReturn(true);
+        when(game.hasRedoTurns()).thenReturn(false);
 
         presenter = new PlayerPresenter(placeManager, eventBus, view, proxy, preferanserMessages, currentUserDto);
         presenter.onGameBuilt(new GameBuiltEvent(game));
@@ -123,6 +125,7 @@ public class PlayerPresenterTest {
         verify(view).displayCards(handCards, centerCards, widow);
         verify(view).disableCards(Collections.<Card>emptySet());
         verify(view).displayHandTricks(handTricks);
+        verify(view).displayTurnNavigation(true, false);
         verifyNoMoreInteractions(view);
     }
 
@@ -135,6 +138,7 @@ public class PlayerPresenterTest {
         verify(view).displayCards(handCards, centerCards, widow);
         verify(view).disableCards(Collections.<Card>emptySet());
         verify(view).displayHandTricks(handTricks);
+        verify(view).displayTurnNavigation(true, false);
         verifyNoMoreInteractions(view);
     }
 

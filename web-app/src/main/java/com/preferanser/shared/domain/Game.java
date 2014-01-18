@@ -20,6 +20,7 @@
 package com.preferanser.shared.domain;
 
 import com.google.common.base.Optional;
+import com.google.common.base.Preconditions;
 import com.google.common.collect.*;
 import com.preferanser.shared.domain.exception.*;
 import com.preferanser.shared.util.EnumRotator;
@@ -36,6 +37,16 @@ import static com.google.common.collect.Sets.newHashSet;
  */
 public class Game {
 
+    private class Turn {
+        Hand hand;
+        Card card;
+
+        private Turn(Hand hand, Card card) {
+            this.hand = hand;
+            this.card = card;
+        }
+    }
+
     private final Players players;
     private final Widow widow;
     private final EnumRotator<Hand> turnRotator;
@@ -43,6 +54,8 @@ public class Game {
     private final Multimap<Hand, Card> handCardMultimap;
     private final Map<Hand, Integer> handTricks = Maps.newHashMapWithExpectedSize(Hand.values().length);
     private final LinkedHashMap<Card, Hand> centerCardHandMap;  // order is important
+    private LinkedList<Turn> undoTurns = Lists.newLinkedList();
+    private LinkedList<Turn> redoTurns = Lists.newLinkedList();
 
     Game(Players players,
          Widow widow,
@@ -118,13 +131,29 @@ public class Game {
             throw new NoTurnsAllowedException(centerCardHandMap);
 
         validateHandTurn(fromHand, card);
+        applyHandTurn(fromHand, card);
 
+        undoTurns.add(new Turn(fromHand, card));
+        redoTurns.clear();
+    }
+
+    private void applyHandTurn(Hand fromHand, Card card) {
         boolean removed = handCardMultimap.get(fromHand).remove(card);
         assert removed : "Failed to remove " + card + " from " + fromHand;
 
         centerCardHandMap.put(card, fromHand);
         turnRotator.next();
     }
+
+    private void revertTurn(Hand fromHand, Card card) {
+        Preconditions.checkArgument(centerCardHandMap.get(card) == fromHand, "Can't revert turn");
+        Hand removed = centerCardHandMap.remove(card);
+        assert removed != null : "Failed to remove " + card + " from center";
+
+        handCardMultimap.put(fromHand, card);
+        turnRotator.prev();
+    }
+
 
     // TODO instead of throwing exceptions - return validation errors
     private void validateHandTurn(Hand hand, Card card) throws IllegalSuitException {
@@ -227,6 +256,30 @@ public class Game {
 
     public Widow getWidow() {
         return widow;
+    }
+
+    public boolean hasUndoTurns() {
+        return !undoTurns.isEmpty();
+    }
+
+    public boolean hasRedoTurns() {
+        return !redoTurns.isEmpty();
+    }
+
+    public void undoTurn() {
+        if (hasUndoTurns()) {
+            Turn lastTurn = undoTurns.removeLast();
+            redoTurns.addLast(lastTurn);
+            revertTurn(lastTurn.hand, lastTurn.card);
+        }
+    }
+
+    public void redoTurn() {
+        if (hasRedoTurns()) {
+            Turn turn = redoTurns.removeLast();
+            undoTurns.addLast(turn);
+            applyHandTurn(turn.hand, turn.card);
+        }
     }
 
 }

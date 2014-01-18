@@ -19,7 +19,7 @@
 
 package com.preferanser.shared.domain;
 
-import com.google.appengine.labs.repackaged.com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableMap;
 import com.preferanser.shared.domain.entity.Deal;
 import com.preferanser.shared.domain.exception.GameBuilderException;
 import com.preferanser.shared.domain.exception.validation.GameBuilderValidationError;

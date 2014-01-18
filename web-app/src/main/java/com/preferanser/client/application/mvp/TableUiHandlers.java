@@ -33,4 +33,6 @@ public interface TableUiHandlers extends UiHandlers {
      * @param newLocation new location
      */
     void changeCardLocation(Card card, TableLocation oldLocation, TableLocation newLocation);
+
+    void logout();
 }

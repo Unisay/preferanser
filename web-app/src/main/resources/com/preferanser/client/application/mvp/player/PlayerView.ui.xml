@@ -32,7 +32,9 @@
             </g:FlowPanel>
 
             <g:FlowPanel addStyleNames="{style.rightHeader}">
-                <g:Label ui:field="authLabel" addStyleNames="{style.authLabel}"/>
+                <g:InlineHTML ui:field="authLabel" addStyleNames="{style.authLabel}"/>
+                <g:HTML addStyleNames="{style.pipe}">|</g:HTML>
+                <g:Hyperlink ui:field="logout" text="{constants.logout}" addStyleNames="{style.logout}"/>
             </g:FlowPanel>
 
         </g:HorizontalPanel>
@@ -66,6 +68,10 @@
                     <p:TurnPointer ui:field="turnPointerEast" turn="EAST"/>
                     <p:TurnPointer ui:field="turnPointerSouth" turn="SOUTH"/>
                     <p:TurnPointer ui:field="turnPointerWest" turn="WEST"/>
+                    <g:Anchor ui:field="undoAnchor" text="{constants.undo}" debugId="undo"
+                              addStyleNames="{style.undoButton}"/>
+                    <g:Anchor ui:field="redoAnchor" text="{constants.redo}" debugId="redo"
+                              addStyleNames="{style.redoButton}"/>
                 </p:Widgets>
             </p:center>
 

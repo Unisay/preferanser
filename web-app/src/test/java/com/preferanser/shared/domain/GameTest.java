@@ -32,12 +32,13 @@ import org.testng.annotations.Test;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import static com.google.appengine.labs.repackaged.com.google.common.collect.Sets.newHashSet;
 import static com.google.common.collect.Maps.newLinkedHashMap;
+import static com.google.common.collect.Sets.newHashSet;
 import static com.preferanser.shared.domain.Card.*;
 import static com.preferanser.shared.domain.Hand.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasEntry;
 import static org.testng.Assert.*;
 import static org.unitils.reflectionassert.ReflectionAssert.assertLenientEquals;
 import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
@@ -304,6 +305,18 @@ public class GameTest {
         assertLenientEquals(newHashSet(SPADE_8, CLUB_KING, HEART_JACK, CLUB_9), game.getDisabledCards());
         game.makeTurn(EAST, CLUB_8);
         assertLenientEquals(newHashSet(SPADE_8, CLUB_KING, CLUB_9, HEART_JACK), game.getDisabledCards());
+    }
+
+    // TODO complete test (add redo, sluff)
+    @Test
+    public void testUndoRedo() throws Exception {
+        game = new Game(Players.THREE, widow, handContractMap, turnRotator, handCardMultimap, centerCardHandMap);
+        game.makeTurn(SOUTH, CLUB_ACE);
+        assertThat(game.getTurn(), equalTo(WEST));
+        assertThat(game.getCenterCards(), hasEntry(CLUB_ACE, SOUTH));
+        game.undoTurn();
+        assertThat(game.getTurn(), equalTo(SOUTH));
+        assertTrue(game.getCenterCards().isEmpty());
     }
 
     private EnumRotator<Hand> createTurnRotator(Hand curValue, Hand... valuesToSkip) {

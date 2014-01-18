@@ -123,6 +123,36 @@
 }
 
 .authLabel {
-    color: #ffa200;
+    color: white;
     font-weight: bold;
+}
+
+.logout {
+    color: white;
+    font-weight: bold;
+    display: inline;
+    cursor: pointer;
+}
+
+.pipe {
+    margin: 0 .5em;
+    display: inline;
+    color: white;
+}
+
+.undoButton, .redoButton {
+    color: #ededed;
+    cursor: pointer;
+    font-weight: bold;
+    margin: 1em;
+    position: relative;
+    top: 380px;
+}
+
+.undoButton {
+    float: left;
+}
+
+.redoButton {
+    float: right;
 }

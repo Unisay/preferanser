@@ -27,33 +27,25 @@ import com.google.gwt.i18n.client.Messages;
  * See <a href="http://www.gwtproject.org/doc/latest/DevGuideI18n.html">GWT i18n doc</a>
  */
 public interface PreferanserMessages extends Messages {
-    @DefaultMessage("{0} chooses contract")
-    String handChoosesContract(String who);
+    @DefaultMessage("{0} chooses contract") String handChoosesContract(String who);
 
-    @DefaultMessage("Deal")
-    String deal();
+    @DefaultMessage("Deal") String deal();
 
-    @DefaultMessage("Wrong number of contracts")
-    String wrongNumberOfContracts();
+    @DefaultMessage("Wrong number of contracts") String wrongNumberOfContracts();
 
-    @DefaultMessage("There are conflicting contracts")
-    String hasConflictingContracts();
+    @DefaultMessage("There are conflicting contracts") String hasConflictingContracts();
 
-    @DefaultMessage("Fist turn not specified")
-    String firstTurnNotSpecified();
+    @DefaultMessage("Fist turn not specified") String firstTurnNotSpecified();
 
-    @DefaultMessage("First turn specified incorrectly")
-    String wrongFirstTurn();
+    @DefaultMessage("First turn specified incorrectly") String wrongFirstTurn();
 
-    @DefaultMessage("Cards dealt incorrectly: {0}")
-    String wrongNumCardsPerHand(String join);
+    @DefaultMessage("Cards dealt incorrectly: {0}") String wrongNumCardsPerHand(String join);
 
-    @DefaultMessage("Number of players not specified")
-    String numPlayersNotSpecified();
+    @DefaultMessage("Number of players not specified") String numPlayersNotSpecified();
 
-    @DefaultMessage("Widow has to have exactly 2 cards")
-    String widowNotSpecified();
+    @DefaultMessage("Widow has to have exactly 2 cards") String widowNotSpecified();
 
-    @DefaultMessage("Has duplicate cards: {0}")
-    String hasDuplicateCards(String join);
+    @DefaultMessage("Has duplicate cards: {0}") String hasDuplicateCards(String join);
+
+    @DefaultMessage("You have logged in as {0}") String loggedInAs(String nickname);
 }

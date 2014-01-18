@@ -68,6 +68,15 @@ public class EnumRotatorTest {
     }
 
     @Test
+    public void testPrev() throws Exception {
+        assertThat(enumRotator.prev(), equalTo(TestEnum.C));
+        assertThat(enumRotator.prev(), equalTo(TestEnum.B));
+        assertThat(enumRotator.prev(), equalTo(TestEnum.A));
+        assertThat(enumRotator.prev(), equalTo(TestEnum.D));
+        assertThat(enumRotator.prev(), equalTo(TestEnum.C));
+    }
+
+    @Test
     public void testNextAfterConstructor() throws Exception {
         assertThat(new EnumRotator<TestEnum>(TestEnum.values(), TestEnum.A).next(), equalTo(TestEnum.B));
     }

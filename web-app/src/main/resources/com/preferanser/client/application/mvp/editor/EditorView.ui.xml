@@ -35,7 +35,9 @@
             </g:FlowPanel>
 
             <g:FlowPanel addStyleNames="{style.rightHeader}">
-                <g:Label ui:field="authLabel" addStyleNames="{style.authLabel}"/>
+                <g:InlineHTML ui:field="authLabel" addStyleNames="{style.authLabel}"/>
+                <g:HTML addStyleNames="{style.pipe}">|</g:HTML>
+                <g:Hyperlink ui:field="logout" text="{constants.logout}" addStyleNames="{style.logout}"/>
             </g:FlowPanel>
 
         </g:HorizontalPanel>
@@ -46,7 +48,8 @@
                 <p:Widgets>
                     <g:FlowPanel addStyleNames="{style.handHeaderLeftPanel}">
                         <g:Label ui:field="titleWest" text="{constants.WEST}" addStyleNames="{style.titleWest}"/>
-                        <g:Anchor ui:field="westContractAnchor" debugId="contract-link-WEST" addStyleNames="{style.contractLink}"/>
+                        <g:Anchor ui:field="westContractAnchor" debugId="contract-link-WEST"
+                                  addStyleNames="{style.contractLink}"/>
                     </g:FlowPanel>
                     <g:Label ui:field="trickCountWest" addStyleNames="{style.trickCountWest}"/>
                 </p:Widgets>
@@ -56,7 +59,8 @@
                 <p:Widgets>
                     <g:FlowPanel addStyleNames="{style.handHeaderLeftPanel}">
                         <g:Label ui:field="titleSouth" text="{constants.SOUTH}" addStyleNames="{style.titleSouth}"/>
-                        <g:Anchor ui:field="southContractAnchor" debugId="contract-link-SOUTH" addStyleNames="{style.contractLink}"/>
+                        <g:Anchor ui:field="southContractAnchor" debugId="contract-link-SOUTH"
+                                  addStyleNames="{style.contractLink}"/>
                     </g:FlowPanel>
                     <g:Label ui:field="trickCountSouth" addStyleNames="{style.trickCountSouth}"/>
                 </p:Widgets>
@@ -66,7 +70,8 @@
                 <p:Widgets>
                     <g:FlowPanel addStyleNames="{style.handHeaderLeftPanel}">
                         <g:Label ui:field="titleEast" text="{constants.EAST}" addStyleNames="{style.titleEast}"/>
-                        <g:Anchor ui:field="eastContractAnchor" debugId="contract-link-EAST" addStyleNames="{style.contractLink}"/>
+                        <g:Anchor ui:field="eastContractAnchor" debugId="contract-link-EAST"
+                                  addStyleNames="{style.contractLink}"/>
                     </g:FlowPanel>
                     <g:Label ui:field="trickCountEast" addStyleNames="{style.trickCountEast}"/>
                 </p:Widgets>

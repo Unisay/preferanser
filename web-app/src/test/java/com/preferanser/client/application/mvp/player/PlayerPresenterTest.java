@@ -21,6 +21,7 @@ package com.preferanser.client.application.mvp.player;
 
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
+import com.preferanser.client.application.i18n.PreferanserMessages;
 import com.preferanser.client.application.mvp.GameBuiltEvent;
 import com.preferanser.shared.domain.*;
 import com.preferanser.shared.dto.CurrentUserDto;
@@ -54,6 +55,8 @@ public class PlayerPresenterTest {
     @Mock
     private Game game;
 
+    @Mock
+    private PreferanserMessages preferanserMessages;
 
     @Mock
     private Map<Hand, Contract> handContracts;
@@ -78,7 +81,9 @@ public class PlayerPresenterTest {
 
         CurrentUserDto currentUserDto = new CurrentUserDto();
         currentUserDto.nickname = "nickname";
+        String loggedInAs = "logged in as nickname";
 
+        when(preferanserMessages.loggedInAs(currentUserDto.nickname)).thenReturn(loggedInAs);
         when(game.getTurn()).thenReturn(turn);
         when(game.getWidow()).thenReturn(widow);
         when(game.getHandContracts()).thenReturn(handContracts);
@@ -87,11 +92,11 @@ public class PlayerPresenterTest {
         when(game.getHandTricks()).thenReturn(handTricks);
         when(game.isTrickComplete()).thenReturn(true);
 
-        presenter = new PlayerPresenter(placeManager, eventBus, view, proxy, currentUserDto);
+        presenter = new PlayerPresenter(placeManager, eventBus, view, proxy, preferanserMessages, currentUserDto);
         presenter.onGameBuilt(new GameBuiltEvent(game));
 
         verify(view).setUiHandlers(presenter);
-        verify(view).displayAuthInfo("nickname");
+        verify(view).displayAuthInfo(loggedInAs);
     }
 
     @Test

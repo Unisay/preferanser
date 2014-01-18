@@ -21,6 +21,7 @@ package com.preferanser.client.application.mvp.player;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
+import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.HasUiHandlers;
@@ -31,6 +32,7 @@ import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.preferanser.client.application.ApplicationPresenter;
+import com.preferanser.client.application.i18n.PreferanserMessages;
 import com.preferanser.client.application.mvp.GameBuiltEvent;
 import com.preferanser.client.application.mvp.TableView;
 import com.preferanser.client.gwtp.NameTokens;
@@ -55,11 +57,13 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
 
     public interface PlayerView extends TableView, HasUiHandlers<PlayerUiHandlers> {
         void displayHandTricks(Map<Hand, Integer> handTricks);
-
         void disableCards(Set<Card> cards);
+
+        void displayTurnNavigation(boolean showPrev, boolean showNext);
     }
 
     private PlaceManager placeManager;
+    private final CurrentUserDto currentUserDto;
     private Optional<Game> gameOptional = Optional.absent();
 
     @ProxyStandard
@@ -67,21 +71,25 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
     public interface Proxy extends ProxyPlace<PlayerPresenter> {}
 
     @Inject
-    public PlayerPresenter(PlaceManager placeManager, EventBus eventBus, PlayerView view, Proxy proxy, CurrentUserDto currentUserDto) {
+    public PlayerPresenter(PlaceManager placeManager,
+                           EventBus eventBus,
+                           PlayerView view,
+                           Proxy proxy,
+                           PreferanserMessages preferanserMessages,
+                           CurrentUserDto currentUserDto) {
         super(eventBus, view, proxy, ApplicationPresenter.TYPE_SetMainContent);
         this.placeManager = placeManager;
+        this.currentUserDto = currentUserDto;
         getView().setUiHandlers(this);
-        getView().displayAuthInfo(currentUserDto.nickname);
+        getView().displayAuthInfo(preferanserMessages.loggedInAs(currentUserDto.nickname));
     }
 
-    @Override
-    protected void onBind() {
+    @Override protected void onBind() {
         super.onBind();
         addRegisteredHandler(GameBuiltEvent.getType(), this);
     }
 
-    @Override
-    protected void onReveal() {
+    @Override protected void onReveal() {
         super.onReveal();
         if (!gameOptional.isPresent()) {
             switchToEditor();
@@ -90,22 +98,19 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
         }
     }
 
-    @Override
-    public void onGameBuilt(GameBuiltEvent gameBuiltEvent) {
+    @Override public void onGameBuilt(GameBuiltEvent gameBuiltEvent) {
         Game game = gameBuiltEvent.getGame();
         Preconditions.checkNotNull(game, "PlayerPresenter.onGameBuilt(gameBuiltEvent.getGame() is null)");
         gameOptional = Optional.of(game);
     }
 
-    @Override
-    public void sluff() {
+    @Override public void sluff() {
         Preconditions.checkState(gameOptional.isPresent(), "PlayerPresenter.sluff(game is null)");
         if (gameOptional.get().sluffTrick())
             refreshView();
     }
 
-    @Override
-    public void changeCardLocation(Card card, TableLocation oldLocation, TableLocation newLocation) {
+    @Override public void changeCardLocation(Card card, TableLocation oldLocation, TableLocation newLocation) {
         Preconditions.checkState(gameOptional.isPresent(), "PlayerPresenter.changeCardLocation(game is null)");
 
         if (oldLocation == newLocation) {
@@ -129,9 +134,24 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
         refreshView();
     }
 
-    @Override
-    public void switchToEditor() {
+    @Override public void switchToEditor() {
         placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.GAME_EDITOR).build());
+    }
+
+    @Override public void logout() {
+        Window.Location.assign(currentUserDto.logoutUrl);
+    }
+
+    @Override public void undo() {
+        Preconditions.checkState(gameOptional.isPresent(), "PlayerPresenter.undo(game is null)");
+        gameOptional.get().undoTurn();
+        refreshView();
+    }
+
+    @Override public void redo() {
+        Preconditions.checkState(gameOptional.isPresent(), "PlayerPresenter.redo(game is null)");
+        gameOptional.get().redoTurn();
+        refreshView();
     }
 
     private void refreshView() {
@@ -139,6 +159,7 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
         refreshContracts();
         refreshCards();
         refreshHandTricks();
+        refreshTurnNavigation();
     }
 
     private void refreshTurn() {
@@ -162,4 +183,11 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
         Preconditions.checkState(gameOptional.isPresent(), "PlayerPresenter.refreshHandTricks(game is null)");
         getView().displayHandTricks(gameOptional.get().getHandTricks());
     }
+
+    private void refreshTurnNavigation() {
+        Preconditions.checkState(gameOptional.isPresent(), "PlayerPresenter.refreshTurnNavigation(game is null)");
+        Game game = gameOptional.get();
+        getView().displayTurnNavigation(game.hasUndoTurns(), game.hasRedoTurns());
+    }
+
 }

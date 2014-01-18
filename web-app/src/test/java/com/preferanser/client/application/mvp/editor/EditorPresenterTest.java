@@ -22,6 +22,7 @@ package com.preferanser.client.application.mvp.editor;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.preferanser.client.application.i18n.PreferanserConstants;
+import com.preferanser.client.application.i18n.PreferanserMessages;
 import com.preferanser.client.application.mvp.editor.dialog.EditorDialogs;
 import com.preferanser.client.service.DealService;
 import com.preferanser.shared.domain.*;
@@ -77,6 +78,9 @@ public class EditorPresenterTest {
     private Map<Hand, Integer> handTricks;
 
     @Mock
+    private PreferanserMessages preferanserMessages;
+
+    @Mock
     private PreferanserConstants preferanserConstants;
 
     private Hand turn;
@@ -89,7 +93,9 @@ public class EditorPresenterTest {
         widow = new Widow();
         CurrentUserDto currentUserDto = new CurrentUserDto();
         currentUserDto.nickname = "nickname";
+        String loggedInAs = "logged in as nickname";
 
+        when(preferanserMessages.loggedInAs(currentUserDto.nickname)).thenReturn(loggedInAs);
         when(gameBuilder.build()).thenReturn(game);
         when(gameBuilder.getFirstTurn()).thenReturn(turn);
         when(gameBuilder.getWidow()).thenReturn(widow);
@@ -105,12 +111,13 @@ public class EditorPresenterTest {
             proxy,
             gameBuilder,
             dealService,
+            preferanserMessages,
             preferanserConstants,
             editorDialogs,
             currentUserDto);
 
         verify(view).setUiHandlers(presenter);
-        verify(view).displayAuthInfo("nickname");
+        verify(view).displayAuthInfo(loggedInAs);
     }
 
     @Test

@@ -72,6 +72,18 @@ public class EnumRotator<E extends Enum<E>> {
         return result;
     }
 
+    public E prev() {
+        currentOrdinal = currentOrdinal == 0 ? values.length - 1 : currentOrdinal - 1;
+        E result = values[currentOrdinal];
+
+        if (valuesToSkip != null)
+            for (E valueToSkip : valuesToSkip)
+                if (valueToSkip == result)
+                    return prev();
+
+        return result;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

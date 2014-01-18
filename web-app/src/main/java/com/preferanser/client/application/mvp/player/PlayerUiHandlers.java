@@ -32,7 +32,17 @@ public interface PlayerUiHandlers extends TableUiHandlers {
     void sluff();
 
     /**
-     *  Switch to editor page
+     * Switch to editor page
      */
     void switchToEditor();
+
+    /**
+     * Undo turn
+     */
+    void undo();
+
+    /**
+     * Redo turn
+     */
+    void redo();
 }

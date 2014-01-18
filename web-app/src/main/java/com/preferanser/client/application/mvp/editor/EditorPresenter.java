@@ -20,6 +20,7 @@
 package com.preferanser.client.application.mvp.editor;
 
 import com.google.common.base.Optional;
+import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.HasUiHandlers;
@@ -32,6 +33,7 @@ import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.preferanser.client.application.ApplicationPresenter;
 import com.preferanser.client.application.i18n.PreferanserConstants;
+import com.preferanser.client.application.i18n.PreferanserMessages;
 import com.preferanser.client.application.mvp.GameBuiltEvent;
 import com.preferanser.client.application.mvp.TableView;
 import com.preferanser.client.application.mvp.dialog.input.InputDialogPresenter;
@@ -57,6 +59,7 @@ public class EditorPresenter extends Presenter<EditorPresenter.EditorView, Edito
     implements EditorUiHandlers, HasHandContracts, InputDialogPresenter.InputResultHandler {
 
     private static final Logger log = Logger.getLogger("EditorPresenter");
+    private final CurrentUserDto currentUserDto;
 
     public interface EditorView extends HasUiHandlers<EditorUiHandlers>, TableView {}
 
@@ -79,6 +82,7 @@ public class EditorPresenter extends Presenter<EditorPresenter.EditorView, Edito
                            Proxy proxy,
                            GameBuilder gameBuilder,
                            DealService dealService,
+                           PreferanserMessages messages,
                            PreferanserConstants constants,
                            EditorDialogs editorDialogs,
                            CurrentUserDto currentUserDto) {
@@ -89,7 +93,8 @@ public class EditorPresenter extends Presenter<EditorPresenter.EditorView, Edito
         this.constants = constants;
         this.editorDialogs = editorDialogs;
         getView().setUiHandlers(this);
-        getView().displayAuthInfo(currentUserDto.nickname);
+        this.currentUserDto = currentUserDto;
+        getView().displayAuthInfo(messages.loggedInAs(currentUserDto.nickname));
         initGameBuilder();
     }
 
@@ -138,6 +143,10 @@ public class EditorPresenter extends Presenter<EditorPresenter.EditorView, Edito
             log.finer(e.getMessage());
             refreshCards();
         }
+    }
+
+    @Override public void logout() {
+        Window.Location.assign(currentUserDto.logoutUrl);
     }
 
     @Override

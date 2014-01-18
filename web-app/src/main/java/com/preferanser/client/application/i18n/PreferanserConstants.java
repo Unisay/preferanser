@@ -31,6 +31,12 @@ public interface PreferanserConstants extends ConstantsWithLookup {
 
     @DefaultStringValue("Preferanser") String preferanser();
 
+    @DefaultStringValue("Log out") String logout();
+
+    @DefaultStringValue("Undo") String undo();
+
+    @DefaultStringValue("Redo") String redo();
+
     @DefaultStringValue("Pass") String pass();
 
     @DefaultStringValue("Whist") String whist();

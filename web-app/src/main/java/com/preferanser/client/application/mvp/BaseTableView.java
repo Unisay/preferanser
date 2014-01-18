@@ -26,6 +26,7 @@ import com.google.gwt.dom.client.Document;
 import com.google.gwt.event.dom.client.*;
 import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.*;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
 import com.preferanser.client.application.i18n.I18nHelper;
@@ -67,7 +68,8 @@ abstract public class BaseTableView<U extends TableUiHandlers>
     @UiField(provided = true) public PreferanserConstants constants;
     @UiField public TableStyle style;
     @UiField public TablePanel table;
-    @UiField public Label authLabel;
+    @UiField public InlineHTML authLabel;
+    @UiField public Hyperlink logout;
 
     @UiField public TurnPointer turnPointerEast;
     @UiField public TurnPointer turnPointerSouth;
@@ -167,7 +169,7 @@ abstract public class BaseTableView<U extends TableUiHandlers>
 
     @Override
     public void displayAuthInfo(String authInfo) {
-        authLabel.setText(authInfo);
+        authLabel.setHTML(authInfo);
     }
 
     @Override
@@ -271,14 +273,15 @@ abstract public class BaseTableView<U extends TableUiHandlers>
 
     abstract protected Logger getLog();
 
+    @UiHandler("logout") public void onLogoutClicked(@SuppressWarnings("unused") ClickEvent event) {
+        getUiHandlers().logout();
+    }
 
-    public
-    @UiFactory TurnPointer turnPointer() {
+    @UiFactory public TurnPointer turnPointer() {
         return new TurnPointer(style, resources.arrowRight());
     }
 
-    public
-    @UiFactory TablePanel tablePanel() {
+    @UiFactory public TablePanel tablePanel() {
         return new TablePanel();
     }
 }

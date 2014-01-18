@@ -25,10 +25,7 @@ import com.google.gwt.event.dom.client.DoubleClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.*;
 import com.google.inject.Inject;
 import com.preferanser.client.application.i18n.I18nHelper;
 import com.preferanser.client.application.i18n.PreferanserConstants;
@@ -56,6 +53,8 @@ public class PlayerView extends BaseTableView<PlayerUiHandlers> implements Playe
     @UiField Label trickCountEast;
     @UiField Label trickCountSouth;
     @UiField Label trickCountWest;
+    @UiField Anchor undoAnchor;
+    @UiField Anchor redoAnchor;
 
     @Inject
     public PlayerView(Binder uiBinder, PreferanserResources resources, PreferanserConstants constants, I18nHelper i18nHelper) {
@@ -76,6 +75,11 @@ public class PlayerView extends BaseTableView<PlayerUiHandlers> implements Playe
             entry.getValue().setDisabled(cards.contains(entry.getKey()));
     }
 
+    @Override public void displayTurnNavigation(boolean showPrev, boolean showNext) {
+        undoAnchor.setVisible(showPrev);
+        redoAnchor.setVisible(showNext);
+    }
+
     @Override
     protected void displayHandTurnPointer(Hand hand, TurnPointer turnPointer, Hand turn) {
         super.displayHandTurnPointer(hand, turnPointer, turn);
@@ -87,6 +91,14 @@ public class PlayerView extends BaseTableView<PlayerUiHandlers> implements Playe
 
     @UiHandler("editButton") void onEditButtonClicked(@SuppressWarnings("unused") ClickEvent event) {
         getUiHandlers().switchToEditor();
+    }
+
+    @UiHandler("undoAnchor") void onUndoButtonClicked(@SuppressWarnings("unused") ClickEvent event) {
+        getUiHandlers().undo();
+    }
+
+    @UiHandler("redoAnchor") void onRedoButtonClicked(@SuppressWarnings("unused") ClickEvent event) {
+        getUiHandlers().redo();
     }
 
     protected void installCenterPanelClickHandler() {

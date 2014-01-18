@@ -44,20 +44,27 @@ public class GameBuilder {
 
     private static final int NUM_OF_CARDS_PER_HAND = 10;
     private static final int NUM_OF_CONTRACTS = 3;
-    private Widow widow = new Widow();
 
+    private Widow widow;
     private Players players;
-
     private Hand firstTurn;
+    private Map<Card, Hand> centerCardHandMap;
+    private Map<Hand, Contract> handContracts;
+    private LinkedHashMultimap<Hand, Card> handCardMultimap;
 
-    private Map<Hand, Contract> handContracts
-        = Maps.newHashMapWithExpectedSize(Hand.PLAYING_HANDS.size());
+    public GameBuilder() {
+        reset();
+    }
 
-    private LinkedHashMultimap<Hand, Card> handCardMultimap
-        = LinkedHashMultimap.create(TableLocation.values().length, Card.values().length);
-
-    private Map<Card, Hand> centerCardHandMap
-        = Maps.newLinkedHashMap(); // order is important
+    public GameBuilder reset() {
+        firstTurn = null;
+        players = null;
+        widow = new Widow();
+        handContracts = Maps.newHashMapWithExpectedSize(Hand.PLAYING_HANDS.size());
+        centerCardHandMap = Maps.newLinkedHashMap(); // order is important
+        handCardMultimap = LinkedHashMultimap.create(TableLocation.values().length, Card.values().length);
+        return this;
+    }
 
     public GameBuilder setDeal(Deal deal) {
         firstTurn = deal.getFirstTurn();
@@ -386,6 +393,5 @@ public class GameBuilder {
     public Map<Card, Hand> getCenterCards() {
         return new LinkedHashMap<Card, Hand>(centerCardHandMap);
     }
-
 
 }

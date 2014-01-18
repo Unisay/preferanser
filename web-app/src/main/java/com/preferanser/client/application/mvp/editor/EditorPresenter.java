@@ -90,17 +90,21 @@ public class EditorPresenter extends Presenter<EditorPresenter.EditorView, Edito
         this.editorDialogs = editorDialogs;
         getView().setUiHandlers(this);
         getView().displayAuthInfo(currentUserDto.nickname);
-        newDeal();
+        initGameBuilder();
     }
 
     @Override
     public void newDeal() {
-        maybeGame = Optional.absent();
-        gameBuilder = new GameBuilder()
-            .setThreePlayers()
-            .setFirstTurn(Hand.SOUTH)
-            .putCards(Hand.SOUTH, Card.values());
+        initGameBuilder();
         refreshView();
+    }
+
+    private void initGameBuilder() {
+        maybeGame = Optional.absent();
+        gameBuilder.reset();
+        gameBuilder.setThreePlayers();
+        gameBuilder.setFirstTurn(Hand.SOUTH);
+        gameBuilder.putCards(Hand.SOUTH, Card.values());
     }
 
     @Override
@@ -187,7 +191,8 @@ public class EditorPresenter extends Presenter<EditorPresenter.EditorView, Edito
     }
 
     private void refreshTurn() {
-        getView().displayTurn(gameBuilder.getFirstTurn());
+        Hand firstTurn = gameBuilder.getFirstTurn();
+        getView().displayTurn(firstTurn);
     }
 
     private void refreshContracts() {

@@ -36,6 +36,7 @@ import java.util.*;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Sets.newHashSet;
 import static com.preferanser.shared.domain.Card.CLUB_ACE;
+import static com.preferanser.shared.domain.Card.CLUB_QUEEN;
 import static com.preferanser.shared.domain.Hand.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -49,6 +50,7 @@ public class GameBuilderTest {
     private Card[] eastCards;
     private Card[] westCards;
     private Deal deal;
+    private Widow widow;
 
     @BeforeMethod
     public void setUp() throws Exception {
@@ -57,15 +59,15 @@ public class GameBuilderTest {
         eastCards = (Card[]) ArrayUtils.subarray(Card.values(), 10, 20);
         westCards = (Card[]) ArrayUtils.subarray(Card.values(), 20, 30);
         builder = new GameBuilder()
-                .setThreePlayers()
-                .setWidow(Widow.fromArray((Card[]) ArrayUtils.subarray(Card.values(), 30, 32)))
-                .setHandContract(SOUTH, Contract.SIX_SPADE)
-                .setHandContract(EAST, Contract.WHIST)
-                .setHandContract(WEST, Contract.PASS)
-                .putCards(SOUTH, southCards)
-                .putCards(EAST, eastCards)
-                .putCards(WEST, westCards)
-                .setFirstTurn(SOUTH);
+            .setThreePlayers()
+            .setWidow(Widow.fromArray((Card[]) ArrayUtils.subarray(Card.values(), 30, 32)))
+            .setHandContract(SOUTH, Contract.SIX_SPADE)
+            .setHandContract(EAST, Contract.WHIST)
+            .setHandContract(WEST, Contract.PASS)
+            .putCards(SOUTH, southCards)
+            .putCards(EAST, eastCards)
+            .putCards(WEST, westCards)
+            .setFirstTurn(SOUTH);
 
         deal = new Deal();
         deal.setPlayers(Players.THREE);
@@ -79,6 +81,7 @@ public class GameBuilderTest {
         deal.setSouthContract(Contract.SIX_SPADE);
         deal.setEastContract(Contract.WHIST);
         deal.setWestContract(Contract.PASS);
+        widow = new Widow(Card.CLUB_KING, CLUB_QUEEN);
     }
 
     @Test
@@ -101,9 +104,9 @@ public class GameBuilderTest {
     @Test
     public void testHandContract() throws Exception {
         Map<Hand, Contract> expectedContracts = ImmutableMap.of(
-                SOUTH, Contract.SIX_SPADE,
-                EAST, Contract.WHIST,
-                WEST, Contract.PASS
+            SOUTH, Contract.SIX_SPADE,
+            EAST, Contract.WHIST,
+            WEST, Contract.PASS
         );
 
         Map<Hand, Contract> actualContracts = builder.build().getHandContracts();
@@ -120,7 +123,7 @@ public class GameBuilderTest {
     }
 
     @Test(expectedExceptions = GameBuilderException.class, expectedExceptionsMessageRegExp = "" +
-            ".*WrongNumCardsPerHandValidationError$")
+        ".*WrongNumCardsPerHandValidationError$")
     public void testClearCards() throws Exception {
         builder.clearCards(TableLocation.SOUTH);
         Map<Hand, Set<Card>> tableCards = builder.getHandCards();
@@ -140,65 +143,65 @@ public class GameBuilderTest {
     }
 
     @Test(expectedExceptions = GameBuilderException.class, expectedExceptionsMessageRegExp = "" +
-            ".*WrongNumCardsPerHandValidationError$")
+        ".*WrongNumCardsPerHandValidationError$")
     public void testClearCards_All() throws Exception {
         builder.clearCards();
         assertReflectionEquals(ImmutableMap.of(
-                Hand.EAST, Collections.emptyList(),
-                Hand.SOUTH, Collections.emptyList(),
-                Hand.WEST, Collections.emptyList()
+            Hand.EAST, Collections.emptyList(),
+            Hand.SOUTH, Collections.emptyList(),
+            Hand.WEST, Collections.emptyList()
         ), builder.getHandCards());
         builder.build();
     }
 
     @Test(expectedExceptions = GameBuilderException.class, expectedExceptionsMessageRegExp
-            = ".*NumPlayersNotSpecifiedValidationError.+FirstTurnNotSpecifiedValidationError" +
-            ".+WrongNumberOfContractsValidationError$")
+        = ".*NumPlayersNotSpecifiedValidationError.+FirstTurnNotSpecifiedValidationError" +
+        ".+WrongNumberOfContractsValidationError$")
     public void testValidate_NoPlayersNoTurnNoContracts() throws Exception {
         new GameBuilder().build();
     }
 
     @Test(expectedExceptions = GameBuilderException.class, expectedExceptionsMessageRegExp
-            = ".*FirstTurnNotSpecifiedValidationError.+WrongNumberOfContractsValidationError$")
+        = ".*FirstTurnNotSpecifiedValidationError.+WrongNumberOfContractsValidationError$")
     public void testValidate_NoTurnNoContracts() throws Exception {
         new GameBuilder()
-                .setFourPlayers()
-                .build();
+            .setFourPlayers()
+            .build();
     }
 
     @Test(expectedExceptions = GameBuilderException.class,
-            expectedExceptionsMessageRegExp = ".*WrongNumberOfContractsValidationError$")
+        expectedExceptionsMessageRegExp = ".*WrongNumberOfContractsValidationError$")
     public void testValidate_NoContracts() throws Exception {
         new GameBuilder()
-                .setFourPlayers()
-                .setFirstTurn(SOUTH)
-                .build();
+            .setFourPlayers()
+            .setFirstTurn(SOUTH)
+            .build();
     }
 
     @Test(expectedExceptions = GameBuilderException.class,
-            expectedExceptionsMessageRegExp = ".*WrongNumberOfContractsValidationError.*")
+        expectedExceptionsMessageRegExp = ".*WrongNumberOfContractsValidationError.*")
     public void testValidate_WrongNumberContracts() throws Exception {
         new GameBuilder()
-                .setThreePlayers()
-                .setFirstTurn(SOUTH)
-                .setHandContract(EAST, Contract.PASS)
-                .setHandContract(SOUTH, Contract.SEVEN_CLUB)
-                .putCards(SOUTH, southCards)
-                .putCards(EAST, eastCards)
-                .putCards(WEST, westCards)
-                .build();
+            .setThreePlayers()
+            .setFirstTurn(SOUTH)
+            .setHandContract(EAST, Contract.PASS)
+            .setHandContract(SOUTH, Contract.SEVEN_CLUB)
+            .putCards(SOUTH, southCards)
+            .putCards(EAST, eastCards)
+            .putCards(WEST, westCards)
+            .build();
     }
 
     @Test
     public void testValidate_HasConflictingContractsAllPasses() throws Exception {
         try {
             builder.setHandContract(SOUTH, Contract.PASS)
-                    .setHandContract(EAST, Contract.PASS)
-                    .setHandContract(WEST, Contract.PASS)
-                    .build();
+                .setHandContract(EAST, Contract.PASS)
+                .setHandContract(WEST, Contract.PASS)
+                .build();
         } catch (GameBuilderException e) {
             List<? extends GameBuilderValidationError> expectedErrors = newArrayList(new
-                    HasConflictingContractsValidationError());
+                HasConflictingContractsValidationError());
             assertReflectionEquals(expectedErrors, e.getBuilderErrors());
         }
     }
@@ -207,12 +210,12 @@ public class GameBuilderTest {
     public void testValidate_HasConflictingContractsAllWhists() throws Exception {
         try {
             builder.setHandContract(SOUTH, Contract.WHIST)
-                    .setHandContract(EAST, Contract.WHIST)
-                    .setHandContract(WEST, Contract.WHIST)
-                    .build();
+                .setHandContract(EAST, Contract.WHIST)
+                .setHandContract(WEST, Contract.WHIST)
+                .build();
         } catch (GameBuilderException e) {
             List<? extends GameBuilderValidationError> expectedErrors = newArrayList(new
-                    HasConflictingContractsValidationError());
+                HasConflictingContractsValidationError());
             assertReflectionEquals(expectedErrors, e.getBuilderErrors());
         }
     }
@@ -221,13 +224,13 @@ public class GameBuilderTest {
     public void testValidate_HasConflictingContractsPassPassWhist() throws Exception {
         try {
             builder.setHandContract(SOUTH, Contract.PASS)
-                    .setHandContract(EAST, Contract.PASS)
-                    .setHandContract(WEST, Contract.WHIST)
-                    .build();
+                .setHandContract(EAST, Contract.PASS)
+                .setHandContract(WEST, Contract.WHIST)
+                .build();
             fail("GameBuilderException expected");
         } catch (GameBuilderException e) {
             List<? extends GameBuilderValidationError> expectedErrors = newArrayList(new
-                    HasConflictingContractsValidationError());
+                HasConflictingContractsValidationError());
             assertReflectionEquals(expectedErrors, e.getBuilderErrors());
         }
     }
@@ -236,40 +239,41 @@ public class GameBuilderTest {
     public void testValidate_HasConflictingContractsPassWhistWhist() throws Exception {
         try {
             builder.setHandContract(SOUTH, Contract.PASS)
-                    .setHandContract(EAST, Contract.WHIST)
-                    .setHandContract(WEST, Contract.WHIST)
-                    .build();
+                .setHandContract(EAST, Contract.WHIST)
+                .setHandContract(WEST, Contract.WHIST)
+                .build();
             fail("GameBuilderException expected");
         } catch (GameBuilderException e) {
             List<? extends GameBuilderValidationError> expectedErrors = newArrayList(new
-                    HasConflictingContractsValidationError());
+                HasConflictingContractsValidationError());
             assertReflectionEquals(expectedErrors, e.getBuilderErrors());
         }
     }
 
     @Test(expectedExceptions = GameBuilderException.class,
-            expectedExceptionsMessageRegExp = ".*HasConflictingContractsValidationError$")
+        expectedExceptionsMessageRegExp = ".*HasConflictingContractsValidationError$")
     public void testValidate_HasConflictingContracts() throws Exception {
         builder.setHandContract(SOUTH, Contract.SIX_DIAMOND)
-                .setHandContract(EAST, Contract.SEVEN_CLUB)
-                .setHandContract(WEST, Contract.WHIST)
-                .build();
+            .setHandContract(EAST, Contract.SEVEN_CLUB)
+            .setHandContract(WEST, Contract.WHIST)
+            .build();
     }
 
     @Test
     public void testValidate_WrongHandCards() throws Exception {
         try {
             new GameBuilder()
-                    .setFourPlayers()
-                    .setFirstTurn(SOUTH)
-                    .setHandContract(SOUTH, Contract.SIX_DIAMOND)
-                    .setHandContract(EAST, Contract.PASS)
-                    .setHandContract(WEST, Contract.WHIST)
-                    .build();
+                .setFourPlayers()
+                .setWidow(widow)
+                .setFirstTurn(SOUTH)
+                .setHandContract(SOUTH, Contract.SIX_DIAMOND)
+                .setHandContract(EAST, Contract.PASS)
+                .setHandContract(WEST, Contract.WHIST)
+                .build();
             fail("WrongNumCardsPerHandValidationError expected");
         } catch (GameBuilderException e) {
             List<? extends GameBuilderValidationError> expectedErrors = newArrayList(
-                    new WrongNumCardsPerHandValidationError(ImmutableMap.of(SOUTH, 0, EAST, 0, WEST, 0))
+                new WrongNumCardsPerHandValidationError(ImmutableMap.of(SOUTH, 0, EAST, 0, WEST, 0))
             );
             assertReflectionEquals(expectedErrors, e.getBuilderErrors());
         }
@@ -279,19 +283,20 @@ public class GameBuilderTest {
     public void testValidate_WrongHandCards2() throws Exception {
         try {
             new GameBuilder()
-                    .setFourPlayers()
-                    .setFirstTurn(SOUTH)
-                    .putCards(SOUTH, (Card[]) ArrayUtils.subarray(southCards, 0, 9))
-                    .putCards(EAST, eastCards)
-                    .putCards(WEST, westCards)
-                    .setHandContract(SOUTH, Contract.SIX_DIAMOND)
-                    .setHandContract(EAST, Contract.PASS)
-                    .setHandContract(WEST, Contract.WHIST)
-                    .build();
+                .setFourPlayers()
+                .setFirstTurn(SOUTH)
+                .setWidow(widow)
+                .putCards(SOUTH, (Card[]) ArrayUtils.subarray(southCards, 0, 9))
+                .putCards(EAST, eastCards)
+                .putCards(WEST, westCards)
+                .setHandContract(SOUTH, Contract.SIX_DIAMOND)
+                .setHandContract(EAST, Contract.PASS)
+                .setHandContract(WEST, Contract.WHIST)
+                .build();
             fail("WrongNumCardsPerHandValidationError expected");
         } catch (GameBuilderException e) {
             List<? extends GameBuilderValidationError> expectedErrors = newArrayList(
-                    new WrongNumCardsPerHandValidationError(ImmutableMap.of(SOUTH, 9))
+                new WrongNumCardsPerHandValidationError(ImmutableMap.of(SOUTH, 9))
             );
             assertReflectionEquals(expectedErrors, e.getBuilderErrors());
         }
@@ -302,19 +307,20 @@ public class GameBuilderTest {
         southCards[0] = eastCards[0];
         try {
             new GameBuilder()
-                    .setFourPlayers()
-                    .setFirstTurn(SOUTH)
-                    .putCards(SOUTH, southCards)
-                    .putCards(EAST, eastCards)
-                    .putCards(WEST, westCards)
-                    .setHandContract(SOUTH, Contract.SIX_DIAMOND)
-                    .setHandContract(EAST, Contract.PASS)
-                    .setHandContract(WEST, Contract.WHIST)
-                    .build();
+                .setFourPlayers()
+                .setFirstTurn(SOUTH)
+                .setWidow(widow)
+                .putCards(SOUTH, southCards)
+                .putCards(EAST, eastCards)
+                .putCards(WEST, westCards)
+                .setHandContract(SOUTH, Contract.SIX_DIAMOND)
+                .setHandContract(EAST, Contract.PASS)
+                .setHandContract(WEST, Contract.WHIST)
+                .build();
             fail("HasDuplicateCardsValidationError expected");
         } catch (GameBuilderException e) {
             List<? extends GameBuilderValidationError> expectedErrors = newArrayList(
-                    new HasDuplicateCardsValidationError(Collections.singleton(eastCards[0]))
+                new HasDuplicateCardsValidationError(Collections.singleton(eastCards[0]))
             );
             assertReflectionEquals(expectedErrors, e.getBuilderErrors());
         }
@@ -337,6 +343,11 @@ public class GameBuilderTest {
         assertTrue(builder.moveCard(Card.SPADE_QUEEN, TableLocation.WEST, TableLocation.CENTER));
         assertTrue(builder.moveCard(Card.CLUB_7, TableLocation.SOUTH, TableLocation.CENTER));
         assertFalse(builder.moveCard(Card.DIAMOND_7, TableLocation.SOUTH, TableLocation.CENTER));
+    }
+
+    @Test
+    public void testReset() throws Exception {
+        assertReflectionEquals(new GameBuilder(), builder.reset());
     }
 
     @Test

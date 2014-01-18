@@ -29,6 +29,7 @@ import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
@@ -72,76 +73,64 @@ public class PlayerPresenterTest {
     @BeforeMethod
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
-        presenter = new PlayerPresenter(placeManager, eventBus, view, proxy, new CurrentUserDto());
-        presenter.onGameBuilt(new GameBuiltEvent(game));
         turn = Hand.EAST;
         widow = new Widow();
 
-        verify(view).setUiHandlers(presenter);
-    }
+        CurrentUserDto currentUserDto = new CurrentUserDto();
+        currentUserDto.nickname = "nickname";
 
-    @Test
-    public void testChangeCardLocation_NotToCenter() throws Exception {
-        when(game.getWidow()).thenReturn(widow);
-        when(game.getHandCards()).thenReturn(handCards);
-        when(game.getCenterCards()).thenReturn(centerCards);
-
-        presenter.changeCardLocation(Card.CLUB_ACE, TableLocation.WEST, TableLocation.EAST);
-
-        verify(game).getHandCards();
-        verify(game).getCenterCards();
-        verify(view).displayCards(handCards, centerCards, widow);
-        verifyNoMoreInteractions(view);
-        verifyNoMoreInteractions(game);
-    }
-
-    @Test
-    public void testChangeCardLocation() throws Exception {
         when(game.getTurn()).thenReturn(turn);
         when(game.getWidow()).thenReturn(widow);
         when(game.getHandContracts()).thenReturn(handContracts);
         when(game.getHandCards()).thenReturn(handCards);
         when(game.getCenterCards()).thenReturn(centerCards);
         when(game.getHandTricks()).thenReturn(handTricks);
+        when(game.isTrickComplete()).thenReturn(true);
 
+        presenter = new PlayerPresenter(placeManager, eventBus, view, proxy, currentUserDto);
+        presenter.onGameBuilt(new GameBuiltEvent(game));
+
+        verify(view).setUiHandlers(presenter);
+        verify(view).displayAuthInfo("nickname");
+    }
+
+    @Test
+    public void testChangeCardLocation_NotToCenter() throws Exception {
+        presenter.changeCardLocation(Card.CLUB_ACE, TableLocation.WEST, TableLocation.EAST);
+
+        verify(game).getWidow();
+        verify(game).getHandCards();
+        verify(game).getCenterCards();
+        verify(game).getDisabledCards();
+        verifyNoMoreInteractions(game);
+
+        verify(view).displayCards(handCards, centerCards, widow);
+        verify(view).disableCards(Collections.<Card>emptySet());
+        verifyNoMoreInteractions(view);
+    }
+
+    @Test
+    public void testChangeCardLocation() throws Exception {
         presenter.changeCardLocation(Card.CLUB_ACE, TableLocation.EAST, TableLocation.CENTER);
 
         verify(view).displayTurn(turn);
         verify(view).displayContracts(handContracts);
         verify(view).displayCards(handCards, centerCards, widow);
+        verify(view).disableCards(Collections.<Card>emptySet());
         verify(view).displayHandTricks(handTricks);
         verifyNoMoreInteractions(view);
     }
 
     @Test
     public void testChangeCardLocation_CompleteTrick() throws Exception {
-        when(game.isTrickComplete()).thenReturn(true);
-        when(game.getTurn()).thenReturn(turn);
-        when(game.getWidow()).thenReturn(widow);
-        when(game.getHandContracts()).thenReturn(handContracts);
-        when(game.getHandCards()).thenReturn(handCards);
-        when(game.getCenterCards()).thenReturn(centerCards);
-        when(game.getHandTricks()).thenReturn(handTricks);
-
         presenter.changeCardLocation(Card.CLUB_ACE, TableLocation.EAST, TableLocation.CENTER);
 
         verify(view).displayTurn(turn);
         verify(view).displayContracts(handContracts);
         verify(view).displayCards(handCards, centerCards, widow);
+        verify(view).disableCards(Collections.<Card>emptySet());
         verify(view).displayHandTricks(handTricks);
         verifyNoMoreInteractions(view);
-    }
-
-    @Test
-    public void testSluff() throws Exception {
-    }
-
-    @Test
-    public void testSwitchToEditor() throws Exception {
-    }
-
-    @Test
-    public void testReset() throws Exception {
     }
 
 }

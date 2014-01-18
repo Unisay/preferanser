@@ -85,7 +85,19 @@ public class EditorPresenterTest {
     @BeforeMethod
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
+        turn = Hand.EAST;
+        widow = new Widow();
+        CurrentUserDto currentUserDto = new CurrentUserDto();
+        currentUserDto.nickname = "nickname";
+
         when(gameBuilder.build()).thenReturn(game);
+        when(gameBuilder.getFirstTurn()).thenReturn(turn);
+        when(gameBuilder.getWidow()).thenReturn(widow);
+        when(gameBuilder.getFirstTurn()).thenReturn(turn);
+        when(gameBuilder.getHandContracts()).thenReturn(handContracts);
+        when(gameBuilder.getHandCards()).thenReturn(handCards);
+        when(gameBuilder.getCenterCards()).thenReturn(centerCards);
+
         presenter = new EditorPresenter(
             placeManager,
             eventBus,
@@ -95,38 +107,15 @@ public class EditorPresenterTest {
             dealService,
             preferanserConstants,
             editorDialogs,
-            new CurrentUserDto());
-
-        turn = Hand.EAST;
-        widow = new Widow();
+            currentUserDto);
 
         verify(view).setUiHandlers(presenter);
+        verify(view).displayAuthInfo("nickname");
     }
 
     @Test
     public void testChangeCardLocation_EqualLocations() throws Exception {
-        when(gameBuilder.getWidow()).thenReturn(widow);
-        when(gameBuilder.getHandCards()).thenReturn(handCards);
-        when(gameBuilder.getCenterCards()).thenReturn(centerCards);
-
-        presenter.changeCardLocation(Card.CLUB_ACE, TableLocation.EAST, TableLocation.EAST);
-
-        verify(gameBuilder).getHandCards();
-        verify(gameBuilder).getCenterCards();
-        verify(view).displayCards(handCards, centerCards, widow);
-
-        verifyNoMoreInteractions(view);
-        verifyNoMoreInteractions(game);
-        verifyNoMoreInteractions(gameBuilder);
-    }
-
-    @Test
-    public void testChangeCardLocation_EditMode() throws Exception {
-        when(gameBuilder.getWidow()).thenReturn(widow);
-        when(gameBuilder.getFirstTurn()).thenReturn(turn);
-        when(gameBuilder.getHandContracts()).thenReturn(handContracts);
-        when(gameBuilder.getHandCards()).thenReturn(handCards);
-        when(gameBuilder.getCenterCards()).thenReturn(centerCards);
+        when(gameBuilder.moveCard(Card.CLUB_ACE, TableLocation.EAST, TableLocation.WEST)).thenReturn(true);
 
         presenter.changeCardLocation(Card.CLUB_ACE, TableLocation.EAST, TableLocation.WEST);
 

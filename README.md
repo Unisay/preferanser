@@ -1,6 +1,6 @@
 #Preferanser is a program to simulate and calculate Russian Preferans Card game deals.
 
-[Codeship build status](https://www.codeship.io/projects/2a84d800-61e6-0131-231e-26f75a0c690d/status)
+![Build status](https://www.codeship.io/projects/2a84d800-61e6-0131-231e-26f75a0c690d/status)
 
 ##Thanks to
 [![Arcbees.com](http://arcbees-ads.appspot.com/ad.png)](http://arcbees.com)

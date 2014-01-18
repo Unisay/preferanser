@@ -23,6 +23,7 @@ import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.preferanser.client.application.mvp.GameBuiltEvent;
 import com.preferanser.shared.domain.*;
+import com.preferanser.shared.dto.CurrentUserDto;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
@@ -71,7 +72,7 @@ public class PlayerPresenterTest {
     @BeforeMethod
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
-        presenter = new PlayerPresenter(placeManager, eventBus, view, proxy);
+        presenter = new PlayerPresenter(placeManager, eventBus, view, proxy, new CurrentUserDto());
         presenter.onGameBuilt(new GameBuiltEvent(game));
         turn = Hand.EAST;
         widow = new Widow();

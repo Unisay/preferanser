@@ -51,18 +51,18 @@ public class Widow implements Serializable, Iterable<Card> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Widow widow = (Widow) o;
+        Widow cards = (Widow) o;
 
-        if (card1 != widow.card1) return false;
-        if (card2 != widow.card2) return false;
+        if (card1 != cards.card1) return false;
+        if (card2 != cards.card2) return false;
 
         return true;
     }
 
     @Override
     public int hashCode() {
-        int result = card1.hashCode();
-        result = 31 * result + card2.hashCode();
+        int result = card1 != null ? card1.hashCode() : 0;
+        result = 31 * result + (card2 != null ? card2.hashCode() : 0);
         return result;
     }
 

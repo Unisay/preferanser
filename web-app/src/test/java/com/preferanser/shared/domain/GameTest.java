@@ -327,25 +327,90 @@ public class GameTest {
         game.makeTurn(WEST, CLUB_JACK);
         game.makeTurn(EAST, CLUB_8);
 
-        game.sluffTrick();
+        assertTrue(game.sluffTrick(), "Failed to sluff trick");
         assertThat(game.getTurn(), equalTo(WEST));
         assertThat(game.getHandTrickCounts(), equalTo((Map) ImmutableMap.of(SOUTH, 0, WEST, 1, EAST, 0, NORTH, 0)));
 
-        game.undoTurn();
+        game.makeTurn(WEST, HEART_JACK);
+        assertThat(game.getTurn(), equalTo(EAST));
+        assertThat(game.getCenterCards(), equalTo((Map) ImmutableMap.of(HEART_JACK, WEST)));
+        assertThat(game.getHandTrickCounts(), equalTo((Map) ImmutableMap.of(SOUTH, 0, WEST, 1, EAST, 0, NORTH, 0)));
+
+        assertTrue(game.undoTurn(), "Failed to undo WEST->HEART_JACK");
+        assertThat(game.getTurn(), equalTo(WEST));
+        assertTrue(game.getCenterCards().isEmpty());
+        assertThat(game.getHandTrickCounts(), equalTo((Map) ImmutableMap.of(SOUTH, 0, WEST, 1, EAST, 0, NORTH, 0)));
+
+        assertTrue(game.undoTurn(), "Failed to undo EAST->CLUB_8");
         assertThat(game.getTurn(), equalTo(EAST));
         assertThat(game.getCenterCards(), equalTo((Map) ImmutableMap.of(CLUB_7, SOUTH, CLUB_JACK, WEST)));
         assertThat(game.getHandTrickCounts(), equalTo((Map) ImmutableMap.of(SOUTH, 0, WEST, 0, EAST, 0, NORTH, 0)));
 
-        game.undoTurn();
+        assertTrue(game.undoTurn(), "Failed to undo WEST->CLUB_JACK");
         assertThat(game.getTurn(), equalTo(WEST));
         assertThat(game.getCenterCards(), equalTo((Map) ImmutableMap.of(CLUB_7, SOUTH)));
 
-        game.undoTurn();
+        assertTrue(game.undoTurn(), "Failed to undo SOUTH->CLUB_7");
         assertThat(game.getTurn(), equalTo(SOUTH));
         assertTrue(game.getCenterCards().isEmpty());
+        assertFalse(game.undoTurn(), "Shouldn't undo");
+
     }
 
-    // todo rest methods hasUndoTurns, hasRedoTurns
+    @Test
+    public void testHasUndoTurns() throws Exception {
+        game = new Game(Players.THREE, widow, handContractMap, turnRotator, handCardMultimap, centerCardHandMap);
+
+        assertFalse(game.hasUndoTurns());
+        game.makeTurn(SOUTH, CLUB_ACE);
+        assertTrue(game.hasUndoTurns());
+        game.makeTurn(WEST, CLUB_JACK);
+        assertTrue(game.hasUndoTurns());
+        game.makeTurn(EAST, CLUB_8);
+        assertTrue(game.hasUndoTurns());
+        game.sluffTrick();
+        assertTrue(game.hasUndoTurns());
+        game.undoTurn(); // Undo SOUTH->CLUB_ACE
+        assertTrue(game.hasUndoTurns());
+        game.undoTurn(); // Undo WEST->CLUB_JACK
+        assertTrue(game.hasUndoTurns());
+        game.undoTurn(); // Undo EAST->CLUB_8
+        assertFalse(game.hasUndoTurns());
+    }
+
+    @Test
+    public void testHasRedoTurns() throws Exception {
+        game = new Game(Players.THREE, widow, handContractMap, turnRotator, handCardMultimap, centerCardHandMap);
+
+        assertFalse(game.hasRedoTurns());
+        game.makeTurn(SOUTH, CLUB_ACE);
+        assertFalse(game.hasRedoTurns());
+        game.undoTurn(); // Undo SOUTH->CLUB_ACE
+        assertTrue(game.hasRedoTurns());
+    }
+
+    @Test
+    public void testHasRedoTurns_WithSluff() throws Exception {
+        game = new Game(Players.THREE, widow, handContractMap, turnRotator, handCardMultimap, centerCardHandMap);
+
+        assertFalse(game.hasRedoTurns());
+        game.makeTurn(SOUTH, CLUB_ACE);
+        assertFalse(game.hasRedoTurns());
+        game.makeTurn(WEST, CLUB_JACK);
+        assertFalse(game.hasRedoTurns());
+        game.makeTurn(EAST, CLUB_8);
+        assertFalse(game.hasRedoTurns());
+        game.sluffTrick();
+        assertFalse(game.hasRedoTurns());
+        game.undoTurn(); // Undo SOUTH->CLUB_ACE
+        assertTrue(game.hasRedoTurns());
+        game.undoTurn(); // Undo WEST->CLUB_JACK
+        assertTrue(game.hasRedoTurns());
+        game.undoTurn(); // Undo EAST->CLUB_8
+        assertTrue(game.hasRedoTurns());
+        game.makeTurn(SOUTH, CLUB_ACE); // By making manual turn we reset redo queue
+        assertFalse(game.hasRedoTurns());
+    }
 
     private EnumRotator<Hand> createTurnRotator(Hand curValue, Hand... valuesToSkip) {
         EnumRotator<Hand> turnRotator = new EnumRotator<Hand>(Hand.values(), curValue);

@@ -45,6 +45,11 @@ public class EnumRotator<E extends Enum<E>> {
         this.valuesToSkip = enumRotator.valuesToSkip;
     }
 
+    public EnumRotator(EnumRotator<E> enumRotator, E current) {
+        this(enumRotator.values, current);
+        this.valuesToSkip = enumRotator.valuesToSkip;
+    }
+
     public void setCurrent(E value) {
         currentOrdinal = value.ordinal();
     }

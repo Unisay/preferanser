@@ -6,6 +6,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
 import com.preferanser.shared.util.EnumRotator;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -104,9 +105,11 @@ public class Trick {
     }
 
     public Optional<Suit> getSuit() {
-        if (turns.isEmpty())
+        Iterator<Turn> turnIterator = turns().iterator();
+        if (!turnIterator.hasNext())
             return Optional.absent();
-        return Optional.of(turns.getFirst().getCard().getSuit());
+        else
+            return Optional.of(turnIterator.next().getCard().getSuit());
     }
 
     public Map<Card, Hand> asMap() {
@@ -117,7 +120,7 @@ public class Trick {
     }
 
     public boolean isEmpty() {
-        return turns.isEmpty();
+        return turns().isEmpty();
     }
 
     public boolean isOpen() {
@@ -135,6 +138,10 @@ public class Trick {
 
     public boolean isClosed() {
         return !isOpen();
+    }
+
+    public EnumRotator<Hand> getTurnRotator() {
+        return turnRotator;
     }
 
     @Override

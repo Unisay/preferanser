@@ -162,12 +162,13 @@ public class Game {
     }
 
     public boolean sluffTrick() {
-        if (currentTrick().isOpen())
+        Trick currentTrick = currentTrick();
+        if (currentTrick.isOpen())
             return false;
 
-        Optional<Hand> trickWinner = currentTrick().determineTrickWinner(getTrump());
-        assert trickWinner.isPresent();
-        Trick trick = new Trick(players, new EnumRotator<Hand>(Hand.values(), trickWinner.get()));
+        Optional<Hand> trickWinner = currentTrick.determineTrickWinner(getTrump());
+        assert trickWinner.isPresent() : "Trick is closed but winner is not present";
+        Trick trick = new Trick(players, new EnumRotator<Hand>(currentTrick.getTurnRotator(), trickWinner.get()));
         trickLog.add(trick);
         currentTrickIndex++;
 
@@ -217,33 +218,39 @@ public class Game {
 
     public boolean hasUndoTurns() {
         assert !trickLog.isEmpty() : "trickLog is empty!";
-        if (trickLog.size() == 1)
-            return trickLog.getFirst().hasUndoTurns();
-        return currentTrick().hasRedoTurns() || previousTrick().hasUndoTurns();
+        if (0 == currentTrickIndex)
+            return currentTrick().hasUndoTurns();
+        return currentTrick().isEmpty()
+            ? previousTrick().hasUndoTurns()
+            : currentTrick().hasUndoTurns();
     }
 
     public boolean hasRedoTurns() {
-        return trickLog.size() - 1 > currentTrickIndex && currentTrick().hasRedoTurns();
+        return trickLog.size() - 1 >= currentTrickIndex && currentTrick().hasRedoTurns();
     }
 
-    public void undoTurn() {
-        if (hasUndoTurns()) {
-            if (currentTrick().isEmpty())
-                currentTrickIndex--;
+    public boolean undoTurn() {
+        if (!hasUndoTurns())
+            return false;
 
-            Turn undoTurn = currentTrick().undoTurn();
-            handCardMultimap.put(undoTurn.getHand(), undoTurn.getCard());
-        }
+        if (currentTrick().isEmpty())
+            currentTrickIndex--;
+
+        Turn undoTurn = currentTrick().undoTurn();
+        handCardMultimap.put(undoTurn.getHand(), undoTurn.getCard());
+        return true;
     }
 
-    public void redoTurn() {
-        if (hasRedoTurns()) {
-            if (currentTrick().isClosed())
-                currentTrickIndex++;
+    public boolean redoTurn() {
+        if (!hasRedoTurns())
+            return false;
 
-            Turn redoTurn = currentTrick().redoTurn();
-            handCardMultimap.remove(redoTurn.getHand(), redoTurn.getCard());
-        }
+        if (currentTrick().isClosed())
+            currentTrickIndex++;
+
+        Turn redoTurn = currentTrick().redoTurn();
+        handCardMultimap.remove(redoTurn.getHand(), redoTurn.getCard());
+        return true;
     }
 
     private Trick currentTrick() {

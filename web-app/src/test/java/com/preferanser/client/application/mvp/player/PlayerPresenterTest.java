@@ -105,14 +105,25 @@ public class PlayerPresenterTest {
     public void testChangeCardLocation_NotToCenter() throws Exception {
         presenter.changeCardLocation(Card.CLUB_ACE, TableLocation.WEST, TableLocation.EAST);
 
+        verify(game).getTurn();
         verify(game).getWidow();
         verify(game).getHandCards();
         verify(game).getCenterCards();
         verify(game).getDisabledCards();
+        verify(game).isTrickClosed();
+        verify(game).getHandContracts();
+        verify(game).getHandTrickCounts();
+        verify(game).hasUndoTurns();
+        verify(game).hasRedoTurns();
         verifyNoMoreInteractions(game);
 
+        verify(view).displayTurn(turn);
+        verify(view).displayContracts(handContracts);
         verify(view).displayCards(handCards, centerCards, widow);
         verify(view).disableCards(Collections.<Card>emptySet());
+        verify(view).displayHandTricks(handTricks);
+        verify(view).displayTurnNavigation(true, false);
+        verify(view).displaySluffButton(true);
         verifyNoMoreInteractions(view);
     }
 
@@ -126,6 +137,7 @@ public class PlayerPresenterTest {
         verify(view).disableCards(Collections.<Card>emptySet());
         verify(view).displayHandTricks(handTricks);
         verify(view).displayTurnNavigation(true, false);
+        verify(view).displaySluffButton(true);
         verifyNoMoreInteractions(view);
     }
 
@@ -139,6 +151,7 @@ public class PlayerPresenterTest {
         verify(view).disableCards(Collections.<Card>emptySet());
         verify(view).displayHandTricks(handTricks);
         verify(view).displayTurnNavigation(true, false);
+        verify(view).displaySluffButton(true);
         verifyNoMoreInteractions(view);
     }
 

@@ -20,7 +20,6 @@
 package com.preferanser.client.application.mvp.player;
 
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.DoubleClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -55,6 +54,7 @@ public class PlayerView extends BaseTableView<PlayerUiHandlers> implements Playe
     @UiField Label trickCountWest;
     @UiField Anchor undoAnchor;
     @UiField Anchor redoAnchor;
+    @UiField Button sluffButton;
 
     @Inject
     public PlayerView(Binder uiBinder, PreferanserResources resources, PreferanserConstants constants, I18nHelper i18nHelper) {
@@ -67,7 +67,6 @@ public class PlayerView extends BaseTableView<PlayerUiHandlers> implements Playe
     protected void init() {
         super.init();
         populateHandTrickCounts();
-        installCenterPanelClickHandler();
     }
 
     @Override public void disableCards(Set<Card> cards) {
@@ -80,6 +79,10 @@ public class PlayerView extends BaseTableView<PlayerUiHandlers> implements Playe
         redoAnchor.setVisible(showNext);
     }
 
+    @Override public void displaySluffButton(boolean visible) {
+        sluffButton.setVisible(visible);
+    }
+
     @Override
     protected void displayHandTurnPointer(Hand hand, TurnPointer turnPointer, Hand turn) {
         super.displayHandTurnPointer(hand, turnPointer, turn);
@@ -89,25 +92,20 @@ public class PlayerView extends BaseTableView<PlayerUiHandlers> implements Playe
             turnPointer.addStyleName(style.notDisplayed());
     }
 
-    @UiHandler("editButton") void onEditButtonClicked(@SuppressWarnings("unused") ClickEvent event) {
+    @UiHandler("editButton") void onEditClicked(@SuppressWarnings("unused") ClickEvent event) {
         getUiHandlers().switchToEditor();
     }
 
-    @UiHandler("undoAnchor") void onUndoButtonClicked(@SuppressWarnings("unused") ClickEvent event) {
+    @UiHandler("undoAnchor") void onUndoClicked(@SuppressWarnings("unused") ClickEvent event) {
         getUiHandlers().undo();
     }
 
-    @UiHandler("redoAnchor") void onRedoButtonClicked(@SuppressWarnings("unused") ClickEvent event) {
+    @UiHandler("redoAnchor") void onRedoClicked(@SuppressWarnings("unused") ClickEvent event) {
         getUiHandlers().redo();
     }
 
-    protected void installCenterPanelClickHandler() {
-        table.addCenterPanelClickHandler(new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent event) {
-                getUiHandlers().sluff();
-            }
-        });
+    @UiHandler("sluffButton") void onSluffClicked(@SuppressWarnings("unused") ClickEvent event) {
+        getUiHandlers().sluff();
     }
 
     @Override

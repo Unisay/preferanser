@@ -58,8 +58,9 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
     public interface PlayerView extends TableView, HasUiHandlers<PlayerUiHandlers> {
         void displayHandTricks(Map<Hand, Integer> handTricks);
         void disableCards(Set<Card> cards);
-
         void displayTurnNavigation(boolean showPrev, boolean showNext);
+
+        void displaySluffButton(boolean visible);
     }
 
     private PlaceManager placeManager;
@@ -114,12 +115,12 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
         Preconditions.checkState(gameOptional.isPresent(), "PlayerPresenter.changeCardLocation(game is null)");
 
         if (oldLocation == newLocation) {
-            refreshCards();
+            refreshView();
             return;
         }
 
         if (TableLocation.CENTER != newLocation) {
-            refreshCards();
+            refreshView();
             return;
         }
 
@@ -127,7 +128,7 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
             gameOptional.get().makeTurn(Hand.valueOf(oldLocation), card);
         } catch (GameException e) {
             log.finer(e.getMessage());
-            refreshCards();
+            refreshView();
             return;
         }
 
@@ -155,39 +156,15 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
     }
 
     private void refreshView() {
-        refreshTurn();
-        refreshContracts();
-        refreshCards();
-        refreshHandTricks();
-        refreshTurnNavigation();
-    }
-
-    private void refreshTurn() {
-        Preconditions.checkState(gameOptional.isPresent(), "PlayerPresenter.refreshTurn(game is null)");
-        getView().displayTurn(gameOptional.get().getTurn());
-    }
-
-    private void refreshContracts() {
-        Preconditions.checkState(gameOptional.isPresent(), "PlayerPresenter.refreshContracts(game is null)");
-        getView().displayContracts(gameOptional.get().getHandContracts());
-    }
-
-    private void refreshCards() {
-        Preconditions.checkState(gameOptional.isPresent(), "PlayerPresenter.refreshCards(game is null)");
         Game game = gameOptional.get();
-        getView().displayCards(game.getHandCards(), game.getCenterCards(), game.getWidow());
-        getView().disableCards(game.getDisabledCards());
-    }
-
-    private void refreshHandTricks() {
-        Preconditions.checkState(gameOptional.isPresent(), "PlayerPresenter.refreshHandTricks(game is null)");
-        getView().displayHandTricks(gameOptional.get().getHandTrickCounts());
-    }
-
-    private void refreshTurnNavigation() {
-        Preconditions.checkState(gameOptional.isPresent(), "PlayerPresenter.refreshTurnNavigation(game is null)");
-        Game game = gameOptional.get();
-        getView().displayTurnNavigation(game.hasUndoTurns(), game.hasRedoTurns());
+        PlayerView view = getView();
+        view.displayTurn(game.getTurn());
+        view.displayCards(game.getHandCards(), game.getCenterCards(), game.getWidow());
+        view.displaySluffButton(game.isTrickClosed());
+        view.displayContracts(game.getHandContracts());
+        view.displayHandTricks(game.getHandTrickCounts());
+        view.displayTurnNavigation(game.hasUndoTurns(), game.hasRedoTurns());
+        view.disableCards(game.getDisabledCards());
     }
 
 }

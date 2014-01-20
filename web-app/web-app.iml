@@ -23,9 +23,9 @@
     </facet>
     <facet type="gwt" name="GWT">
       <configuration>
-        <setting name="additionalCompilerParameters" value="-Xss1024K -XX:MaxPermSize=256M" />
-        <setting name="compilerMaxHeapSize" value="1024" />
-        <setting name="gwtScriptOutputStyle" value="OBF" />
+        <setting name="additionalCompilerParameters" value="-Xss1024K -XX:MaxPermSize=512M" />
+        <setting name="compilerMaxHeapSize" value="2048" />
+        <setting name="gwtScriptOutputStyle" value="PRETTY" />
         <setting name="gwtSdkUrl" value="file://$MAVEN_REPOSITORY$/com/google/gwt/gwt-dev/2.5.1/" />
         <setting name="gwtSdkType" value="maven" />
         <setting name="webFacet" value="Web" />

@@ -355,6 +355,43 @@ public class GameTest {
         assertTrue(game.getCenterCards().isEmpty());
         assertFalse(game.undoTurn(), "Shouldn't undo");
 
+        assertTrue(game.redoTurn(), "Failed to redo SOUTH->CLUB_7");
+        assertThat(game.getTurn(), equalTo(WEST));
+        assertThat(game.getCenterCards(), equalTo((Map) ImmutableMap.of(CLUB_7, SOUTH)));
+
+        assertTrue(game.redoTurn(), "Failed to redo WEST->CLUB_JACK");
+        assertThat(game.getTurn(), equalTo(EAST));
+        assertThat(game.getCenterCards(), equalTo((Map) ImmutableMap.of(CLUB_7, SOUTH, CLUB_JACK, WEST)));
+        assertThat(game.getHandTrickCounts(), equalTo((Map) ImmutableMap.of(SOUTH, 0, WEST, 0, EAST, 0, NORTH, 0)));
+
+        assertTrue(game.redoTurn(), "Failed to redo EAST->CLUB_8");
+        assertThat(game.getTurn(), equalTo(WEST));
+        assertThat(game.getCenterCards(), equalTo((Map) ImmutableMap.of(CLUB_7, SOUTH, CLUB_JACK, WEST, CLUB_8, EAST)));
+        assertThat(game.getHandTrickCounts(), equalTo((Map) ImmutableMap.of(SOUTH, 0, WEST, 1, EAST, 0, NORTH, 0)));
+
+        assertTrue(game.redoTurn(), "Failed to redo WEST->HEART_JACK");
+        assertThat(game.getTurn(), equalTo(EAST));
+        assertThat(game.getCenterCards(), equalTo((Map) ImmutableMap.of(HEART_JACK, WEST)));
+        assertThat(game.getHandTrickCounts(), equalTo((Map) ImmutableMap.of(SOUTH, 0, WEST, 1, EAST, 0, NORTH, 0)));
+    }
+
+    @Test
+    public void testUndoSluffRedo() throws Exception {
+        game = new Game(Players.THREE, widow, handContractMap, turnRotator, handCardMultimap, centerCardHandMap);
+
+        game.makeTurn(SOUTH, CLUB_ACE);
+        game.makeTurn(WEST, CLUB_JACK);
+        game.makeTurn(EAST, CLUB_8);
+        assertTrue(game.sluffTrick(), "Failed to sluff trick");
+        game.makeTurn(SOUTH, CLUB_KING);
+        assertTrue(game.undoTurn(), "Failed to undo SOUTH->CLUB_KING");
+        assertThat(game.getCenterCards(), equalTo((Map) ImmutableMap.of()));
+        assertTrue(game.undoTurn(), "Failed to undo EAST->CLUB_8");
+        assertThat(game.getCenterCards(), equalTo((Map) ImmutableMap.of(CLUB_ACE, SOUTH, CLUB_JACK, WEST)));
+        assertTrue(game.redoTurn(), "Failed to redo EAST->CLUB_8");
+        assertThat(game.getCenterCards(), equalTo((Map) ImmutableMap.of(CLUB_ACE, SOUTH, CLUB_JACK, WEST, CLUB_8, EAST)));
+        assertTrue(game.sluffTrick(), "Failed to sluff trick");
+        assertThat(game.getCenterCards(), equalTo((Map) ImmutableMap.of()));
     }
 
     @Test

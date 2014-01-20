@@ -140,7 +140,7 @@
     color: white;
 }
 
-.undoButton, .redoButton {
+.undoLink, .redoLink {
     color: #ededed;
     cursor: pointer;
     font-weight: bold;
@@ -149,10 +149,16 @@
     top: 380px;
 }
 
-.undoButton {
+.undoLink {
     float: left;
 }
 
-.redoButton {
+.redoLink {
     float: right;
+}
+
+.sluffButton {
+    position: relative;
+    top: 45px;
+    left: 190px;
 }

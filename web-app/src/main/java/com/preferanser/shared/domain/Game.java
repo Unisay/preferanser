@@ -30,6 +30,7 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 
+import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.collect.Maps.newHashMap;
 import static com.google.common.collect.Sets.newHashSet;
 
@@ -130,6 +131,11 @@ public class Game {
         boolean removed = handCardMultimap.get(fromHand).remove(card);
         assert removed : "Failed to remove " + card + " from " + fromHand;
         currentTrick().applyTurn(fromHand, card);
+        truncateTrickLog();
+    }
+
+    private void truncateTrickLog() {
+        trickLog.subList(currentTrickIndex + 1, trickLog.size()).clear();
     }
 
     // TODO instead of throwing exceptions - return validation errors
@@ -226,7 +232,13 @@ public class Game {
     }
 
     public boolean hasRedoTurns() {
-        return trickLog.size() - 1 >= currentTrickIndex && currentTrick().hasRedoTurns();
+        int lastTrickIndex = trickLog.size() - 1;
+        checkState(lastTrickIndex >= currentTrickIndex, "currentTrickIndex == %s, trickLog.size() == %s", currentTrickIndex, trickLog.size());
+
+        if (lastTrickIndex > currentTrickIndex && currentTrick().isClosed())
+            currentTrickIndex++;
+
+        return currentTrick().hasRedoTurns();
     }
 
     public boolean undoTurn() {
@@ -250,6 +262,10 @@ public class Game {
 
         Turn redoTurn = currentTrick().redoTurn();
         handCardMultimap.remove(redoTurn.getHand(), redoTurn.getCard());
+
+        if (currentTrick().isClosed())
+            currentTrickIndex++;
+
         return true;
     }
 

@@ -14,7 +14,7 @@ import java.util.Map;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.collect.Lists.newLinkedList;
-import static com.google.common.collect.Maps.newHashMap;
+import static com.google.common.collect.Maps.newLinkedHashMap;
 
 public class Trick {
 
@@ -73,7 +73,7 @@ public class Trick {
     }
 
     public Turn redoTurn() {
-        Preconditions.checkState(isOpen(), "Can't redo turn in the closed trick");
+        Preconditions.checkState(hasRedoTurns(), "There is no turns in the trick to redo");
         turnRotator.next();
         return turns.get(++currentTurnIndex);
     }
@@ -113,7 +113,7 @@ public class Trick {
     }
 
     public Map<Card, Hand> asMap() {
-        Map<Card, Hand> map = newHashMap();
+        Map<Card, Hand> map = newLinkedHashMap();
         for (Turn turn : turns())
             map.put(turn.getCard(), turn.getHand());
         return ImmutableMap.copyOf(map);

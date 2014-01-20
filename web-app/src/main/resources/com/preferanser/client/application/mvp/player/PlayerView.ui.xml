@@ -65,13 +65,12 @@
 
             <p:center>
                 <p:Widgets>
+                    <g:Button ui:field="sluffButton" text="{constants.sluff}" debugId="sluff" addStyleNames="{style.sluffButton}"/>
+                    <g:Anchor ui:field="undoAnchor" title="{constants.undo}" debugId="undo" addStyleNames="{style.undoLink} fa fa-arrow-left"/>
+                    <g:Anchor ui:field="redoAnchor" title="{constants.redo}" debugId="redo" addStyleNames="{style.redoLink} fa fa-arrow-right"/>
                     <p:TurnPointer ui:field="turnPointerEast" turn="EAST"/>
                     <p:TurnPointer ui:field="turnPointerSouth" turn="SOUTH"/>
                     <p:TurnPointer ui:field="turnPointerWest" turn="WEST"/>
-                    <g:Anchor ui:field="undoAnchor" text="{constants.undo}" debugId="undo"
-                              addStyleNames="{style.undoButton}"/>
-                    <g:Anchor ui:field="redoAnchor" text="{constants.redo}" debugId="redo"
-                              addStyleNames="{style.redoButton}"/>
                 </p:Widgets>
             </p:center>
 

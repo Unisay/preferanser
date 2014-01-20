@@ -33,6 +33,8 @@ public interface PreferanserConstants extends ConstantsWithLookup {
 
     @DefaultStringValue("Log out") String logout();
 
+    @DefaultStringValue("To sluff") String sluff();
+
     @DefaultStringValue("Undo") String undo();
 
     @DefaultStringValue("Redo") String redo();

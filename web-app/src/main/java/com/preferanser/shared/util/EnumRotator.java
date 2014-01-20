@@ -100,4 +100,13 @@ public class EnumRotator<E extends Enum<E>> {
     public int hashCode() {
         return Objects.hashCode(values, currentOrdinal, valuesToSkip);
     }
+
+    @Override
+    public String toString() {
+        return Objects.toStringHelper(this)
+            .addValue(values)
+            .addValue(currentOrdinal)
+            .addValue(valuesToSkip)
+            .toString();
+    }
 }

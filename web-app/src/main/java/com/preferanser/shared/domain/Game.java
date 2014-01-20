@@ -20,16 +20,17 @@
 package com.preferanser.shared.domain;
 
 import com.google.common.base.Optional;
-import com.google.common.base.Preconditions;
 import com.google.common.collect.*;
 import com.preferanser.shared.domain.exception.*;
 import com.preferanser.shared.util.EnumRotator;
 import com.preferanser.shared.util.GameUtils;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.Set;
 
 import static com.google.common.collect.Maps.newHashMap;
-import static com.google.common.collect.Maps.newLinkedHashMap;
 import static com.google.common.collect.Sets.newHashSet;
 
 /**
@@ -37,25 +38,12 @@ import static com.google.common.collect.Sets.newHashSet;
  */
 public class Game {
 
-    private class Turn {
-        Hand hand;
-        Card card;
-
-        private Turn(Hand hand, Card card) {
-            this.hand = hand;
-            this.card = card;
-        }
-    }
-
     private final Players players;
     private final Widow widow;
-    private final EnumRotator<Hand> turnRotator;
     private final Map<Hand, Contract> handContracts;
     private final Multimap<Hand, Card> handCardMultimap;
-    private final Map<Hand, Integer> handTricks = Maps.newHashMapWithExpectedSize(Hand.values().length);
-    private final LinkedHashMap<Card, Hand> centerCardHandMap;  // order is important
-    private LinkedList<Turn> undoTurns = Lists.newLinkedList();
-    private LinkedList<Turn> redoTurns = Lists.newLinkedList();
+    private final LinkedList<Trick> trickLog = Lists.newLinkedList();
+    private int currentTrickIndex;
 
     Game(Players players,
          Widow widow,
@@ -67,16 +55,9 @@ public class Game {
         this.players = players;
         this.widow = new Widow(widow);
         this.handContracts = newHashMap(handContracts);
-        this.turnRotator = new EnumRotator<Hand>(turnRotator);
         this.handCardMultimap = LinkedHashMultimap.create(handCardMultimap);
-        this.centerCardHandMap = newLinkedHashMap(centerCardHandMap);  // order is important
-        initHandTricks();
-    }
-
-    private void initHandTricks() {
-        for (Hand hand : Hand.values()) {
-            handTricks.put(hand, 0);
-        }
+        trickLog.add(new Trick(players, turnRotator, centerCardHandMap));
+        currentTrickIndex = 0;
     }
 
     public Map<Hand, Set<Card>> getHandCards() {
@@ -88,11 +69,25 @@ public class Game {
     }
 
     public Map<Card, Hand> getCenterCards() {
-        return ImmutableMap.copyOf(centerCardHandMap);
+        return currentTrick().asMap();
     }
 
-    public Map<Hand, Integer> getHandTricks() {
-        return ImmutableMap.copyOf(handTricks);
+    public Map<Hand, Integer> getHandTrickCounts() {
+        Map<Hand, Integer> counts = Maps.newHashMap();
+        for (Hand hand : Hand.values())
+            counts.put(hand, getHandTricksCount(hand));
+        return counts;
+    }
+
+    public int getHandTricksCount(Hand hand) {
+        int count = 0;
+        Optional<Suit> trump = getTrump();
+        for (Trick nextTrick : trickLog.subList(0, currentTrickIndex + 1)) {
+            Optional<Hand> maybeWinner = nextTrick.determineTrickWinner(trump);
+            if (maybeWinner.isPresent() && maybeWinner.get() == hand)
+                count++;
+        }
+        return count;
     }
 
     public Map<Hand, Contract> getHandContracts() {
@@ -118,46 +113,28 @@ public class Game {
     }
 
     public void makeTurn(Hand fromHand, Card card) throws GameException {
-        if (fromHand != turnRotator.current())
-            throw new NotInTurnException(turnRotator.current(), fromHand);
+        if (fromHand != currentTrick().getTurn())
+            throw new NotInTurnException(currentTrick().getTurn(), fromHand);
 
         if (!handCardMultimap.containsEntry(fromHand, card))
             throw new NoSuchHandCardException(fromHand, card);
 
-        if (centerCardHandMap.containsValue(fromHand))
-            throw new DuplicateGameTurnException(centerCardHandMap, fromHand);
+        if (currentTrick().hasCardFrom(fromHand))
+            throw new DuplicateGameTurnException(currentTrick().asMap(), fromHand);
 
-        if (centerCardHandMap.size() == players.getNumPlayers())
-            throw new NoTurnsAllowedException(centerCardHandMap);
+        if (currentTrick().asMap().size() == players.getNumPlayers())
+            throw new NoTurnsAllowedException(currentTrick().asMap());
 
         validateHandTurn(fromHand, card);
-        applyHandTurn(fromHand, card);
 
-        undoTurns.add(new Turn(fromHand, card));
-        redoTurns.clear();
-    }
-
-    private void applyHandTurn(Hand fromHand, Card card) {
         boolean removed = handCardMultimap.get(fromHand).remove(card);
         assert removed : "Failed to remove " + card + " from " + fromHand;
-
-        centerCardHandMap.put(card, fromHand);
-        turnRotator.next();
+        currentTrick().applyTurn(fromHand, card);
     }
-
-    private void revertTurn(Hand fromHand, Card card) {
-        Preconditions.checkArgument(centerCardHandMap.get(card) == fromHand, "Can't revert turn");
-        Hand removed = centerCardHandMap.remove(card);
-        assert removed != null : "Failed to remove " + card + " from center";
-
-        handCardMultimap.put(fromHand, card);
-        turnRotator.prev();
-    }
-
 
     // TODO instead of throwing exceptions - return validation errors
     private void validateHandTurn(Hand hand, Card card) throws IllegalSuitException {
-        Optional<Suit> maybeTrickSuit = getTrickSuit();
+        Optional<Suit> maybeTrickSuit = currentTrick().getSuit();
         if (!maybeTrickSuit.isPresent())
             return;
 
@@ -184,57 +161,33 @@ public class Game {
         return false;
     }
 
-    private Optional<Suit> getTrickSuit() {
-        if (centerCardHandMap.isEmpty())
-            return Optional.absent();
-        return Optional.of(centerCardHandMap.entrySet().iterator().next().getKey().getSuit());
-    }
-
-    public boolean isTrickComplete() {
-        return centerCardHandMap.size() == players.getNumPlayers();
-    }
-
     public boolean sluffTrick() {
-        if (!isTrickComplete())
+        if (currentTrick().isOpen())
             return false;
 
-        Hand turn = determineTrickWinner();
-        handTricks.put(turn, handTricks.get(turn) + 1); // Non-atomic increment!
-        turnRotator.setCurrent(turn);
-        centerCardHandMap.clear();
+        Optional<Hand> trickWinner = currentTrick().determineTrickWinner(getTrump());
+        assert trickWinner.isPresent();
+        Trick trick = new Trick(players, new EnumRotator<Hand>(Hand.values(), trickWinner.get()));
+        trickLog.add(trick);
+        currentTrickIndex++;
+
         return true;
     }
 
-    private Hand determineTrickWinner() {
-        assert (centerCardHandMap.size() == players.getNumPlayers());
-        Iterator<Card> cardIterator = centerCardHandMap.keySet().iterator();
-        Card maxCard = cardIterator.next();
-        Optional<Suit> optionalTrump = getTrump();
-        while (cardIterator.hasNext()) {
-            Card nextCard = cardIterator.next();
-            if (optionalTrump.isPresent() && maxCard.getSuit() != optionalTrump.get() && nextCard.getSuit() == optionalTrump.get()) {
-                maxCard = nextCard;
-            } else if (maxCard.getSuit() == nextCard.getSuit()) {
-                if (Rank.comparator().compare(maxCard.getRank(), nextCard.getRank()) < 0) {
-                    maxCard = nextCard;
-                }
-            }
-        }
-        return centerCardHandMap.get(maxCard);
-    }
-
     public Hand getTurn() {
-        if (isTrickComplete())
-            return determineTrickWinner();
+        Trick trick = currentTrick();
+        if (trick.isOpen())
+            return trick.getTurn();
         else
-            return turnRotator.current();
+            return trick.determineTrickWinner(getTrump()).get();
     }
 
     public Set<Card> getDisabledCards() {
-        if (isTrickComplete())
+        if (currentTrick().isClosed())
             return newHashSet(handCardMultimap.values());
+
         Set<Card> disabledCards = newHashSet();
-        Hand turn = turnRotator.current();
+        Hand turn = currentTrick().getTurn();
         for (Map.Entry<Hand, Card> handCardEntry : handCardMultimap.entries()) {
             Card card = handCardEntry.getValue();
             if (handCardEntry.getKey() == turn) {
@@ -258,28 +211,47 @@ public class Game {
         return widow;
     }
 
+    public boolean isTrickClosed() {
+        return currentTrick().isClosed();
+    }
+
     public boolean hasUndoTurns() {
-        return !undoTurns.isEmpty();
+        assert !trickLog.isEmpty() : "trickLog is empty!";
+        if (trickLog.size() == 1)
+            return trickLog.getFirst().hasUndoTurns();
+        return currentTrick().hasRedoTurns() || previousTrick().hasUndoTurns();
     }
 
     public boolean hasRedoTurns() {
-        return !redoTurns.isEmpty();
+        return trickLog.size() - 1 > currentTrickIndex && currentTrick().hasRedoTurns();
     }
 
     public void undoTurn() {
         if (hasUndoTurns()) {
-            Turn lastTurn = undoTurns.removeLast();
-            redoTurns.addLast(lastTurn);
-            revertTurn(lastTurn.hand, lastTurn.card);
+            if (currentTrick().isEmpty())
+                currentTrickIndex--;
+
+            Turn undoTurn = currentTrick().undoTurn();
+            handCardMultimap.put(undoTurn.getHand(), undoTurn.getCard());
         }
     }
 
     public void redoTurn() {
         if (hasRedoTurns()) {
-            Turn turn = redoTurns.removeLast();
-            undoTurns.addLast(turn);
-            applyHandTurn(turn.hand, turn.card);
+            if (currentTrick().isClosed())
+                currentTrickIndex++;
+
+            Turn redoTurn = currentTrick().redoTurn();
+            handCardMultimap.remove(redoTurn.getHand(), redoTurn.getCard());
         }
+    }
+
+    private Trick currentTrick() {
+        return trickLog.get(currentTrickIndex);
+    }
+
+    private Trick previousTrick() {
+        return trickLog.get(currentTrickIndex - 1);
     }
 
 }

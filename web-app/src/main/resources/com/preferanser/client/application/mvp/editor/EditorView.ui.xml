@@ -25,7 +25,7 @@
 
     <g:VerticalPanel addStyleNames="{style.verticalPanel}" spacing="0">
 
-        <g:HorizontalPanel height="60" spacing="10" width="100%">
+        <g:HorizontalPanel height="60" spacing="10" width="100%" verticalAlignment="ALIGN_MIDDLE">
 
             <g:FlowPanel addStyleNames="{style.leftHeader}">
                 <g:Button ui:field="playButton" text="{constants.play}" debugId="play"/>

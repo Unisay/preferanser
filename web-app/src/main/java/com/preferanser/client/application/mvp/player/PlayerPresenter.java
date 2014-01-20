@@ -181,7 +181,7 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
 
     private void refreshHandTricks() {
         Preconditions.checkState(gameOptional.isPresent(), "PlayerPresenter.refreshHandTricks(game is null)");
-        getView().displayHandTricks(gameOptional.get().getHandTricks());
+        getView().displayHandTricks(gameOptional.get().getHandTrickCounts());
     }
 
     private void refreshTurnNavigation() {

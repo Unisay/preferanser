@@ -38,7 +38,6 @@ import static com.preferanser.shared.domain.Card.*;
 import static com.preferanser.shared.domain.Hand.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasEntry;
 import static org.testng.Assert.*;
 import static org.unitils.reflectionassert.ReflectionAssert.assertLenientEquals;
 import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
@@ -207,14 +206,14 @@ public class GameTest {
 
         game = new Game(Players.THREE, widow, handContractMap, turnRotator, handCardMultimap, centerCardHandMap);
 
-        assertTrue(game.isTrickComplete());
+        assertTrue(game.isTrickClosed());
     }
 
     @Test
     public void testIsTrickComplete_ThreePlayers_Negative() throws Exception {
         game = new Game(Players.THREE, widow, handContractMap, turnRotator, handCardMultimap, centerCardHandMap);
 
-        assertFalse(game.isTrickComplete());
+        assertFalse(game.isTrickClosed());
     }
 
     @Test
@@ -228,7 +227,7 @@ public class GameTest {
         turnRotator = createTurnRotator(SOUTH, NORTH);
         game = new Game(Players.FOUR, widow, handContractMap, turnRotator, handCardMultimap, centerCardHandMap);
 
-        assertTrue(game.isTrickComplete());
+        assertTrue(game.isTrickClosed());
     }
 
     @Test
@@ -240,7 +239,7 @@ public class GameTest {
 
         game = new Game(Players.FOUR, widow, handContractMap, turnRotator, handCardMultimap, centerCardHandMap);
 
-        assertFalse(game.isTrickComplete());
+        assertFalse(game.isTrickClosed());
     }
 
     @Test
@@ -291,8 +290,8 @@ public class GameTest {
         assertTrue(game.sluffTrick());
 
         assertTrue(game.getCenterCards().isEmpty());
-        assertThat(turnRotator.current(), equalTo(SOUTH));
-        assertReflectionEquals(ImmutableMap.of(SOUTH, 1, EAST, 0, WEST, 0, NORTH, 0), game.getHandTricks());
+        assertThat(game.getTurn(), equalTo(SOUTH));
+        assertReflectionEquals(ImmutableMap.of(SOUTH, 1, EAST, 0, WEST, 0, NORTH, 0), game.getHandTrickCounts());
     }
 
     @Test
@@ -307,17 +306,46 @@ public class GameTest {
         assertLenientEquals(newHashSet(SPADE_8, CLUB_KING, CLUB_9, HEART_JACK), game.getDisabledCards());
     }
 
-    // TODO complete test (add redo, sluff)
     @Test
     public void testUndoRedo() throws Exception {
+        handCardMultimap.clear();
+
+        handCardMultimap.put(EAST, CLUB_8);
+        handCardMultimap.put(EAST, SPADE_8);
+
+        handCardMultimap.put(SOUTH, CLUB_7);
+        handCardMultimap.put(SOUTH, CLUB_ACE);
+        handCardMultimap.put(SOUTH, CLUB_KING);
+
+        handCardMultimap.put(WEST, CLUB_JACK);
+        handCardMultimap.put(WEST, CLUB_9);
+        handCardMultimap.put(WEST, HEART_JACK);
+
         game = new Game(Players.THREE, widow, handContractMap, turnRotator, handCardMultimap, centerCardHandMap);
-        game.makeTurn(SOUTH, CLUB_ACE);
+
+        game.makeTurn(SOUTH, CLUB_7);
+        game.makeTurn(WEST, CLUB_JACK);
+        game.makeTurn(EAST, CLUB_8);
+
+        game.sluffTrick();
         assertThat(game.getTurn(), equalTo(WEST));
-        assertThat(game.getCenterCards(), hasEntry(CLUB_ACE, SOUTH));
+        assertThat(game.getHandTrickCounts(), equalTo((Map) ImmutableMap.of(SOUTH, 0, WEST, 1, EAST, 0, NORTH, 0)));
+
+        game.undoTurn();
+        assertThat(game.getTurn(), equalTo(EAST));
+        assertThat(game.getCenterCards(), equalTo((Map) ImmutableMap.of(CLUB_7, SOUTH, CLUB_JACK, WEST)));
+        assertThat(game.getHandTrickCounts(), equalTo((Map) ImmutableMap.of(SOUTH, 0, WEST, 0, EAST, 0, NORTH, 0)));
+
+        game.undoTurn();
+        assertThat(game.getTurn(), equalTo(WEST));
+        assertThat(game.getCenterCards(), equalTo((Map) ImmutableMap.of(CLUB_7, SOUTH)));
+
         game.undoTurn();
         assertThat(game.getTurn(), equalTo(SOUTH));
         assertTrue(game.getCenterCards().isEmpty());
     }
+
+    // todo rest methods hasUndoTurns, hasRedoTurns
 
     private EnumRotator<Hand> createTurnRotator(Hand curValue, Hand... valuesToSkip) {
         EnumRotator<Hand> turnRotator = new EnumRotator<Hand>(Hand.values(), curValue);

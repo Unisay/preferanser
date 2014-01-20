@@ -89,8 +89,8 @@ public class PlayerPresenterTest {
         when(game.getHandContracts()).thenReturn(handContracts);
         when(game.getHandCards()).thenReturn(handCards);
         when(game.getCenterCards()).thenReturn(centerCards);
-        when(game.getHandTricks()).thenReturn(handTricks);
-        when(game.isTrickComplete()).thenReturn(true);
+        when(game.getHandTrickCounts()).thenReturn(handTricks);
+        when(game.isTrickClosed()).thenReturn(true);
         when(game.hasUndoTurns()).thenReturn(true);
         when(game.hasRedoTurns()).thenReturn(false);
 

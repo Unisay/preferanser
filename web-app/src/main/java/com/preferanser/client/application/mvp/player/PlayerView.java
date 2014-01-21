@@ -49,6 +49,7 @@ public class PlayerView extends BaseTableView<PlayerUiHandlers> implements Playe
 
     // @UiField Label trickCountWidow;
     @UiField Button editButton;
+    @UiField Button resetButton;
     @UiField Label trickCountEast;
     @UiField Label trickCountSouth;
     @UiField Label trickCountWest;
@@ -94,6 +95,10 @@ public class PlayerView extends BaseTableView<PlayerUiHandlers> implements Playe
 
     @UiHandler("editButton") void onEditClicked(@SuppressWarnings("unused") ClickEvent event) {
         getUiHandlers().switchToEditor();
+    }
+
+    @UiHandler("resetButton") void onResetClicked(@SuppressWarnings("unused") ClickEvent event) {
+        getUiHandlers().reset();
     }
 
     @UiHandler("undoAnchor") void onUndoClicked(@SuppressWarnings("unused") ClickEvent event) {

@@ -57,7 +57,9 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
 
     public interface PlayerView extends TableView, HasUiHandlers<PlayerUiHandlers> {
         void displayHandTricks(Map<Hand, Integer> handTricks);
+
         void disableCards(Set<Card> cards);
+
         void displayTurnNavigation(boolean showPrev, boolean showNext);
 
         void displaySluffButton(boolean visible);
@@ -152,6 +154,12 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
     @Override public void redo() {
         Preconditions.checkState(gameOptional.isPresent(), "PlayerPresenter.redo(game is null)");
         gameOptional.get().redoTurn();
+        refreshView();
+    }
+
+    @Override public void reset() {
+        Preconditions.checkState(gameOptional.isPresent(), "PlayerPresenter.reset(game is null)");
+        gameOptional.get().reset();
         refreshView();
     }
 

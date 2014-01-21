@@ -136,6 +136,10 @@ public class Trick {
         return turns.subList(0, currentTurnIndex + 1);
     }
 
+    public void clearTurnLog() {
+        turns.clear();
+    }
+
     public boolean isClosed() {
         return !isOpen();
     }

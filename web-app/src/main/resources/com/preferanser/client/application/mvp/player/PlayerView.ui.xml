@@ -29,6 +29,7 @@
 
             <g:FlowPanel addStyleNames="{style.leftHeader}">
                 <g:Button ui:field="editButton" text="{constants.edit}" debugId="edit"/>
+                <g:Button ui:field="resetButton" text="{constants.reset}" debugId="reset"/>
             </g:FlowPanel>
 
             <g:FlowPanel addStyleNames="{style.rightHeader}">

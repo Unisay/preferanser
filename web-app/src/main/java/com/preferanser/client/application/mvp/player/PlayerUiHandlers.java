@@ -45,4 +45,9 @@ public interface PlayerUiHandlers extends TableUiHandlers {
      * Redo turn
      */
     void redo();
+
+    /**
+     * Reset made turns and start from the scratch
+     */
+    void reset();
 }

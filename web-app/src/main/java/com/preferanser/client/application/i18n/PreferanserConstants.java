@@ -79,6 +79,8 @@ public interface PreferanserConstants extends ConstantsWithLookup {
 
     @DefaultStringValue("Edit") String edit();
 
+    @DefaultStringValue("Reset") String reset();
+
     @DefaultStringValue("To sluff") String toSluff();
 
     @DefaultStringValue("New deal") String deal();

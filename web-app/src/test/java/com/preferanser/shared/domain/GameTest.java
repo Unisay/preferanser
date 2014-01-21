@@ -61,12 +61,11 @@ public class GameTest {
         turnRotator = createTurnRotator(SOUTH, NORTH);
         handCardMultimap = createHandCardMultimap();
         centerCardHandMap = createCenterCardHandMap();
+        game = new Game(Players.THREE, widow, handContractMap, turnRotator, handCardMultimap, centerCardHandMap);
     }
 
     @Test
     public void testMakeTurn_FromHandWrongCard() throws Exception {
-        game = new Game(Players.THREE, widow, handContractMap, turnRotator, handCardMultimap, centerCardHandMap);
-
         try {
             game.makeTurn(SOUTH, DIAMOND_ACE);
             fail("NoSuchHandCardException must have been thrown!");
@@ -79,8 +78,6 @@ public class GameTest {
 
     @Test
     public void testMakeTurn_NotInTurn() throws Exception {
-        game = new Game(Players.THREE, widow, handContractMap, turnRotator, handCardMultimap, centerCardHandMap);
-
         try {
             game.makeTurn(WEST, CLUB_JACK);
             fail("NotInTurnException must have been thrown!");
@@ -183,8 +180,6 @@ public class GameTest {
 
     @Test
     public void testMakeTurn_DuplicateGameTurn() throws Exception {
-        game = new Game(Players.THREE, widow, handContractMap, turnRotator, handCardMultimap, centerCardHandMap);
-
         game.makeTurn(SOUTH, CLUB_ACE);
         game.makeTurn(WEST, CLUB_9);
         game.makeTurn(EAST, CLUB_8);
@@ -244,7 +239,6 @@ public class GameTest {
 
     @Test
     public void testGetTurn() throws Exception {
-        game = new Game(Players.THREE, widow, handContractMap, turnRotator, handCardMultimap, centerCardHandMap);
         assertThat(game.getTurn(), equalTo(SOUTH));
         game.makeTurn(SOUTH, CLUB_ACE);
         assertThat(game.getTurn(), equalTo(WEST));
@@ -256,8 +250,6 @@ public class GameTest {
 
     @Test
     public void testGetTrump() throws Exception {
-        game = new Game(Players.THREE, widow, handContractMap, turnRotator, handCardMultimap, centerCardHandMap);
-
         assertTrue(game.getTrump().isPresent());
         assertThat(game.getTrump().get(), equalTo(Suit.SPADE));
     }
@@ -280,7 +272,6 @@ public class GameTest {
 
     @Test
     public void testSluffTrick() throws Exception {
-        game = new Game(Players.THREE, widow, handContractMap, turnRotator, handCardMultimap, centerCardHandMap);
         assertFalse(game.sluffTrick());
         game.makeTurn(SOUTH, CLUB_ACE);
         assertFalse(game.sluffTrick());
@@ -296,7 +287,6 @@ public class GameTest {
 
     @Test
     public void testGetDisabledCards() throws Exception {
-        game = new Game(Players.THREE, widow, handContractMap, turnRotator, handCardMultimap, centerCardHandMap);
         assertLenientEquals(newHashSet(CLUB_8, SPADE_8, CLUB_JACK, CLUB_9, HEART_JACK), game.getDisabledCards());
         game.makeTurn(SOUTH, CLUB_ACE);
         assertLenientEquals(newHashSet(CLUB_8, SPADE_8, CLUB_KING, HEART_JACK), game.getDisabledCards());
@@ -377,8 +367,6 @@ public class GameTest {
 
     @Test
     public void testUndoSluffRedo() throws Exception {
-        game = new Game(Players.THREE, widow, handContractMap, turnRotator, handCardMultimap, centerCardHandMap);
-
         game.makeTurn(SOUTH, CLUB_ACE);
         game.makeTurn(WEST, CLUB_JACK);
         game.makeTurn(EAST, CLUB_8);
@@ -394,8 +382,6 @@ public class GameTest {
 
     @Test
     public void testHasUndoTurns() throws Exception {
-        game = new Game(Players.THREE, widow, handContractMap, turnRotator, handCardMultimap, centerCardHandMap);
-
         assertFalse(game.hasUndoTurns());
         game.makeTurn(SOUTH, CLUB_ACE);
         assertTrue(game.hasUndoTurns());
@@ -415,8 +401,6 @@ public class GameTest {
 
     @Test
     public void testHasRedoTurns() throws Exception {
-        game = new Game(Players.THREE, widow, handContractMap, turnRotator, handCardMultimap, centerCardHandMap);
-
         assertFalse(game.hasRedoTurns());
         game.makeTurn(SOUTH, CLUB_ACE);
         assertFalse(game.hasRedoTurns());
@@ -426,8 +410,6 @@ public class GameTest {
 
     @Test
     public void testHasRedoTurns_WithSluff() throws Exception {
-        game = new Game(Players.THREE, widow, handContractMap, turnRotator, handCardMultimap, centerCardHandMap);
-
         assertFalse(game.hasRedoTurns());
         game.makeTurn(SOUTH, CLUB_ACE);
         assertFalse(game.hasRedoTurns());
@@ -445,6 +427,21 @@ public class GameTest {
         assertTrue(game.hasRedoTurns());
         game.makeTurn(SOUTH, CLUB_ACE); // By making manual turn we reset redo queue
         assertFalse(game.hasRedoTurns());
+    }
+
+    @Test
+    public void testReset() throws Exception {
+        game.makeTurn(SOUTH, CLUB_ACE);
+        game.makeTurn(WEST, CLUB_JACK);
+        game.makeTurn(EAST, CLUB_8);
+        game.sluffTrick();
+        game.makeTurn(SOUTH, CLUB_KING);
+        game.reset();
+        assertFalse(game.hasUndoTurns());
+        assertFalse(game.hasRedoTurns());
+        assertThat(game.getTurn(), equalTo(SOUTH));
+        assertThat(game.getHandTrickCounts(), equalTo((Map) ImmutableMap.of(SOUTH, 0, WEST, 0, EAST, 0, NORTH, 0)));
+        assertThat(game.getCenterCards(), equalTo((Map) ImmutableMap.of()));
     }
 
     private EnumRotator<Hand> createTurnRotator(Hand curValue, Hand... valuesToSkip) {

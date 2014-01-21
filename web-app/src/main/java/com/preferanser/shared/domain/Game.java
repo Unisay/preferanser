@@ -257,15 +257,9 @@ public class Game {
         if (!hasRedoTurns())
             return false;
 
-        if (currentTrick().isClosed())
-            currentTrickIndex++;
-
         Turn redoTurn = currentTrick().redoTurn();
         handCardMultimap.remove(redoTurn.getHand(), redoTurn.getCard());
-
-        if (currentTrick().isClosed())
-            currentTrickIndex++;
-
+        sluffTrick();
         return true;
     }
 
@@ -275,6 +269,17 @@ public class Game {
 
     private Trick previousTrick() {
         return trickLog.get(currentTrickIndex - 1);
+    }
+
+    public void reset() {
+        boolean turnUndone;
+        do {
+            turnUndone = undoTurn();
+        } while (turnUndone);
+        Trick first = trickLog.getFirst();
+        first.clearTurnLog();
+        trickLog.clear();
+        trickLog.add(first);
     }
 
 }

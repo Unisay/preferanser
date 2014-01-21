@@ -20,6 +20,7 @@
 package com.preferanser.client.application;
 
 import com.gwtplatform.mvp.client.gin.AbstractPresenterModule;
+import com.preferanser.client.application.mvp.deal.DealModule;
 import com.preferanser.client.application.mvp.editor.EditorModule;
 import com.preferanser.client.application.mvp.error.ErrorPresenter;
 import com.preferanser.client.application.mvp.error.ErrorView;
@@ -32,6 +33,7 @@ public class ApplicationModule extends AbstractPresenterModule {
     @Override
     @SuppressWarnings("OverlyCoupledMethod")
     protected void configure() {
+        install(new DealModule());
         install(new PlayerModule());
         install(new EditorModule());
 

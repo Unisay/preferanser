@@ -38,7 +38,7 @@ import com.preferanser.client.application.widgets.TablePanel;
 import com.preferanser.client.application.widgets.TurnPointer;
 import com.preferanser.client.geom.Point;
 import com.preferanser.client.geom.Rect;
-import com.preferanser.client.theme.greencloth.client.com.preferanser.client.application.PreferanserResources;
+import com.preferanser.laf.client.PreferanserResources;
 import com.preferanser.shared.domain.*;
 
 import javax.annotation.Nullable;

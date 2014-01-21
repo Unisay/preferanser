@@ -16,7 +16,7 @@ import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.collect.Lists.newLinkedList;
 import static com.google.common.collect.Maps.newLinkedHashMap;
 
-public class Trick {
+public class Trick implements Iterable<Turn> {
 
     private final EnumRotator<Hand> turnRotator;
     private final LinkedList<Turn> turns = newLinkedList();
@@ -146,6 +146,10 @@ public class Trick {
 
     public EnumRotator<Hand> getTurnRotator() {
         return turnRotator;
+    }
+
+    @Override public Iterator<Turn> iterator() {
+        return turns.iterator();
     }
 
     @Override

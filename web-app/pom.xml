@@ -31,7 +31,7 @@
     <artifactId>web-app</artifactId>
     <packaging>war</packaging>
     <name>Preferanser Web Application</name>
-    <description>Preferanser - GWTP application using Requestfactory and Spring using a servlet container</description>
+    <description>Preferanser</description>
 
     <properties>
         <objectify.version>4.0b3</objectify.version>
@@ -45,6 +45,12 @@
     </properties>
 
     <dependencies>
+
+        <dependency>
+            <groupId>com.preferanser</groupId>
+            <artifactId>web-app-laf</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>com.googlecode.objectify</groupId>

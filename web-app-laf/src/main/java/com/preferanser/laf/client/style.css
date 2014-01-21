@@ -14,7 +14,8 @@ html, body {
 }
 
 body {
-    overflow: hidden;
+    color: white;
+    text-shadow: 1px 1px black;
 }
 
 * {
@@ -23,6 +24,12 @@ body {
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+}
+
+.layoutCenter {
+    width: 1164px;
+    height: 100%;
+    margin: 0 auto;
 }
 
 @sprite .gwt-DialogBox {
@@ -129,16 +136,4 @@ body {
 
 .gwt-Button:hover {
     text-shadow: -1px -1px 1px black;
-}
-
-.statusPanel {
-    position: absolute;
-    top: 10px;
-    height: 26px;
-    padding: 5px 10px;
-    background-color: rgba(0, 0, 0, 0.3);
-    border-radius: 7px;
-    color: white;
-    font-weight: bold;
-    text-shadow: 1px 1px 1px black;
 }

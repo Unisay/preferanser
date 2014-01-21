@@ -23,14 +23,15 @@
     </facet>
     <facet type="gwt" name="GWT">
       <configuration>
-        <setting name="additionalCompilerParameters" value="-XX:MaxPermSize=512m" />
-        <setting name="compilerMaxHeapSize" value="2000" />
-        <setting name="gwtScriptOutputStyle" value="PRETTY" />
+        <setting name="additionalCompilerParameters" value="-Xss1024K -XX:MaxPermSize=256M" />
+        <setting name="compilerMaxHeapSize" value="1024" />
+        <setting name="gwtScriptOutputStyle" value="OBF" />
         <setting name="gwtSdkUrl" value="file://$MAVEN_REPOSITORY$/com/google/gwt/gwt-dev/2.5.1/" />
         <setting name="gwtSdkType" value="maven" />
         <setting name="webFacet" value="Web" />
         <packaging>
           <module name="com.preferanser.client.theme.greencloth.GreenCloth" enabled="false" />
+          <module name="com.preferanser.laf.green.Green" enabled="false" />
         </packaging>
       </configuration>
     </facet>
@@ -44,17 +45,20 @@
       <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/resources" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/test/resources" type="java-test-resource" />
-      <excludeFolder url="file://$MODULE_DIR$/target/.generated" />
-      <excludeFolder url="file://$MODULE_DIR$/target/gwt-unitCache" />
-      <excludeFolder url="file://$MODULE_DIR$/target/maven-archiver" />
-      <excludeFolder url="file://$MODULE_DIR$/target/surefire-reports" />
       <excludeFolder url="file://$MODULE_DIR$/target/test-classes" />
       <excludeFolder url="file://$MODULE_DIR$/target/web-app-1.0-SNAPSHOT" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="Maven: com.googlecode.objectify:objectify:4.0b3" level="project" />
+    <orderEntry type="module" module-name="web-app-laf" />
     <orderEntry type="library" name="Maven: com.google.guava:guava:15.0" level="project" />
+    <orderEntry type="library" name="Maven: ch.qos.logback:logback-classic:1.0.13" level="project" />
+    <orderEntry type="library" name="Maven: ch.qos.logback:logback-core:1.0.13" level="project" />
+    <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.5" level="project" />
+    <orderEntry type="library" name="Maven: org.slf4j:jcl-over-slf4j:1.7.5" level="project" />
+    <orderEntry type="library" name="Maven: org.slf4j:log4j-over-slf4j:1.7.5" level="project" />
+    <orderEntry type="library" name="Maven: org.slf4j:jul-to-slf4j:1.7.5" level="project" />
+    <orderEntry type="library" name="Maven: com.googlecode.objectify:objectify:4.0b3" level="project" />
     <orderEntry type="library" name="Maven: com.google.appengine:appengine-api-1.0-sdk:1.7.6" level="project" />
     <orderEntry type="library" name="Maven: com.google.appengine:appengine-api-labs:1.7.6" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: com.google.gwt:gwt-user:2.5.1" level="project" />
@@ -62,8 +66,8 @@
     <orderEntry type="library" scope="PROVIDED" name="Maven: javax.validation:validation-api:sources:1.0.0.GA" level="project" />
     <orderEntry type="library" name="Maven: org.json:json:20090211" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: com.google.gwt:gwt-dev:2.5.1" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: com.gwtplatform:gwtp-mvp-client:1.0" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: com.gwtplatform:gwtp-clients-common:1.0" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: com.gwtplatform:gwtp-mvp-client:1.1.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: com.gwtplatform:gwtp-clients-common:1.1.1" level="project" />
     <orderEntry type="library" name="Maven: com.google.inject:guice:3.0" level="project" />
     <orderEntry type="library" name="Maven: javax.inject:javax.inject:1" level="project" />
     <orderEntry type="library" name="Maven: aopalliance:aopalliance:1.0" level="project" />
@@ -103,12 +107,6 @@
     <orderEntry type="library" scope="TEST" name="Maven: ognl:ognl:2.6.9" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.mockito:mockito-core:1.9.5" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.objenesis:objenesis:1.0" level="project" />
-    <orderEntry type="library" name="Maven: ch.qos.logback:logback-classic:1.0.13" level="project" />
-    <orderEntry type="library" name="Maven: ch.qos.logback:logback-core:1.0.13" level="project" />
-    <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.5" level="project" />
-    <orderEntry type="library" name="Maven: org.slf4j:jcl-over-slf4j:1.7.5" level="project" />
-    <orderEntry type="library" name="Maven: org.slf4j:log4j-over-slf4j:1.7.5" level="project" />
-    <orderEntry type="library" name="Maven: org.slf4j:jul-to-slf4j:1.7.5" level="project" />
   </component>
 </module>
 

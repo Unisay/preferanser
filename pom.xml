@@ -32,6 +32,7 @@
         <module>web-app</module>
         <module>web-test</module>
         <module>backend-client</module>
+        <module>web-app-laf</module>
     </modules>
 
     <packaging>pom</packaging>
@@ -39,7 +40,7 @@
     <properties>
         <!-- client -->
         <gwt.version>2.5.1</gwt.version>
-        <gwtp.version>1.0</gwtp.version>
+        <gwtp.version>1.1.1</gwtp.version>
         <gin.version>2.1.2</gin.version>
         <gwt.style>OBF</gwt.style>
 

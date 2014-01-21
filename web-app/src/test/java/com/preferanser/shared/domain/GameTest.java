@@ -21,6 +21,7 @@ package com.preferanser.shared.domain;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.LinkedHashMultimap;
+import com.preferanser.shared.domain.entity.Play;
 import com.preferanser.shared.domain.exception.DuplicateGameTurnException;
 import com.preferanser.shared.domain.exception.IllegalSuitException;
 import com.preferanser.shared.domain.exception.NoSuchHandCardException;
@@ -442,6 +443,19 @@ public class GameTest {
         assertThat(game.getTurn(), equalTo(SOUTH));
         assertThat(game.getHandTrickCounts(), equalTo((Map) ImmutableMap.of(SOUTH, 0, WEST, 0, EAST, 0, NORTH, 0)));
         assertThat(game.getCenterCards(), equalTo((Map) ImmutableMap.of()));
+    }
+
+    @Test
+    public void testToPlay() throws Exception {
+        game.makeTurn(SOUTH, CLUB_ACE);
+        game.makeTurn(WEST, CLUB_JACK);
+        game.makeTurn(EAST, CLUB_8);
+        game.sluffTrick();
+        game.makeTurn(SOUTH, CLUB_KING);
+
+        Play play = game.toPlay();
+        Game clonedGame = new Game(play);
+        assertReflectionEquals(game, clonedGame);
     }
 
     private EnumRotator<Hand> createTurnRotator(Hand curValue, Hand... valuesToSkip) {

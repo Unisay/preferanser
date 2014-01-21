@@ -25,8 +25,6 @@ import com.google.common.collect.BiMap;
 import com.google.common.collect.EnumHashBiMap;
 import com.google.common.collect.ImmutableMap;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -34,7 +32,7 @@ import com.google.gwt.uibinder.client.UiChild;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.*;
 import com.preferanser.client.application.mvp.editor.layout.*;
-import com.preferanser.client.theme.greencloth.client.com.preferanser.client.application.PreferanserResources;
+import com.preferanser.laf.client.PreferanserResources;
 import com.preferanser.shared.domain.TableLocation;
 
 import javax.annotation.Nullable;
@@ -152,10 +150,6 @@ public class TablePanel extends Composite {
 
             layout.apply(cardWidgets);
         }
-    }
-
-    public void addCenterPanelClickHandler(ClickHandler clickHandler) {
-        centerCardsPanel.addDomHandler(clickHandler, ClickEvent.getType());
     }
 
     public Map<Panel, TableLocation> getPanelLocations() {

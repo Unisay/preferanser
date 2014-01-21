@@ -1,0 +1,70 @@
+<!--
+  ~ Preferanser is a program to simulate and calculate Russian Preferans Card game deals.
+  ~
+  ~     Copyright (C) 2013  Yuriy Lazarev <Yuriy.Lazarev@gmail.com>
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, either version 3 of the License, or
+  ~     (at your option) any later version.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see [http://www.gnu.org/licenses/].
+  -->
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+             xmlns:g="urn:import:com.google.gwt.user.client.ui"
+        >
+
+    <ui:with field="constants" type="com.preferanser.client.application.i18n.PreferanserConstants"/>
+    <ui:with field="resources" type="com.preferanser.laf.client.PreferanserResources"/>
+
+    <ui:style>
+        @import url(http://fonts.googleapis.com/css?family=Lobster&amp;subset=cyrillic);
+
+        .title {
+            margin: 1em 0 .5em 0;
+            font-size: 36pt;
+            font-family: 'Lobster', cursive;
+        }
+
+        .description, .createDealDescription, .chooseDeal {
+            margin-bottom: 1em;
+            font-size: 12pt;
+        }
+
+        .createDealDescription {
+            display: inline;
+            margin-right: 1em;
+        }
+
+        .chooseDeal {
+            display: inline;
+            margin-left: 1em;
+        }
+
+        .deals {
+            width: 100%;
+            margin-top: 2em;
+            background-color: rgba(0, 0, 0, .1);
+            border-radius: 7px;
+        }
+
+    </ui:style>
+
+    <g:FlowPanel addStyleNames="{resources.css.layoutCenter}">
+        <g:Label text="{constants.preferanser}" addStyleNames="{style.title}"/>
+        <g:Label text="{constants.description}" addStyleNames="{style.description}"/>
+        <g:Label text="{constants.createDealDescription}" addStyleNames="{style.createDealDescription}"/>
+        <g:Button text="{constants.createNewDeal}"/>
+        <g:Label text="{constants.chooseDeal}" addStyleNames="{style.chooseDeal}"/>
+
+        <g:Grid ui:field="dealGrid" cellSpacing="10" addStyleNames="{style.deals}"/>
+
+    </g:FlowPanel>
+
+</ui:UiBinder>

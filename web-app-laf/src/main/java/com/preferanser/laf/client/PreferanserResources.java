@@ -17,7 +17,7 @@
  *     along with this program.  If not, see [http://www.gnu.org/licenses/].
  */
 
-package com.preferanser.client.theme.greencloth.client.com.preferanser.client.application;
+package com.preferanser.laf.client;
 
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
@@ -31,11 +31,14 @@ import com.google.gwt.user.cellview.client.DataGrid;
  */
 public interface PreferanserResources extends ClientBundle {
 
+    @SuppressWarnings("unused")
     interface Style extends CssResource {
 
-        @SuppressWarnings("unused") String dialogTop();
+        String dialogTop();
 
-        @SuppressWarnings("unused") String Caption();
+        String Caption();
+
+        String layoutCenter();
 
         @ClassName("gwt-DialogBox") String gwtDialogBox();
 
@@ -43,20 +46,30 @@ public interface PreferanserResources extends ClientBundle {
 
         @ClassName("gwt-Button") String gwtButton();
 
-        String statusPanel();
+        @ClassName("gwt-TabBarFirst") String gwtTabBarFirst();
+
+        @ClassName("gwt-TabBarRest") String gwtTabBarRest();
+
+        @ClassName("gwt-Label") String gwtLabel();
+
+        @ClassName("gwt-TabBarItem") String gwtTabBarItem();
+
+        @ClassName("gwt-TabBar") String gwtTabBar();
+
+        @ClassName("gwt-TabPanelBottom") String gwtTabPanelBottom();
+
+        @ClassName("gwt-TabBarItem-selected") String gwtTabBarItemSelected();
     }
 
     interface DataGridResources extends DataGrid.Resources {
 
-        interface DataGridStyle extends DataGrid.Style { }
+        interface DataGridStyle extends DataGrid.Style {}
 
         @Override
-        @Source({DataGrid.Style.DEFAULT_CSS, "DataGrid.css"})
-        DataGridStyle dataGridStyle();
+        @Source({DataGrid.Style.DEFAULT_CSS, "DataGrid.css"}) DataGridStyle dataGridStyle();
     }
 
-    @Source("green_cloth.css")
-    Style css();
+    @Source("style.css") Style css();
 
     DataGridResources dataGrid();
 

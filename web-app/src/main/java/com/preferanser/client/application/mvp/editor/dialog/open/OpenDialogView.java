@@ -36,7 +36,7 @@ import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.PopupViewWithUiHandlers;
 import com.preferanser.client.application.i18n.PreferanserConstants;
-import com.preferanser.client.theme.greencloth.client.com.preferanser.client.application.PreferanserResources;
+import com.preferanser.laf.client.PreferanserResources;
 import com.preferanser.shared.domain.entity.Deal;
 
 import java.util.Date;
@@ -55,10 +55,10 @@ public class OpenDialogView extends PopupViewWithUiHandlers<OpenDialogUiHandlers
 
     @Inject
     protected OpenDialogView(
-            Binder uiBinder,
-            EventBus eventBus,
-            PreferanserResources resources,
-            PreferanserConstants constants
+        Binder uiBinder,
+        EventBus eventBus,
+        PreferanserResources resources,
+        PreferanserConstants constants
     ) {
         super(eventBus);
         dealDataGrid = new DataGrid<Deal>(10, resources.dataGrid(), new ProvidesDealKey());

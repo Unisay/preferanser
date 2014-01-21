@@ -26,7 +26,6 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewImpl;
-import com.preferanser.client.application.widgets.StatusBar;
 
 public class ApplicationView extends ViewImpl implements ApplicationPresenter.TheView {
 
@@ -35,12 +34,8 @@ public class ApplicationView extends ViewImpl implements ApplicationPresenter.Th
     @UiField
     SimplePanel main;
 
-    @UiField(provided = true)
-    StatusBar statusBar;
-
     @Inject
-    public ApplicationView(Binder uiBinder, StatusBar statusBar) {
-        this.statusBar = statusBar;
+    public ApplicationView(Binder uiBinder) {
         initWidget(uiBinder.createAndBindUi(this));
     }
 

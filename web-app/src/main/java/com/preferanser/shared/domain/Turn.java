@@ -3,10 +3,16 @@ package com.preferanser.shared.domain;
 import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
 
-public class Turn {
+import java.io.Serializable;
 
-    private final Hand hand;
-    private final Card card;
+public class Turn implements Serializable {
+
+    private Hand hand;
+    private Card card;
+
+    @SuppressWarnings("unused") // For serialization
+    private Turn() {
+    }
 
     public Turn(Hand hand, Card card) {
         Preconditions.checkNotNull(hand, "Hand is null");

@@ -22,8 +22,9 @@
              xmlns:p="urn:import:com.preferanser.client.application.widgets">
     <ui:with field="constants" type="com.preferanser.client.application.i18n.PreferanserConstants"/>
     <ui:style src="../table.css" type="com.preferanser.client.application.mvp.editor.style.TableStyle"/>
+    <ui:style field="theme" type="com.preferanser.laf.green.client.PreferanserResources.Style"/>
 
-    <g:VerticalPanel addStyleNames="{style.verticalPanel}" spacing="0">
+    <g:VerticalPanel addStyleNames="{theme.layoutCenter}" spacing="0">
 
         <g:HorizontalPanel height="60" spacing="10" width="100%">
 

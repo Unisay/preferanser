@@ -20,7 +20,6 @@
 package com.preferanser.client.gin;
 
 import com.google.gwt.inject.client.multibindings.GinMultibinder;
-import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
 import com.gwtplatform.mvp.client.Bootstrapper;
@@ -32,13 +31,11 @@ import com.gwtplatform.mvp.client.gin.DefaultModule;
 import com.preferanser.client.application.ApplicationModule;
 import com.preferanser.client.application.ResourceLoader;
 import com.preferanser.client.application.i18n.I18nHelper;
-import com.preferanser.client.application.widgets.StatusBar;
 import com.preferanser.client.gwtp.AuthBootstrapper;
 import com.preferanser.client.gwtp.NameTokens;
 import com.preferanser.client.restygwt.RestyGwtDispatcher;
 import com.preferanser.client.restygwt.RestyGwtLoggingRequestListener;
 import com.preferanser.client.restygwt.RestyGwtRequestListener;
-import com.preferanser.client.theme.greencloth.client.com.preferanser.client.application.PreferanserResources;
 import com.preferanser.shared.domain.GameBuilder;
 import com.preferanser.shared.dto.CurrentUserDto;
 
@@ -50,7 +47,7 @@ public class ClientModule extends AbstractPresenterModule {
         install(new ApplicationModule());
 
         // DefaultPlaceManager Places
-        bindConstant().annotatedWith(DefaultPlace.class).to(NameTokens.GAME_EDITOR);
+        bindConstant().annotatedWith(DefaultPlace.class).to(NameTokens.DEALS);
         bindConstant().annotatedWith(ErrorPlace.class).to(NameTokens.ERROR);
         bindConstant().annotatedWith(UnauthorizedPlace.class).to(NameTokens.UNAUTHORIZED);
 
@@ -62,7 +59,6 @@ public class ClientModule extends AbstractPresenterModule {
         requestListenerMultibinder.addBinding().to(RestyGwtLoggingRequestListener.class);
         // requestListenerMultibinder.addBinding().to(RestyGwtStatusBarRequestListener.class);
 
-        bind(StatusBar.class).toProvider(StatusBarProvider.class).in(Singleton.class);
         bind(RestyGwtDispatcher.class).toProvider(RestyGwtDispatcher.Provider.class).asEagerSingleton();
         bind(GameBuilder.class).toProvider(GameBuilderProvider.class).in(Singleton.class); // TODO: should be prototype scope
         bind(ResourceLoader.class).asEagerSingleton();
@@ -73,20 +69,6 @@ public class ClientModule extends AbstractPresenterModule {
             GameBuilder gameBuilder = new GameBuilder();
             gameBuilder.setThreePlayers(); // TODO: remove this initialization
             return gameBuilder;
-        }
-    }
-
-    static class StatusBarProvider implements Provider<StatusBar> {
-        private PreferanserResources preferanserResources;
-
-        @Inject
-        public StatusBarProvider(PreferanserResources preferanserResources) {
-            this.preferanserResources = preferanserResources;
-        }
-
-        @Override
-        public StatusBar get() {
-            return new StatusBar(preferanserResources.css());
         }
     }
 

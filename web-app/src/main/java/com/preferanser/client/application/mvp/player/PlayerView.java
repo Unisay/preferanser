@@ -31,7 +31,7 @@ import com.preferanser.client.application.i18n.PreferanserConstants;
 import com.preferanser.client.application.mvp.BaseTableView;
 import com.preferanser.client.application.widgets.CardWidget;
 import com.preferanser.client.application.widgets.TurnPointer;
-import com.preferanser.client.theme.greencloth.client.com.preferanser.client.application.PreferanserResources;
+import com.preferanser.laf.client.PreferanserResources;
 import com.preferanser.shared.domain.Card;
 import com.preferanser.shared.domain.Contract;
 import com.preferanser.shared.domain.Hand;

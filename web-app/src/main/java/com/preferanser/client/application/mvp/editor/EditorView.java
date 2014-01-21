@@ -35,7 +35,7 @@ import com.preferanser.client.application.widgets.CardWidget;
 import com.preferanser.client.application.widgets.RequestButton;
 import com.preferanser.client.application.widgets.TurnPointer;
 import com.preferanser.client.restygwt.RestyGwtDispatcher;
-import com.preferanser.client.theme.greencloth.client.com.preferanser.client.application.PreferanserResources;
+import com.preferanser.laf.client.PreferanserResources;
 import com.preferanser.shared.domain.Contract;
 import com.preferanser.shared.domain.Hand;
 

@@ -21,14 +21,12 @@ package com.preferanser.shared.domain;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.*;
+import com.preferanser.shared.domain.entity.Play;
 import com.preferanser.shared.domain.exception.*;
 import com.preferanser.shared.util.EnumRotator;
 import com.preferanser.shared.util.GameUtils;
 
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.collect.Maps.newHashMap;
@@ -43,7 +41,7 @@ public class Game {
     private final Widow widow;
     private final Map<Hand, Contract> handContracts;
     private final Multimap<Hand, Card> handCardMultimap;
-    private final LinkedList<Trick> trickLog = Lists.newLinkedList();
+    private final LinkedList<Trick> trickLog;
     private int currentTrickIndex;
 
     Game(Players players,
@@ -55,10 +53,39 @@ public class Game {
     ) {
         this.players = players;
         this.widow = new Widow(widow);
-        this.handContracts = newHashMap(handContracts);
-        this.handCardMultimap = LinkedHashMultimap.create(handCardMultimap);
+        this.handContracts = ImmutableMap.copyOf(handContracts);
+        this.handCardMultimap = HashMultimap.create(handCardMultimap);
+        trickLog = Lists.newLinkedList();
         trickLog.add(new Trick(players, turnRotator, centerCardHandMap));
         currentTrickIndex = 0;
+    }
+
+    public Game(Play play) {
+        players = play.getPlayers();
+        widow = play.getWidow();
+        handContracts = ImmutableMap.copyOf(play.getHandContracts());
+        handCardMultimap = HashMultimap.create(play.getHandCards());
+        trickLog = constructTricks(play, getTrump());
+        currentTrickIndex = play.getCurrentTrickIndex();
+    }
+
+    private LinkedList<Trick> constructTricks(Play play, Optional<Suit> trump) {
+        LinkedList<Trick> tricks = Lists.newLinkedList();
+        EnumRotator<Hand> turnRotator = new EnumRotator<Hand>(Hand.values(), play.getFirstTurn());
+        if (play.getPlayers() == Players.THREE)
+            turnRotator.setSkipValues(Hand.NORTH);
+        Trick trick = new Trick(play.getPlayers(), turnRotator);
+        tricks.add(trick);
+        if (play.getTurns() != null) {
+            for (Turn turn : play.getTurns()) {
+                assert trick.isOpen();
+                trick.applyTurn(turn.getHand(), turn.getCard());
+                if (trick.isClosed()) {
+                    tricks.add(trick = createNewTrick(trick, trump, play.getPlayers()));
+                }
+            }
+        }
+        return tricks;
     }
 
     public Map<Hand, Set<Card>> getHandCards() {
@@ -74,7 +101,7 @@ public class Game {
     }
 
     public Map<Hand, Integer> getHandTrickCounts() {
-        Map<Hand, Integer> counts = Maps.newHashMap();
+        Map<Hand, Integer> counts = newHashMap();
         for (Hand hand : Hand.values())
             counts.put(hand, getHandTricksCount(hand));
         return counts;
@@ -172,13 +199,16 @@ public class Game {
         if (currentTrick.isOpen())
             return false;
 
-        Optional<Hand> trickWinner = currentTrick.determineTrickWinner(getTrump());
-        assert trickWinner.isPresent() : "Trick is closed but winner is not present";
-        Trick trick = new Trick(players, new EnumRotator<Hand>(currentTrick.getTurnRotator(), trickWinner.get()));
-        trickLog.add(trick);
+        trickLog.add(createNewTrick(currentTrick, getTrump(), players));
         currentTrickIndex++;
 
         return true;
+    }
+
+    private Trick createNewTrick(Trick currentTrick, Optional<Suit> trump, Players gamePlayers) {
+        Optional<Hand> trickWinner = currentTrick.determineTrickWinner(trump);
+        assert trickWinner.isPresent() : "Trick is closed but winner is not present";
+        return new Trick(gamePlayers, new EnumRotator<Hand>(currentTrick.getTurnRotator(), trickWinner.get()));
     }
 
     public Hand getTurn() {
@@ -280,6 +310,25 @@ public class Game {
         first.clearTurnLog();
         trickLog.clear();
         trickLog.add(first);
+    }
+
+    public Play toPlay() {
+        Play play = new Play();
+        play.setCreated(new Date());
+        play.setFirstTurn(trickLog.getFirst().getTurn());
+        play.setPlayers(players);
+        play.setWidow(widow);
+        play.setEastContract(handContracts.get(Hand.EAST));
+        play.setSouthContract(handContracts.get(Hand.SOUTH));
+        play.setWestContract(handContracts.get(Hand.WEST));
+        play.setEastCards(newHashSet(handCardMultimap.get(Hand.EAST)));
+        play.setSouthCards(newHashSet(handCardMultimap.get(Hand.SOUTH)));
+        play.setWestCards(newHashSet(handCardMultimap.get(Hand.WEST)));
+        List<Turn> turns = Lists.newArrayListWithCapacity(trickLog.size());
+        for (Trick trick : trickLog) for (Turn turn : trick) turns.add(turn);
+        play.setTurns(turns);
+        play.setCurrentTrickIndex(currentTrickIndex);
+        return play;
     }
 
 }

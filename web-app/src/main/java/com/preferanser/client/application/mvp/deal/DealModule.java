@@ -17,12 +17,18 @@
  *     along with this program.  If not, see [http://www.gnu.org/licenses/].
  */
 
-package com.preferanser.client.gwtp;
+package com.preferanser.client.application.mvp.deal;
 
-public class NameTokens {
-    public static final String ERROR = "error";
-    public static final String UNAUTHORIZED = "unauthorized";
-    public static final String DEALS = "deals";
-    public static final String GAME_EDITOR = "editor";
-    public static final String GAME_PLAYER = "player";
+import com.gwtplatform.mvp.client.gin.AbstractPresenterModule;
+
+/**
+ * Gin module for the mvp deal page
+ */
+public class DealModule extends AbstractPresenterModule {
+
+    @Override
+    protected void configure() {
+        bindPresenter(DealPresenter.class, DealPresenter.DealView.class, DealView.class, DealPresenter.Proxy.class);
+    }
+
 }

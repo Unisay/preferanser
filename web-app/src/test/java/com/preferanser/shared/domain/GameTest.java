@@ -366,7 +366,7 @@ public class GameTest {
 
         assertTrue(game.redoTurn(), "Failed to redo EAST->CLUB_8");
         assertThat(game.getTurn(), equalTo(WEST));
-        assertThat(game.getCenterCards(), equalTo((Map) ImmutableMap.of(CLUB_7, SOUTH, CLUB_JACK, WEST, CLUB_8, EAST)));
+        assertThat(game.getCenterCards(), equalTo((Map) ImmutableMap.of()));
         assertThat(game.getHandTrickCounts(), equalTo((Map) ImmutableMap.of(SOUTH, 0, WEST, 1, EAST, 0, NORTH, 0)));
 
         assertTrue(game.redoTurn(), "Failed to redo WEST->HEART_JACK");
@@ -389,8 +389,6 @@ public class GameTest {
         assertTrue(game.undoTurn(), "Failed to undo EAST->CLUB_8");
         assertThat(game.getCenterCards(), equalTo((Map) ImmutableMap.of(CLUB_ACE, SOUTH, CLUB_JACK, WEST)));
         assertTrue(game.redoTurn(), "Failed to redo EAST->CLUB_8");
-        assertThat(game.getCenterCards(), equalTo((Map) ImmutableMap.of(CLUB_ACE, SOUTH, CLUB_JACK, WEST, CLUB_8, EAST)));
-        assertTrue(game.sluffTrick(), "Failed to sluff trick");
         assertThat(game.getCenterCards(), equalTo((Map) ImmutableMap.of()));
     }
 

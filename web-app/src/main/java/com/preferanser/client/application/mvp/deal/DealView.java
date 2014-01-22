@@ -1,7 +1,9 @@
 package com.preferanser.client.application.mvp.deal;
 
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.Label;
@@ -21,6 +23,7 @@ public class DealView extends ViewWithUiHandlers<DealUiHandlers> implements Deal
     @UiField(provided = true) Grid dealGrid;
     @UiField PreferanserResources resources;
     @UiField PreferanserConstants constants;
+    @UiField Button editorButton;
 
     @Inject
     public DealView(Binder uiBinder) {
@@ -38,4 +41,7 @@ public class DealView extends ViewWithUiHandlers<DealUiHandlers> implements Deal
         }
     }
 
+    @UiHandler("editorButton") void onEditor(@SuppressWarnings("unused") ClickEvent event) {
+        getUiHandlers().openDealEditor();
+    }
 }

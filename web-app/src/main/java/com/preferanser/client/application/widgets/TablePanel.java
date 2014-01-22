@@ -46,7 +46,7 @@ import static com.preferanser.shared.domain.TableLocation.*;
 
 public class TablePanel extends Composite {
 
-    public interface Binder extends UiBinder<DockPanel, TablePanel> {}
+    public interface Binder extends UiBinder<Widget, TablePanel> {}
 
     private static Binder uiBinder = GWT.create(Binder.class);
 
@@ -116,6 +116,19 @@ public class TablePanel extends Composite {
     public void addCenter(HasWidgets hasWidgets) {
         for (Widget widget : newArrayList(hasWidgets))
             centerCardsPanel.add(widget);
+    }
+
+    /**
+     * Add tab to center
+     *
+     * @param widget tab widget
+     * @param title  tab title
+     * @param index  tab position
+     */
+    @UiChild
+    public void addTab(Widget widget, String title, int index) {
+        centerTabPanel.insert(widget, title, index);
+        centerTabPanel.selectTab(0);
     }
 
     public void addHandCardsToCenter(Collection<HandCard> handCards) {

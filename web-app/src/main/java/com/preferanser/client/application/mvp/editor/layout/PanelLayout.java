@@ -56,7 +56,7 @@ public abstract class PanelLayout<T extends IsWidget> implements Layout<T> {
     }
 
     protected int getDisposableWidth() {
-        return getWidth() - PADDING - PADDING;
+        return getWidth() - 2 * PADDING;
     }
 
     protected int getHeight() {
@@ -64,7 +64,7 @@ public abstract class PanelLayout<T extends IsWidget> implements Layout<T> {
     }
 
     protected int getDisposableHeight() {
-        return getHeight() - 4 * PADDING;
+        return getHeight() - 2 * PADDING;
     }
 
     protected void positionWidget(CardWidget cardWidget, int x, int y, int z) {

@@ -20,12 +20,12 @@ public class WidowLayout extends PanelLayout<CardWidget> {
     @Override
     public void layoutPanelWidgets(Collection<CardWidget> widgets) {
         Iterator<CardWidget> iterator = widgets.iterator();
+        int x = (getWidth() - cardWidth) / 2;
+        int y = (getHeight() - cardHeight) / 2;
         if (iterator.hasNext()) {
-            int x = (getWidth() - cardWidth) / 2;
-            int y = (getHeight() - cardHeight) / 2;
-            positionWidget(iterator.next(), x - cardWidth / 2 + PADDING, y, 1);
+            positionWidget(iterator.next(), x - cardWidth / 2, y, 1);
             if (iterator.hasNext())
-                positionWidget(iterator.next(), x + cardWidth / 2 + PADDING, y, 2);
+                positionWidget(iterator.next(), x + cardWidth / 2, y, 2);
         }
     }
 

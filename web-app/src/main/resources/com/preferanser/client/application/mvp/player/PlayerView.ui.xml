@@ -22,9 +22,11 @@
              xmlns:p="urn:import:com.preferanser.client.application.widgets">
     <ui:with field="constants" type="com.preferanser.client.application.i18n.PreferanserConstants"/>
     <ui:style src="../table.css" type="com.preferanser.client.application.mvp.editor.style.TableStyle"/>
-    <ui:style field="theme" type="com.preferanser.laf.green.client.PreferanserResources.Style"/>
+    <ui:with field="resources" type="com.preferanser.laf.client.PreferanserResources"/>
 
-    <g:VerticalPanel addStyleNames="{theme.layoutCenter}" spacing="0">
+    <g:FlowPanel addStyleNames="{resources.css.layoutCenter}">
+
+        <g:Label text="{constants.preferanser}" addStyleNames="{resources.css.titleSmaller}"/>
 
         <g:HorizontalPanel height="60" spacing="10" width="100%">
 
@@ -78,6 +80,6 @@
 
         </p:TablePanel>
 
-    </g:VerticalPanel>
+    </g:FlowPanel>
 
 </ui:UiBinder>

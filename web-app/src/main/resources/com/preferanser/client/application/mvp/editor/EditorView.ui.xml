@@ -21,18 +21,56 @@
              xmlns:g="urn:import:com.google.gwt.user.client.ui"
              xmlns:p="urn:import:com.preferanser.client.application.widgets">
     <ui:with field="constants" type="com.preferanser.client.application.i18n.PreferanserConstants"/>
+    <ui:with field="resources" type="com.preferanser.laf.client.PreferanserResources"/>
     <ui:style src="../table.css" type="com.preferanser.client.application.mvp.editor.style.TableStyle"/>
-    <ui:style field="theme" type="com.preferanser.laf.green.client.PreferanserResources.Style"/>
 
-    <g:VerticalPanel addStyleNames="{theme.layoutCenter}" spacing="0">
+    <ui:style field="editorStyle">
+        .propertiesPanel {
+            width: 100%;
+            padding: 1em;
+        }
 
-        <g:HorizontalPanel height="60" spacing="10" width="100%" verticalAlignment="ALIGN_MIDDLE">
+        .formInput {
+            margin-bottom: 1em;
+        }
+
+        @external .gwt-Label;
+        .formInput .gwt-Label {
+            margin-bottom: .5em;
+            font-weight: bold;
+        }
+
+        .formInput input, .formInput textarea {
+            width: 505px;
+            border: none;
+            border-radius: 5px;
+            background-color: rgba(0, 0, 0, .1);
+            color: white;
+            padding: 10px;
+            font-size: 110%;
+            resize: none;
+        }
+
+        .formInput input {
+            height: 2em;
+        }
+
+        .formInput textarea {
+            height: 23em;
+        }
+
+    </ui:style>
+    <g:FlowPanel addStyleNames="{resources.css.layoutCenter}">
+
+        <g:Label text="{constants.preferanser}" addStyleNames="{resources.css.titleSmaller}"/>
+
+        <g:HorizontalPanel height="60" width="100%" verticalAlignment="ALIGN_MIDDLE">
 
             <g:FlowPanel addStyleNames="{style.leftHeader}">
-                <g:Button ui:field="playButton" text="{constants.play}" debugId="play"/>
-                <p:RequestButton ui:field="saveButton" text="{constants.save}" debugId="save"/>
-                <p:RequestButton ui:field="openButton" text="{constants.open}" debugId="open"/>
-                <g:Button ui:field="dealButton" text="{constants.deal}" debugId="deal"/>
+                <g:Button ui:field="resetButton" text="{constants.reset}" addStyleNames="{style.topButton}" debugId="reset"/>
+                <g:Button ui:field="playButton" text="{constants.play}" addStyleNames="{style.topButton}" debugId="play"/>
+                <p:RequestButton ui:field="saveButton" text="{constants.save}" addStyleNames="{style.topButton}" debugId="save"/>
+                <g:Button ui:field="quitButton" text="{constants.quit}" addStyleNames="{style.topButton}" debugId="quit"/>
             </g:FlowPanel>
 
             <g:FlowPanel addStyleNames="{style.rightHeader}">
@@ -86,8 +124,21 @@
                 </p:Widgets>
             </p:center>
 
+            <p:tab title="{constants.properties}" index="0">
+                <g:FlowPanel addStyleNames="{editorStyle.propertiesPanel}">
+                    <g:FlowPanel width="100%" addStyleNames="{editorStyle.formInput}">
+                        <g:Label text="{constants.dealName}"/>
+                        <g:TextBox ui:field="dealName"/>
+                    </g:FlowPanel>
+                    <g:FlowPanel width="100%" addStyleNames="{editorStyle.formInput}">
+                        <g:Label text="{constants.dealDescription}"/>
+                        <g:TextArea ui:field="dealDescription"/>
+                    </g:FlowPanel>
+                </g:FlowPanel>
+            </p:tab>
+
         </p:TablePanel>
 
-    </g:VerticalPanel>
+    </g:FlowPanel>
 
 </ui:UiBinder>

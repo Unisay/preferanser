@@ -62,10 +62,11 @@ abstract public class BaseTableView<U extends TableUiHandlers>
     private final ImageDragController imageDragController = new ImageDragController(Document.get());
 
     protected final I18nHelper i18nHelper;
-    protected final PreferanserResources resources;
     protected final CardImageResourceRetriever cardImageResourceRetriever;
 
     @UiField(provided = true) public PreferanserConstants constants;
+    @UiField(provided = true) public PreferanserResources resources;
+
     @UiField public TableStyle style;
     @UiField public TablePanel table;
     @UiField public InlineHTML authLabel;

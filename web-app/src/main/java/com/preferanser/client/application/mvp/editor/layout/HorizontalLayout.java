@@ -66,7 +66,7 @@ public class HorizontalLayout extends SortingPanelLayout<CardWidget> {
 
     @Override
     protected int getStartY() {
-        return 3 * PADDING;
+        return PADDING;
     }
 
     @Override

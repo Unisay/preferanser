@@ -56,7 +56,7 @@ public class VerticalPanelLayout<T extends CardWidget> extends SortingPanelLayou
 
     @Override
     protected int getStartY() {
-        return 3 * PADDING;
+        return PADDING;
     }
 
     @Override

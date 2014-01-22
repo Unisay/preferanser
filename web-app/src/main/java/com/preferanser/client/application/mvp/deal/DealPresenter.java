@@ -8,6 +8,8 @@ import com.gwtplatform.mvp.client.View;
 import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.ProxyStandard;
 import com.gwtplatform.mvp.client.annotations.UseGatekeeper;
+import com.gwtplatform.mvp.client.proxy.PlaceManager;
+import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.preferanser.client.application.ApplicationPresenter;
 import com.preferanser.client.gwtp.LoggedInGatekeeper;
@@ -30,10 +32,12 @@ public class DealPresenter extends Presenter<DealPresenter.DealView, DealPresent
     public interface Proxy extends ProxyPlace<DealPresenter> {}
 
     private final DealService dealService;
+    private final PlaceManager placeManager;
 
     @Inject
-    public DealPresenter(EventBus eventBus, DealView view, Proxy proxy, DealService dealService) {
+    public DealPresenter(EventBus eventBus, DealView view, Proxy proxy, PlaceManager placeManager, DealService dealService) {
         super(eventBus, view, proxy, ApplicationPresenter.TYPE_SetMainContent);
+        this.placeManager = placeManager;
         getView().setUiHandlers(this);
         this.dealService = dealService;
     }
@@ -55,4 +59,7 @@ public class DealPresenter extends Presenter<DealPresenter.DealView, DealPresent
 
     }
 
+    @Override public void openDealEditor() {
+        placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.GAME_EDITOR).build());
+    }
 }

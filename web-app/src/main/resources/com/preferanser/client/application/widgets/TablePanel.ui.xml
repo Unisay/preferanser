@@ -18,70 +18,90 @@
   -->
 
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
-             xmlns:g="urn:import:com.google.gwt.user.client.ui"
-        >
+             xmlns:g="urn:import:com.google.gwt.user.client.ui">
     <ui:with field="constants" type="com.preferanser.client.application.i18n.PreferanserConstants"/>
     <ui:style>
 
-        .dockPanel {
-            width: 100%;
-            height: 100%;
+        @def gap 10px;
+
+        .table {
+            margin-top: gap;
         }
 
-        .eastDock, .southDock, .westDock, .centerDock {
-            position: relative;
+        .west {
+            float: left;
+            margin-right: gap;
         }
 
-        .eastVPanel, .southVPanel, .westVPanel {
-            position: relative;
-            width: 100%;
+        .center {
+            float: left;
+            background-color: rgba(0, 0, 0, 0.1);
+            border-radius: 7px;
+            width: 550px;
+            height: 440px;
+            margin: 0;
+        }
+
+        .east {
+            float: right;
+            margin-left: gap;
+        }
+
+        .south {
+            clear: both;
+            margin-top: gap;
+            display: inline-block;
+        }
+
+        .west, .east {
+            width: 297px;
+        }
+
+        .west, .east, {
+            height: 440px;
+        }
+
+        .south {
+            width: 1164px;
+            height: 184px;
         }
 
         .southHPanel, .eastHPanel, .westHPanel {
             width: 100%;
             line-height: 20px;
             padding: 0 10px 0 10px;
-            position: absolute;
-            top: 0;
-            left: 0;
             -webkit-border-top-left-radius: 7px;
             -webkit-border-top-right-radius: 7px;
             -moz-border-radius-topleft: 7px;
             -moz-border-radius-topright: 7px;
             border-top-left-radius: 7px;
             border-top-right-radius: 7px;
-            background-color: rgba(0, 0, 0, 0.1);
+            background-color: rgba(0, 0, 0, 0.2);
             height: 20px;
             font-weight: bold;
             cursor: pointer;
             white-space: nowrap;
         }
 
-        .eastFlowPanel, .southFlowPanel, .westFlowPanel {
-            width: 100%;
+        .eastCards, .southCards, .westCards {
             position: relative;
             background-color: rgba(0, 0, 0, 0.1);
-            border-radius: 7px;
+            -webkit-border-bottom-left-radius: 7px;
+            -webkit-border-bottom-right-radius: 7px;
+            -moz-border-radius-bottomleft: 7px;
+            -moz-border-radius-bottomright: 7px;
+            border-bottom-left-radius: 7px;
+            border-bottom-right-radius: 7px;
         }
 
-        .southDock {
-            width: 1164px;
+        .eastCards, .westCards {
+            height: 420px;
+            width: 100%;
         }
 
-        .eastDock, .westDock {
-            width: 297px;
-        }
-
-        .southFlowPanel {
-            height: 184px;
-        }
-
-        .eastFlowPanel, .westFlowPanel {
-            height: 440px;
-        }
-
-        .eastVPanel, .westVPanel {
-            width: 297px;
+        .southCards {
+            height: 164px;
+            width: 100%;
         }
 
         .handTitle {
@@ -89,49 +109,40 @@
             text-shadow: 1px 1px 1px #222;
         }
 
-        .centerTabPanel {
-            position: relative;
-            background-color: rgba(0, 0, 0, 0.1);
-            border-radius: 7px;
-            width: 530px;
-            height: 100%;
-        }
-
-        .centerCardsPanel, .widowPanel {
+        .fullSize {
             width: 100%;
             height: 100%;
         }
     </ui:style>
 
-    <g:DockPanel debugId="dlp" addStyleNames="{style.dockPanel}" spacing="10">
-        <g:Dock direction="SOUTH" addStyleNames="{style.southDock}">
-            <g:VerticalPanel addStyleNames="{style.southVPanel}">
-                <g:FlowPanel ui:field="southCardsPanel" addStyleNames="{style.southFlowPanel}" debugId="SOUTH"/>
-                <g:HorizontalPanel ui:field="southPanelHeader" addStyleNames="{style.handTitle} {style.southHPanel}"/>
-            </g:VerticalPanel>
-        </g:Dock>
-        <g:Dock direction="EAST" addStyleNames="{style.eastDock}">
-            <g:VerticalPanel addStyleNames="{style.eastVPanel}">
-                <g:FlowPanel ui:field="eastCardsPanel" addStyleNames="{style.eastFlowPanel}" debugId="EAST"/>
-                <g:HorizontalPanel ui:field="eastPanelHeader" addStyleNames="{style.handTitle} {style.eastHPanel}"/>
-            </g:VerticalPanel>
-        </g:Dock>
-        <g:Dock direction="WEST" addStyleNames="{style.westDock}">
-            <g:VerticalPanel addStyleNames="{style.westVPanel}">
-                <g:FlowPanel ui:field="westCardsPanel" addStyleNames="{style.westFlowPanel}" debugId="WEST"/>
-                <g:HorizontalPanel ui:field="westPanelHeader" addStyleNames="{style.handTitle} {style.westHPanel}"/>
-            </g:VerticalPanel>
-        </g:Dock>
-        <g:Dock direction="CENTER" addStyleNames="{style.centerDock}">
-            <g:TabPanel ui:field="centerTabPanel" addStyleNames="{style.centerTabPanel}" debugId="centerTabPanel">
+    <g:FlowPanel addStyleNames="{style.table} {style.fullSize}">
+
+        <g:FlowPanel debugId="west" addStyleNames="{style.west}">
+            <g:HorizontalPanel ui:field="westPanelHeader" addStyleNames="{style.handTitle} {style.westHPanel}" debugId="west-title"/>
+            <g:FlowPanel ui:field="westCardsPanel" addStyleNames="{style.westCards}" debugId="west-cards"/>
+        </g:FlowPanel>
+
+        <g:SimpleLayoutPanel addStyleNames="{style.center}">
+            <g:TabPanel ui:field="centerTabPanel" width="100%" height="100%" debugId="center">
                 <g:Tab text="{constants.game}">
-                    <g:FlowPanel ui:field="centerCardsPanel" debugId="centerCardsPanel" addStyleNames="{style.centerCardsPanel}"/>
+                    <g:FlowPanel ui:field="centerCardsPanel" debugId="centerCardsPanel" addStyleNames="{style.fullSize}"/>
                 </g:Tab>
                 <g:Tab text="{constants.widow}">
-                    <g:FlowPanel ui:field="widowPanel" addStyleNames="{style.widowPanel}"/>
+                    <g:FlowPanel ui:field="widowPanel" addStyleNames="{style.fullSize}"/>
                 </g:Tab>
             </g:TabPanel>
-        </g:Dock>
-    </g:DockPanel>
+        </g:SimpleLayoutPanel>
+
+        <g:FlowPanel debugId="east" addStyleNames="{style.east}">
+            <g:HorizontalPanel ui:field="eastPanelHeader" addStyleNames="{style.handTitle} {style.eastHPanel}" debugId="east-title"/>
+            <g:FlowPanel ui:field="eastCardsPanel" addStyleNames="{style.eastCards}" debugId="east-cards"/>
+        </g:FlowPanel>
+
+        <g:FlowPanel debugId="south" addStyleNames="{style.south}">
+            <g:HorizontalPanel ui:field="southPanelHeader" addStyleNames="{style.handTitle} {style.southHPanel}" debugId="south-title"/>
+            <g:FlowPanel ui:field="southCardsPanel" addStyleNames="{style.southCards}" debugId="south-cards"/>
+        </g:FlowPanel>
+
+    </g:FlowPanel>
 
 </ui:UiBinder>

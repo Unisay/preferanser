@@ -49,15 +49,15 @@ public interface EditorUiHandlers extends TableUiHandlers {
     /**
      * Save deal
      */
-    void onDealSaveClicked();
-
-    /**
-     * Open deal
-     */
-    void onDealOpenClicked();
+    void save();
 
     /**
      * Create new deal
      */
-    void newDeal();
+    void reset();
+
+    /**
+     * Quit editor
+     */
+    void quit();
 }

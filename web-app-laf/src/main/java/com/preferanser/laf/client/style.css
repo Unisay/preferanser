@@ -26,9 +26,19 @@ body {
     user-select: none;
 }
 
+.title, .title-smaller {
+    margin: 1em 0 .5em 0;
+    font-size: 36pt;
+    font-family: 'Lobster', cursive;
+}
+
+.title-smaller {
+    margin-top: .5em;
+    font-size: 28pt;
+}
+
 .layoutCenter {
     width: 1164px;
-    height: 100%;
     margin: 0 auto;
 }
 

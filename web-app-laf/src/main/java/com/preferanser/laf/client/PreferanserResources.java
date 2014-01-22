@@ -34,6 +34,10 @@ public interface PreferanserResources extends ClientBundle {
     @SuppressWarnings("unused")
     interface Style extends CssResource {
 
+        String title();
+
+        @ClassName("title-smaller") String titleSmaller();
+
         String dialogTop();
 
         String Caption();
@@ -59,6 +63,7 @@ public interface PreferanserResources extends ClientBundle {
         @ClassName("gwt-TabPanelBottom") String gwtTabPanelBottom();
 
         @ClassName("gwt-TabBarItem-selected") String gwtTabBarItemSelected();
+
     }
 
     interface DataGridResources extends DataGrid.Resources {

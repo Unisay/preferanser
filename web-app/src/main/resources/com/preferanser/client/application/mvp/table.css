@@ -87,7 +87,7 @@
 
 @external .turnPointerEast;
 .turnPointerEast {
-    left: 495px;
+    left: 515px;
     transform: rotate(0);
     -ms-transform: rotate(0);
     -webkit-transform: rotate(0);
@@ -156,4 +156,8 @@
     position: relative;
     top: 45px;
     left: 190px;
+}
+
+.topButton {
+    margin-right: 8px;
 }

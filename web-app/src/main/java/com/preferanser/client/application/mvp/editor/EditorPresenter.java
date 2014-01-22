@@ -20,6 +20,7 @@
 package com.preferanser.client.application.mvp.editor;
 
 import com.google.common.base.Optional;
+import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
@@ -48,7 +49,7 @@ import com.preferanser.shared.domain.exception.GameBuilderException;
 import com.preferanser.shared.domain.exception.GameException;
 import com.preferanser.shared.dto.CurrentUserDto;
 
-import java.util.List;
+import java.util.Date;
 import java.util.logging.Logger;
 
 
@@ -61,7 +62,9 @@ public class EditorPresenter extends Presenter<EditorPresenter.EditorView, Edito
     private static final Logger log = Logger.getLogger("EditorPresenter");
     private final CurrentUserDto currentUserDto;
 
-    public interface EditorView extends HasUiHandlers<EditorUiHandlers>, TableView {}
+    public interface EditorView extends HasUiHandlers<EditorUiHandlers>, TableView {
+        void displayDealName(String name);
+    }
 
     private Optional<Game> maybeGame;
     private GameBuilder gameBuilder;
@@ -99,9 +102,13 @@ public class EditorPresenter extends Presenter<EditorPresenter.EditorView, Edito
     }
 
     @Override
-    public void newDeal() {
+    public void reset() {
         initGameBuilder();
         refreshView();
+    }
+
+    @Override public void quit() {
+        placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.DEALS).build());
     }
 
     private void initGameBuilder() {
@@ -116,6 +123,7 @@ public class EditorPresenter extends Presenter<EditorPresenter.EditorView, Edito
     protected void onReveal() {
         super.onReveal();
         refreshView();
+        getView().displayDealName(DateTimeFormat.getFormat(DateTimeFormat.PredefinedFormat.DATE_TIME_MEDIUM).format(new Date()));
     }
 
     @Override
@@ -168,18 +176,8 @@ public class EditorPresenter extends Presenter<EditorPresenter.EditorView, Edito
     }
 
     @Override
-    public void onDealSaveClicked() {
+    public void save() {
         editorDialogs.showInputDialog(constants.save(), constants.saveDescription());
-    }
-
-    @Override
-    public void onDealOpenClicked() {
-        dealService.load(new Response<List<Deal>>() {
-            @Override
-            protected void handle(List<Deal> deals) {
-                editorDialogs.showOpenDialog(deals);
-            }
-        });
     }
 
     public void onDealOpenClicked(Deal deal) {

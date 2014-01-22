@@ -35,11 +35,15 @@ public interface PreferanserConstants extends ConstantsWithLookup {
 
     @DefaultStringValue("Create new deal description") String createDealDescription();
 
-    @DefaultStringValue("Create new deal") String createNewDeal();
+    @DefaultStringValue("Deal name") String dealName();
 
-    @DefaultStringValue("Choose deal") String chooseDeal();
+    @DefaultStringValue("Deal description") String dealDescription();
+
+    @DefaultStringValue("Deal editor") String editor();
 
     @DefaultStringValue("Log out") String logout();
+
+    @DefaultStringValue("Properties") String properties();
 
     @DefaultStringValue("To sluff") String sluff();
 
@@ -94,6 +98,10 @@ public interface PreferanserConstants extends ConstantsWithLookup {
     @DefaultStringValue("New deal") String deal();
 
     @DefaultStringValue("Save") String save();
+
+    @DefaultStringValue("Close") String close();
+
+    @DefaultStringValue("Quit") String quit();
 
     @DefaultStringValue("Saving") String saving();
 

@@ -1,6 +1,7 @@
 package com.preferanser.client.application.mvp.deal;
 
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -20,6 +21,8 @@ public class DealView extends ViewWithUiHandlers<DealUiHandlers> implements Deal
 
     public interface Binder extends UiBinder<Widget, DealView> {}
 
+    private static final DateTimeFormat DATE_TIME_FORMAT = DateTimeFormat.getFormat(DateTimeFormat.PredefinedFormat.DATE_TIME_SHORT);
+
     @UiField(provided = true) Grid dealGrid;
     @UiField PreferanserResources resources;
     @UiField PreferanserConstants constants;
@@ -36,7 +39,7 @@ public class DealView extends ViewWithUiHandlers<DealUiHandlers> implements Deal
         for (int i = 0; i < deals.size(); i++) {
             Deal deal = deals.get(i);
             dealGrid.setWidget(i, 0, new Label(deal.getName()));
-            dealGrid.setWidget(i, 1, new Label(deal.getCreated().toString()));
+            dealGrid.setWidget(i, 1, new Label(DATE_TIME_FORMAT.format(deal.getCreated())));
             dealGrid.setWidget(i, 2, new Button(constants.play()));
         }
     }

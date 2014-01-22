@@ -37,26 +37,26 @@
         @external .gwt-Label;
         .formInput .gwt-Label {
             margin-bottom: .5em;
-            font-weight: bold;
+            font-weight: 400;
         }
 
         .formInput input, .formInput textarea {
-            width: 505px;
+            width: 500px;
             border: none;
             border-radius: 5px;
             background-color: rgba(0, 0, 0, .1);
             color: white;
-            padding: 10px;
-            font-size: 110%;
+            font-size: 14pt;
             resize: none;
         }
 
         .formInput input {
-            height: 2em;
+            padding: 5px 10px;
         }
 
         .formInput textarea {
-            height: 23em;
+            padding: 10px;
+            height: 265px;
         }
 
     </ui:style>

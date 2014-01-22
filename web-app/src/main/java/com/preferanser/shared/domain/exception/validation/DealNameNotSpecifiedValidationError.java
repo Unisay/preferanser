@@ -17,47 +17,16 @@
  *     along with this program.  If not, see [http://www.gnu.org/licenses/].
  */
 
-package com.preferanser.client.application.mvp.editor;
+package com.preferanser.shared.domain.exception.validation;
 
-import com.preferanser.client.application.mvp.TableUiHandlers;
-import com.preferanser.shared.domain.Hand;
+import com.preferanser.client.application.i18n.PreferanserConstants;
+import com.preferanser.client.application.i18n.PreferanserMessages;
 
-/**
- * Game builder UI handlers
- */
-public interface EditorUiHandlers extends TableUiHandlers {
+public class DealNameNotSpecifiedValidationError extends GameBuilderValidationError {
 
-    /**
-     * User chose contract for hand
-     *
-     * @param hand for which contract is chosen
-     */
-    void chooseContract(Hand hand);
+    @Override
+    public String formatLocalMessage(PreferanserConstants constants, PreferanserMessages messages) {
+        return constants.dealNameNotSpecified();
+    }
 
-    /**
-     * User chose first turn
-     *
-     * @param hand who turns first
-     */
-    void chooseTurn(Hand hand);
-
-    /**
-     * Switch to player page
-     */
-    void switchToPlayer();
-
-    /**
-     * Save deal
-     */
-    void save(String name, String description);
-
-    /**
-     * Create new deal
-     */
-    void reset();
-
-    /**
-     * Quit editor
-     */
-    void quit();
 }

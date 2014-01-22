@@ -21,6 +21,7 @@ package com.preferanser.shared.domain;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Maps;
 import com.preferanser.shared.domain.entity.Deal;
@@ -45,6 +46,8 @@ public class GameBuilder {
     private static final int NUM_OF_CARDS_PER_HAND = 10;
     private static final int NUM_OF_CONTRACTS = 3;
 
+    private String name;
+    private String description;
     private Widow widow;
     private Players players;
     private Hand firstTurn;
@@ -121,6 +124,16 @@ public class GameBuilder {
 
     public GameBuilder setFourPlayers() {
         players = Players.FOUR;
+        return this;
+    }
+
+    public GameBuilder setName(String name) {
+        this.name = name;
+        return this;
+    }
+
+    public GameBuilder setDescription(String description) {
+        this.description = description;
         return this;
     }
 
@@ -214,6 +227,9 @@ public class GameBuilder {
 
     private Optional<List<GameBuilderValidationError>> validate() {
         List<GameBuilderValidationError> errors = newArrayList();
+
+        if (Strings.isNullOrEmpty(name))
+            errors.add(new DealNameNotSpecifiedValidationError()); // TODO: also check invalid names
 
         if (players == null)
             errors.add(new NumPlayersNotSpecifiedValidationError());
@@ -321,7 +337,11 @@ public class GameBuilder {
         );
     }
 
-    public Deal buildDeal(String name) {
+    public Deal buildDeal() throws GameBuilderException {
+        Optional<List<GameBuilderValidationError>> validationErrors = validate();
+        if (validationErrors.isPresent())
+            throw new GameBuilderException(validationErrors.get());
+
         Deal deal = new Deal();
         deal.setCreated(Clock.getNow());
         deal.setFirstTurn(firstTurn);

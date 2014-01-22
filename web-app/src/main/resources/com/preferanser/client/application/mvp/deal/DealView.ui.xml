@@ -36,11 +36,6 @@
             margin-right: 1em;
         }
 
-        .chooseDeal {
-            display: inline;
-            margin-left: 1em;
-        }
-
         .deals {
             width: 100%;
             margin-top: 2em;

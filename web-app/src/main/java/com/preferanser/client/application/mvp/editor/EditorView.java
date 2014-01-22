@@ -109,7 +109,7 @@ public class EditorView extends BaseTableView<EditorUiHandlers> implements Edito
     }
 
     @UiHandler("saveButton") void onSaveButtonClicked(@SuppressWarnings("unused") ClickEvent event) {
-        getUiHandlers().save();
+        getUiHandlers().save(dealName.getText(), dealDescription.getText());
     }
 
     @UiHandler("resetButton") void onDealButtonClicked(@SuppressWarnings("unused") ClickEvent event) {

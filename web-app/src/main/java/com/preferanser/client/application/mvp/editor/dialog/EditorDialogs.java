@@ -19,39 +19,28 @@
 
 package com.preferanser.client.application.mvp.editor.dialog;
 
-import com.google.common.base.Strings;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
-import com.preferanser.client.application.mvp.dialog.input.InputDialogPresenter;
 import com.preferanser.client.application.mvp.editor.EditorPresenter;
 import com.preferanser.client.application.mvp.editor.dialog.contract.ContractDialogPresenter;
-import com.preferanser.client.application.mvp.editor.dialog.open.OpenDialogPresenter;
 import com.preferanser.client.application.mvp.editor.dialog.validation.ValidationDialogPresenter;
 import com.preferanser.shared.domain.Hand;
-import com.preferanser.shared.domain.entity.Deal;
 import com.preferanser.shared.domain.exception.validation.GameBuilderValidationError;
 
 import java.util.Collection;
-import java.util.List;
 
 public class EditorDialogs {
 
     private final Provider<EditorPresenter> editorPresenterProvider;
     private final ContractDialogPresenter contractDialog;
-    private final OpenDialogPresenter openDialog;
-    private final InputDialogPresenter inputDialog;
     private final ValidationDialogPresenter validationDialog;
 
     @Inject
     public EditorDialogs(Provider<EditorPresenter> editorPresenterProvider,
                          ContractDialogPresenter contractDialog,
-                         OpenDialogPresenter openDialog,
-                         InputDialogPresenter inputDialog,
                          ValidationDialogPresenter validationDialog) {
         this.editorPresenterProvider = editorPresenterProvider;
         this.contractDialog = contractDialog;
-        this.openDialog = openDialog;
-        this.inputDialog = inputDialog;
         this.validationDialog = validationDialog;
     }
 
@@ -62,29 +51,9 @@ public class EditorDialogs {
         editorPresenter.addToPopupSlot(contractDialog);
     }
 
-    public void showInputDialog(String title, String description) {
-        inputDialog.setTitle(title);
-        inputDialog.setDescription(description);
-        inputDialog.onInputResult(new InputDialogPresenter.InputResultHandler() {
-            @Override public void handleInputResult(String name) {
-                if (!Strings.isNullOrEmpty(name)) {
-                    inputDialog.getView().hide();
-                    editorPresenterProvider.get().handleInputResult(name);
-                }
-            }
-        });
-        editorPresenterProvider.get().addToPopupSlot(inputDialog);
-    }
-
     public void showValidationDialog(Collection<GameBuilderValidationError> errors) {
         validationDialog.setValidationErrors(errors);
         editorPresenterProvider.get().addToPopupSlot(validationDialog);
     }
 
-    public void showOpenDialog(List<Deal> deals) {
-        EditorPresenter editorPresenter = editorPresenterProvider.get();
-        openDialog.setDeals(deals);
-        openDialog.setEditorPresenter(editorPresenter);
-        editorPresenter.addToPopupSlot(openDialog);
-    }
 }

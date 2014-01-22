@@ -352,7 +352,7 @@ public class GameBuilderTest {
 
     @Test
     public void testBuildDeal() throws Exception {
-        Deal actualDeal = builder.buildDeal("name");
+        Deal actualDeal = builder.setName("name").setDescription("description").buildDeal();
         assertReflectionEquals(deal, actualDeal);
     }
 

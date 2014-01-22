@@ -118,13 +118,9 @@
 }
 
 .authLabel {
-    color: white;
-    font-weight: bold;
 }
 
 .logout {
-    color: white;
-    font-weight: bold;
     display: inline;
     cursor: pointer;
 }

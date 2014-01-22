@@ -5,8 +5,6 @@ html, body {
     width: 100%;
     min-height: 100%;
     margin: 0 !important;
-    font-family: sans-serif;
-    font-size: 90%;
 }
 
 @sprite body {
@@ -14,6 +12,9 @@ html, body {
 }
 
 body {
+    font-weight: 400;
+    font-family: 'Lora', sans-serif;
+    font-size: 12pt;
     color: white;
     text-shadow: 1px 1px black;
 }
@@ -58,7 +59,10 @@ body {
 }
 
 .gwt-TabBarItem {
-    font-weight: bold;
+    font-family: 'PT Serif Caption', sans-serif;
+    font-weight: 400;
+    font-size: 10pt;
+    text-shadow: 1px 1px #3d3d3d;
     padding: 0 1em;
 }
 
@@ -137,11 +141,13 @@ body {
     padding: 5px 10px;
     border-radius: 7px;
     color: white;
-    font-weight: bold;
     text-shadow: 1px 1px 1px black;
     height: 26px;
     cursor: pointer;
     outline: none;
+    font-weight: 400;
+    font-family: 'PT Serif Caption', sans-serif;
+    font-size: 9pt;
 }
 
 .gwt-Button:hover {

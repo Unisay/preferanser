@@ -37,7 +37,6 @@ import com.preferanser.client.application.i18n.PreferanserConstants;
 import com.preferanser.client.application.i18n.PreferanserMessages;
 import com.preferanser.client.application.mvp.GameBuiltEvent;
 import com.preferanser.client.application.mvp.TableView;
-import com.preferanser.client.application.mvp.dialog.input.InputDialogPresenter;
 import com.preferanser.client.application.mvp.editor.dialog.EditorDialogs;
 import com.preferanser.client.gwtp.LoggedInGatekeeper;
 import com.preferanser.client.gwtp.NameTokens;
@@ -56,8 +55,7 @@ import java.util.logging.Logger;
 /**
  * Table presenter
  */
-public class EditorPresenter extends Presenter<EditorPresenter.EditorView, EditorPresenter.Proxy>
-    implements EditorUiHandlers, HasHandContracts, InputDialogPresenter.InputResultHandler {
+public class EditorPresenter extends Presenter<EditorPresenter.EditorView, EditorPresenter.Proxy> implements EditorUiHandlers, HasHandContracts {
 
     private static final Logger log = Logger.getLogger("EditorPresenter");
     private final CurrentUserDto currentUserDto;
@@ -176,19 +174,18 @@ public class EditorPresenter extends Presenter<EditorPresenter.EditorView, Edito
     }
 
     @Override
-    public void save() {
-        editorDialogs.showInputDialog(constants.save(), constants.saveDescription());
+    public void save(String name, String description) {
+        try {
+            Deal deal = gameBuilder.setName(name).setDescription(description).buildDeal();
+            dealService.persist(deal, new Response<Void>());
+        } catch (GameBuilderException e) {
+            editorDialogs.showValidationDialog(e.getBuilderErrors());
+        }
     }
 
     public void onDealOpenClicked(Deal deal) {
         gameBuilder.setDeal(deal);
         refreshView();
-    }
-
-    @Override
-    public void handleInputResult(String name) {
-        Deal deal = gameBuilder.buildDeal(name);
-        dealService.persist(deal, new Response<Void>());
     }
 
     private void refreshView() {

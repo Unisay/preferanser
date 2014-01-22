@@ -78,7 +78,10 @@
             border-top-right-radius: 7px;
             background-color: rgba(0, 0, 0, 0.2);
             height: 20px;
-            font-weight: bold;
+            font-family: 'PT Serif Caption', sans-serif;
+            font-weight: 400;
+            font-size: 10pt;
+            text-shadow: 1px 1px #3d3d3d;
             cursor: pointer;
             white-space: nowrap;
         }

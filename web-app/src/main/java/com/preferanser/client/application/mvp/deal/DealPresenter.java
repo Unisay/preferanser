@@ -35,6 +35,7 @@ public class DealPresenter extends Presenter<DealPresenter.DealView, DealPresent
 
     private final DealService dealService;
     private final PlaceManager placeManager;
+    private List<Deal> deals;
 
     @Inject
     public DealPresenter(EventBus eventBus, DealView view, Proxy proxy, PlaceManager placeManager, DealService dealService) {
@@ -47,11 +48,17 @@ public class DealPresenter extends Presenter<DealPresenter.DealView, DealPresent
     @Override protected void onBind() {
         super.onBind();
         addRegisteredHandler(GameBuiltEvent.getType(), this);
-        loadDeals();
+        dealService.load(new Response<List<Deal>>() {
+            @Override protected void handle(List<Deal> loadedDeals) {
+                deals = loadedDeals;
+                getView().displayDeals(deals);
+            }
+        });
     }
 
     @Override public void onGameBuilt(GameBuiltEvent event) {
-        loadDeals();
+        deals.add(event.getGame().toDeal());
+        getView().displayDeals(deals);
     }
 
     @Override public void playDeal(Deal deal) {
@@ -66,11 +73,4 @@ public class DealPresenter extends Presenter<DealPresenter.DealView, DealPresent
         placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.GAME_EDITOR).build());
     }
 
-    private void loadDeals() {
-        dealService.load(new Response<List<Deal>>() {
-            @Override protected void handle(List<Deal> deals) {
-                getView().displayDeals(deals);
-            }
-        });
-    }
 }

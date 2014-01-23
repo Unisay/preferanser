@@ -21,7 +21,7 @@ package com.preferanser.shared.domain;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.LinkedHashMultimap;
-import com.preferanser.shared.domain.entity.Play;
+import com.preferanser.shared.domain.entity.Deal;
 import com.preferanser.shared.domain.exception.DuplicateGameTurnException;
 import com.preferanser.shared.domain.exception.IllegalSuitException;
 import com.preferanser.shared.domain.exception.NotInTurnException;
@@ -445,8 +445,8 @@ public class GameTest {
         game.sluffTrick();
         game.makeTurn(CLUB_KING);
 
-        Play play = game.toPlay();
-        Game clonedGame = new Game(play);
+        Deal deal = game.toDeal();
+        Game clonedGame = new Game(deal);
         assertReflectionEquals(game, clonedGame);
     }
 

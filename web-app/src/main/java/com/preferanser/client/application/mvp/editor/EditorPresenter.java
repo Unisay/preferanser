@@ -41,7 +41,6 @@ import com.preferanser.client.gwtp.NameTokens;
 import com.preferanser.client.service.DealService;
 import com.preferanser.client.service.Response;
 import com.preferanser.shared.domain.*;
-import com.preferanser.shared.domain.entity.Deal;
 import com.preferanser.shared.domain.exception.GameBuilderException;
 import com.preferanser.shared.domain.exception.GameException;
 import com.preferanser.shared.dto.CurrentUserDto;
@@ -158,20 +157,16 @@ public class EditorPresenter extends Presenter<EditorPresenter.EditorView, Edito
 
     @Override
     public void save(String name, String description) {
+        Game game;
         try {
-            maybeGame = Optional.of(gameBuilder.build());
-            GameBuiltEvent.fire(this, maybeGame.get());
-            // TODO: build deal from game
-            Deal deal = gameBuilder.setName(name).setDescription(description).buildDeal();
-            dealService.persist(deal, new Response<Void>());
+            game = gameBuilder.setName(name).setDescription(description).build();
         } catch (GameBuilderException e) {
             editorDialogs.showValidationDialog(e.getBuilderErrors());
+            return;
         }
-    }
-
-    public void onDealOpenClicked(Deal deal) {
-        gameBuilder.setDeal(deal);
-        refreshView();
+        GameBuiltEvent.fire(this, game);
+        dealService.persist(game.toDeal(), new Response<Void>());
+        maybeGame = Optional.of(game);
     }
 
     private void refreshView() {

@@ -24,11 +24,9 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Maps;
-import com.preferanser.shared.domain.entity.Deal;
 import com.preferanser.shared.domain.exception.DuplicateGameTurnException;
 import com.preferanser.shared.domain.exception.GameBuilderException;
 import com.preferanser.shared.domain.exception.validation.*;
-import com.preferanser.shared.util.Clock;
 import com.preferanser.shared.util.EnumRotator;
 import com.preferanser.shared.util.GameUtils;
 
@@ -68,51 +66,6 @@ public class GameBuilder {
         centerCardHandMap = Maps.newLinkedHashMap(); // order is important
         handCardMultimap = LinkedHashMultimap.create(TableLocation.values().length, Card.values().length);
         return this;
-    }
-
-    public GameBuilder setDeal(Deal deal) {
-        name = deal.getName();
-        description = deal.getDescription();
-        firstTurn = deal.getFirstTurn();
-        players = deal.getPlayers();
-        widow = deal.getWidow() == null ? new Widow() : deal.getWidow();
-        setHandDealContracts(deal);
-        setHandDealCards(deal);
-        setCenterDealCards(deal);
-        return this;
-    }
-
-    private void setHandDealContracts(Deal deal) {
-        handContracts.clear();
-
-        if (deal.getEastContract() != null)
-            handContracts.put(Hand.EAST, deal.getEastContract());
-
-        if (deal.getSouthContract() != null)
-            handContracts.put(Hand.SOUTH, deal.getSouthContract());
-
-        if (deal.getWestContract() != null)
-            handContracts.put(Hand.WEST, deal.getWestContract());
-    }
-
-    private void setHandDealCards(Deal deal) {
-        clearCards();
-        putCards(Hand.EAST, deal.getEastCards());
-        putCards(Hand.SOUTH, deal.getSouthCards());
-        putCards(Hand.WEST, deal.getWestCards());
-    }
-
-    private void setCenterDealCards(Deal deal) {
-        centerCardHandMap.clear();
-
-        if (deal.getCenterEastCard() != null)
-            centerCardHandMap.put(deal.getCenterEastCard(), Hand.EAST);
-
-        if (deal.getCenterSouthCard() != null)
-            centerCardHandMap.put(deal.getCenterSouthCard(), Hand.SOUTH);
-
-        if (deal.getCenterWestCard() != null)
-            centerCardHandMap.put(deal.getCenterWestCard(), Hand.WEST);
     }
 
     public GameBuilder setFirstTurn(Hand firstTurn) {
@@ -345,69 +298,6 @@ public class GameBuilder {
             handCardMultimap,
             centerCardHandMap
         );
-    }
-
-    public Deal buildDeal() throws GameBuilderException {
-        Optional<List<GameBuilderValidationError>> validationErrors = validate();
-        if (validationErrors.isPresent())
-            throw new GameBuilderException(validationErrors.get());
-
-        Deal deal = new Deal();
-        deal.setName(name);
-        deal.setDescription(description);
-        deal.setCreated(Clock.getNow());
-        deal.setFirstTurn(firstTurn);
-        deal.setName(name);
-        deal.setPlayers(players);
-        deal.setWidow(widow);
-        initContracts(deal);
-        initHandCards(deal);
-        initCenterCards(deal);
-        return deal;
-    }
-
-    private void initCenterCards(Deal dto) {
-        Map<Card, Hand> centerCards = getCenterCards();
-        for (Map.Entry<Card, Hand> cardHandEntry : centerCards.entrySet()) {
-            switch (cardHandEntry.getValue()) {
-                case EAST:
-                    dto.setCenterEastCard(cardHandEntry.getKey());
-                    break;
-                case SOUTH:
-                    dto.setCenterSouthCard(cardHandEntry.getKey());
-                    break;
-                case WEST:
-                    dto.setCenterWestCard(cardHandEntry.getKey());
-                    break;
-                default:
-                    throw new IllegalStateException("Invalid Hand constant: " + cardHandEntry.getValue());
-            }
-        }
-    }
-
-    private void initHandCards(Deal dto) {
-        Map<Hand, Set<Card>> tableCards = getHandCards();
-        dto.setEastCards(getHandCards(tableCards, Hand.EAST));
-        dto.setSouthCards(getHandCards(tableCards, Hand.SOUTH));
-        dto.setWestCards(getHandCards(tableCards, Hand.WEST));
-    }
-
-    private void initContracts(Deal dto) {
-        Map<Hand, Contract> handContracts = getHandContracts();
-        dto.setEastContract(handContracts.get(Hand.EAST));
-        dto.setSouthContract(handContracts.get(Hand.SOUTH));
-        dto.setWestContract(handContracts.get(Hand.WEST));
-    }
-
-    private Set<Card> getHandCards(Map<Hand, Set<Card>> handCards, Hand hand) {
-        Set<Card> cardsCollection = handCards.get(hand);
-        Set<Card> cards = newHashSet();
-        if (cardsCollection == null) {
-            cards = Collections.emptySet();
-        } else {
-            cards.addAll(cardsCollection);
-        }
-        return cards;
     }
 
     public Hand getFirstTurn() {

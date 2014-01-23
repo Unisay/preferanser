@@ -29,8 +29,16 @@ public class Turn implements Serializable {
         return hand;
     }
 
+    public void setHand(Hand hand) {
+        this.hand = hand;
+    }
+
     public Card getCard() {
         return card;
+    }
+
+    public void setCard(Card card) {
+        this.card = card;
     }
 
     public Suit getSuit() {

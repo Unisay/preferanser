@@ -20,7 +20,6 @@
 package com.preferanser.shared.domain;
 
 import com.google.common.collect.ImmutableMap;
-import com.preferanser.shared.domain.entity.Deal;
 import com.preferanser.shared.domain.exception.GameBuilderException;
 import com.preferanser.shared.domain.exception.validation.GameBuilderValidationError;
 import com.preferanser.shared.domain.exception.validation.HasConflictingContractsValidationError;
@@ -49,7 +48,6 @@ public class GameBuilderTest {
     private Card[] southCards;
     private Card[] eastCards;
     private Card[] westCards;
-    private Deal deal;
     private Widow widow;
     private String name;
     private String description;
@@ -75,19 +73,6 @@ public class GameBuilderTest {
             .putCards(WEST, westCards)
             .setFirstTurn(SOUTH);
 
-        deal = new Deal();
-        deal.setPlayers(Players.THREE);
-        deal.setFirstTurn(SOUTH);
-        deal.setCreated(Clock.getNow());
-        deal.setName(name);
-        deal.setDescription(description);
-        deal.setWidow(Widow.fromArray((Card[]) ArrayUtils.subarray(Card.values(), 30, 32)));
-        deal.setSouthCards(newHashSet(southCards));
-        deal.setEastCards(newHashSet(eastCards));
-        deal.setWestCards(newHashSet(westCards));
-        deal.setSouthContract(Contract.SIX_SPADE);
-        deal.setEastContract(Contract.WHIST);
-        deal.setWestContract(Contract.PASS);
         widow = new Widow(Card.CLUB_KING, CLUB_QUEEN);
     }
 
@@ -358,18 +343,6 @@ public class GameBuilderTest {
     @Test
     public void testReset() throws Exception {
         assertReflectionEquals(new GameBuilder(), builder.reset());
-    }
-
-    @Test
-    public void testBuildDeal() throws Exception {
-        Deal actualDeal = builder.buildDeal();
-        assertReflectionEquals(deal, actualDeal);
-    }
-
-    @Test
-    public void testBuildFromDeal() throws Exception {
-        GameBuilder actualBuilder = new GameBuilder().setDeal(deal);
-        assertReflectionEquals(builder, actualBuilder);
     }
 
 }

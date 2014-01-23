@@ -21,7 +21,7 @@ package com.preferanser.shared.domain;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.*;
-import com.preferanser.shared.domain.entity.Play;
+import com.preferanser.shared.domain.entity.Deal;
 import com.preferanser.shared.domain.exception.*;
 import com.preferanser.shared.util.EnumRotator;
 import com.preferanser.shared.util.GameUtils;
@@ -60,28 +60,28 @@ public class Game {
         currentTrickIndex = 0;
     }
 
-    public Game(Play play) {
-        players = play.getPlayers();
-        widow = play.getWidow();
-        handContracts = ImmutableMap.copyOf(play.getHandContracts());
-        handCardMultimap = HashMultimap.create(play.getHandCards());
-        trickLog = constructTricks(play, getTrump());
-        currentTrickIndex = play.getCurrentTrickIndex();
+    public Game(Deal deal) {
+        players = deal.getPlayers();
+        widow = deal.getWidow();
+        handContracts = ImmutableMap.copyOf(deal.getHandContracts());
+        handCardMultimap = HashMultimap.create(deal.getHandCards());
+        trickLog = constructTricks(deal, getTrump());
+        currentTrickIndex = deal.getCurrentTrickIndex();
     }
 
-    private LinkedList<Trick> constructTricks(Play play, Optional<Suit> trump) {
+    private LinkedList<Trick> constructTricks(Deal deal, Optional<Suit> trump) {
         LinkedList<Trick> tricks = Lists.newLinkedList();
-        EnumRotator<Hand> turnRotator = new EnumRotator<Hand>(Hand.values(), play.getFirstTurn());
-        if (play.getPlayers() == Players.THREE)
+        EnumRotator<Hand> turnRotator = new EnumRotator<Hand>(Hand.values(), deal.getFirstTurn());
+        if (deal.getPlayers() == Players.THREE)
             turnRotator.setSkipValues(Hand.WIDOW);
-        Trick trick = new Trick(play.getPlayers(), turnRotator);
+        Trick trick = new Trick(deal.getPlayers(), turnRotator);
         tricks.add(trick);
-        if (play.getTurns() != null) {
-            for (Turn turn : play.getTurns()) {
+        if (deal.getTurns() != null) {
+            for (Turn turn : deal.getTurns()) {
                 assert trick.isOpen();
                 trick.applyTurn(turn.getHand(), turn.getCard());
                 if (trick.isClosed()) {
-                    tricks.add(trick = createNewTrick(trick, trump, play.getPlayers()));
+                    tricks.add(trick = createNewTrick(trick, trump, deal.getPlayers()));
                 }
             }
         }
@@ -322,23 +322,23 @@ public class Game {
         trickLog.add(first);
     }
 
-    public Play toPlay() {
-        Play play = new Play();
-        play.setCreated(new Date());
-        play.setFirstTurn(trickLog.getFirst().getTurn());
-        play.setPlayers(players);
-        play.setWidow(widow);
-        play.setEastContract(handContracts.get(Hand.EAST));
-        play.setSouthContract(handContracts.get(Hand.SOUTH));
-        play.setWestContract(handContracts.get(Hand.WEST));
-        play.setEastCards(newHashSet(handCardMultimap.get(Hand.EAST)));
-        play.setSouthCards(newHashSet(handCardMultimap.get(Hand.SOUTH)));
-        play.setWestCards(newHashSet(handCardMultimap.get(Hand.WEST)));
+    public Deal toDeal() {
+        Deal deal = new Deal();
+        deal.setCreated(new Date());
+        deal.setFirstTurn(trickLog.getFirst().getTurn());
+        deal.setPlayers(players);
+        deal.setWidow(widow);
+        deal.setEastContract(handContracts.get(Hand.EAST));
+        deal.setSouthContract(handContracts.get(Hand.SOUTH));
+        deal.setWestContract(handContracts.get(Hand.WEST));
+        deal.setEastCards(newHashSet(handCardMultimap.get(Hand.EAST)));
+        deal.setSouthCards(newHashSet(handCardMultimap.get(Hand.SOUTH)));
+        deal.setWestCards(newHashSet(handCardMultimap.get(Hand.WEST)));
         List<Turn> turns = Lists.newArrayListWithCapacity(trickLog.size());
         for (Trick trick : trickLog) for (Turn turn : trick) turns.add(turn);
-        play.setTurns(turns);
-        play.setCurrentTrickIndex(currentTrickIndex);
-        return play;
+        deal.setTurns(turns);
+        deal.setCurrentTrickIndex(currentTrickIndex);
+        return deal;
     }
 
 }

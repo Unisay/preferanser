@@ -42,6 +42,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.testng.Assert.*;
 import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
+import static org.unitils.reflectionassert.ReflectionComparatorMode.LENIENT_ORDER;
 
 public class GameBuilderTest {
 
@@ -51,14 +52,20 @@ public class GameBuilderTest {
     private Card[] westCards;
     private Deal deal;
     private Widow widow;
+    private String name;
+    private String description;
 
     @BeforeMethod
     public void setUp() throws Exception {
         Clock.setNow(new Date(1));
+        name = "name";
+        description = "description";
         southCards = (Card[]) ArrayUtils.subarray(Card.values(), 0, 10);
         eastCards = (Card[]) ArrayUtils.subarray(Card.values(), 10, 20);
         westCards = (Card[]) ArrayUtils.subarray(Card.values(), 20, 30);
         builder = new GameBuilder()
+            .setName(name)
+            .setDescription(description)
             .setThreePlayers()
             .setWidow(Widow.fromArray((Card[]) ArrayUtils.subarray(Card.values(), 30, 32)))
             .setHandContract(SOUTH, Contract.SIX_SPADE)
@@ -73,7 +80,8 @@ public class GameBuilderTest {
         deal.setPlayers(Players.THREE);
         deal.setFirstTurn(SOUTH);
         deal.setCreated(Clock.getNow());
-        deal.setName("name");
+        deal.setName(name);
+        deal.setDescription(description);
         deal.setWidow(Widow.fromArray((Card[]) ArrayUtils.subarray(Card.values(), 30, 32)));
         deal.setSouthCards(newHashSet(southCards));
         deal.setEastCards(newHashSet(eastCards));
@@ -116,10 +124,9 @@ public class GameBuilderTest {
     @Test
     public void testPutCards_Array() throws Exception {
         Game game = builder.build();
-
-        assertThat(game.getCardsByHand(SOUTH), equalTo((Collection<Card>) newArrayList(southCards)));
-        assertThat(game.getCardsByHand(EAST), equalTo((Collection<Card>) newArrayList(eastCards)));
-        assertThat(game.getCardsByHand(WEST), equalTo((Collection<Card>) newArrayList(westCards)));
+        assertReflectionEquals(newHashSet(southCards), game.getCardsByHand(SOUTH), LENIENT_ORDER);
+        assertReflectionEquals(newHashSet(eastCards), game.getCardsByHand(EAST), LENIENT_ORDER);
+        assertReflectionEquals(newHashSet(westCards), game.getCardsByHand(WEST), LENIENT_ORDER);
     }
 
     @Test(expectedExceptions = GameBuilderException.class, expectedExceptionsMessageRegExp = "" +
@@ -263,6 +270,8 @@ public class GameBuilderTest {
     public void testValidate_WrongHandCards() throws Exception {
         try {
             new GameBuilder()
+                .setName(name)
+                .setDescription(description)
                 .setFourPlayers()
                 .setWidow(widow)
                 .setFirstTurn(SOUTH)
@@ -283,6 +292,8 @@ public class GameBuilderTest {
     public void testValidate_WrongHandCards2() throws Exception {
         try {
             new GameBuilder()
+                .setName(name)
+                .setDescription(description)
                 .setFourPlayers()
                 .setFirstTurn(SOUTH)
                 .setWidow(widow)
@@ -307,6 +318,8 @@ public class GameBuilderTest {
         southCards[0] = eastCards[0];
         try {
             new GameBuilder()
+                .setName(name)
+                .setDescription(description)
                 .setFourPlayers()
                 .setFirstTurn(SOUTH)
                 .setWidow(widow)
@@ -352,7 +365,7 @@ public class GameBuilderTest {
 
     @Test
     public void testBuildDeal() throws Exception {
-        Deal actualDeal = builder.setName("name").setDescription("description").buildDeal();
+        Deal actualDeal = builder.buildDeal();
         assertReflectionEquals(deal, actualDeal);
     }
 

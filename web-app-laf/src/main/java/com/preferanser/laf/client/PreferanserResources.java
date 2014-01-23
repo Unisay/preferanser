@@ -29,6 +29,7 @@ import com.google.gwt.user.cellview.client.DataGrid;
  * <p/>
  * <a href="http://www.gwtproject.org/doc/latest/DevGuideClientBundle.html">ClientBundle</a>
  */
+@SuppressWarnings("unused")
 public interface PreferanserResources extends ClientBundle {
 
     @SuppressWarnings("unused")

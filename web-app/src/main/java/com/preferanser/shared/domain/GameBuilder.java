@@ -60,6 +60,8 @@ public class GameBuilder {
     }
 
     public GameBuilder reset() {
+        name = null;
+        description = null;
         firstTurn = null;
         players = null;
         widow = new Widow();
@@ -70,6 +72,8 @@ public class GameBuilder {
     }
 
     public GameBuilder setDeal(Deal deal) {
+        name = deal.getName();
+        description = deal.getDescription();
         firstTurn = deal.getFirstTurn();
         players = deal.getPlayers();
         widow = deal.getWidow() == null ? new Widow() : deal.getWidow();
@@ -343,6 +347,8 @@ public class GameBuilder {
             throw new GameBuilderException(validationErrors.get());
 
         Deal deal = new Deal();
+        deal.setName(name);
+        deal.setDescription(description);
         deal.setCreated(Clock.getNow());
         deal.setFirstTurn(firstTurn);
         deal.setName(name);

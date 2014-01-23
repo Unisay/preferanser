@@ -141,7 +141,6 @@ public class GameBuilder {
         return this;
     }
 
-    // TODO: use widow in ui
     public GameBuilder setWidow(Widow widow) {
         this.widow = widow;
         return this;

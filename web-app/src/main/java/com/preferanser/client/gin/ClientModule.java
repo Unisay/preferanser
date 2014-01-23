@@ -60,7 +60,7 @@ public class ClientModule extends AbstractPresenterModule {
         // requestListenerMultibinder.addBinding().to(RestyGwtStatusBarRequestListener.class);
 
         bind(RestyGwtDispatcher.class).toProvider(RestyGwtDispatcher.Provider.class).asEagerSingleton();
-        bind(GameBuilder.class).toProvider(GameBuilderProvider.class).in(Singleton.class); // TODO: should be prototype scope
+        bind(GameBuilder.class).toProvider(GameBuilderProvider.class).in(Singleton.class);
         bind(ResourceLoader.class).asEagerSingleton();
     }
 

@@ -19,6 +19,7 @@
 
 package com.preferanser.client.geom;
 
+import com.google.common.base.Objects;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.event.dom.client.MouseEvent;
 import com.google.gwt.user.client.ui.Widget;
@@ -51,8 +52,8 @@ public class Point {
 
     public static Point FromWidgetRightBottom(Widget widget) {
         return new Point(
-                widget.getAbsoluteLeft() + widget.getOffsetWidth(),
-                widget.getAbsoluteTop() + widget.getOffsetHeight());
+            widget.getAbsoluteLeft() + widget.getOffsetWidth(),
+            widget.getAbsoluteTop() + widget.getOffsetHeight());
     }
 
     public Point plus(Point that) {
@@ -79,4 +80,20 @@ public class Point {
         return y;
     }
 
+    @Override public String toString() {
+        return Objects.toStringHelper(this).add("x", x).add("y", y).toString();
+    }
+
+    @Override public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Point point = (Point) o;
+        return x == point.x && y == point.y;
+    }
+
+    @Override public int hashCode() {
+        int result = x;
+        result = 31 * result + y;
+        return result;
+    }
 }

@@ -35,17 +35,11 @@ public class Rect {
         return new Rect(Point.FromWidgetLeftTop(widget), Point.FromWidgetRightBottom(widget));
     }
 
-    /**
-     * TODO: unit test
-     */
     public boolean contains(Point point) {
         return leftTop.getX() <= point.getX() && leftTop.getY() <= point.getY() &&
-                rightBottom.getX() >= point.getX() && rightBottom.getY() >= point.getY();
+            rightBottom.getX() >= point.getX() && rightBottom.getY() >= point.getY();
     }
 
-    /**
-     * TODO: unit test
-     */
     public Point center() {
         return leftTop.plus(rightBottom.minus(leftTop).divide(2));
     }

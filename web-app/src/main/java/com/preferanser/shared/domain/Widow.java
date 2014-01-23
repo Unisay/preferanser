@@ -126,4 +126,8 @@ public class Widow implements Serializable, Iterable<Card> {
             return true;
         } else return false;
     }
+
+    public boolean containsCard(Card card) {
+        return card1 == card || card2 == card;
+    }
 }

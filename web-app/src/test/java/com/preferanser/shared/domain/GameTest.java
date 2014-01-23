@@ -24,7 +24,6 @@ import com.google.common.collect.LinkedHashMultimap;
 import com.preferanser.shared.domain.entity.Play;
 import com.preferanser.shared.domain.exception.DuplicateGameTurnException;
 import com.preferanser.shared.domain.exception.IllegalSuitException;
-import com.preferanser.shared.domain.exception.NoSuchHandCardException;
 import com.preferanser.shared.domain.exception.NotInTurnException;
 import com.preferanser.shared.util.EnumRotator;
 import org.testng.annotations.BeforeMethod;
@@ -59,28 +58,21 @@ public class GameTest {
     public void setUp() throws Exception {
         widow = new Widow();
         handContractMap = createHandContractMap();
-        turnRotator = createTurnRotator(SOUTH, NORTH);
+        turnRotator = createTurnRotator(SOUTH, WIDOW);
         handCardMultimap = createHandCardMultimap();
         centerCardHandMap = createCenterCardHandMap();
         game = new Game(Players.THREE, widow, handContractMap, turnRotator, handCardMultimap, centerCardHandMap);
     }
 
-    @Test
+    @Test(expectedExceptions = IllegalArgumentException.class, expectedExceptionsMessageRegExp = "No hand holds DIAMOND_ACE")
     public void testMakeTurn_FromHandWrongCard() throws Exception {
-        try {
-            game.makeTurn(SOUTH, DIAMOND_ACE);
-            fail("NoSuchHandCardException must have been thrown!");
-        } catch (NoSuchHandCardException e) {
-            assertThat(e.getCard(), equalTo(DIAMOND_ACE));
-            assertThat(e.getHand(), equalTo(SOUTH));
-            assertThat(e.getMessage(), equalTo("Can't make turn because there is no DIAMOND_ACE at SOUTH"));
-        }
+        game.makeTurn(DIAMOND_ACE);
     }
 
     @Test
     public void testMakeTurn_NotInTurn() throws Exception {
         try {
-            game.makeTurn(WEST, CLUB_JACK);
+            game.makeTurn(CLUB_JACK);
             fail("NotInTurnException must have been thrown!");
         } catch (NotInTurnException e) {
             assertThat(e.getFromHand(), equalTo(WEST));
@@ -98,9 +90,9 @@ public class GameTest {
 
         game = new Game(Players.THREE, widow, handContractMap, turnRotator, handCardMultimap, centerCardHandMap);
 
-        game.makeTurn(SOUTH, CLUB_ACE);
+        game.makeTurn(CLUB_ACE);
         try {
-            game.makeTurn(WEST, HEART_ACE);
+            game.makeTurn(HEART_ACE);
             fail("IllegalSuitException must have been thrown!");
         } catch (IllegalSuitException e) {
             assertThat(e.getActualSuit(), equalTo(Suit.HEART));
@@ -118,9 +110,9 @@ public class GameTest {
 
         game = new Game(Players.THREE, widow, handContractMap, turnRotator, handCardMultimap, centerCardHandMap);
 
-        game.makeTurn(SOUTH, CLUB_ACE);
+        game.makeTurn(CLUB_ACE);
         try {
-            game.makeTurn(WEST, SPADE_ACE);
+            game.makeTurn(SPADE_ACE);
             fail("IllegalSuitException must have been thrown!");
         } catch (IllegalSuitException e) {
             assertThat(e.getActualSuit(), equalTo(Suit.SPADE));
@@ -137,9 +129,9 @@ public class GameTest {
 
         game = new Game(Players.THREE, widow, handContractMap, turnRotator, handCardMultimap, centerCardHandMap);
 
-        game.makeTurn(SOUTH, CLUB_ACE);
+        game.makeTurn(CLUB_ACE);
         try {
-            game.makeTurn(WEST, HEART_ACE);
+            game.makeTurn(HEART_ACE);
             fail("IllegalSuitException must have been thrown!");
         } catch (IllegalSuitException e) {
             assertThat(e.getActualSuit(), equalTo(Suit.HEART));
@@ -156,8 +148,8 @@ public class GameTest {
 
         game = new Game(Players.THREE, widow, handContractMap, turnRotator, handCardMultimap, centerCardHandMap);
 
-        game.makeTurn(SOUTH, CLUB_ACE);
-        game.makeTurn(WEST, HEART_ACE);
+        game.makeTurn(CLUB_ACE);
+        game.makeTurn(HEART_ACE);
     }
 
     @Test
@@ -175,17 +167,17 @@ public class GameTest {
 
         game = new Game(Players.THREE, widow, handContractMap, turnRotator, handCardMultimap, centerCardHandMap);
 
-        game.makeTurn(SOUTH, CLUB_ACE);
-        game.makeTurn(WEST, HEART_ACE);
+        game.makeTurn(CLUB_ACE);
+        game.makeTurn(HEART_ACE);
     }
 
     @Test
     public void testMakeTurn_DuplicateGameTurn() throws Exception {
-        game.makeTurn(SOUTH, CLUB_ACE);
-        game.makeTurn(WEST, CLUB_9);
-        game.makeTurn(EAST, CLUB_8);
+        game.makeTurn(CLUB_ACE);
+        game.makeTurn(CLUB_9);
+        game.makeTurn(CLUB_8);
         try {
-            game.makeTurn(SOUTH, CLUB_KING);
+            game.makeTurn(CLUB_KING);
             fail("DuplicateGameTurnException must have been thrown!");
         } catch (DuplicateGameTurnException e) {
             assertThat(e.getFromHand(), equalTo(SOUTH));
@@ -215,12 +207,12 @@ public class GameTest {
     @Test
     public void testIsTrickComplete_FourPlayers_Positive() throws Exception {
         centerCardHandMap.clear();
-        centerCardHandMap.put(DIAMOND_ACE, NORTH);
+        centerCardHandMap.put(DIAMOND_ACE, WIDOW);
         centerCardHandMap.put(DIAMOND_KING, EAST);
         centerCardHandMap.put(DIAMOND_JACK, SOUTH);
         centerCardHandMap.put(DIAMOND_QUEEN, WEST);
 
-        turnRotator = createTurnRotator(SOUTH, NORTH);
+        turnRotator = createTurnRotator(SOUTH, WIDOW);
         game = new Game(Players.FOUR, widow, handContractMap, turnRotator, handCardMultimap, centerCardHandMap);
 
         assertTrue(game.isTrickClosed());
@@ -241,11 +233,11 @@ public class GameTest {
     @Test
     public void testGetTurn() throws Exception {
         assertThat(game.getTurn(), equalTo(SOUTH));
-        game.makeTurn(SOUTH, CLUB_ACE);
+        game.makeTurn(CLUB_ACE);
         assertThat(game.getTurn(), equalTo(WEST));
-        game.makeTurn(WEST, CLUB_9);
+        game.makeTurn(CLUB_9);
         assertThat(game.getTurn(), equalTo(EAST));
-        game.makeTurn(EAST, CLUB_8);
+        game.makeTurn(CLUB_8);
         assertThat(game.getTurn(), equalTo(SOUTH));
     }
 
@@ -274,26 +266,26 @@ public class GameTest {
     @Test
     public void testSluffTrick() throws Exception {
         assertFalse(game.sluffTrick());
-        game.makeTurn(SOUTH, CLUB_ACE);
+        game.makeTurn(CLUB_ACE);
         assertFalse(game.sluffTrick());
-        game.makeTurn(WEST, CLUB_JACK);
+        game.makeTurn(CLUB_JACK);
         assertFalse(game.sluffTrick());
-        game.makeTurn(EAST, CLUB_8);
+        game.makeTurn(CLUB_8);
         assertTrue(game.sluffTrick());
 
         assertTrue(game.getCenterCards().isEmpty());
         assertThat(game.getTurn(), equalTo(SOUTH));
-        assertReflectionEquals(ImmutableMap.of(SOUTH, 1, EAST, 0, WEST, 0, NORTH, 0), game.getHandTrickCounts());
+        assertReflectionEquals(ImmutableMap.of(SOUTH, 1, EAST, 0, WEST, 0, WIDOW, 0), game.getHandTrickCounts());
     }
 
     @Test
     public void testGetDisabledCards() throws Exception {
         assertLenientEquals(newHashSet(CLUB_8, SPADE_8, CLUB_JACK, CLUB_9, HEART_JACK), game.getDisabledCards());
-        game.makeTurn(SOUTH, CLUB_ACE);
+        game.makeTurn(CLUB_ACE);
         assertLenientEquals(newHashSet(CLUB_8, SPADE_8, CLUB_KING, HEART_JACK), game.getDisabledCards());
-        game.makeTurn(WEST, CLUB_JACK);
+        game.makeTurn(CLUB_JACK);
         assertLenientEquals(newHashSet(SPADE_8, CLUB_KING, HEART_JACK, CLUB_9), game.getDisabledCards());
-        game.makeTurn(EAST, CLUB_8);
+        game.makeTurn(CLUB_8);
         assertLenientEquals(newHashSet(SPADE_8, CLUB_KING, CLUB_9, HEART_JACK), game.getDisabledCards());
     }
 
@@ -314,28 +306,28 @@ public class GameTest {
 
         game = new Game(Players.THREE, widow, handContractMap, turnRotator, handCardMultimap, centerCardHandMap);
 
-        game.makeTurn(SOUTH, CLUB_7);
-        game.makeTurn(WEST, CLUB_JACK);
-        game.makeTurn(EAST, CLUB_8);
+        game.makeTurn(CLUB_7);
+        game.makeTurn(CLUB_JACK);
+        game.makeTurn(CLUB_8);
 
         assertTrue(game.sluffTrick(), "Failed to sluff trick");
         assertThat(game.getTurn(), equalTo(WEST));
-        assertThat(game.getHandTrickCounts(), equalTo((Map) ImmutableMap.of(SOUTH, 0, WEST, 1, EAST, 0, NORTH, 0)));
+        assertThat(game.getHandTrickCounts(), equalTo((Map) ImmutableMap.of(SOUTH, 0, WEST, 1, EAST, 0, WIDOW, 0)));
 
-        game.makeTurn(WEST, HEART_JACK);
+        game.makeTurn(HEART_JACK);
         assertThat(game.getTurn(), equalTo(EAST));
         assertThat(game.getCenterCards(), equalTo((Map) ImmutableMap.of(HEART_JACK, WEST)));
-        assertThat(game.getHandTrickCounts(), equalTo((Map) ImmutableMap.of(SOUTH, 0, WEST, 1, EAST, 0, NORTH, 0)));
+        assertThat(game.getHandTrickCounts(), equalTo((Map) ImmutableMap.of(SOUTH, 0, WEST, 1, EAST, 0, WIDOW, 0)));
 
         assertTrue(game.undoTurn(), "Failed to undo WEST->HEART_JACK");
         assertThat(game.getTurn(), equalTo(WEST));
         assertTrue(game.getCenterCards().isEmpty());
-        assertThat(game.getHandTrickCounts(), equalTo((Map) ImmutableMap.of(SOUTH, 0, WEST, 1, EAST, 0, NORTH, 0)));
+        assertThat(game.getHandTrickCounts(), equalTo((Map) ImmutableMap.of(SOUTH, 0, WEST, 1, EAST, 0, WIDOW, 0)));
 
         assertTrue(game.undoTurn(), "Failed to undo EAST->CLUB_8");
         assertThat(game.getTurn(), equalTo(EAST));
         assertThat(game.getCenterCards(), equalTo((Map) ImmutableMap.of(CLUB_7, SOUTH, CLUB_JACK, WEST)));
-        assertThat(game.getHandTrickCounts(), equalTo((Map) ImmutableMap.of(SOUTH, 0, WEST, 0, EAST, 0, NORTH, 0)));
+        assertThat(game.getHandTrickCounts(), equalTo((Map) ImmutableMap.of(SOUTH, 0, WEST, 0, EAST, 0, WIDOW, 0)));
 
         assertTrue(game.undoTurn(), "Failed to undo WEST->CLUB_JACK");
         assertThat(game.getTurn(), equalTo(WEST));
@@ -353,26 +345,26 @@ public class GameTest {
         assertTrue(game.redoTurn(), "Failed to redo WEST->CLUB_JACK");
         assertThat(game.getTurn(), equalTo(EAST));
         assertThat(game.getCenterCards(), equalTo((Map) ImmutableMap.of(CLUB_7, SOUTH, CLUB_JACK, WEST)));
-        assertThat(game.getHandTrickCounts(), equalTo((Map) ImmutableMap.of(SOUTH, 0, WEST, 0, EAST, 0, NORTH, 0)));
+        assertThat(game.getHandTrickCounts(), equalTo((Map) ImmutableMap.of(SOUTH, 0, WEST, 0, EAST, 0, WIDOW, 0)));
 
         assertTrue(game.redoTurn(), "Failed to redo EAST->CLUB_8");
         assertThat(game.getTurn(), equalTo(WEST));
         assertThat(game.getCenterCards(), equalTo((Map) ImmutableMap.of()));
-        assertThat(game.getHandTrickCounts(), equalTo((Map) ImmutableMap.of(SOUTH, 0, WEST, 1, EAST, 0, NORTH, 0)));
+        assertThat(game.getHandTrickCounts(), equalTo((Map) ImmutableMap.of(SOUTH, 0, WEST, 1, EAST, 0, WIDOW, 0)));
 
         assertTrue(game.redoTurn(), "Failed to redo WEST->HEART_JACK");
         assertThat(game.getTurn(), equalTo(EAST));
         assertThat(game.getCenterCards(), equalTo((Map) ImmutableMap.of(HEART_JACK, WEST)));
-        assertThat(game.getHandTrickCounts(), equalTo((Map) ImmutableMap.of(SOUTH, 0, WEST, 1, EAST, 0, NORTH, 0)));
+        assertThat(game.getHandTrickCounts(), equalTo((Map) ImmutableMap.of(SOUTH, 0, WEST, 1, EAST, 0, WIDOW, 0)));
     }
 
     @Test
     public void testUndoSluffRedo() throws Exception {
-        game.makeTurn(SOUTH, CLUB_ACE);
-        game.makeTurn(WEST, CLUB_JACK);
-        game.makeTurn(EAST, CLUB_8);
+        game.makeTurn(CLUB_ACE);
+        game.makeTurn(CLUB_JACK);
+        game.makeTurn(CLUB_8);
         assertTrue(game.sluffTrick(), "Failed to sluff trick");
-        game.makeTurn(SOUTH, CLUB_KING);
+        game.makeTurn(CLUB_KING);
         assertTrue(game.undoTurn(), "Failed to undo SOUTH->CLUB_KING");
         assertThat(game.getCenterCards(), equalTo((Map) ImmutableMap.of()));
         assertTrue(game.undoTurn(), "Failed to undo EAST->CLUB_8");
@@ -384,11 +376,11 @@ public class GameTest {
     @Test
     public void testHasUndoTurns() throws Exception {
         assertFalse(game.hasUndoTurns());
-        game.makeTurn(SOUTH, CLUB_ACE);
+        game.makeTurn(CLUB_ACE);
         assertTrue(game.hasUndoTurns());
-        game.makeTurn(WEST, CLUB_JACK);
+        game.makeTurn(CLUB_JACK);
         assertTrue(game.hasUndoTurns());
-        game.makeTurn(EAST, CLUB_8);
+        game.makeTurn(CLUB_8);
         assertTrue(game.hasUndoTurns());
         game.sluffTrick();
         assertTrue(game.hasUndoTurns());
@@ -403,7 +395,7 @@ public class GameTest {
     @Test
     public void testHasRedoTurns() throws Exception {
         assertFalse(game.hasRedoTurns());
-        game.makeTurn(SOUTH, CLUB_ACE);
+        game.makeTurn(CLUB_ACE);
         assertFalse(game.hasRedoTurns());
         game.undoTurn(); // Undo SOUTH->CLUB_ACE
         assertTrue(game.hasRedoTurns());
@@ -412,11 +404,11 @@ public class GameTest {
     @Test
     public void testHasRedoTurns_WithSluff() throws Exception {
         assertFalse(game.hasRedoTurns());
-        game.makeTurn(SOUTH, CLUB_ACE);
+        game.makeTurn(CLUB_ACE);
         assertFalse(game.hasRedoTurns());
-        game.makeTurn(WEST, CLUB_JACK);
+        game.makeTurn(CLUB_JACK);
         assertFalse(game.hasRedoTurns());
-        game.makeTurn(EAST, CLUB_8);
+        game.makeTurn(CLUB_8);
         assertFalse(game.hasRedoTurns());
         game.sluffTrick();
         assertFalse(game.hasRedoTurns());
@@ -426,32 +418,32 @@ public class GameTest {
         assertTrue(game.hasRedoTurns());
         game.undoTurn(); // Undo EAST->CLUB_8
         assertTrue(game.hasRedoTurns());
-        game.makeTurn(SOUTH, CLUB_ACE); // By making manual turn we reset redo queue
+        game.makeTurn(CLUB_ACE); // By making manual turn we reset redo queue
         assertFalse(game.hasRedoTurns());
     }
 
     @Test
     public void testReset() throws Exception {
-        game.makeTurn(SOUTH, CLUB_ACE);
-        game.makeTurn(WEST, CLUB_JACK);
-        game.makeTurn(EAST, CLUB_8);
+        game.makeTurn(CLUB_ACE);
+        game.makeTurn(CLUB_JACK);
+        game.makeTurn(CLUB_8);
         game.sluffTrick();
-        game.makeTurn(SOUTH, CLUB_KING);
+        game.makeTurn(CLUB_KING);
         game.reset();
         assertFalse(game.hasUndoTurns());
         assertFalse(game.hasRedoTurns());
         assertThat(game.getTurn(), equalTo(SOUTH));
-        assertThat(game.getHandTrickCounts(), equalTo((Map) ImmutableMap.of(SOUTH, 0, WEST, 0, EAST, 0, NORTH, 0)));
+        assertThat(game.getHandTrickCounts(), equalTo((Map) ImmutableMap.of(SOUTH, 0, WEST, 0, EAST, 0, WIDOW, 0)));
         assertThat(game.getCenterCards(), equalTo((Map) ImmutableMap.of()));
     }
 
     @Test
     public void testToPlay() throws Exception {
-        game.makeTurn(SOUTH, CLUB_ACE);
-        game.makeTurn(WEST, CLUB_JACK);
-        game.makeTurn(EAST, CLUB_8);
+        game.makeTurn(CLUB_ACE);
+        game.makeTurn(CLUB_JACK);
+        game.makeTurn(CLUB_8);
         game.sluffTrick();
-        game.makeTurn(SOUTH, CLUB_KING);
+        game.makeTurn(CLUB_KING);
 
         Play play = game.toPlay();
         Game clonedGame = new Game(play);

@@ -12,6 +12,7 @@ import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.preferanser.client.application.ApplicationPresenter;
+import com.preferanser.client.application.mvp.GameBuiltEvent;
 import com.preferanser.client.gwtp.LoggedInGatekeeper;
 import com.preferanser.client.gwtp.NameTokens;
 import com.preferanser.client.service.DealService;
@@ -20,7 +21,8 @@ import com.preferanser.shared.domain.entity.Deal;
 
 import java.util.List;
 
-public class DealPresenter extends Presenter<DealPresenter.DealView, DealPresenter.Proxy> implements DealUiHandlers {
+public class DealPresenter extends Presenter<DealPresenter.DealView, DealPresenter.Proxy>
+    implements DealUiHandlers, GameBuiltEvent.GameBuiltHandler {
 
     public interface DealView extends View, HasUiHandlers<DealUiHandlers> {
         void displayDeals(List<Deal> deals);
@@ -44,11 +46,12 @@ public class DealPresenter extends Presenter<DealPresenter.DealView, DealPresent
 
     @Override protected void onBind() {
         super.onBind();
-        dealService.load(new Response<List<Deal>>() {
-            @Override protected void handle(List<Deal> deals) {
-                getView().displayDeals(deals);
-            }
-        });
+        addRegisteredHandler(GameBuiltEvent.getType(), this);
+        loadDeals();
+    }
+
+    @Override public void onGameBuilt(GameBuiltEvent event) {
+        loadDeals();
     }
 
     @Override public void playDeal(Deal deal) {
@@ -61,5 +64,13 @@ public class DealPresenter extends Presenter<DealPresenter.DealView, DealPresent
 
     @Override public void openDealEditor() {
         placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.GAME_EDITOR).build());
+    }
+
+    private void loadDeals() {
+        dealService.load(new Response<List<Deal>>() {
+            @Override protected void handle(List<Deal> deals) {
+                getView().displayDeals(deals);
+            }
+        });
     }
 }

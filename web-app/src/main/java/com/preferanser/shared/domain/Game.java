@@ -73,7 +73,7 @@ public class Game {
         LinkedList<Trick> tricks = Lists.newLinkedList();
         EnumRotator<Hand> turnRotator = new EnumRotator<Hand>(Hand.values(), play.getFirstTurn());
         if (play.getPlayers() == Players.THREE)
-            turnRotator.setSkipValues(Hand.NORTH);
+            turnRotator.setSkipValues(Hand.WIDOW);
         Trick trick = new Trick(play.getPlayers(), turnRotator);
         tricks.add(trick);
         if (play.getTurns() != null) {
@@ -140,7 +140,9 @@ public class Game {
         return Optional.absent();
     }
 
-    public void makeTurn(Hand fromHand, Card card) throws GameException {
+    public void makeTurn(Card card) throws GameException {
+        Hand fromHand = getCardHand(card);
+
         if (fromHand != currentTrick().getTurn())
             throw new NotInTurnException(currentTrick().getTurn(), fromHand);
 
@@ -159,6 +161,14 @@ public class Game {
         assert removed : "Failed to remove " + card + " from " + fromHand;
         currentTrick().applyTurn(fromHand, card);
         truncateTrickLog();
+    }
+
+    private Hand getCardHand(Card card) {
+        for (Map.Entry<Hand, Card> entry : handCardMultimap.entries()) {
+            if (entry.getValue() == card)
+                return entry.getKey();
+        }
+        throw new IllegalArgumentException("No hand holds " + card);
     }
 
     private void truncateTrickLog() {

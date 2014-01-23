@@ -24,24 +24,12 @@ import com.google.common.collect.ImmutableList;
 
 public enum Hand {
 
-    EAST, SOUTH, WEST, NORTH;
+    EAST, SOUTH, WEST, WIDOW;
 
     public static ImmutableList<Hand> PLAYING_HANDS = ImmutableList.of(EAST, SOUTH, WEST);
 
     public static Hand valueOf(TableLocation tableLocation) {
-        switch (tableLocation) {
-            case EAST:
-                return Hand.EAST;
-            case SOUTH:
-                return Hand.SOUTH;
-            case WEST:
-                return Hand.WEST;
-            case WIDOW:
-                return Hand.NORTH;
-            default:
-                throw new IllegalArgumentException("TableLocation " + tableLocation + " doesn't have a corresponding " +
-                        "Hand!");
-        }
+        return Hand.valueOf(tableLocation.name());
     }
 
 }

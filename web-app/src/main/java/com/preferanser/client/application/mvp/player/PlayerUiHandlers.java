@@ -19,17 +19,23 @@
 
 package com.preferanser.client.application.mvp.player;
 
-import com.preferanser.client.application.mvp.TableUiHandlers;
+import com.gwtplatform.mvp.client.UiHandlers;
+import com.preferanser.shared.domain.Card;
 
 /**
  * Game UI handlers
  */
-public interface PlayerUiHandlers extends TableUiHandlers {
+public interface PlayerUiHandlers extends UiHandlers {
 
     /**
      * User moved cards to sluff
      */
     void sluff();
+
+    /**
+     * User moved card to center or double clicked
+     */
+    void makeTurn(Card card);
 
     /**
      * Switch to editor page
@@ -50,4 +56,6 @@ public interface PlayerUiHandlers extends TableUiHandlers {
      * Reset made turns and start from the scratch
      */
     void reset();
+
+    void logout(); // TODO move to a separate mvp
 }

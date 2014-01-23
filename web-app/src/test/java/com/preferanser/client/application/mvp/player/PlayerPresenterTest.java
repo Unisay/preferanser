@@ -102,48 +102,8 @@ public class PlayerPresenterTest {
     }
 
     @Test
-    public void testChangeCardLocation_NotToCenter() throws Exception {
-        presenter.changeCardLocation(Card.CLUB_ACE, TableLocation.WEST, TableLocation.EAST);
-
-        verify(game).getTurn();
-        verify(game).getWidow();
-        verify(game).getHandCards();
-        verify(game).getCenterCards();
-        verify(game).getDisabledCards();
-        verify(game).isTrickClosed();
-        verify(game).getHandContracts();
-        verify(game).getHandTrickCounts();
-        verify(game).hasUndoTurns();
-        verify(game).hasRedoTurns();
-        verifyNoMoreInteractions(game);
-
-        verify(view).displayTurn(turn);
-        verify(view).displayContracts(handContracts);
-        verify(view).displayCards(handCards, centerCards, widow);
-        verify(view).disableCards(Collections.<Card>emptySet());
-        verify(view).displayHandTricks(handTricks);
-        verify(view).displayTurnNavigation(true, false);
-        verify(view).displaySluffButton(true);
-        verifyNoMoreInteractions(view);
-    }
-
-    @Test
-    public void testChangeCardLocation() throws Exception {
-        presenter.changeCardLocation(Card.CLUB_ACE, TableLocation.EAST, TableLocation.CENTER);
-
-        verify(view).displayTurn(turn);
-        verify(view).displayContracts(handContracts);
-        verify(view).displayCards(handCards, centerCards, widow);
-        verify(view).disableCards(Collections.<Card>emptySet());
-        verify(view).displayHandTricks(handTricks);
-        verify(view).displayTurnNavigation(true, false);
-        verify(view).displaySluffButton(true);
-        verifyNoMoreInteractions(view);
-    }
-
-    @Test
-    public void testChangeCardLocation_CompleteTrick() throws Exception {
-        presenter.changeCardLocation(Card.CLUB_ACE, TableLocation.EAST, TableLocation.CENTER);
+    public void testMakeTurn() throws Exception {
+        presenter.makeTurn(Card.CLUB_ACE);
 
         verify(view).displayTurn(turn);
         verify(view).displayContracts(handContracts);

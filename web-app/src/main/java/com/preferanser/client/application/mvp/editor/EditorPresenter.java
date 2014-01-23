@@ -21,7 +21,6 @@ package com.preferanser.client.application.mvp.editor;
 
 import com.google.common.base.Optional;
 import com.google.gwt.i18n.client.DateTimeFormat;
-import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.HasUiHandlers;
@@ -33,7 +32,6 @@ import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.preferanser.client.application.ApplicationPresenter;
-import com.preferanser.client.application.i18n.PreferanserConstants;
 import com.preferanser.client.application.i18n.PreferanserMessages;
 import com.preferanser.client.application.mvp.GameBuiltEvent;
 import com.preferanser.client.application.mvp.TableView;
@@ -58,7 +56,6 @@ import java.util.logging.Logger;
 public class EditorPresenter extends Presenter<EditorPresenter.EditorView, EditorPresenter.Proxy> implements EditorUiHandlers, HasHandContracts {
 
     private static final Logger log = Logger.getLogger("EditorPresenter");
-    private final CurrentUserDto currentUserDto;
 
     public interface EditorView extends HasUiHandlers<EditorUiHandlers>, TableView {
         void displayDealName(String name);
@@ -68,7 +65,6 @@ public class EditorPresenter extends Presenter<EditorPresenter.EditorView, Edito
     private GameBuilder gameBuilder;
     private final PlaceManager placeManager;
     private final DealService dealService;
-    private final PreferanserConstants constants;
     private final EditorDialogs editorDialogs;
 
     @ProxyStandard
@@ -84,17 +80,14 @@ public class EditorPresenter extends Presenter<EditorPresenter.EditorView, Edito
                            GameBuilder gameBuilder,
                            DealService dealService,
                            PreferanserMessages messages,
-                           PreferanserConstants constants,
                            EditorDialogs editorDialogs,
                            CurrentUserDto currentUserDto) {
         super(eventBus, view, proxy, ApplicationPresenter.TYPE_SetMainContent);
         this.placeManager = placeManager;
         this.gameBuilder = gameBuilder;
         this.dealService = dealService;
-        this.constants = constants;
         this.editorDialogs = editorDialogs;
         getView().setUiHandlers(this);
-        this.currentUserDto = currentUserDto;
         getView().displayAuthInfo(messages.loggedInAs(currentUserDto.nickname));
         initGameBuilder();
     }
@@ -136,23 +129,13 @@ public class EditorPresenter extends Presenter<EditorPresenter.EditorView, Edito
     }
 
     @Override
-    public void changeCardLocation(Card card, TableLocation oldLocation, TableLocation newLocation) {
-        if (oldLocation == newLocation) {
-            refreshCards();
-            return;
-        }
-
-        try {
-            gameBuilder.moveCard(card, oldLocation, newLocation);
-            refreshView();
+    public void changeCardLocation(Card card, Optional<TableLocation> maybeNewLocation) {
+        if (maybeNewLocation.isPresent()) try {
+            gameBuilder.moveCard(card, maybeNewLocation.get());
         } catch (GameException e) {
             log.finer(e.getMessage());
-            refreshCards();
         }
-    }
-
-    @Override public void logout() {
-        Window.Location.assign(currentUserDto.logoutUrl);
+        refreshCards();
     }
 
     @Override
@@ -176,6 +159,9 @@ public class EditorPresenter extends Presenter<EditorPresenter.EditorView, Edito
     @Override
     public void save(String name, String description) {
         try {
+            maybeGame = Optional.of(gameBuilder.build());
+            GameBuiltEvent.fire(this, maybeGame.get());
+            // TODO: build deal from game
             Deal deal = gameBuilder.setName(name).setDescription(description).buildDeal();
             dealService.persist(deal, new Response<Void>());
         } catch (GameBuilderException e) {

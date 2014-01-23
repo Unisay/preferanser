@@ -19,6 +19,7 @@
 
 package com.preferanser.client.application.mvp.editor;
 
+import com.google.common.base.Optional;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -34,8 +35,10 @@ import com.preferanser.client.application.widgets.RequestButton;
 import com.preferanser.client.application.widgets.TurnPointer;
 import com.preferanser.client.restygwt.RestyGwtDispatcher;
 import com.preferanser.laf.client.PreferanserResources;
+import com.preferanser.shared.domain.Card;
 import com.preferanser.shared.domain.Contract;
 import com.preferanser.shared.domain.Hand;
+import com.preferanser.shared.domain.TableLocation;
 
 import java.util.logging.Logger;
 
@@ -89,6 +92,10 @@ public class EditorView extends BaseTableView<EditorUiHandlers> implements Edito
 
     @Override protected void displayNoContract(Hand hand) {
         getHandContractTextHolder(hand).setText(constants.chooseContract());
+    }
+
+    @Override protected void changeCardLocation(Card card, Optional<TableLocation> targetTableLocation) {
+        getUiHandlers().changeCardLocation(card, targetTableLocation);
     }
 
     private Anchor getHandContractTextHolder(Hand hand) {

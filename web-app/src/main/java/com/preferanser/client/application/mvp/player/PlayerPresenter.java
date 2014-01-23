@@ -39,7 +39,6 @@ import com.preferanser.client.gwtp.NameTokens;
 import com.preferanser.shared.domain.Card;
 import com.preferanser.shared.domain.Game;
 import com.preferanser.shared.domain.Hand;
-import com.preferanser.shared.domain.TableLocation;
 import com.preferanser.shared.domain.exception.GameException;
 import com.preferanser.shared.dto.CurrentUserDto;
 
@@ -113,27 +112,13 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
             refreshView();
     }
 
-    @Override public void changeCardLocation(Card card, TableLocation oldLocation, TableLocation newLocation) {
+    @Override public void makeTurn(Card card) {
         Preconditions.checkState(gameOptional.isPresent(), "PlayerPresenter.changeCardLocation(game is null)");
-
-        if (oldLocation == newLocation) {
-            refreshView();
-            return;
-        }
-
-        if (TableLocation.CENTER != newLocation) {
-            refreshView();
-            return;
-        }
-
         try {
-            gameOptional.get().makeTurn(Hand.valueOf(oldLocation), card);
+            gameOptional.get().makeTurn(card);
         } catch (GameException e) {
             log.finer(e.getMessage());
-            refreshView();
-            return;
         }
-
         refreshView();
     }
 

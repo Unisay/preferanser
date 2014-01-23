@@ -48,7 +48,7 @@ public class CenterLayout extends PanelLayout<HandCard> {
     private void positionCardWidget(HandCard handCard, int z) {
         int x, y;
         switch (handCard.getHand()) {
-            case NORTH:
+            case WIDOW:
                 x = (getWidth() - imageWidth) / 2;
                 y = (getHeight() - imageHeight - imageHeight) / 2;
                 positionWidget(handCard.getCardWidget(), x, y, z);

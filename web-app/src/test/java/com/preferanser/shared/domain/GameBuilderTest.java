@@ -141,7 +141,7 @@ public class GameBuilderTest {
 
     @Test
     public void testClearCards_Center() throws Exception {
-        builder.putCards(Hand.SOUTH, CLUB_ACE).moveCard(CLUB_ACE, TableLocation.SOUTH, TableLocation.CENTER);
+        builder.putCards(Hand.SOUTH, CLUB_ACE).moveCard(CLUB_ACE, TableLocation.CENTER);
         builder.clearCards(TableLocation.CENTER);
         Game game = builder.build();
         assertTrue(builder.getCenterCards().isEmpty(), "No cards in TableLocation.CENTER expected");
@@ -341,20 +341,20 @@ public class GameBuilderTest {
     @Test
     public void testMoveCard() throws Exception {
         assertThat(builder.getHandCards().get(Hand.SOUTH), hasItem(SPADE_7));
-        assertTrue(builder.moveCard(SPADE_7, TableLocation.SOUTH, TableLocation.EAST));
+        assertTrue(builder.moveCard(SPADE_7, TableLocation.EAST));
         assertThat(builder.getHandCards().get(Hand.SOUTH), not(hasItem(SPADE_7)));
         assertThat(builder.getHandCards().get(Hand.EAST), hasItem(SPADE_7));
-        assertTrue(builder.moveCard(SPADE_7, TableLocation.EAST, TableLocation.CENTER));
+        assertTrue(builder.moveCard(SPADE_7, TableLocation.CENTER));
         assertThat(builder.getHandCards().get(Hand.SOUTH), not(hasItem(SPADE_7)));
         assertThat(builder.getCenterCards(), hasKey(SPADE_7));
         assertThat(builder.getCenterCards().get(SPADE_7), equalTo(Hand.EAST));
-        assertTrue(builder.moveCard(SPADE_7, TableLocation.CENTER, TableLocation.WEST));
+        assertTrue(builder.moveCard(SPADE_7, TableLocation.WEST));
         assertThat(builder.getCenterCards(), not(hasKey(SPADE_7)));
         assertThat(builder.getHandCards().get(Hand.WEST), hasItem(SPADE_7));
-        assertTrue(builder.moveCard(DIAMOND_9, TableLocation.EAST, TableLocation.CENTER));
-        assertTrue(builder.moveCard(SPADE_QUEEN, TableLocation.WEST, TableLocation.CENTER));
-        assertTrue(builder.moveCard(CLUB_7, TableLocation.SOUTH, TableLocation.CENTER));
-        assertFalse(builder.moveCard(DIAMOND_7, TableLocation.SOUTH, TableLocation.CENTER));
+        assertTrue(builder.moveCard(DIAMOND_9, TableLocation.CENTER));
+        assertTrue(builder.moveCard(SPADE_QUEEN, TableLocation.CENTER));
+        assertTrue(builder.moveCard(CLUB_7, TableLocation.CENTER));
+        assertFalse(builder.moveCard(DIAMOND_7, TableLocation.CENTER));
     }
 
     @Test

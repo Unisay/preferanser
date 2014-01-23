@@ -20,6 +20,7 @@
 package com.preferanser.client.application.mvp;
 
 import com.google.common.base.Function;
+import com.google.common.base.Optional;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.EnumHashBiMap;
 import com.google.gwt.dom.client.Document;
@@ -28,6 +29,7 @@ import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.*;
+import com.gwtplatform.mvp.client.UiHandlers;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
 import com.preferanser.client.application.i18n.I18nHelper;
 import com.preferanser.client.application.i18n.PreferanserConstants;
@@ -50,7 +52,7 @@ import static com.google.common.collect.Iterables.transform;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Maps.newHashMapWithExpectedSize;
 
-abstract public class BaseTableView<U extends TableUiHandlers>
+abstract public class BaseTableView<U extends UiHandlers>
     extends ViewWithUiHandlers<U>
     implements TableView, CardWidget.Handlers {
 
@@ -212,24 +214,28 @@ abstract public class BaseTableView<U extends TableUiHandlers>
         for (final Map.Entry<Panel, TableLocation> entry : panels.entrySet()) {
             final Panel sourcePanel = entry.getKey();
             sourcePanel.addDomHandler(new MouseUpHandler() {
-                @Override
-                public void onMouseUp(MouseUpEvent event) {
-                    if (!imageDragController.isDrag())
-                        return;
-                    Point cardCenter = Rect.FromWidget(imageDragController.getCardWidget()).center();
-                    for (Panel targetPanel : panels.keySet()) {
-                        if (Rect.FromWidget(targetPanel).contains(cardCenter)) {
-                            Card card = cardWidgetBiMap.inverse().get(imageDragController.getCardWidget());
-                            TableLocation oldLocation = entry.getValue();
-                            TableLocation newLocation = panels.get(targetPanel);
-                            getLog().finer("Card dragged: " + card + ": " + oldLocation + " -> " + newLocation);
-                            getUiHandlers().changeCardLocation(card, oldLocation, newLocation);
-                            return;
-                        }
+                @Override public void onMouseUp(MouseUpEvent event) {
+                    if (imageDragController.isDrag()) {
+                        Point cursorPoint = Point.FromMouseEvent(event);
+                        Card card = cardWidgetBiMap.inverse().get(imageDragController.getCardWidget());
+                        changeCardLocation(card, findTargetTableLocation(cursorPoint));
                     }
                 }
             }, MouseUpEvent.getType());
         }
+    }
+
+    protected abstract void changeCardLocation(Card card, Optional<TableLocation> targetTableLocation);
+
+    private Optional<TableLocation> findTargetTableLocation(Point cursorPoint) {
+        Map<Panel, TableLocation> panels = table.getPanelLocations();
+        for (Panel targetPanel : panels.keySet()) {
+            if (Rect.FromWidget(targetPanel).contains(cursorPoint)) {
+                TableLocation newLocation = panels.get(targetPanel);
+                return Optional.of(newLocation);
+            }
+        }
+        return Optional.absent();
     }
 
     private void putCardImageOnTop(Widget image) {
@@ -275,7 +281,7 @@ abstract public class BaseTableView<U extends TableUiHandlers>
     abstract protected Logger getLog();
 
     @UiHandler("logout") public void onLogoutClicked(@SuppressWarnings("unused") ClickEvent event) {
-        getUiHandlers().logout();
+        // TODO implement AuthViewPresenter
     }
 
     @UiFactory public TurnPointer turnPointer() {

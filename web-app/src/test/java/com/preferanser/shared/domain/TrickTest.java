@@ -25,7 +25,7 @@ public class TrickTest {
     @BeforeMethod
     public void setUp() throws Exception {
         turnRotator = new EnumRotator<Hand>(Hand.values(), SOUTH);
-        turnRotator.setSkipValues(Hand.NORTH);
+        turnRotator.setSkipValues(Hand.WIDOW);
         trick = new Trick(Players.THREE, turnRotator);
     }
 

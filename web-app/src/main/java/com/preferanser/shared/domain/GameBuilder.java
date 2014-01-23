@@ -183,9 +183,22 @@ public class GameBuilder {
         return this;
     }
 
-    public boolean moveCard(Card card, TableLocation oldLocation, TableLocation newLocation) throws DuplicateGameTurnException {
+    public boolean moveCard(Card card, TableLocation newLocation) throws DuplicateGameTurnException {
+        TableLocation oldLocation = findCardTableLocation(card);
         return removeCardFromOldLocation(card, oldLocation)
             && addCardToNewLocation(card, oldLocation, newLocation);
+    }
+
+    private TableLocation findCardTableLocation(Card card) {
+        for (Map.Entry<Hand, Card> entry : handCardMultimap.entries()) {
+            if (entry.getValue() == card)
+                return TableLocation.valueOf(entry.getKey());
+        }
+        if (widow.containsCard(card))
+            return TableLocation.WIDOW;
+
+        checkArgument(centerCardHandMap.containsKey(card), "Cant find card %s on the table", card);
+        return TableLocation.valueOf(centerCardHandMap.get(card));
     }
 
     private boolean removeCardFromOldLocation(Card card, TableLocation oldLocation) {
@@ -195,7 +208,7 @@ public class GameBuilder {
                 return true;
             case WIDOW:
                 widow.remove(card);
-                handCardMultimap.replaceValues(Hand.NORTH, widow.asSet());
+                handCardMultimap.replaceValues(Hand.WIDOW, widow.asSet());
                 return true;
             default:
                 Hand oldHand = Hand.valueOf(oldLocation);
@@ -322,7 +335,7 @@ public class GameBuilder {
             throw new GameBuilderException(validationErrors.get());
 
         EnumRotator<Hand> handRotator = new EnumRotator<Hand>(Hand.values(), firstTurn);
-        handRotator.setSkipValues(Hand.NORTH);
+        handRotator.setSkipValues(Hand.WIDOW);
 
         return new Game(
             players,

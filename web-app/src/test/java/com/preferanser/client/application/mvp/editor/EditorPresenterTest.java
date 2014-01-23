@@ -19,6 +19,7 @@
 
 package com.preferanser.client.application.mvp.editor;
 
+import com.google.common.base.Optional;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.preferanser.client.application.i18n.PreferanserConstants;
@@ -112,7 +113,6 @@ public class EditorPresenterTest {
             gameBuilder,
             dealService,
             preferanserMessages,
-            preferanserConstants,
             editorDialogs,
             currentUserDto);
 
@@ -122,9 +122,9 @@ public class EditorPresenterTest {
 
     @Test
     public void testChangeCardLocation_EqualLocations() throws Exception {
-        when(gameBuilder.moveCard(Card.CLUB_ACE, TableLocation.EAST, TableLocation.WEST)).thenReturn(true);
+        when(gameBuilder.moveCard(Card.CLUB_ACE, TableLocation.WEST)).thenReturn(true);
 
-        presenter.changeCardLocation(Card.CLUB_ACE, TableLocation.EAST, TableLocation.WEST);
+        presenter.changeCardLocation(Card.CLUB_ACE, Optional.of(TableLocation.WEST));
 
         verify(view).displayTurn(turn);
         verify(view).displayContracts(handContracts);

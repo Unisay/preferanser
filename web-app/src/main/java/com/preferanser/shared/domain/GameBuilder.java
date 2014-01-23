@@ -198,7 +198,7 @@ public class GameBuilder {
             return TableLocation.WIDOW;
 
         checkArgument(centerCardHandMap.containsKey(card), "Cant find card %s on the table", card);
-        return TableLocation.valueOf(centerCardHandMap.get(card));
+        return TableLocation.CENTER;
     }
 
     private boolean removeCardFromOldLocation(Card card, TableLocation oldLocation) {

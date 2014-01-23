@@ -126,8 +126,6 @@ public class EditorPresenterTest {
 
         presenter.changeCardLocation(Card.CLUB_ACE, Optional.of(TableLocation.WEST));
 
-        verify(view).displayTurn(turn);
-        verify(view).displayContracts(handContracts);
         verify(view).displayCards(handCards, centerCards, widow);
         verifyNoMoreInteractions(view);
     }

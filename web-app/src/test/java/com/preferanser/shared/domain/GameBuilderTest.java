@@ -143,9 +143,7 @@ public class GameBuilderTest {
     public void testClearCards_Center() throws Exception {
         builder.putCards(Hand.SOUTH, CLUB_ACE).moveCard(CLUB_ACE, TableLocation.CENTER);
         builder.clearCards(TableLocation.CENTER);
-        Game game = builder.build();
         assertTrue(builder.getCenterCards().isEmpty(), "No cards in TableLocation.CENTER expected");
-        assertTrue(game.getCenterCards().isEmpty(), "No cards in TableLocation.CENTER expected");
     }
 
     @Test(expectedExceptions = GameBuilderException.class, expectedExceptionsMessageRegExp = "" +

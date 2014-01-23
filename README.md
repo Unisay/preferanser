@@ -1,4 +1,4 @@
-#Preferanser is a program to simulate and calculate Russian Preferans Card game deals.
+#Preferanser is a program to compose, exchange and calculate [Russian Preferans Card](https://en.wikipedia.org/wiki/Preferans) game deals.
 
 ![Build status](https://www.codeship.io/projects/2a84d800-61e6-0131-231e-26f75a0c690d/status)
 

@@ -107,4 +107,23 @@ public class Widow implements Serializable, Iterable<Card> {
         return card1 != null && card2 != null;
     }
 
+    public boolean remove(Card card) {
+        if (card1 == card) {
+            card1 = null;
+            return true;
+        } else if (card2 == card) {
+            card2 = null;
+            return true;
+        } else return false;
+    }
+
+    public boolean add(Card card) {
+        if (card1 == null) {
+            card1 = card;
+            return true;
+        } else if (card2 == null) {
+            card2 = card;
+            return true;
+        } else return false;
+    }
 }

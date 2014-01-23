@@ -35,8 +35,7 @@ import java.util.*;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Sets.newHashSet;
-import static com.preferanser.shared.domain.Card.CLUB_ACE;
-import static com.preferanser.shared.domain.Card.CLUB_QUEEN;
+import static com.preferanser.shared.domain.Card.*;
 import static com.preferanser.shared.domain.Hand.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -341,21 +340,21 @@ public class GameBuilderTest {
 
     @Test
     public void testMoveCard() throws Exception {
-        assertThat(builder.getHandCards().get(Hand.SOUTH), hasItem(Card.SPADE_7));
-        assertTrue(builder.moveCard(Card.SPADE_7, TableLocation.SOUTH, TableLocation.EAST));
-        assertThat(builder.getHandCards().get(Hand.SOUTH), not(hasItem(Card.SPADE_7)));
-        assertThat(builder.getHandCards().get(Hand.EAST), hasItem(Card.SPADE_7));
-        assertTrue(builder.moveCard(Card.SPADE_7, TableLocation.SOUTH, TableLocation.CENTER));
-        assertThat(builder.getHandCards().get(Hand.SOUTH), not(hasItem(Card.SPADE_7)));
-        assertThat(builder.getCenterCards(), hasKey(Card.SPADE_7));
-        assertThat(builder.getCenterCards().get(Card.SPADE_7), equalTo(Hand.SOUTH));
-        assertTrue(builder.moveCard(Card.SPADE_7, TableLocation.CENTER, TableLocation.WEST));
-        assertThat(builder.getCenterCards(), not(hasKey(Card.SPADE_7)));
-        assertThat(builder.getHandCards().get(Hand.WEST), hasItem(Card.SPADE_7));
-        assertTrue(builder.moveCard(Card.DIAMOND_9, TableLocation.EAST, TableLocation.CENTER));
-        assertTrue(builder.moveCard(Card.SPADE_QUEEN, TableLocation.WEST, TableLocation.CENTER));
-        assertTrue(builder.moveCard(Card.CLUB_7, TableLocation.SOUTH, TableLocation.CENTER));
-        assertFalse(builder.moveCard(Card.DIAMOND_7, TableLocation.SOUTH, TableLocation.CENTER));
+        assertThat(builder.getHandCards().get(Hand.SOUTH), hasItem(SPADE_7));
+        assertTrue(builder.moveCard(SPADE_7, TableLocation.SOUTH, TableLocation.EAST));
+        assertThat(builder.getHandCards().get(Hand.SOUTH), not(hasItem(SPADE_7)));
+        assertThat(builder.getHandCards().get(Hand.EAST), hasItem(SPADE_7));
+        assertTrue(builder.moveCard(SPADE_7, TableLocation.EAST, TableLocation.CENTER));
+        assertThat(builder.getHandCards().get(Hand.SOUTH), not(hasItem(SPADE_7)));
+        assertThat(builder.getCenterCards(), hasKey(SPADE_7));
+        assertThat(builder.getCenterCards().get(SPADE_7), equalTo(Hand.EAST));
+        assertTrue(builder.moveCard(SPADE_7, TableLocation.CENTER, TableLocation.WEST));
+        assertThat(builder.getCenterCards(), not(hasKey(SPADE_7)));
+        assertThat(builder.getHandCards().get(Hand.WEST), hasItem(SPADE_7));
+        assertTrue(builder.moveCard(DIAMOND_9, TableLocation.EAST, TableLocation.CENTER));
+        assertTrue(builder.moveCard(SPADE_QUEEN, TableLocation.WEST, TableLocation.CENTER));
+        assertTrue(builder.moveCard(CLUB_7, TableLocation.SOUTH, TableLocation.CENTER));
+        assertFalse(builder.moveCard(DIAMOND_7, TableLocation.SOUTH, TableLocation.CENTER));
     }
 
     @Test

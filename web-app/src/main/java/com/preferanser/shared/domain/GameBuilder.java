@@ -35,11 +35,10 @@ import com.preferanser.shared.util.GameUtils;
 import java.util.*;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Maps.newHashMap;
 import static com.google.common.collect.Sets.newHashSet;
-import static com.preferanser.shared.domain.TableLocation.CENTER;
-import static com.preferanser.shared.domain.TableLocation.WIDOW;
 
 public class GameBuilder {
 
@@ -184,46 +183,41 @@ public class GameBuilder {
         return this;
     }
 
-    // TODO optimize and test this method
     public boolean moveCard(Card card, TableLocation oldLocation, TableLocation newLocation) throws DuplicateGameTurnException {
-        if (CENTER == oldLocation) { // moving card out of center
-            checkArgument(centerCardHandMap.containsKey(card), "There is no %s in TableLocation.CENTER", card);
-            centerCardHandMap.remove(card);
-            handCardMultimap.get(Hand.valueOf(newLocation)).add(card);
-        } else if (CENTER == newLocation) { // moving card to center
-            if (centerCardHandMap.size() == players.getNumPlayers()) {
-                return false;
-            }
-            Hand oldHand = Hand.valueOf(oldLocation);
-            if (centerCardHandMap.containsValue(oldHand))
-                throw new DuplicateGameTurnException(centerCardHandMap, oldHand);
-            handCardMultimap.get(oldHand).remove(card);
-            centerCardHandMap.put(card, oldHand);
-        } else if (WIDOW == newLocation) {
-            if (widow.card1 == null) {
-                widow.card1 = card;
-            } else if (widow.card2 == null) {
-                widow.card2 = card;
-            } else {
-                return false;
-            }
-            handCardMultimap.get(Hand.valueOf(oldLocation)).remove(card);
-            handCardMultimap.get(Hand.NORTH).clear();
-            handCardMultimap.putAll(Hand.NORTH, widow.asSet());
-        } else if (WIDOW == oldLocation) {
-            if (widow.card1 == card)
-                widow.card1 = null;
-            else if (widow.card2 == card)
-                widow.card2 = null;
-            handCardMultimap.get(Hand.NORTH).clear();
-            handCardMultimap.putAll(Hand.NORTH, widow.asSet());
-            handCardMultimap.get(Hand.valueOf(newLocation)).add(card);
-        } else {
-            Hand oldHand = Hand.valueOf(oldLocation);
-            Hand newHand = Hand.valueOf(newLocation);
-            checkArgument(handCardMultimap.get(oldHand).contains(card), "There is no %s in Hand.%s", card, oldHand);
-            handCardMultimap.get(oldHand).remove(card);
-            handCardMultimap.get(newHand).add(card);
+        return removeCardFromOldLocation(card, oldLocation)
+            && addCardToNewLocation(card, oldLocation, newLocation);
+    }
+
+    private boolean removeCardFromOldLocation(Card card, TableLocation oldLocation) {
+        switch (oldLocation) {
+            case CENTER:
+                checkNotNull(centerCardHandMap.remove(card), "There is no %s in TableLocation.CENTER", card);
+                return true;
+            case WIDOW:
+                widow.remove(card);
+                handCardMultimap.replaceValues(Hand.NORTH, widow.asSet());
+                return true;
+            default:
+                Hand oldHand = Hand.valueOf(oldLocation);
+                checkArgument(handCardMultimap.get(oldHand).contains(card), "There is no %s in Hand.%s", card, oldHand);
+                return handCardMultimap.remove(oldHand, card);
+        }
+    }
+
+    private boolean addCardToNewLocation(Card card, TableLocation oldLocation, TableLocation newLocation) throws DuplicateGameTurnException {
+        switch (newLocation) {
+            case CENTER:
+                if (centerCardHandMap.size() == players.getNumPlayers())
+                    return false;
+                Hand oldHand = Hand.valueOf(oldLocation);
+                if (centerCardHandMap.containsValue(oldHand))
+                    throw new DuplicateGameTurnException(centerCardHandMap, oldHand);
+                centerCardHandMap.put(card, oldHand);
+                break;
+            case WIDOW:
+                return widow.add(card);
+            default:
+                handCardMultimap.put(Hand.valueOf(newLocation), card);
         }
         return true;
     }

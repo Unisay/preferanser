@@ -147,7 +147,7 @@ public class GameBuilder {
             if (entry.getValue() == card)
                 return TableLocation.valueOf(entry.getKey());
         }
-        if (widow.containsCard(card))
+        if (widow.containsCard(card)) // TODO unit-test
             return TableLocation.WIDOW;
 
         checkArgument(centerCardHandMap.containsKey(card), "Cant find card %s on the table", card);
@@ -159,7 +159,7 @@ public class GameBuilder {
             case CENTER:
                 checkNotNull(centerCardHandMap.remove(card), "There is no %s in TableLocation.CENTER", card);
                 return true;
-            case WIDOW:
+            case WIDOW: // TODO unit-test
                 widow.remove(card);
                 handCardMultimap.replaceValues(Hand.WIDOW, widow.asSet());
                 return true;
@@ -176,12 +176,12 @@ public class GameBuilder {
                 if (centerCardHandMap.size() == players.getNumPlayers())
                     return false;
                 Hand oldHand = Hand.valueOf(oldLocation);
-                if (centerCardHandMap.containsValue(oldHand))
+                if (centerCardHandMap.containsValue(oldHand)) // TODO unit-test
                     throw new DuplicateGameTurnException(centerCardHandMap, oldHand);
                 centerCardHandMap.put(card, oldHand);
                 break;
             case WIDOW:
-                return widow.add(card);
+                return widow.add(card); // TODO unit-test
             default:
                 handCardMultimap.put(Hand.valueOf(newLocation), card);
         }
@@ -291,6 +291,8 @@ public class GameBuilder {
         handRotator.setSkipValues(Hand.WIDOW);
 
         return new Game(
+            name,
+            description,
             players,
             widow,
             handContracts,

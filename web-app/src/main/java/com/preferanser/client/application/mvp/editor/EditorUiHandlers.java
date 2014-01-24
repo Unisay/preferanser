@@ -45,24 +45,24 @@ public interface EditorUiHandlers extends UiHandlers {
     void chooseTurn(Hand hand);
 
     /**
-     * Switch to player page
+     * Save deal and switch to player
      */
-    void switchToPlayer(String name, String description);
+    void saveAndPlay(String name, String description);
 
     /**
-     * Save deal
+     * Save deal and close editor
      */
-    void save(String name, String description);
+    void closeWithSave(String name, String description);
+
+    /**
+     * Close editor without saving deal
+     */
+    void closeWithoutSave();
 
     /**
      * Create new deal
      */
     void reset();
-
-    /**
-     * Quit editor
-     */
-    void quit();
 
     /**
      * User changed card location

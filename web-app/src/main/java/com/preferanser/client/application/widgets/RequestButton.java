@@ -24,7 +24,7 @@ public class RequestButton extends Button {
             }
 
             @Override
-            protected void afterResponseIdHandled(RequestIdValue requestIdValue) {
+            protected void afterResponseHandled(RequestIdValue requestIdValue) {
                 restoreDelayed();
             }
 

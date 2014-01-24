@@ -31,9 +31,7 @@ import com.preferanser.client.application.i18n.I18nHelper;
 import com.preferanser.client.application.i18n.PreferanserConstants;
 import com.preferanser.client.application.mvp.BaseTableView;
 import com.preferanser.client.application.widgets.CardWidget;
-import com.preferanser.client.application.widgets.RequestButton;
 import com.preferanser.client.application.widgets.TurnPointer;
-import com.preferanser.client.restygwt.RestyGwtDispatcher;
 import com.preferanser.laf.client.PreferanserResources;
 import com.preferanser.shared.domain.Card;
 import com.preferanser.shared.domain.Contract;
@@ -42,29 +40,27 @@ import com.preferanser.shared.domain.TableLocation;
 
 import java.util.logging.Logger;
 
-import static com.preferanser.client.restygwt.RequestIdValue.SAVE_DEAL;
-
 public class EditorView extends BaseTableView<EditorUiHandlers> implements EditorPresenter.EditorView, CardWidget.Handlers {
 
     private static final Logger log = Logger.getLogger("EditorView");
 
     public interface Binder extends UiBinder<Widget, EditorView> {}
 
-    @UiField Button playButton;
-    @UiField Button quitButton;
+    @UiField Button closeWithSaveButton;
+    @UiField Button closeWithoutSaveButton;
+    @UiField Button saveAndPlayButton;
     @UiField Button resetButton;
-    @UiField(provided = true) RequestButton saveButton;
 
     @UiField Anchor eastContractAnchor;
     @UiField Anchor southContractAnchor;
     @UiField Anchor westContractAnchor;
+
     @UiField TextBox dealName;
     @UiField TextArea dealDescription;
 
     @Inject
-    public EditorView(Binder uiBinder, PreferanserResources resources, PreferanserConstants constants, I18nHelper i18nHelper, RestyGwtDispatcher restyGwtDispatcher) {
+    public EditorView(Binder uiBinder, PreferanserResources resources, PreferanserConstants constants, I18nHelper i18nHelper) {
         super(constants, resources, i18nHelper);
-        saveButton = new RequestButton(restyGwtDispatcher, SAVE_DEAL, constants.saving(), constants.saved());
         initWidget(uiBinder.createAndBindUi(this));
         init();
     }
@@ -111,20 +107,20 @@ public class EditorView extends BaseTableView<EditorUiHandlers> implements Edito
         }
     }
 
-    @UiHandler("playButton") void onPlayButtonClicked(@SuppressWarnings("unused") ClickEvent event) {
-        getUiHandlers().switchToPlayer(dealName.getText(), dealDescription.getText());
+    @UiHandler("saveAndPlayButton") void onSaveAndPlayButtonClicked(@SuppressWarnings("unused") ClickEvent event) {
+        getUiHandlers().saveAndPlay(dealName.getText(), dealDescription.getText());
     }
 
-    @UiHandler("saveButton") void onSaveButtonClicked(@SuppressWarnings("unused") ClickEvent event) {
-        getUiHandlers().save(dealName.getText(), dealDescription.getText());
+    @UiHandler("closeWithSaveButton") void onCloseWithSaveButtonClicked(@SuppressWarnings("unused") ClickEvent event) {
+        getUiHandlers().closeWithSave(dealName.getText(), dealDescription.getText());
+    }
+
+    @UiHandler("closeWithoutSaveButton") void onCloseWithoutSaveButtonClicked(@SuppressWarnings("unused") ClickEvent event) {
+        getUiHandlers().closeWithoutSave();
     }
 
     @UiHandler("resetButton") void onDealButtonClicked(@SuppressWarnings("unused") ClickEvent event) {
         getUiHandlers().reset();
-    }
-
-    @UiHandler("quitButton") void onQuitButtonClicked(@SuppressWarnings("unused") ClickEvent event) {
-        getUiHandlers().quit();
     }
 
     @UiHandler("eastContractAnchor") void onEastContractLinkClicked(@SuppressWarnings("unused") ClickEvent event) {

@@ -79,6 +79,9 @@ public interface PreferanserResources extends ClientBundle {
 
     DataGridResources dataGrid();
 
+    @Source("images/warp.png")
+    @ImageResource.ImageOptions(height = 32, width = 32) ImageResource warp();
+
     @Source("images/arrow_right.png")
     @ImageResource.ImageOptions(height = 32, width = 32) ImageResource arrowRight();
 

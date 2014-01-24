@@ -14,6 +14,10 @@ public abstract class RestyGwtRequestIdListenerAdapter implements RestyGwtReques
 
     private List<RequestIdValue> requestIds;
 
+    protected RestyGwtRequestIdListenerAdapter() {
+        this(RequestIdValue.values());
+    }
+
     public RestyGwtRequestIdListenerAdapter(RequestIdValue... requestIds) {
         this(newArrayList(requestIds));
     }
@@ -48,22 +52,22 @@ public abstract class RestyGwtRequestIdListenerAdapter implements RestyGwtReques
     public final void beforeResponseHandled(Method method, Request request, Response response) {
         RequestIdValue requestIdValue = getRequestIdValue(method);
         if (requestIds.contains(requestIdValue))
-            beforeResponseIdHandled(requestIdValue);
+            beforeResponseHandled(requestIdValue);
     }
 
     @SuppressWarnings("unused")
-    protected void beforeResponseIdHandled(RequestIdValue requestIdValue) {
+    protected void beforeResponseHandled(RequestIdValue requestIdValue) {
     }
 
     @Override
     public final void afterResponseHandled(Method method, Request request, Response response) {
         RequestIdValue requestIdValue = getRequestIdValue(method);
         if (requestIds.contains(requestIdValue))
-            afterResponseIdHandled(requestIdValue);
+            afterResponseHandled(requestIdValue);
     }
 
     @SuppressWarnings("unused")
-    protected void afterResponseIdHandled(RequestIdValue requestIdValue) {
+    protected void afterResponseHandled(RequestIdValue requestIdValue) {
     }
 
     @Override

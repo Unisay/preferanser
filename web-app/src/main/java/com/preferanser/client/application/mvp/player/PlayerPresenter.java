@@ -70,7 +70,7 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
     private Optional<Game> gameOptional = Optional.absent();
 
     @ProxyStandard
-    @NameToken(NameTokens.GAME_PLAYER)
+    @NameToken(NameTokens.PLAYER)
     public interface Proxy extends ProxyPlace<PlayerPresenter> {}
 
     @Inject
@@ -123,7 +123,7 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
     }
 
     @Override public void switchToEditor() {
-        placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.GAME_EDITOR).build());
+        placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.EDITOR).build());
     }
 
     @Override public void logout() {

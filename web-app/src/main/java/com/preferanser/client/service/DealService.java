@@ -36,16 +36,19 @@ import static com.preferanser.client.restygwt.RequestIdValue.*;
 @SuppressWarnings("VoidMethodAnnotatedWithGET")
 public interface DealService extends RestService {
 
+    /**
+     * Persist deal on backend
+     *
+     * @param deal     deal
+     * @param callback contains new deal id as Long
+     */
     @POST
-    @RequestId(SAVE_DEAL)
-    void persist(Deal dto, MethodCallback<Void> callback);
+    @RequestId(SAVE_DEAL) void persist(Deal deal, MethodCallback<Long> callback);
 
     @GET
-    @RequestId(LOAD_DEALS)
-    void load(MethodCallback<List<Deal>> callback);
+    @RequestId(LOAD_DEALS) void load(MethodCallback<List<Deal>> callback);
 
     @DELETE
     @Path("/{dealId}")
-    @RequestId(DELETE_DEAL)
-    void delete(@PathParam("dealId") Long dealId, MethodCallback<Void> callback);
+    @RequestId(DELETE_DEAL) void delete(@PathParam("dealId") Long dealId, MethodCallback<Void> callback);
 }

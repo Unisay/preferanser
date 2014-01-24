@@ -68,7 +68,7 @@
             border-bottom-right-radius: radius;
         }
 
-        /*noinspection ALL*/
+            /*noinspection ALL*/
         .deals tr.odd td {
             background-color: rgba(0, 0, 0, .1);
         }
@@ -90,7 +90,6 @@
         <g:Button ui:field="editorButton" text="{constants.editor}" addStyleNames="{style.editorButton}"/>
         <g:Label text="{constants.dealsDescription}" addStyleNames="{style.description} {style.inline}"/>
         <g:FlexTable ui:field="dealTable" cellSpacing="0" cellPadding="5" addStyleNames="{style.deals}"/>
-
     </g:FlowPanel>
 
 </ui:UiBinder>

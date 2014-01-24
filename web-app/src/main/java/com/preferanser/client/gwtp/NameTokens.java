@@ -23,6 +23,6 @@ public class NameTokens {
     public static final String ERROR = "error";
     public static final String UNAUTHORIZED = "unauthorized";
     public static final String DEALS = "deals";
-    public static final String GAME_EDITOR = "editor";
-    public static final String GAME_PLAYER = "player";
+    public static final String EDITOR = "editor";
+    public static final String PLAYER = "player";
 }

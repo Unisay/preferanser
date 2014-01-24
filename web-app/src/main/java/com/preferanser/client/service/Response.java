@@ -41,5 +41,6 @@ public class Response<T> implements MethodCallback<T> {
         handle(response);
     }
 
-    protected void handle(T response) {};
+    protected void handle(T response) {
+    }
 }

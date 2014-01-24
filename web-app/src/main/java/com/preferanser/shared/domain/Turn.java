@@ -52,11 +52,8 @@ public class Turn implements Serializable {
     @Override public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         Turn that = (Turn) o;
-
-        return Objects.equal(this.hand, that.hand) &&
-            Objects.equal(this.card, that.card);
+        return Objects.equal(this.hand, that.hand) && Objects.equal(this.card, that.card);
     }
 
     @Override public int hashCode() {

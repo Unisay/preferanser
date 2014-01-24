@@ -19,6 +19,7 @@
 
 package com.preferanser.shared.domain;
 
+import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
 import com.googlecode.objectify.annotation.Embed;
 
@@ -44,26 +45,6 @@ public class Widow implements Serializable, Iterable<Card> {
 
     public Widow(Widow widow) {
         this(widow.card1, widow.card2);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Widow cards = (Widow) o;
-
-        if (card1 != cards.card1) return false;
-        if (card2 != cards.card2) return false;
-
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = card1 != null ? card1.hashCode() : 0;
-        result = 31 * result + (card2 != null ? card2.hashCode() : 0);
-        return result;
     }
 
     public Card getCard1() {
@@ -129,5 +110,24 @@ public class Widow implements Serializable, Iterable<Card> {
 
     public boolean containsCard(Card card) {
         return card1 == card || card2 == card;
+    }
+
+    @Override public String toString() {
+        return Objects.toStringHelper(this)
+            .add("card1", card1)
+            .add("card2", card2)
+            .toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        return this == o
+            || !(o == null || getClass() != o.getClass())
+            && this.asSet().equals(((Widow) o).asSet());
+    }
+
+    @Override
+    public int hashCode() {
+        return asSet().hashCode();
     }
 }

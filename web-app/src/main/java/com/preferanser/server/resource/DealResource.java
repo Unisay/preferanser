@@ -50,13 +50,13 @@ public class DealResource {
     }
 
     @POST
-    public void save(Deal deal) {
+    public Long save(Deal deal) {
         Optional<String> currentUserId = authenticationService.getCurrentUserId();
         if (!currentUserId.isPresent())
             throw new NoAuthenticatedUserException();
         deal.setUserId(currentUserId.get());
         deal.setCreated(new Date());
-        dealDao.save(deal);
+        return dealDao.save(deal).getId();
     }
 
     @DELETE

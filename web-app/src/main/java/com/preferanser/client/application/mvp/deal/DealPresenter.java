@@ -1,5 +1,6 @@
 package com.preferanser.client.application.mvp.deal;
 
+import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
@@ -62,7 +63,9 @@ public class DealPresenter extends Presenter<DealPresenter.DealView, DealPresent
     }
 
     @Override public void onDealCreated(DealCreatedEvent event) {
-        deals.add(event.getDeal());
+        Deal deal = event.getDeal();
+        Preconditions.checkNotNull(deal.getId(), "Deal has null id, can't add it!");
+        deals.add(deal);
         refreshView();
     }
 
@@ -71,7 +74,9 @@ public class DealPresenter extends Presenter<DealPresenter.DealView, DealPresent
     }
 
     @Override public void deleteDeal(final Deal deal) {
-        dealService.delete(deal.getId(), new Response<Void>() {
+        Long dealId = deal.getId();
+        Preconditions.checkNotNull(dealId, "Deal has null id, can't delete it!");
+        dealService.delete(dealId, new Response<Void>() {
             @Override public void onSuccess(Method method, Void response) {
                 deals.remove(deal);
                 refreshView();
@@ -80,7 +85,7 @@ public class DealPresenter extends Presenter<DealPresenter.DealView, DealPresent
     }
 
     @Override public void openDealEditor() {
-        placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.GAME_EDITOR).build());
+        placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.EDITOR).build());
     }
 
     private void refreshView() {

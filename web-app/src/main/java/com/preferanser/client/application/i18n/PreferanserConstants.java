@@ -29,6 +29,70 @@ import com.google.gwt.i18n.client.ConstantsWithLookup;
 @SuppressWarnings("ClassWithTooManyMethods")
 public interface PreferanserConstants extends ConstantsWithLookup {
 
+    @DefaultStringValue("SPADE_7") String SPADE_7();
+
+    @DefaultStringValue("CLUB_7") String CLUB_7();
+
+    @DefaultStringValue("DIAMOND_7") String DIAMOND_7();
+
+    @DefaultStringValue("HEART_7") String HEART_7();
+
+    @DefaultStringValue("SPADE_8") String SPADE_8();
+
+    @DefaultStringValue("CLUB_8") String CLUB_8();
+
+    @DefaultStringValue("DIAMOND_8") String DIAMOND_8();
+
+    @DefaultStringValue("HEART_8") String HEART_8();
+
+    @DefaultStringValue("SPADE_9") String SPADE_9();
+
+    @DefaultStringValue("CLUB_9") String CLUB_9();
+
+    @DefaultStringValue("DIAMOND_9") String DIAMOND_9();
+
+    @DefaultStringValue("HEART_9") String HEART_9();
+
+    @DefaultStringValue("SPADE_10") String SPADE_10();
+
+    @DefaultStringValue("CLUB_10") String CLUB_10();
+
+    @DefaultStringValue("DIAMOND_10") String DIAMOND_10();
+
+    @DefaultStringValue("HEART_10") String HEART_10();
+
+    @DefaultStringValue("SPADE_JACK") String SPADE_JACK();
+
+    @DefaultStringValue("CLUB_JACK") String CLUB_JACK();
+
+    @DefaultStringValue("DIAMOND_JACK") String DIAMOND_JACK();
+
+    @DefaultStringValue("HEART_JACK") String HEART_JACK();
+
+    @DefaultStringValue("SPADE_QUEEN") String SPADE_QUEEN();
+
+    @DefaultStringValue("CLUB_QUEEN") String CLUB_QUEEN();
+
+    @DefaultStringValue("DIAMOND_QUEEN") String DIAMOND_QUEEN();
+
+    @DefaultStringValue("HEART_QUEEN") String HEART_QUEEN();
+
+    @DefaultStringValue("SPADE_KING") String SPADE_KING();
+
+    @DefaultStringValue("CLUB_KING") String CLUB_KING();
+
+    @DefaultStringValue("DIAMOND_KING") String DIAMOND_KING();
+
+    @DefaultStringValue("HEART_KING") String HEART_KING();
+
+    @DefaultStringValue("SPADE_ACE") String SPADE_ACE();
+
+    @DefaultStringValue("CLUB_ACE") String CLUB_ACE();
+
+    @DefaultStringValue("DIAMOND_ACE") String DIAMOND_ACE();
+
+    @DefaultStringValue("HEART_ACE") String HEART_ACE();
+
     @DefaultStringValue("Preferanser") String preferanser();
 
     @DefaultStringValue("Description") String description();
@@ -101,16 +165,6 @@ public interface PreferanserConstants extends ConstantsWithLookup {
 
     @DefaultStringValue("New deal") String deal();
 
-    @DefaultStringValue("Save") String save();
-
-    @DefaultStringValue("Close") String close();
-
-    @DefaultStringValue("Quit") String quit();
-
-    @DefaultStringValue("Saving") String saving();
-
-    @DefaultStringValue("Saved") String saved();
-
     @DefaultStringValue("Open") String open();
 
     @DefaultStringValue("Delete") String delete();
@@ -119,72 +173,23 @@ public interface PreferanserConstants extends ConstantsWithLookup {
 
     @DefaultStringValue("Loaded") String loaded();
 
-    @DefaultStringValue("Please choose name for the deal") String saveDescription();
+    @DefaultStringValue("saveDescription") String saveDescription();
 
-    @DefaultStringValue("Choose contract") String chooseContract();
+    @DefaultStringValue("Выбрать контракт") String chooseContract();
 
-    @DefaultStringValue("SPADE_7") String SPADE_7();
+    @DefaultStringValue("Закрыть") String close();
 
-    @DefaultStringValue("CLUB_7") String CLUB_7();
+    @DefaultStringValue("Выйти") String quit();
 
-    @DefaultStringValue("DIAMOND_7") String DIAMOND_7();
+    @DefaultStringValue("Сохранить") String save();
 
-    @DefaultStringValue("HEART_7") String HEART_7();
+    @DefaultStringValue("Сохраняется...") String saving();
 
-    @DefaultStringValue("SPADE_8") String SPADE_8();
+    @DefaultStringValue("Сохранено") String saved();
 
-    @DefaultStringValue("CLUB_8") String CLUB_8();
+    @DefaultStringValue("Сохранить и закрыть") String closeWithSave();
 
-    @DefaultStringValue("DIAMOND_8") String DIAMOND_8();
+    @DefaultStringValue("Закрыть без сохранения") String closeWithoutSave();
 
-    @DefaultStringValue("HEART_8") String HEART_8();
-
-    @DefaultStringValue("SPADE_9") String SPADE_9();
-
-    @DefaultStringValue("CLUB_9") String CLUB_9();
-
-    @DefaultStringValue("DIAMOND_9") String DIAMOND_9();
-
-    @DefaultStringValue("HEART_9") String HEART_9();
-
-    @DefaultStringValue("SPADE_10") String SPADE_10();
-
-    @DefaultStringValue("CLUB_10") String CLUB_10();
-
-    @DefaultStringValue("DIAMOND_10") String DIAMOND_10();
-
-    @DefaultStringValue("HEART_10") String HEART_10();
-
-    @DefaultStringValue("SPADE_JACK") String SPADE_JACK();
-
-    @DefaultStringValue("CLUB_JACK") String CLUB_JACK();
-
-    @DefaultStringValue("DIAMOND_JACK") String DIAMOND_JACK();
-
-    @DefaultStringValue("HEART_JACK") String HEART_JACK();
-
-    @DefaultStringValue("SPADE_QUEEN") String SPADE_QUEEN();
-
-    @DefaultStringValue("CLUB_QUEEN") String CLUB_QUEEN();
-
-    @DefaultStringValue("DIAMOND_QUEEN") String DIAMOND_QUEEN();
-
-    @DefaultStringValue("HEART_QUEEN") String HEART_QUEEN();
-
-    @DefaultStringValue("SPADE_KING") String SPADE_KING();
-
-    @DefaultStringValue("CLUB_KING") String CLUB_KING();
-
-    @DefaultStringValue("DIAMOND_KING") String DIAMOND_KING();
-
-    @DefaultStringValue("HEART_KING") String HEART_KING();
-
-    @DefaultStringValue("SPADE_ACE") String SPADE_ACE();
-
-    @DefaultStringValue("CLUB_ACE") String CLUB_ACE();
-
-    @DefaultStringValue("DIAMOND_ACE") String DIAMOND_ACE();
-
-    @DefaultStringValue("HEART_ACE") String HEART_ACE();
-
+    @DefaultStringValue("Сохранить и разыграть") String saveAndPlay();
 }

@@ -41,9 +41,11 @@ import com.preferanser.client.gwtp.NameTokens;
 import com.preferanser.client.service.DealService;
 import com.preferanser.client.service.Response;
 import com.preferanser.shared.domain.*;
+import com.preferanser.shared.domain.entity.Deal;
 import com.preferanser.shared.domain.exception.GameBuilderException;
 import com.preferanser.shared.domain.exception.GameException;
 import com.preferanser.shared.dto.CurrentUserDto;
+import org.fusesource.restygwt.client.Method;
 
 import java.util.Date;
 import java.util.logging.Logger;
@@ -60,14 +62,13 @@ public class EditorPresenter extends Presenter<EditorPresenter.EditorView, Edito
         void displayDealName(String name);
     }
 
-    private Optional<Game> maybeGame;
     private GameBuilder gameBuilder;
     private final PlaceManager placeManager;
     private final DealService dealService;
     private final EditorDialogs editorDialogs;
 
     @ProxyStandard
-    @NameToken(NameTokens.GAME_EDITOR)
+    @NameToken(NameTokens.EDITOR)
     @UseGatekeeper(LoggedInGatekeeper.class)
     public interface Proxy extends ProxyPlace<EditorPresenter> {}
 
@@ -97,12 +98,11 @@ public class EditorPresenter extends Presenter<EditorPresenter.EditorView, Edito
         refreshView();
     }
 
-    @Override public void quit() {
-        placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.DEALS).build());
+    @Override public void closeWithoutSave() {
+        revealPlace(NameTokens.DEALS);
     }
 
     private void initGameBuilder() {
-        maybeGame = Optional.absent();
         gameBuilder.reset();
         gameBuilder.setThreePlayers();
         gameBuilder.setFirstTurn(Hand.SOUTH);
@@ -145,23 +145,32 @@ public class EditorPresenter extends Presenter<EditorPresenter.EditorView, Edito
     }
 
     @Override
-    public void switchToPlayer(String name, String description) {
-        save(name, description);
-        placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.GAME_PLAYER).build());
+    public void saveAndPlay(String name, String description) {
+        saveAndOpenPlace(name, description, NameTokens.PLAYER);
     }
 
     @Override
-    public void save(String name, String description) {
-        Game game;
+    public void closeWithSave(String name, String description) {
+        saveAndOpenPlace(name, description, NameTokens.DEALS);
+    }
+
+    private void saveAndOpenPlace(String name, String description, final String place) {
         try {
-            game = gameBuilder.setName(name).setDescription(description).build();
+            final Deal deal = gameBuilder.setName(name).setDescription(description).build().toDeal();
+            dealService.persist(deal, new Response<Long>() { // TODO handle failures
+                @Override public void onSuccess(Method method, Long dealId) {
+                    deal.setId(dealId);
+                    DealCreatedEvent.fire(EditorPresenter.this, deal);
+                    revealPlace(place);
+                }
+            });
         } catch (GameBuilderException e) {
             editorDialogs.showValidationDialog(e.getBuilderErrors());
-            return;
         }
-        DealCreatedEvent.fire(this, game.toDeal(name, description));
-        dealService.persist(game.toDeal(name, description), new Response<Void>());
-        maybeGame = Optional.of(game);
+    }
+
+    private void revealPlace(String place) {
+        placeManager.revealPlace(new PlaceRequest.Builder().nameToken(place).build());
     }
 
     private void refreshView() {

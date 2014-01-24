@@ -37,6 +37,8 @@ import static com.google.common.collect.Sets.newHashSet;
  */
 public class Game {
 
+    private final String name;
+    private final String description;
     private final Players players;
     private final Widow widow;
     private final Map<Hand, Contract> handContracts;
@@ -44,13 +46,17 @@ public class Game {
     private final LinkedList<Trick> trickLog;
     private int currentTrickIndex;
 
-    Game(Players players,
+    Game(String name,
+         String description,
+         Players players,
          Widow widow,
          Map<Hand, Contract> handContracts,
          EnumRotator<Hand> turnRotator,
          Multimap<Hand, Card> handCardMultimap,
          Map<Card, Hand> centerCardHandMap
     ) {
+        this.name = name;
+        this.description = description;
         this.players = players;
         this.widow = new Widow(widow);
         this.handContracts = ImmutableMap.copyOf(handContracts);
@@ -61,6 +67,8 @@ public class Game {
     }
 
     public Game(Deal deal) {
+        name = deal.getName();
+        description = deal.getDescription();
         players = deal.getPlayers();
         widow = deal.getWidow();
         handContracts = ImmutableMap.copyOf(deal.getHandContracts());
@@ -145,9 +153,6 @@ public class Game {
 
         if (fromHand != currentTrick().getTurn())
             throw new NotInTurnException(currentTrick().getTurn(), fromHand);
-
-        if (!handCardMultimap.containsEntry(fromHand, card))
-            throw new NoSuchHandCardException(fromHand, card);
 
         if (currentTrick().hasCardFrom(fromHand))
             throw new DuplicateGameTurnException(currentTrick().asMap(), fromHand);
@@ -295,7 +300,7 @@ public class Game {
 
     public boolean redoTurn() {
         if (!hasRedoTurns())
-            return false;
+            return false; // TODO unit test
 
         Turn redoTurn = currentTrick().redoTurn();
         handCardMultimap.remove(redoTurn.getHand(), redoTurn.getCard());
@@ -322,7 +327,7 @@ public class Game {
         trickLog.add(first);
     }
 
-    public Deal toDeal(String name, String description) {
+    public Deal toDeal() {
         Deal deal = new Deal();
         deal.setName(name);
         deal.setDescription(description);

@@ -35,11 +35,13 @@ public interface PreferanserConstants extends ConstantsWithLookup {
 
     @DefaultStringValue("Create new deal description") String createDealDescription();
 
+    @DefaultStringValue("Deals description") String dealsDescription();
+
+    @DefaultStringValue("Deal description") String dealDescription();
+
     @DefaultStringValue("Deal name") String dealName();
 
     @DefaultStringValue("Deal name not specified") String dealNameNotSpecified();
-
-    @DefaultStringValue("Deal description") String dealDescription();
 
     @DefaultStringValue("Deal editor") String editor();
 

@@ -33,12 +33,13 @@ import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.preferanser.client.application.ApplicationPresenter;
 import com.preferanser.client.application.i18n.PreferanserMessages;
-import com.preferanser.client.application.mvp.GameBuiltEvent;
+import com.preferanser.client.application.mvp.DealCreatedEvent;
 import com.preferanser.client.application.mvp.TableView;
 import com.preferanser.client.gwtp.NameTokens;
 import com.preferanser.shared.domain.Card;
 import com.preferanser.shared.domain.Game;
 import com.preferanser.shared.domain.Hand;
+import com.preferanser.shared.domain.entity.Deal;
 import com.preferanser.shared.domain.exception.GameException;
 import com.preferanser.shared.dto.CurrentUserDto;
 
@@ -50,7 +51,7 @@ import java.util.logging.Logger;
  * Presenter for the mvp page
  */
 public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, PlayerPresenter.Proxy>
-    implements PlayerUiHandlers, GameBuiltEvent.GameBuiltHandler {
+    implements PlayerUiHandlers, DealCreatedEvent.DealCreatedHandler {
 
     private static final Logger log = Logger.getLogger("PlayerPresenter");
 
@@ -88,7 +89,7 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
 
     @Override protected void onBind() {
         super.onBind();
-        addRegisteredHandler(GameBuiltEvent.getType(), this);
+        addRegisteredHandler(DealCreatedEvent.getType(), this);
     }
 
     @Override protected void onReveal() {
@@ -100,10 +101,9 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
         }
     }
 
-    @Override public void onGameBuilt(GameBuiltEvent gameBuiltEvent) {
-        Game game = gameBuiltEvent.getGame();
-        Preconditions.checkNotNull(game, "PlayerPresenter.onGameBuilt(gameBuiltEvent.getGame() is null)");
-        gameOptional = Optional.of(game);
+    @Override public void onDealCreated(DealCreatedEvent dealCreatedEvent) {
+        Deal deal = dealCreatedEvent.getDeal();
+        gameOptional = Optional.of(new Game(deal));
     }
 
     @Override public void sluff() {

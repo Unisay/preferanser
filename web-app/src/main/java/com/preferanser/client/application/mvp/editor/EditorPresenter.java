@@ -33,7 +33,7 @@ import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.preferanser.client.application.ApplicationPresenter;
 import com.preferanser.client.application.i18n.PreferanserMessages;
-import com.preferanser.client.application.mvp.GameBuiltEvent;
+import com.preferanser.client.application.mvp.DealCreatedEvent;
 import com.preferanser.client.application.mvp.TableView;
 import com.preferanser.client.application.mvp.editor.dialog.EditorDialogs;
 import com.preferanser.client.gwtp.LoggedInGatekeeper;
@@ -145,14 +145,9 @@ public class EditorPresenter extends Presenter<EditorPresenter.EditorView, Edito
     }
 
     @Override
-    public void switchToPlayer() {
-        try {
-            maybeGame = Optional.of(gameBuilder.build());
-            placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.GAME_PLAYER).build());
-            GameBuiltEvent.fire(this, maybeGame.get());
-        } catch (GameBuilderException e) {
-            editorDialogs.showValidationDialog(e.getBuilderErrors());
-        }
+    public void switchToPlayer(String name, String description) {
+        save(name, description);
+        placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.GAME_PLAYER).build());
     }
 
     @Override
@@ -164,8 +159,8 @@ public class EditorPresenter extends Presenter<EditorPresenter.EditorView, Edito
             editorDialogs.showValidationDialog(e.getBuilderErrors());
             return;
         }
-        GameBuiltEvent.fire(this, game);
-        dealService.persist(game.toDeal(), new Response<Void>());
+        DealCreatedEvent.fire(this, game.toDeal(name, description));
+        dealService.persist(game.toDeal(name, description), new Response<Void>());
         maybeGame = Optional.of(game);
     }
 

@@ -322,8 +322,10 @@ public class Game {
         trickLog.add(first);
     }
 
-    public Deal toDeal() {
+    public Deal toDeal(String name, String description) {
         Deal deal = new Deal();
+        deal.setName(name);
+        deal.setDescription(description);
         deal.setCreated(new Date());
         deal.setFirstTurn(trickLog.getFirst().getTurn());
         deal.setPlayers(players);

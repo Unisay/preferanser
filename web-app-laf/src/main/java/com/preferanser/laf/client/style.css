@@ -150,6 +150,10 @@ body {
     font-size: 9pt;
 }
 
+.gwt-Button:disabled {
+    color: darkgray;
+}
+
 .gwt-Button:hover {
     text-shadow: -1px -1px 1px black;
 }

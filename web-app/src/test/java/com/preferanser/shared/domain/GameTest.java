@@ -49,6 +49,8 @@ public class GameTest {
 
     private Game game;
     private Widow widow;
+    private String name;
+    private String description;
     private Map<Hand, Contract> handContractMap;
     private EnumRotator<Hand> turnRotator;
     private LinkedHashMultimap<Hand, Card> handCardMultimap;
@@ -56,6 +58,8 @@ public class GameTest {
 
     @BeforeMethod
     public void setUp() throws Exception {
+        name = "name";
+        description = "description";
         widow = new Widow();
         handContractMap = createHandContractMap();
         turnRotator = createTurnRotator(SOUTH, WIDOW);
@@ -438,14 +442,14 @@ public class GameTest {
     }
 
     @Test
-    public void testToPlay() throws Exception {
+    public void testToDeal() throws Exception {
         game.makeTurn(CLUB_ACE);
         game.makeTurn(CLUB_JACK);
         game.makeTurn(CLUB_8);
         game.sluffTrick();
         game.makeTurn(CLUB_KING);
 
-        Deal deal = game.toDeal();
+        Deal deal = game.toDeal(name, description);
         Game clonedGame = new Game(deal);
         assertReflectionEquals(game, clonedGame);
     }

@@ -112,7 +112,7 @@ public class EditorView extends BaseTableView<EditorUiHandlers> implements Edito
     }
 
     @UiHandler("playButton") void onPlayButtonClicked(@SuppressWarnings("unused") ClickEvent event) {
-        getUiHandlers().switchToPlayer();
+        getUiHandlers().switchToPlayer(dealName.getText(), dealDescription.getText());
     }
 
     @UiHandler("saveButton") void onSaveButtonClicked(@SuppressWarnings("unused") ClickEvent event) {

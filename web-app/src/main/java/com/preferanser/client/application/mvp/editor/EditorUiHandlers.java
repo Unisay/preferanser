@@ -47,7 +47,7 @@ public interface EditorUiHandlers extends UiHandlers {
     /**
      * Switch to player page
      */
-    void switchToPlayer();
+    void switchToPlayer(String name, String description);
 
     /**
      * Save deal

@@ -23,24 +23,62 @@
     <ui:with field="constants" type="com.preferanser.client.application.i18n.PreferanserConstants"/>
     <ui:with field="resources" type="com.preferanser.laf.client.PreferanserResources"/>
 
-    <ui:style>
+    <ui:style field="style" type="com.preferanser.client.application.mvp.deal.DealView.DealViewStyle">
         @import url(http://fonts.googleapis.com/css?family=Lobster&amp;subset=cyrillic);
 
-        .description, .createDealDescription {
+        @def radius 10px;
+
+        .description {
             margin-bottom: 1em;
             font-size: 12pt;
-        }
-
-        .createDealDescription {
-            display: inline;
-            margin-right: 1em;
         }
 
         .deals {
             width: 100%;
             margin-top: 2em;
             background-color: rgba(0, 0, 0, .1);
-            border-radius: 7px;
+            border-radius: radius;
+        }
+
+        .deals tr > td:first-child {
+            padding-left: radius;
+        }
+
+        .deals tr:first-child td:first-child {
+            -moz-border-radius-topleft: radius;
+            -webkit-border-top-left-radius: radius;
+            border-top-left-radius: radius;
+        }
+
+        .deals tr:first-child td:last-child {
+            -moz-border-radius-topright: radius;
+            -webkit-border-top-right-radius: radius;
+            border-top-right-radius: radius;
+        }
+
+        .deals tr:last-child td:first-child {
+            -moz-border-radius-bottomleft: radius;
+            -webkit-border-bottom-left-radius: radius;
+            border-bottom-left-radius: radius;
+        }
+
+        .deals tr:last-child td:last-child {
+            -moz-border-radius-bottomright: radius;
+            -webkit-border-bottom-right-radius: radius;
+            border-bottom-right-radius: radius;
+        }
+
+        /*noinspection ALL*/
+        .deals tr.odd td {
+            background-color: rgba(0, 0, 0, .1);
+        }
+
+        .inline {
+            display: inline-block;
+        }
+
+        .editorButton {
+            margin: 0 1em;
         }
 
     </ui:style>
@@ -48,10 +86,10 @@
     <g:FlowPanel addStyleNames="{resources.css.layoutCenter}">
         <g:Label text="{constants.preferanser}" addStyleNames="{resources.css.title}"/>
         <g:Label text="{constants.description}" addStyleNames="{style.description}"/>
-        <g:Label text="{constants.createDealDescription}" addStyleNames="{style.createDealDescription}"/>
-        <g:Button ui:field="editorButton" text="{constants.editor}"/>
-
-        <g:Grid ui:field="dealGrid" cellSpacing="10" addStyleNames="{style.deals}"/>
+        <g:Label text="{constants.createDealDescription}" addStyleNames="{style.description} {style.inline}"/>
+        <g:Button ui:field="editorButton" text="{constants.editor}" addStyleNames="{style.editorButton}"/>
+        <g:Label text="{constants.dealsDescription}" addStyleNames="{style.description} {style.inline}"/>
+        <g:FlexTable ui:field="dealTable" cellSpacing="0" cellPadding="5" addStyleNames="{style.deals}"/>
 
     </g:FlowPanel>
 

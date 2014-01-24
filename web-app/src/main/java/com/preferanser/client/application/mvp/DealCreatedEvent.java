@@ -23,55 +23,55 @@ import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HasHandlers;
 import com.google.web.bindery.event.shared.HandlerRegistration;
-import com.preferanser.shared.domain.Game;
+import com.preferanser.shared.domain.entity.Deal;
 
-public class GameBuiltEvent extends GwtEvent<GameBuiltEvent.GameBuiltHandler> {
+public class DealCreatedEvent extends GwtEvent<DealCreatedEvent.DealCreatedHandler> {
 
-    private Game game;
+    private Deal deal;
 
     @SuppressWarnings("unused")
-    protected GameBuiltEvent() {
+    protected DealCreatedEvent() {
         // Possibly for serialization.
     }
 
-    public GameBuiltEvent(Game game) {
-        this.game = game;
+    public DealCreatedEvent(Deal deal) {
+        this.deal = deal;
     }
 
-    public static void fire(HasHandlers source, Game game) {
-        source.fireEvent(new GameBuiltEvent(game));
+    public static void fire(HasHandlers source, Deal deal1) {
+        source.fireEvent(new DealCreatedEvent(deal1));
     }
 
-    public static void fire(HasHandlers source, GameBuiltEvent eventInstance) {
+    public static void fire(HasHandlers source, DealCreatedEvent eventInstance) {
         source.fireEvent(eventInstance);
     }
 
     public interface HasGameBuiltHandlers extends HasHandlers {
-        HandlerRegistration addGlobalHandler(GameBuiltHandler handler);
+        HandlerRegistration addGlobalHandler(DealCreatedHandler handler);
     }
 
-    public interface GameBuiltHandler extends EventHandler {
-        public void onGameBuilt(GameBuiltEvent event);
+    public interface DealCreatedHandler extends EventHandler {
+        public void onDealCreated(DealCreatedEvent event);
     }
 
-    private static final Type<GameBuiltHandler> TYPE = new Type<GameBuiltHandler>();
+    private static final Type<DealCreatedHandler> TYPE = new Type<DealCreatedHandler>();
 
-    public static Type<GameBuiltHandler> getType() {
+    public static Type<DealCreatedHandler> getType() {
         return TYPE;
     }
 
     @Override
-    public Type<GameBuiltHandler> getAssociatedType() {
+    public Type<DealCreatedHandler> getAssociatedType() {
         return TYPE;
     }
 
     @Override
-    protected void dispatch(GameBuiltHandler handler) {
-        handler.onGameBuilt(this);
+    protected void dispatch(DealCreatedHandler handler) {
+        handler.onDealCreated(this);
     }
 
-    public Game getGame() {
-        return game;
+    public Deal getDeal() {
+        return deal;
     }
 
 }

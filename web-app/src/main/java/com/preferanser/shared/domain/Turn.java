@@ -11,7 +11,7 @@ public class Turn implements Serializable {
     private Card card;
 
     @SuppressWarnings("unused") // For serialization
-    private Turn() {
+    public Turn() {
     }
 
     public Turn(Hand hand, Card card) {

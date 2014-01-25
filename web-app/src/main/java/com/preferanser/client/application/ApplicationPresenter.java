@@ -35,7 +35,7 @@ public class ApplicationPresenter
     public interface TheView extends View {}
 
     @ContentSlot
-    public static final Type<RevealContentHandler<?>> TYPE_SetMainContent = new Type<RevealContentHandler<?>>();
+    public static final Type<RevealContentHandler<?>> MAIN_SLOT = new Type<RevealContentHandler<?>>();
 
     @ProxyStandard
     public interface TheProxy extends Proxy<ApplicationPresenter> {}

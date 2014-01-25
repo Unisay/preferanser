@@ -42,13 +42,14 @@ public class UnauthorizedPresenter extends Presenter<UnauthorizedPresenter.TheVi
     @ProxyStandard
     @NameToken(NameTokens.UNAUTHORIZED)
     public interface TheProxy extends ProxyPlace<UnauthorizedPresenter> {}
+
     public interface TheView extends View {}
 
     private final CurrentUserDto currentUserDto;
 
     @Inject
     public UnauthorizedPresenter(EventBus eventBus, TheView view, TheProxy proxy, CurrentUserDto currentUserDto) {
-        super(eventBus, view, proxy, ApplicationPresenter.TYPE_SetMainContent);
+        super(eventBus, view, proxy, ApplicationPresenter.MAIN_SLOT);
         this.currentUserDto = currentUserDto;
     }
 

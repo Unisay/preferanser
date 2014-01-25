@@ -80,7 +80,7 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
                            Proxy proxy,
                            PreferanserMessages preferanserMessages,
                            CurrentUserDto currentUserDto) {
-        super(eventBus, view, proxy, ApplicationPresenter.TYPE_SetMainContent);
+        super(eventBus, view, proxy, ApplicationPresenter.MAIN_SLOT);
         this.placeManager = placeManager;
         this.currentUserDto = currentUserDto;
         getView().setUiHandlers(this);

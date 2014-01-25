@@ -6,12 +6,10 @@ import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.*;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
 import com.preferanser.client.application.i18n.PreferanserConstants;
-import com.preferanser.laf.client.PreferanserResources;
 import com.preferanser.shared.domain.entity.Deal;
 
 import java.util.List;
@@ -20,16 +18,22 @@ public class DealView extends ViewWithUiHandlers<DealUiHandlers> implements Deal
 
     public interface Binder extends UiBinder<Widget, DealView> {}
 
+    interface DealViewStyle extends CssResource {
+        String odd();
+
+        String deals();
+    }
+
     private static final DateTimeFormat DATE_TIME_FORMAT = DateTimeFormat.getFormat(DateTimeFormat.PredefinedFormat.DATE_TIME_SHORT);
 
     @UiField(provided = true) FlexTable dealTable;
-    @UiField PreferanserResources resources;
-    @UiField PreferanserConstants constants;
-    @UiField Button editorButton;
     @UiField DealViewStyle style;
 
+    private final PreferanserConstants constants;
+
     @Inject
-    public DealView(Binder uiBinder) {
+    public DealView(Binder uiBinder, PreferanserConstants constants) {
+        this.constants = constants;
         dealTable = new FlexTable();
         HTMLTable.ColumnFormatter columnFormatter = dealTable.getColumnFormatter();
         columnFormatter.setWidth(1, "40px");
@@ -76,22 +80,6 @@ public class DealView extends ViewWithUiHandlers<DealUiHandlers> implements Deal
             }
         });
         return button;
-    }
-
-    @UiHandler("editorButton") void onEditor(@SuppressWarnings("unused") ClickEvent event) {
-        getUiHandlers().openDealEditor();
-    }
-
-    interface DealViewStyle extends CssResource {
-
-        String description();
-
-        String inline();
-
-        String odd();
-
-        String deals();
-
     }
 
 }

@@ -82,7 +82,7 @@ public class EditorPresenter extends Presenter<EditorPresenter.EditorView, Edito
                            PreferanserMessages messages,
                            EditorDialogs editorDialogs,
                            CurrentUserDto currentUserDto) {
-        super(eventBus, view, proxy, ApplicationPresenter.TYPE_SetMainContent);
+        super(eventBus, view, proxy, ApplicationPresenter.MAIN_SLOT);
         this.placeManager = placeManager;
         this.gameBuilder = gameBuilder;
         this.dealService = dealService;

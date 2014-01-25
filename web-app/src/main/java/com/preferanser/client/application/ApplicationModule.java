@@ -24,6 +24,7 @@ import com.preferanser.client.application.mvp.deal.DealModule;
 import com.preferanser.client.application.mvp.editor.EditorModule;
 import com.preferanser.client.application.mvp.error.ErrorPresenter;
 import com.preferanser.client.application.mvp.error.ErrorView;
+import com.preferanser.client.application.mvp.main.MainModule;
 import com.preferanser.client.application.mvp.player.PlayerModule;
 import com.preferanser.client.application.mvp.unauthorized.UnauthorizedPresenter;
 import com.preferanser.client.application.mvp.unauthorized.UnauthorizedView;
@@ -33,6 +34,7 @@ public class ApplicationModule extends AbstractPresenterModule {
     @Override
     @SuppressWarnings("OverlyCoupledMethod")
     protected void configure() {
+        install(new MainModule());
         install(new DealModule());
         install(new PlayerModule());
         install(new EditorModule());

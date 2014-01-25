@@ -10,11 +10,9 @@ import com.gwtplatform.mvp.client.View;
 import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.ProxyStandard;
 import com.gwtplatform.mvp.client.annotations.UseGatekeeper;
-import com.gwtplatform.mvp.client.proxy.PlaceManager;
-import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
-import com.preferanser.client.application.ApplicationPresenter;
 import com.preferanser.client.application.mvp.DealCreatedEvent;
+import com.preferanser.client.application.mvp.main.MainPresenter;
 import com.preferanser.client.gwtp.LoggedInGatekeeper;
 import com.preferanser.client.gwtp.NameTokens;
 import com.preferanser.client.service.DealService;
@@ -39,13 +37,11 @@ public class DealPresenter extends Presenter<DealPresenter.DealView, DealPresent
     public interface Proxy extends ProxyPlace<DealPresenter> {}
 
     private final DealService dealService;
-    private final PlaceManager placeManager;
     private List<Deal> deals = Lists.newLinkedList();
 
     @Inject
-    public DealPresenter(EventBus eventBus, DealView view, Proxy proxy, PlaceManager placeManager, DealService dealService) {
-        super(eventBus, view, proxy, ApplicationPresenter.TYPE_SetMainContent);
-        this.placeManager = placeManager;
+    public DealPresenter(EventBus eventBus, DealView view, Proxy proxy, DealService dealService) {
+        super(eventBus, view, proxy, MainPresenter.MAIN_SLOT);
         getView().setUiHandlers(this);
         this.dealService = dealService;
     }
@@ -53,6 +49,10 @@ public class DealPresenter extends Presenter<DealPresenter.DealView, DealPresent
     @Override protected void onBind() {
         super.onBind();
         addRegisteredHandler(DealCreatedEvent.getType(), this);
+    }
+
+    @Override protected void onReveal() {
+        super.onReveal();
         dealService.load(new Response<List<Deal>>() {
             @Override protected void handle(List<Deal> loadedDeals) {
                 deals.clear();
@@ -82,10 +82,6 @@ public class DealPresenter extends Presenter<DealPresenter.DealView, DealPresent
                 refreshView();
             }
         });
-    }
-
-    @Override public void openDealEditor() {
-        placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.EDITOR).build());
     }
 
     private void refreshView() {

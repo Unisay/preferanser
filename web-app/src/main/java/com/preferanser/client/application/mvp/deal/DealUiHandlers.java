@@ -9,6 +9,4 @@ public interface DealUiHandlers extends UiHandlers {
 
     void deleteDeal(Deal deal);
 
-    void openDealEditor();
-
 }

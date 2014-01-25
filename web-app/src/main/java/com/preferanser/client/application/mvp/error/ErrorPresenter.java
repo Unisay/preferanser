@@ -41,7 +41,7 @@ public class ErrorPresenter extends Presenter<ErrorPresenter.TheView, ErrorPrese
 
     @Inject
     public ErrorPresenter(EventBus eventBus, TheView view, TheProxy proxy) {
-        super(eventBus, view, proxy, ApplicationPresenter.TYPE_SetMainContent);
+        super(eventBus, view, proxy, ApplicationPresenter.MAIN_SLOT);
     }
 
 }

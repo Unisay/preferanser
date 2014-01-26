@@ -29,12 +29,14 @@ import com.preferanser.shared.domain.Card;
 public class CardWidget extends Composite {
 
     public interface Handlers {
+
         void onCardMouseDown(CardWidget cardWidget, MouseDownEvent event);
         void onCardDragStart(CardWidget cardWidget, DragStartEvent event);
         void onCardDoubleClick(CardWidget cardWidget, DoubleClickEvent event);
     }
 
     private final Card card;
+
     private final SimplePanel wrapper;
     private final Image image;
     private final String disabledClass;
@@ -93,6 +95,10 @@ public class CardWidget extends Composite {
             wrapper.addStyleName(disabledClass);
         else
             wrapper.removeStyleName(disabledClass);
+    }
+
+    public boolean isEnabled() {
+        return !disabled;
     }
 
     public boolean isDisabled() {

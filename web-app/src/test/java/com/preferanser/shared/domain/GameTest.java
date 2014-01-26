@@ -68,7 +68,7 @@ public class GameTest {
         game = new Game(name, description, Players.THREE, widow, handContractMap, turnRotator, handCardMultimap, centerCardHandMap);
     }
 
-    @Test(expectedExceptions = IllegalArgumentException.class, expectedExceptionsMessageRegExp = "No hand holds DIAMOND_ACE")
+    @Test(expectedExceptions = IllegalArgumentException.class, expectedExceptionsMessageRegExp = "^No hand holds DIAMOND_ACE.*$")
     public void testMakeTurn_FromHandWrongCard() throws Exception {
         game.makeTurn(DIAMOND_ACE);
     }

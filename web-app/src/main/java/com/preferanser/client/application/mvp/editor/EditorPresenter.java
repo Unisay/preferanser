@@ -129,10 +129,12 @@ public class EditorPresenter extends Presenter<EditorPresenter.EditorView, Edito
 
     @Override
     public void changeCardLocation(Card card, Optional<TableLocation> maybeNewLocation) {
-        if (maybeNewLocation.isPresent()) try {
-            gameBuilder.moveCard(card, maybeNewLocation.get());
-        } catch (GameException e) {
-            log.finer(e.getMessage());
+        if (maybeNewLocation.isPresent()) {
+            try {
+                gameBuilder.moveCard(card, maybeNewLocation.get());
+            } catch (GameException e) {
+                log.finer(e.getMessage());
+            }
         }
         refreshCards();
     }

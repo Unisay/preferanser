@@ -41,6 +41,7 @@ import com.preferanser.client.service.Response;
 import com.preferanser.shared.domain.Card;
 import com.preferanser.shared.domain.Game;
 import com.preferanser.shared.domain.Hand;
+import com.preferanser.shared.domain.TableLocation;
 import com.preferanser.shared.domain.entity.Deal;
 import com.preferanser.shared.domain.exception.GameException;
 import com.preferanser.shared.dto.CurrentUserDto;
@@ -135,11 +136,13 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
             refreshView();
     }
 
-    @Override public void makeTurn(Card card) {
-        try {
-            gameOptional.get().makeTurn(card);
-        } catch (GameException e) {
-            log.finer(e.getMessage());
+    @Override public void changeCardLocation(Card card, Optional<TableLocation> newLocation) {
+        if (newLocation.isPresent() && newLocation.get() == TableLocation.CENTER) {
+            try {
+                gameOptional.get().makeTurn(card);
+            } catch (GameException e) {
+                log.finer(e.getMessage());
+            }
         }
         refreshView();
     }

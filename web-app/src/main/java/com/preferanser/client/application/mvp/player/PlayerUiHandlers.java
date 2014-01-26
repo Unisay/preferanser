@@ -19,23 +19,17 @@
 
 package com.preferanser.client.application.mvp.player;
 
-import com.gwtplatform.mvp.client.UiHandlers;
-import com.preferanser.shared.domain.Card;
+import com.preferanser.client.application.mvp.editor.TableUiHandlers;
 
 /**
  * Game UI handlers
  */
-public interface PlayerUiHandlers extends UiHandlers {
+public interface PlayerUiHandlers extends TableUiHandlers {
 
     /**
      * User moved cards to sluff
      */
     void sluff();
-
-    /**
-     * User moved card to center or double clicked
-     */
-    void makeTurn(Card card);
 
     /**
      * Switch to editor page

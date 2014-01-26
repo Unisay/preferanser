@@ -29,10 +29,10 @@ import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.*;
-import com.gwtplatform.mvp.client.UiHandlers;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
 import com.preferanser.client.application.i18n.I18nHelper;
 import com.preferanser.client.application.i18n.PreferanserConstants;
+import com.preferanser.client.application.mvp.editor.TableUiHandlers;
 import com.preferanser.client.application.mvp.editor.style.TableStyle;
 import com.preferanser.client.application.widgets.CardWidget;
 import com.preferanser.client.application.widgets.HandCard;
@@ -53,9 +53,7 @@ import static com.google.common.collect.Iterables.transform;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Maps.newHashMapWithExpectedSize;
 
-abstract public class BaseTableView<U extends UiHandlers>
-    extends ViewWithUiHandlers<U>
-    implements TableView, CardWidget.Handlers {
+abstract public class BaseTableView<U extends TableUiHandlers> extends ViewWithUiHandlers<U> implements TableView, CardWidget.Handlers {
 
     protected final Map<Hand, Label> handTricksCountMap = newHashMapWithExpectedSize(Hand.values().length);
 
@@ -229,14 +227,12 @@ abstract public class BaseTableView<U extends UiHandlers>
                     if (imageDragController.isDrag()) {
                         Point cursorPoint = Point.FromMouseEvent(event);
                         Card card = cardWidgetBiMap.inverse().get(imageDragController.getCardWidget());
-                        changeCardLocation(card, findTargetTableLocation(cursorPoint));
+                        getUiHandlers().changeCardLocation(card, findTargetTableLocation(cursorPoint));
                     }
                 }
             }, MouseUpEvent.getType());
         }
     }
-
-    protected abstract void changeCardLocation(Card card, Optional<TableLocation> targetTableLocation);
 
     private Optional<TableLocation> findTargetTableLocation(Point cursorPoint) {
         Map<Panel, TableLocation> panels = table.getPanelLocations();

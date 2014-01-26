@@ -19,16 +19,12 @@
 
 package com.preferanser.client.application.mvp.editor;
 
-import com.google.common.base.Optional;
-import com.gwtplatform.mvp.client.UiHandlers;
-import com.preferanser.shared.domain.Card;
 import com.preferanser.shared.domain.Hand;
-import com.preferanser.shared.domain.TableLocation;
 
 /**
  * Game builder UI handlers
  */
-public interface EditorUiHandlers extends UiHandlers {
+public interface EditorUiHandlers extends TableUiHandlers {
 
     /**
      * User chose contract for hand
@@ -58,13 +54,5 @@ public interface EditorUiHandlers extends UiHandlers {
      * Create new deal
      */
     void reset();
-
-    /**
-     * User changed card location
-     *
-     * @param card        card
-     * @param newLocation new location is optional
-     */
-    void changeCardLocation(Card card, Optional<TableLocation> newLocation);
 
 }

@@ -132,13 +132,8 @@ public class PlayerView extends BaseTableView<PlayerUiHandlers> implements Playe
     @Override public void onCardDoubleClick(CardWidget cardWidget, DoubleClickEvent event) {
         if (cardWidget.isEnabled() && cardWidget.isDraggable()) {
             getLog().finer("Card location change: " + cardWidget.getCard() + " -> " + TableLocation.CENTER);
-            getUiHandlers().makeTurn(cardWidget.getCard());
+            getUiHandlers().changeCardLocation(cardWidget.getCard(), Optional.of(TableLocation.CENTER));
         }
-    }
-
-    @Override protected void changeCardLocation(Card card, Optional<TableLocation> targetTableLocation) {
-        if (targetTableLocation.isPresent() && targetTableLocation.get() == TableLocation.CENTER)
-            getUiHandlers().makeTurn(card);
     }
 
     @Override public void displayHandTricks(Map<Hand, Integer> handTricks) {

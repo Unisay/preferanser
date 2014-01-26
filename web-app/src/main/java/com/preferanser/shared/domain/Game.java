@@ -173,7 +173,7 @@ public class Game {
             if (entry.getValue() == card)
                 return entry.getKey();
         }
-        throw new IllegalArgumentException("No hand holds " + card);
+        throw new IllegalArgumentException("No hand holds " + card + ": " + handCardMultimap);
     }
 
     private void truncateTrickLog() {

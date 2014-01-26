@@ -10,7 +10,7 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-
+    <name>Preferanser Backend Client</name>
     <artifactId>backend-client</artifactId>
 
     <dependencies>

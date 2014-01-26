@@ -36,12 +36,15 @@ import com.preferanser.client.application.i18n.PreferanserMessages;
 import com.preferanser.client.application.mvp.DealCreatedEvent;
 import com.preferanser.client.application.mvp.TableView;
 import com.preferanser.client.gwtp.NameTokens;
+import com.preferanser.client.service.DealService;
+import com.preferanser.client.service.Response;
 import com.preferanser.shared.domain.Card;
 import com.preferanser.shared.domain.Game;
 import com.preferanser.shared.domain.Hand;
 import com.preferanser.shared.domain.entity.Deal;
 import com.preferanser.shared.domain.exception.GameException;
 import com.preferanser.shared.dto.CurrentUserDto;
+import org.fusesource.restygwt.client.Method;
 
 import java.util.Map;
 import java.util.Set;
@@ -65,8 +68,10 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
         void displaySluffButton(boolean visible);
     }
 
-    private PlaceManager placeManager;
+    private final PlaceManager placeManager;
+    private final DealService dealService;
     private final CurrentUserDto currentUserDto;
+    private Optional<Long> dealId = Optional.absent();
     private Optional<Game> gameOptional = Optional.absent();
 
     @ProxyStandard
@@ -78,10 +83,12 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
                            EventBus eventBus,
                            PlayerView view,
                            Proxy proxy,
+                           DealService dealService,
                            PreferanserMessages preferanserMessages,
                            CurrentUserDto currentUserDto) {
         super(eventBus, view, proxy, ApplicationPresenter.MAIN_SLOT);
         this.placeManager = placeManager;
+        this.dealService = dealService;
         this.currentUserDto = currentUserDto;
         getView().setUiHandlers(this);
         getView().displayAuthInfo(preferanserMessages.loggedInAs(currentUserDto.nickname));
@@ -92,12 +99,29 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
         addRegisteredHandler(DealCreatedEvent.getType(), this);
     }
 
+    @Override
+    public void prepareFromRequest(PlaceRequest request) {
+        super.prepareFromRequest(request);
+        String dealIdString = request.getParameter("deal", "");
+        try {
+            this.dealId = Optional.of(Long.parseLong(dealIdString));
+        } catch (NumberFormatException e) {
+            placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.DEALS).build());
+        }
+    }
+
     @Override protected void onReveal() {
         super.onReveal();
-        if (!gameOptional.isPresent()) {
-            switchToEditor();
-        } else {
+        if (gameOptional.isPresent()) {
             refreshView();
+        } else {
+            Preconditions.checkState(dealId.isPresent(), "DealId is not initialized from URL parameter 'deal'");
+            dealService.getById(dealId.get(), new Response<Deal>() {
+                @Override public void onSuccess(Method method, Deal deal) {
+                    gameOptional = Optional.of(new Game(deal));
+                    refreshView();
+                }
+            });
         }
     }
 
@@ -107,13 +131,11 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
     }
 
     @Override public void sluff() {
-        Preconditions.checkState(gameOptional.isPresent(), "PlayerPresenter.sluff(game is null)");
         if (gameOptional.get().sluffTrick())
             refreshView();
     }
 
     @Override public void makeTurn(Card card) {
-        Preconditions.checkState(gameOptional.isPresent(), "PlayerPresenter.changeCardLocation(game is null)");
         try {
             gameOptional.get().makeTurn(card);
         } catch (GameException e) {
@@ -131,24 +153,22 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
     }
 
     @Override public void undo() {
-        Preconditions.checkState(gameOptional.isPresent(), "PlayerPresenter.undo(game is null)");
         gameOptional.get().undoTurn();
         refreshView();
     }
 
     @Override public void redo() {
-        Preconditions.checkState(gameOptional.isPresent(), "PlayerPresenter.redo(game is null)");
         gameOptional.get().redoTurn();
         refreshView();
     }
 
     @Override public void reset() {
-        Preconditions.checkState(gameOptional.isPresent(), "PlayerPresenter.reset(game is null)");
         gameOptional.get().reset();
         refreshView();
     }
 
     private void refreshView() {
+        log.finest("Refreshing view...");
         Game game = gameOptional.get();
         PlayerView view = getView();
         view.displayTurn(game.getTurn());

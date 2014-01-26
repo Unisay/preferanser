@@ -26,11 +26,7 @@ import com.google.gwt.resources.client.CssResource;
  */
 public interface TableStyle extends CssResource, TurnPointerStyle {
 
-    String card();
-
     @ClassName("gwt-Label") String gwtLabel();
-
-    String dragging();
 
     @ClassName("not-visible") String notVisible();
 

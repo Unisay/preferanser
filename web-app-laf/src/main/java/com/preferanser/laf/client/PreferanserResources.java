@@ -35,16 +35,6 @@ public interface PreferanserResources extends ClientBundle {
     @SuppressWarnings("unused")
     interface Style extends CssResource {
 
-        String title();
-
-        @ClassName("title-smaller") String titleSmaller();
-
-        String dialogTop();
-
-        String Caption();
-
-        String layoutCenter();
-
         @ClassName("gwt-DialogBox") String gwtDialogBox();
 
         @ClassName("gwt-DialogBoxOverlay") String gwtDialogBoxOverlay();
@@ -65,6 +55,25 @@ public interface PreferanserResources extends ClientBundle {
 
         @ClassName("gwt-TabBarItem-selected") String gwtTabBarItemSelected();
 
+        String title();
+
+        @ClassName("title-smaller") String titleSmaller();
+
+        String dialogTop();
+
+        String Caption();
+
+        String layoutCenter();
+
+        String requestLoader();
+
+        String card();
+
+        @ClassName("card-disabled") String cardDisabled();
+
+        @ClassName("card-draggable") String cardDraggable();
+
+        @ClassName("card-dragging") String cardDragging();
     }
 
     interface DataGridResources extends DataGrid.Resources {
@@ -83,10 +92,10 @@ public interface PreferanserResources extends ClientBundle {
     @ImageResource.ImageOptions(height = 32, width = 32) ImageResource arrowRight();
 
     @Source("images/green_cloth_back.jpg")
-    @ImageResource.ImageOptions(repeatStyle = ImageResource.RepeatStyle.Horizontal) ImageResource pageBackground();
+    @ImageResource.ImageOptions(repeatStyle = ImageResource.RepeatStyle.Horizontal) ImageResource greenClothBackground();
 
     @Source("images/wood_back.png")
-    @ImageResource.ImageOptions(repeatStyle = ImageResource.RepeatStyle.Both) ImageResource dialogBackground();
+    @ImageResource.ImageOptions(repeatStyle = ImageResource.RepeatStyle.Both) ImageResource woodBackground();
 
     @Source("images/cards/c7.png")
     @ImageResource.ImageOptions(width = 109, height = 144) ImageResource c7();

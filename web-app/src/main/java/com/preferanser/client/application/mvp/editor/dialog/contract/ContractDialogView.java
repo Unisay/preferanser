@@ -35,7 +35,6 @@ import com.preferanser.shared.domain.Hand;
 
 public class ContractDialogView extends PopupViewWithUiHandlers<ContractDialogUiHandlers> implements ContractDialogPresenter.TheView {
 
-
     interface Binder extends UiBinder<PopupPanel, ContractDialogView> {}
 
     @UiField DialogBox dialog;

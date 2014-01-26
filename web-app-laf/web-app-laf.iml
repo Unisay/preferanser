@@ -3,7 +3,8 @@
   <component name="FacetManager">
     <facet type="gwt" name="GWT">
       <configuration>
-        <setting name="gwtSdkUrl" value="file://$USER_HOME$/lib/gwt-2.5.1" />
+        <setting name="gwtSdkUrl" value="file://$MAVEN_REPOSITORY$/com/google/gwt/gwt-dev/2.5.1/" />
+        <setting name="gwtSdkType" value="maven" />
       </configuration>
     </facet>
   </component>

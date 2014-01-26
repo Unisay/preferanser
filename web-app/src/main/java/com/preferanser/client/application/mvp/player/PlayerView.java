@@ -25,15 +25,13 @@ import com.google.gwt.event.dom.client.DoubleClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.ui.Anchor;
-import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.*;
 import com.google.inject.Inject;
 import com.preferanser.client.application.i18n.I18nHelper;
 import com.preferanser.client.application.i18n.PreferanserConstants;
 import com.preferanser.client.application.mvp.BaseTableView;
 import com.preferanser.client.application.widgets.CardWidget;
+import com.preferanser.client.application.widgets.HandCard;
 import com.preferanser.client.application.widgets.TurnPointer;
 import com.preferanser.laf.client.PreferanserResources;
 import com.preferanser.shared.domain.Card;
@@ -41,6 +39,7 @@ import com.preferanser.shared.domain.Contract;
 import com.preferanser.shared.domain.Hand;
 import com.preferanser.shared.domain.TableLocation;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
@@ -51,7 +50,6 @@ public class PlayerView extends BaseTableView<PlayerUiHandlers> implements Playe
 
     public interface Binder extends UiBinder<Widget, PlayerView> {}
 
-    // @UiField Label trickCountWidow;
     @UiField Button editButton;
     @UiField Button resetButton;
     @UiField Label trickCountEast;
@@ -74,8 +72,24 @@ public class PlayerView extends BaseTableView<PlayerUiHandlers> implements Playe
     }
 
     @Override public void disableCards(Set<Card> cards) {
-        for (Map.Entry<Card, CardWidget> entry : cardWidgetBiMap.entrySet())
-            entry.getValue().setDisabled(cards.contains(entry.getKey()));
+        for (Map.Entry<Card, CardWidget> entry : cardWidgetBiMap.entrySet()) {
+            CardWidget cardWidget = entry.getValue();
+            boolean disabled = cards.contains(entry.getKey());
+            cardWidget.setDisabled(disabled);
+            if (disabled)
+                cardWidget.setDraggable(false);
+        }
+    }
+
+    @Override protected void displayCenterCards(List<HandCard> handCards) {
+        for (HandCard handCard : handCards)
+            handCard.getCardWidget().setDraggable(false);
+        super.displayCenterCards(handCards);
+    }
+
+    @Override protected void displayCardWidget(HasWidgets panel, CardWidget cardWidget) {
+        cardWidget.setDraggable(true);
+        super.displayCardWidget(panel, cardWidget);
     }
 
     @Override public void displayTurnNavigation(boolean showPrev, boolean showNext) {
@@ -116,8 +130,10 @@ public class PlayerView extends BaseTableView<PlayerUiHandlers> implements Playe
     }
 
     @Override public void onCardDoubleClick(CardWidget cardWidget, DoubleClickEvent event) {
-        getLog().finer("Card location change: " + cardWidget.getCard() + " -> " + TableLocation.CENTER);
-        getUiHandlers().makeTurn(cardWidget.getCard());
+        if (!cardWidget.isDisabled()) {
+            getLog().finer("Card location change: " + cardWidget.getCard() + " -> " + TableLocation.CENTER);
+            getUiHandlers().makeTurn(cardWidget.getCard());
+        }
     }
 
     @Override protected void changeCardLocation(Card card, Optional<TableLocation> targetTableLocation) {

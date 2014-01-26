@@ -29,12 +29,9 @@
             font-size: 12pt;
         }
 
-        .inline {
-            display: inline-block;
-        }
-
         .editorButton {
-            margin: 0 1em;
+            margin-bottom: .5em;
+            float: right;
         }
 
     </ui:style>
@@ -42,9 +39,8 @@
     <g:FlowPanel addStyleNames="{resources.css.layoutCenter}">
         <g:Label text="{constants.preferanser}" addStyleNames="{resources.css.title}"/>
         <g:Label text="{constants.description}" addStyleNames="{style.description}"/>
-        <g:Label text="{constants.createDealDescription}" addStyleNames="{style.description} {style.inline}"/>
-        <g:Button ui:field="editorButton" text="{constants.editor}" addStyleNames="{style.editorButton}"/>
-        <g:Label text="{constants.dealsDescription}" addStyleNames="{style.description} {style.inline}"/>
+        <g:Label text="{constants.createDealDescription}" addStyleNames="{style.description}"/>
+        <g:Button ui:field="editorButton" text="{constants.createDeal}" addStyleNames="{style.editorButton}"/>
         <g:SimplePanel ui:field="main"/>
     </g:FlowPanel>
 

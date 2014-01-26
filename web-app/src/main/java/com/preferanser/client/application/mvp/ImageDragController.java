@@ -27,29 +27,32 @@ import com.preferanser.client.geom.Point;
 
 public class ImageDragController implements MouseMoveHandler, MouseUpHandler {
 
-    private static final String STYLE_DRAGGING = "dragging";
     private CardWidget cardWidget;
     private Point clickOffset;
     private Point parentOffset;
     private boolean down = false;
     private boolean drag = false;
     private final Document doc;
+    private final String cardDraggingClassName;
 
-    public ImageDragController(Document doc) {
+    public ImageDragController(Document doc, String cardDraggingClassName) {
         this.doc = doc;
+        this.cardDraggingClassName = cardDraggingClassName;
     }
 
     public void onCardWidgetMouseDown(CardWidget cardWidget, MouseDownEvent event) {
-        down = true;
-        this.parentOffset = Point.FromWidgetLeftTop(cardWidget.getParent());
-        this.clickOffset = Point.FromMouseEventRelative(event);
-        this.cardWidget = cardWidget;
+        if (cardWidget.isDraggable()) {
+            down = true;
+            this.parentOffset = Point.FromWidgetLeftTop(cardWidget.getParent());
+            this.clickOffset = Point.FromMouseEventRelative(event);
+            this.cardWidget = cardWidget;
+        }
     }
 
     @Override public void onMouseMove(MouseMoveEvent event) {
         if (down) {
             // noinspection GWTStyleCheck
-            cardWidget.addStyleName(STYLE_DRAGGING);
+            cardWidget.addStyleName(cardDraggingClassName);
             drag = true;
         }
         if (drag)
@@ -59,7 +62,7 @@ public class ImageDragController implements MouseMoveHandler, MouseUpHandler {
     @Override public void onMouseUp(MouseUpEvent event) {
         if (drag) {
             // noinspection GWTStyleCheck
-            cardWidget.removeStyleName(STYLE_DRAGGING);
+            cardWidget.removeStyleName(cardDraggingClassName);
             this.cardWidget = null;
             drag = false;
         }

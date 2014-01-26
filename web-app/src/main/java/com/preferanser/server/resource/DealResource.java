@@ -49,6 +49,12 @@ public class DealResource {
         return dealDao.getAllDescDateCreated();
     }
 
+    @GET
+    @Path("/{dealId}")
+    public Deal getById(@PathParam("dealId") Long dealId) {
+        return dealDao.get(dealId);
+    }
+
     @POST
     public Long save(Deal deal) {
         Optional<String> currentUserId = authenticationService.getCurrentUserId();

@@ -47,17 +47,12 @@ public interface EditorUiHandlers extends UiHandlers {
     /**
      * Save deal and switch to player
      */
-    void saveAndPlay(String name, String description);
-
-    /**
-     * Save deal and close editor
-     */
-    void closeWithSave(String name, String description);
+    void save(String name, String description);
 
     /**
      * Close editor without saving deal
      */
-    void closeWithoutSave();
+    void cancel();
 
     /**
      * Create new deal

@@ -28,30 +28,29 @@ import com.preferanser.shared.domain.Card;
 
 public class CardWidget extends Composite {
 
-    private static final String CARD_DISABLED_CLASS_NAME = "card-disabled";
-    private final SimplePanel wrapper;
-    private final Image image;
-
     public interface Handlers {
         void onCardMouseDown(CardWidget cardWidget, MouseDownEvent event);
         void onCardDragStart(CardWidget cardWidget, DragStartEvent event);
         void onCardDoubleClick(CardWidget cardWidget, DoubleClickEvent event);
     }
 
-    private Card card;
+    private final Card card;
+    private final SimplePanel wrapper;
+    private final Image image;
+    private final String disabledClass;
+    private final String draggableClass;
+    private boolean draggable;
+    private boolean disabled;
 
-    public CardWidget(Card card) {
+    public CardWidget(Card card, String disabledClass, String draggableClass) {
         this.card = card;
+        this.disabledClass = disabledClass;
+        this.draggableClass = draggableClass;
         image = new Image();
         wrapper = new SimplePanel(image);
         initWidget(wrapper);
-    }
-
-    public void setDisabled(boolean disabled) {
-        if (disabled)
-            wrapper.addStyleName(CARD_DISABLED_CLASS_NAME);
-        else
-            wrapper.removeStyleName(CARD_DISABLED_CLASS_NAME);
+        setDraggable(true);
+        setDisabled(false);
     }
 
     public void setResource(ImageResource imageResource) {
@@ -76,6 +75,30 @@ public class CardWidget extends Composite {
         });
     }
 
+    public void setDraggable(boolean draggable) {
+        this.draggable = draggable;
+        if (draggable)
+            wrapper.addStyleName(draggableClass);
+        else
+            wrapper.removeStyleName(draggableClass);
+    }
+
+    public boolean isDraggable() {
+        return draggable;
+    }
+
+    public void setDisabled(boolean disabled) {
+        this.disabled = disabled;
+        if (disabled)
+            wrapper.addStyleName(disabledClass);
+        else
+            wrapper.removeStyleName(disabledClass);
+    }
+
+    public boolean isDisabled() {
+        return disabled;
+    }
+
     public Card getCard() {
         return card;
     }
@@ -91,5 +114,13 @@ public class CardWidget extends Composite {
     @Override
     public int hashCode() {
         return card.hashCode();
+    }
+
+    @Override public String toString() {
+        return "CardWidget{" +
+            "draggable=" + draggable +
+            ", disabled=" + disabled +
+            ", card=" + card +
+            '}';
     }
 }

@@ -46,9 +46,8 @@ public class EditorView extends BaseTableView<EditorUiHandlers> implements Edito
 
     public interface Binder extends UiBinder<Widget, EditorView> {}
 
-    @UiField Button closeWithSaveButton;
-    @UiField Button closeWithoutSaveButton;
-    @UiField Button saveAndPlayButton;
+    @UiField Button saveButton;
+    @UiField Button cancelButton;
     @UiField Button resetButton;
 
     @UiField Anchor eastContractAnchor;
@@ -107,16 +106,12 @@ public class EditorView extends BaseTableView<EditorUiHandlers> implements Edito
         }
     }
 
-    @UiHandler("saveAndPlayButton") void onSaveAndPlayButtonClicked(@SuppressWarnings("unused") ClickEvent event) {
-        getUiHandlers().saveAndPlay(dealName.getText(), dealDescription.getText());
+    @UiHandler("saveButton") void onCloseWithSaveButtonClicked(@SuppressWarnings("unused") ClickEvent event) {
+        getUiHandlers().save(dealName.getText(), dealDescription.getText());
     }
 
-    @UiHandler("closeWithSaveButton") void onCloseWithSaveButtonClicked(@SuppressWarnings("unused") ClickEvent event) {
-        getUiHandlers().closeWithSave(dealName.getText(), dealDescription.getText());
-    }
-
-    @UiHandler("closeWithoutSaveButton") void onCloseWithoutSaveButtonClicked(@SuppressWarnings("unused") ClickEvent event) {
-        getUiHandlers().closeWithoutSave();
+    @UiHandler("cancelButton") void onCloseWithoutSaveButtonClicked(@SuppressWarnings("unused") ClickEvent event) {
+        getUiHandlers().cancel();
     }
 
     @UiHandler("resetButton") void onDealButtonClicked(@SuppressWarnings("unused") ClickEvent event) {

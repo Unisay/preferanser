@@ -14,6 +14,7 @@ public class DialogBoxRequestLoader extends DialogBox implements RequestLoader {
         setText("Waiting...");
         setAnimationEnabled(false);
         setGlassEnabled(true);
+        addStyleName(resources.css().requestLoader());
     }
 
     @Override public void startLoader() {

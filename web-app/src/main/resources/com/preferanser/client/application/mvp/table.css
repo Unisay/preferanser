@@ -8,27 +8,6 @@
     visibility: hidden;
 }
 
-@external .card;
-.card {
-    position: absolute;
-    top: 0;
-    left: 0;
-    opacity: 1;
-    cursor: url("img/cursor/open-hand.cur") 4 4, move;
-}
-
-@external .card-disabled;
-.card-disabled > img {
-    filter: brightness(.70);
-    -moz-filter: brightness(.70);
-    -webkit-filter: brightness(.70);
-}
-
-@external .dragging;
-.dragging {
-    cursor: url("img/cursor/closed-hand.cur") 4 4, move;
-}
-
 .buttonsPanel td {
     vertical-align: middle ! important;
 }

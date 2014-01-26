@@ -8,7 +8,7 @@ html, body {
 }
 
 @sprite body {
-    gwt-image: 'pageBackground';
+    gwt-image: 'greenClothBackground';
 }
 
 body {
@@ -25,26 +25,6 @@ body {
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
-}
-
-.title, .title-smaller {
-    margin: 1em 0 .5em 0;
-    font-size: 36pt;
-    font-family: 'Lobster', cursive;
-}
-
-.title-smaller {
-    margin-top: .5em;
-    font-size: 28pt;
-}
-
-.layoutCenter {
-    width: 1164px;
-    margin: 0 auto;
-}
-
-@sprite .gwt-DialogBox {
-    gwt-image: 'dialogBackground';
 }
 
 .gwt-TabBar {
@@ -112,6 +92,10 @@ body {
     box-shadow: 0 0 15px black;
 }
 
+@sprite .gwt-DialogBox {
+    gwt-image: 'woodBackground';
+}
+
 @external .Caption;
 .gwt-DialogBox .Caption {
     color: white;
@@ -124,6 +108,7 @@ body {
 .gwt-DialogBoxOverlay {
     z-index: 100000000;
     background-color: rgba(0, 0, 0, 0.3);
+    filter: blur(3px);
     -webkit-filter: blur(3px);
     -moz-filter: blur(3px);
     -o-filter: blur(3px);
@@ -156,4 +141,45 @@ body {
 
 .gwt-Button:hover {
     text-shadow: -1px -1px 1px black;
+}
+
+.card {
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 1;
+}
+
+.card-draggable {
+    cursor: url("img/cursor/open-hand.cur") 4 4, move;
+}
+
+.card-disabled > img {
+    filter: brightness(.70);
+    -moz-filter: brightness(.70);
+    -webkit-filter: brightness(.70);
+}
+
+.card-dragging {
+    cursor: url("img/cursor/closed-hand.cur") 4 4, move;
+}
+
+.title, .title-smaller {
+    margin: 1em 0 .5em 0;
+    font-size: 36pt;
+    font-family: 'Lobster', cursive;
+}
+
+.title-smaller {
+    margin-top: .5em;
+    font-size: 28pt;
+}
+
+.layoutCenter {
+    width: 1164px;
+    margin: 0 auto;
+}
+
+.requestLoader {
+
 }

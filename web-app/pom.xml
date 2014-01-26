@@ -265,6 +265,7 @@
 
                     <runTarget>Preferanser.html</runTarget>
                     <modules>
+                        <module>com.preferanser.laf.Green</module>
                         <module>com.preferanser.Preferanser</module>
                     </modules>
                 </configuration>
@@ -276,29 +277,6 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
-
-            <!-- Run annotation processors on src/home/java sources -->
-            <plugin>
-                <groupId>org.bsc.maven</groupId>
-                <artifactId>maven-processor-plugin</artifactId>
-                <version>${maven-processor-plugin.version}</version>
-                <executions>
-                    <execution>
-                        <id>process</id>
-                        <goals>
-                            <goal>process</goal>
-                        </goals>
-                        <phase>generate-sources</phase>
-                    </execution>
-                </executions>
-                <dependencies>
-                    <dependency>
-                        <groupId>com.google.web.bindery</groupId>
-                        <artifactId>requestfactory-apt</artifactId>
-                        <version>${gwt.version}</version>
-                    </dependency>
-                </dependencies>
             </plugin>
 
             <plugin>

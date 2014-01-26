@@ -99,8 +99,6 @@ public interface PreferanserConstants extends ConstantsWithLookup {
 
     @DefaultStringValue("Create new deal description") String createDealDescription();
 
-    @DefaultStringValue("Deals description") String dealsDescription();
-
     @DefaultStringValue("Deal description") String dealDescription();
 
     @DefaultStringValue("Deal name") String dealName();
@@ -183,13 +181,15 @@ public interface PreferanserConstants extends ConstantsWithLookup {
 
     @DefaultStringValue("Сохранить") String save();
 
+    @DefaultStringValue("Отменить") String cancel();
+
     @DefaultStringValue("Сохраняется...") String saving();
 
     @DefaultStringValue("Сохранено") String saved();
 
-    @DefaultStringValue("Сохранить и закрыть") String closeWithSave();
-
-    @DefaultStringValue("Закрыть без сохранения") String closeWithoutSave();
-
     @DefaultStringValue("Сохранить и разыграть") String saveAndPlay();
+
+    @DefaultStringValue("Данный расклад не может быть разыгран, так как он содержит следующие ошибки:") String dealWithErrors();
+
+    @DefaultStringValue("Создать расклад") String createDeal();
 }

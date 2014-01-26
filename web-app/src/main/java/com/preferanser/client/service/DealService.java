@@ -48,6 +48,10 @@ public interface DealService extends RestService {
     @GET
     @RequestId(LOAD_DEALS) void load(MethodCallback<List<Deal>> callback);
 
+    @GET
+    @Path("/{dealId}")
+    @RequestId(GET_DEAL) void getById(@PathParam("dealId") Long dealId, MethodCallback<Deal> callback);
+
     @DELETE
     @Path("/{dealId}")
     @RequestId(DELETE_DEAL) void delete(@PathParam("dealId") Long dealId, MethodCallback<Void> callback);

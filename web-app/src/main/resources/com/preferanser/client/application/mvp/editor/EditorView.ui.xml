@@ -67,9 +67,8 @@
         <g:HorizontalPanel height="60" width="100%" verticalAlignment="ALIGN_MIDDLE">
 
             <g:FlowPanel addStyleNames="{style.leftHeader}">
-                <g:Button ui:field="closeWithSaveButton" text="{constants.closeWithSave}" addStyleNames="{style.topButton}" debugId="quitWithSave"/>
-                <g:Button ui:field="closeWithoutSaveButton" text="{constants.closeWithoutSave}" addStyleNames="{style.topButton}" debugId="quitWithoutSave"/>
-                <g:Button ui:field="saveAndPlayButton" text="{constants.saveAndPlay}" addStyleNames="{style.topButton}" debugId="saveAndPlay"/>
+                <g:Button ui:field="saveButton" text="{constants.save}" addStyleNames="{style.topButton}" debugId="save"/>
+                <g:Button ui:field="cancelButton" text="{constants.cancel}" addStyleNames="{style.topButton}" debugId="cancel"/>
                 <g:Button ui:field="resetButton" text="{constants.reset}" addStyleNames="{style.topButton}" debugId="reset"/>
             </g:FlowPanel>
 

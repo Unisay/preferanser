@@ -29,6 +29,7 @@ import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.PopupViewWithUiHandlers;
 import com.preferanser.client.application.i18n.PreferanserConstants;
 import com.preferanser.client.application.i18n.PreferanserMessages;
+import com.preferanser.client.application.widgets.EscapableDialogBox;
 import com.preferanser.client.application.widgets.UlListPanel;
 import com.preferanser.shared.domain.exception.validation.GameBuilderValidationError;
 
@@ -36,17 +37,17 @@ import java.util.Collection;
 
 public class ValidationDialogView extends PopupViewWithUiHandlers<ValidationDialogUiHandlers> implements ValidationDialogPresenter.TheView {
 
-    private final PreferanserConstants constants;
     private final PreferanserMessages messages;
 
     interface Binder extends UiBinder<PopupPanel, ValidationDialogView> {}
 
     @UiField UlListPanel listPanel;
+    @UiField PreferanserConstants constants;
+    @UiField EscapableDialogBox dialog;
 
     @Inject
-    protected ValidationDialogView(Binder uiBinder, EventBus eventBus, PreferanserConstants constants, PreferanserMessages messages) {
+    protected ValidationDialogView(Binder uiBinder, EventBus eventBus, PreferanserMessages messages) {
         super(eventBus);
-        this.constants = constants;
         this.messages = messages;
         initWidget(uiBinder.createAndBindUi(this));
     }

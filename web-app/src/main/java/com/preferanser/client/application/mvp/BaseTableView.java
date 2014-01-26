@@ -44,6 +44,7 @@ import com.preferanser.laf.client.PreferanserResources;
 import com.preferanser.shared.domain.*;
 
 import javax.annotation.Nullable;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
@@ -61,7 +62,7 @@ abstract public class BaseTableView<U extends UiHandlers>
     protected final Map<Hand, TurnPointer> handTurnPointerMap = newHashMapWithExpectedSize(Hand.PLAYING_HANDS.size());
     protected final BiMap<Card, CardWidget> cardWidgetBiMap = EnumHashBiMap.create(Card.class);
     private final Map<Hand, Label> handTitleMap = newHashMapWithExpectedSize(Hand.PLAYING_HANDS.size());
-    private final ImageDragController imageDragController = new ImageDragController(Document.get());
+    private final ImageDragController imageDragController;
 
     protected final I18nHelper i18nHelper;
     protected final CardImageResourceRetriever cardImageResourceRetriever;
@@ -83,10 +84,11 @@ abstract public class BaseTableView<U extends UiHandlers>
     @UiField public Label titleWest;
 
     public BaseTableView(PreferanserConstants constants, PreferanserResources resources, I18nHelper i18nHelper) {
-        cardImageResourceRetriever = new CardImageResourceRetriever(resources);
         this.constants = constants;
         this.i18nHelper = i18nHelper;
         this.resources = resources;
+        cardImageResourceRetriever = new CardImageResourceRetriever(resources);
+        imageDragController = new ImageDragController(Document.get(), resources.css().cardDragging());
     }
 
     protected void init() {
@@ -104,7 +106,7 @@ abstract public class BaseTableView<U extends UiHandlers>
         displayWidow(widow);
     }
 
-    private void detachCardWidgets() {
+    protected void detachCardWidgets() {
         for (CardWidget cardWidget : cardWidgetBiMap.values())
             cardWidget.removeFromParent();
     }
@@ -135,7 +137,11 @@ abstract public class BaseTableView<U extends UiHandlers>
                 return new HandCard(entry.getValue(), cardWidget);
             }
         };
-        table.addHandCardsToCenter(newArrayList(transform(centerCards.entrySet(), func)));
+        displayCenterCards(newArrayList(transform(centerCards.entrySet(), func)));
+    }
+
+    protected void displayCenterCards(List<HandCard> handCards) {
+        table.addHandCardsToCenter(handCards);
     }
 
     private void displayHandCards(Hand hand, Iterable<Card> cards) {
@@ -154,6 +160,10 @@ abstract public class BaseTableView<U extends UiHandlers>
             cardWidget = createCardWidget(card);
             cardWidgetBiMap.put(card, cardWidget);
         }
+        displayCardWidget(panel, cardWidget);
+    }
+
+    protected void displayCardWidget(HasWidgets panel, CardWidget cardWidget) {
         panel.add(cardWidget);
     }
 
@@ -188,7 +198,8 @@ abstract public class BaseTableView<U extends UiHandlers>
     @Override
     public void onCardMouseDown(CardWidget cardWidget, MouseDownEvent event) {
         imageDragController.onCardWidgetMouseDown(cardWidget, event);
-        putCardImageOnTop(cardWidget);
+        if (!cardWidget.isDisabled())
+            putCardImageOnTop(cardWidget);
     }
 
     @Override
@@ -258,10 +269,10 @@ abstract public class BaseTableView<U extends UiHandlers>
     }
 
     protected CardWidget createCardWidget(Card card) {
-        CardWidget cardWidget = new CardWidget(card);
+        CardWidget cardWidget = new CardWidget(card, resources.css().cardDisabled(), resources.css().cardDraggable());
         cardWidget.setResource(cardImageResourceRetriever.getByCard(card));
         cardWidget.setHandlers(this);
-        cardWidget.addStyleName(style.card());
+        cardWidget.addStyleName(resources.css().card());
         cardWidget.ensureDebugId(card.name());
         return cardWidget;
     }

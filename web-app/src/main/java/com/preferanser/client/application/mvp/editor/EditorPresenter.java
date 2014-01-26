@@ -98,7 +98,7 @@ public class EditorPresenter extends Presenter<EditorPresenter.EditorView, Edito
         refreshView();
     }
 
-    @Override public void closeWithoutSave() {
+    @Override public void cancel() {
         revealPlace(NameTokens.DEALS);
     }
 
@@ -145,23 +145,14 @@ public class EditorPresenter extends Presenter<EditorPresenter.EditorView, Edito
     }
 
     @Override
-    public void saveAndPlay(String name, String description) {
-        saveAndOpenPlace(name, description, NameTokens.PLAYER);
-    }
-
-    @Override
-    public void closeWithSave(String name, String description) {
-        saveAndOpenPlace(name, description, NameTokens.DEALS);
-    }
-
-    private void saveAndOpenPlace(String name, String description, final String place) {
+    public void save(String name, String description) {
         try {
             final Deal deal = gameBuilder.setName(name).setDescription(description).build().toDeal();
             dealService.persist(deal, new Response<Long>() { // TODO handle failures
                 @Override public void onSuccess(Method method, Long dealId) {
                     deal.setId(dealId);
                     DealCreatedEvent.fire(EditorPresenter.this, deal);
-                    revealPlace(place);
+                    revealPlace(NameTokens.DEALS);
                 }
             });
         } catch (GameBuilderException e) {

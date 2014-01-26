@@ -48,4 +48,5 @@ public interface PreferanserMessages extends Messages {
     @DefaultMessage("Has duplicate cards: {0}") String hasDuplicateCards(String join);
 
     @DefaultMessage("You have logged in as {0}") String loggedInAs(String nickname);
+
 }

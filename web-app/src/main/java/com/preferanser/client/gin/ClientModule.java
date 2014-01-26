@@ -31,8 +31,8 @@ import com.gwtplatform.mvp.client.gin.DefaultModule;
 import com.preferanser.client.application.ApplicationModule;
 import com.preferanser.client.application.ResourceLoader;
 import com.preferanser.client.application.i18n.I18nHelper;
+import com.preferanser.client.application.widgets.DialogBoxRequestLoader;
 import com.preferanser.client.application.widgets.RequestLoader;
-import com.preferanser.client.application.widgets.StatusMessageRequestLoader;
 import com.preferanser.client.gwtp.AuthBootstrapper;
 import com.preferanser.client.gwtp.NameTokens;
 import com.preferanser.client.restygwt.RequestLoaderRestyGwtListener;
@@ -62,8 +62,8 @@ public class ClientModule extends AbstractPresenterModule {
         requestListenerMultibinder.addBinding().to(RestyGwtLoggingRequestListener.class);
         requestListenerMultibinder.addBinding().to(RequestLoaderRestyGwtListener.class);
 
-        bind(RequestLoader.class).to(StatusMessageRequestLoader.class).in(Singleton.class);
-        // bind(RequestLoader.class).to(DialogBoxRequestLoader.class).in(Singleton.class);
+//        bind(RequestLoader.class).to(StatusMessageRequestLoader.class).in(Singleton.class);
+        bind(RequestLoader.class).to(DialogBoxRequestLoader.class).in(Singleton.class);
         bind(RestyGwtDispatcher.class).toProvider(RestyGwtDispatcher.Provider.class).asEagerSingleton();
         bind(GameBuilder.class).toProvider(GameBuilderProvider.class).in(Singleton.class);
         bind(ResourceLoader.class).asEagerSingleton();

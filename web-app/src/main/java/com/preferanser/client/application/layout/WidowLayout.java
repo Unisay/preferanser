@@ -20,8 +20,8 @@ public class WidowLayout extends PanelLayout<CardWidget> {
     @Override
     public void layoutPanelWidgets(Collection<CardWidget> widgets) {
         Iterator<CardWidget> iterator = widgets.iterator();
-        int x = (getWidth() - cardWidth) / 2;
-        int y = (getHeight() - cardHeight) / 2;
+        int x = panel.getAbsoluteLeft() + (getWidth() - cardWidth) / 2;
+        int y = panel.getAbsoluteTop() + (getHeight() - cardHeight) / 2;
         if (iterator.hasNext()) {
             positionWidget(iterator.next(), x - cardWidth / 2, y, 1);
             if (iterator.hasNext())

@@ -29,7 +29,6 @@ public class ImageDragController implements MouseMoveHandler, MouseUpHandler {
 
     private CardWidget cardWidget;
     private Point clickOffset;
-    private Point parentOffset;
     private boolean down = false;
     private boolean drag = false;
     private final Document doc;
@@ -43,7 +42,6 @@ public class ImageDragController implements MouseMoveHandler, MouseUpHandler {
     public void onCardWidgetMouseDown(CardWidget cardWidget, MouseDownEvent event) {
         if (cardWidget.isDraggable()) {
             down = true;
-            this.parentOffset = Point.FromWidgetLeftTop(cardWidget.getParent());
             this.clickOffset = Point.FromMouseEventRelative(event);
             this.cardWidget = cardWidget;
         }
@@ -56,7 +54,7 @@ public class ImageDragController implements MouseMoveHandler, MouseUpHandler {
             drag = true;
         }
         if (drag)
-            updateImagePosition(Point.FromMouseEvent(event, doc).minus(clickOffset).minus(parentOffset));
+            updatePosition(Point.FromMouseEvent(event, doc).minus(clickOffset));
     }
 
     @Override public void onMouseUp(MouseUpEvent event) {
@@ -69,7 +67,7 @@ public class ImageDragController implements MouseMoveHandler, MouseUpHandler {
         down = false;
     }
 
-    private void updateImagePosition(Point point) {
+    private void updatePosition(Point point) {
         Style style = cardWidget.getElement().getStyle();
         style.setLeft(point.getX(), Style.Unit.PX);
         style.setTop(point.getY(), Style.Unit.PX);

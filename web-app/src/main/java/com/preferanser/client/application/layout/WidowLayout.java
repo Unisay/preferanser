@@ -1,4 +1,4 @@
-package com.preferanser.client.application.mvp.editor.layout;
+package com.preferanser.client.application.layout;
 
 import com.google.gwt.user.client.ui.Panel;
 import com.preferanser.client.application.widgets.CardWidget;

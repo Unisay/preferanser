@@ -17,7 +17,7 @@
  *     along with this program.  If not, see [http://www.gnu.org/licenses/].
  */
 
-package com.preferanser.client.application.mvp.editor.layout;
+package com.preferanser.client.application.layout;
 
 import com.google.gwt.user.client.ui.Panel;
 import com.preferanser.client.application.widgets.CardWidget;
@@ -39,7 +39,7 @@ public class EastLayout extends VerticalPanelLayout<CardWidget> {
 
     @Override
     protected int getStartX() {
-        return getWidth() - super.getStartX() - imageWidth;
+        return panel.getAbsoluteLeft() + getWidth() - imageWidth - PADDING;
     }
 
     @Override

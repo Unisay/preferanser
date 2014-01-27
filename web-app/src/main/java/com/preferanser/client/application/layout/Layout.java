@@ -17,18 +17,12 @@
  *     along with this program.  If not, see [http://www.gnu.org/licenses/].
  */
 
-package com.preferanser.client.application.mvp.editor.layout;
+package com.preferanser.client.application.layout;
 
-import com.google.gwt.user.client.ui.Panel;
-import com.preferanser.client.application.widgets.CardWidget;
+import com.google.gwt.user.client.ui.IsWidget;
 
-public class WestLayout extends VerticalPanelLayout<CardWidget> {
+import java.util.Collection;
 
-    public WestLayout(Panel panel, int imageWidth, int imageHeight) {
-        super(panel, imageWidth, imageHeight);
-        this.maxSameSuitOffsetX = imageWidth - minSameSuitOffsetX;
-        this.minDiffSuitOffsetY = 85;
-        this.maxDiffSuitOffsetY = imageHeight;
-    }
-
+public interface Layout<T extends IsWidget> {
+    void apply(Collection<T> widgets);
 }

@@ -17,7 +17,7 @@
  *     along with this program.  If not, see [http://www.gnu.org/licenses/].
  */
 
-package com.preferanser.client.application.mvp.editor.layout;
+package com.preferanser.client.application.layout;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;

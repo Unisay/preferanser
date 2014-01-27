@@ -31,7 +31,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiChild;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.*;
-import com.preferanser.client.application.mvp.editor.layout.*;
+import com.preferanser.client.application.layout.*;
 import com.preferanser.laf.client.PreferanserResources;
 import com.preferanser.shared.domain.TableLocation;
 

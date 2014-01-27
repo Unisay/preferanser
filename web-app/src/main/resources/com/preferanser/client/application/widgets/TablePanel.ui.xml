@@ -34,7 +34,6 @@
         }
 
         .center {
-            position: relative;
             float: left;
             background-color: rgba(0, 0, 0, 0.1);
             border-radius: 7px;
@@ -88,7 +87,6 @@
         }
 
         .eastCards, .southCards, .westCards {
-            position: relative;
             background-color: rgba(0, 0, 0, 0.1);
             -webkit-border-bottom-left-radius: 7px;
             -webkit-border-bottom-right-radius: 7px;

@@ -17,7 +17,7 @@
  *     along with this program.  If not, see [http://www.gnu.org/licenses/].
  */
 
-package com.preferanser.client.application.mvp.editor.layout;
+package com.preferanser.client.application.layout;
 
 import com.google.gwt.user.client.ui.Panel;
 import com.preferanser.client.application.widgets.CardWidget;
@@ -61,12 +61,7 @@ public class HorizontalLayout extends SortingPanelLayout<CardWidget> {
 
     @Override
     protected int getStartX() {
-        return (getWidth() - getCardsWidth()) / 2;
-    }
-
-    @Override
-    protected int getStartY() {
-        return PADDING;
+        return super.getStartX() + (getWidth() - getCardsWidth()) / 2;
     }
 
     @Override

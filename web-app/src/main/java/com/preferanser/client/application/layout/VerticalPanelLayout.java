@@ -17,7 +17,7 @@
  *     along with this program.  If not, see [http://www.gnu.org/licenses/].
  */
 
-package com.preferanser.client.application.mvp.editor.layout;
+package com.preferanser.client.application.layout;
 
 import com.google.gwt.user.client.ui.Panel;
 import com.preferanser.client.application.widgets.CardWidget;
@@ -52,11 +52,6 @@ public class VerticalPanelLayout<T extends CardWidget> extends SortingPanelLayou
         sameSuitOffsetX = calculateSameSuitOffsetX(cards);
         diffSuitOffsetY = calculateDiffSuitOffsetY(cards);
         super.positionWidgets(cardWidgets);
-    }
-
-    @Override
-    protected int getStartY() {
-        return PADDING;
     }
 
     @Override

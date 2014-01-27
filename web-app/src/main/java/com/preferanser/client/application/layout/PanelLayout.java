@@ -17,19 +17,21 @@
  *     along with this program.  If not, see [http://www.gnu.org/licenses/].
  */
 
-package com.preferanser.client.application.mvp.editor.layout;
+package com.preferanser.client.application.layout;
 
-import com.google.gwt.dom.client.Style;
+import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Panel;
+import com.preferanser.client.application.widgets.CardAnimation;
 import com.preferanser.client.application.widgets.CardWidget;
 
 import java.util.Collection;
 
 public abstract class PanelLayout<T extends IsWidget> implements Layout<T> {
 
+    private static final int ANIMATION_DURATION_MILLIS = 600;
     protected static final int PADDING = 10;
-    private final Panel panel;
+    protected final Panel panel;
 
     protected PanelLayout(Panel panel) {
         this.panel = panel;
@@ -44,11 +46,11 @@ public abstract class PanelLayout<T extends IsWidget> implements Layout<T> {
     protected abstract void layoutPanelWidgets(Collection<T> widgets);
 
     protected int getStartX() {
-        return PADDING;
+        return panel.getAbsoluteLeft() + PADDING;
     }
 
     protected int getStartY() {
-        return PADDING;
+        return panel.getAbsoluteTop() + PADDING;
     }
 
     protected int getWidth() {
@@ -68,10 +70,14 @@ public abstract class PanelLayout<T extends IsWidget> implements Layout<T> {
     }
 
     protected void positionWidget(CardWidget cardWidget, int x, int y, int z) {
-        Style style = cardWidget.getElement().getStyle();
-        style.setLeft(x, Style.Unit.PX);
-        style.setTop(y, Style.Unit.PX);
-        style.setZIndex(z);
+        Element element = cardWidget.getElement();
+        int currentX = element.getOffsetLeft();
+        int currentY = element.getOffsetTop();
+        if (currentX != x || currentY != y) {
+            CardAnimation animation = new CardAnimation(element);
+            animation.moveTo(x, y, ANIMATION_DURATION_MILLIS);
+        }
+        element.getStyle().setZIndex(z);
     }
 
 }

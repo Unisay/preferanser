@@ -17,7 +17,7 @@
  *     along with this program.  If not, see [http://www.gnu.org/licenses/].
  */
 
-package com.preferanser.client.application.mvp.editor.layout;
+package com.preferanser.client.application.layout;
 
 import com.google.common.base.Preconditions;
 import com.google.gwt.user.client.ui.Panel;
@@ -49,23 +49,23 @@ public class CenterLayout extends PanelLayout<HandCard> {
         int x, y;
         switch (handCard.getHand()) {
             case WIDOW:
-                x = (getWidth() - imageWidth) / 2;
-                y = (getHeight() - imageHeight - imageHeight) / 2;
+                x = getStartX() + (getWidth() - imageWidth) / 2;
+                y = getStartY() + (getHeight() - imageHeight - imageHeight) / 2;
                 positionWidget(handCard.getCardWidget(), x, y, z);
                 break;
             case EAST:
-                x = getWidth() / 2;
-                y = (getHeight() - imageHeight) / 2;
+                x = getStartX() + getWidth() / 2;
+                y = getStartY() + (getHeight() - imageHeight) / 2;
                 positionWidget(handCard.getCardWidget(), x, y, z);
                 break;
             case SOUTH:
-                x = (getWidth() - imageWidth) / 2;
-                y = getHeight() / 2;
+                x = getStartX() + (getWidth() - imageWidth) / 2;
+                y = getStartY() + getHeight() / 2;
                 positionWidget(handCard.getCardWidget(), x, y, z);
                 break;
             case WEST:
-                x = (getWidth() - imageWidth - imageWidth) / 2;
-                y = (getHeight() - imageHeight) / 2;
+                x = getStartX() + (getWidth() - imageWidth - imageWidth) / 2;
+                y = getStartY() + (getHeight() - imageHeight) / 2;
                 positionWidget(handCard.getCardWidget(), x, y, z);
                 break;
             default:

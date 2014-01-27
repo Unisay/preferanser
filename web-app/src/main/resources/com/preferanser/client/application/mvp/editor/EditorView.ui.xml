@@ -117,9 +117,11 @@
 
             <p:center>
                 <p:Widgets>
-                    <p:TurnPointer ui:field="turnPointerEast" turn="EAST"/>
-                    <p:TurnPointer ui:field="turnPointerSouth" turn="SOUTH"/>
-                    <p:TurnPointer ui:field="turnPointerWest" turn="WEST"/>
+                    <g:FlowPanel debugId="turn-pointer-holder" addStyleNames="{style.turnPointerHolder}">
+                        <p:TurnPointer ui:field="turnPointerEast" turn="EAST"/>
+                        <p:TurnPointer ui:field="turnPointerSouth" turn="SOUTH"/>
+                        <p:TurnPointer ui:field="turnPointerWest" turn="WEST"/>
+                    </g:FlowPanel>
                 </p:Widgets>
             </p:center>
 

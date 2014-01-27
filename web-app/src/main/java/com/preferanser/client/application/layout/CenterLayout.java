@@ -49,23 +49,23 @@ public class CenterLayout extends PanelLayout<HandCard> {
         int x, y;
         switch (handCard.getHand()) {
             case WIDOW:
-                x = getStartX() + (getWidth() - imageWidth) / 2;
-                y = getStartY() + (getHeight() - imageHeight - imageHeight) / 2;
+                x = panel.getAbsoluteLeft() + (getWidth() - imageWidth) / 2;
+                y = panel.getAbsoluteTop() + (getHeight() - imageHeight - imageHeight) / 2;
                 positionWidget(handCard.getCardWidget(), x, y, z);
                 break;
             case EAST:
-                x = getStartX() + getWidth() / 2;
-                y = getStartY() + (getHeight() - imageHeight) / 2;
+                x = panel.getAbsoluteLeft() + getWidth() / 2;
+                y = panel.getAbsoluteTop() + (getHeight() - imageHeight) / 2;
                 positionWidget(handCard.getCardWidget(), x, y, z);
                 break;
             case SOUTH:
-                x = getStartX() + (getWidth() - imageWidth) / 2;
-                y = getStartY() + getHeight() / 2;
+                x = panel.getAbsoluteLeft() + (getWidth() - imageWidth) / 2;
+                y = panel.getAbsoluteTop() + getHeight() / 2;
                 positionWidget(handCard.getCardWidget(), x, y, z);
                 break;
             case WEST:
-                x = getStartX() + (getWidth() - imageWidth - imageWidth) / 2;
-                y = getStartY() + (getHeight() - imageHeight) / 2;
+                x = panel.getAbsoluteLeft() + (getWidth() - imageWidth - imageWidth) / 2;
+                y = panel.getAbsoluteTop() + (getHeight() - imageHeight) / 2;
                 positionWidget(handCard.getCardWidget(), x, y, z);
                 break;
             default:

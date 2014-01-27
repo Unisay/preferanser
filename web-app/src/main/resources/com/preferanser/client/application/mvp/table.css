@@ -50,6 +50,12 @@
 
 }
 
+.turnPointerHolder {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
 @external .turnPointer;
 .turnPointer {
     position: absolute;
@@ -74,7 +80,7 @@
 
 @external .turnPointerSouth;
 .turnPointerSouth {
-    top: 405px;
+    top: 383px;
     transform: rotate(90deg);
     -ms-transform: rotate(90deg);
     -webkit-transform: rotate(90deg);

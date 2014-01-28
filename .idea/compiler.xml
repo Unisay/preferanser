@@ -23,6 +23,7 @@
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="true" />
         <module name="backend-client" />
+        <module name="web-app-laf" />
         <module name="web-test" />
       </profile>
     </annotationProcessing>

@@ -5,6 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/backend-client/backend-client.iml" filepath="$PROJECT_DIR$/backend-client/backend-client.iml" />
       <module fileurl="file://$PROJECT_DIR$/preferanser.iml" filepath="$PROJECT_DIR$/preferanser.iml" />
       <module fileurl="file://$PROJECT_DIR$/web-app/web-app.iml" filepath="$PROJECT_DIR$/web-app/web-app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/web-app-laf/web-app-laf.iml" filepath="$PROJECT_DIR$/web-app-laf/web-app-laf.iml" />
       <module fileurl="file://$PROJECT_DIR$/web-test/web-test.iml" filepath="$PROJECT_DIR$/web-test/web-test.iml" />
     </modules>
   </component>

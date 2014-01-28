@@ -8,8 +8,20 @@
           <element id="module-output" name="web-app" />
         </element>
         <element id="directory" name="lib">
-          <element id="library" level="project" name="Maven: com.googlecode.objectify:objectify:4.0b3" />
+          <element id="archive" name="web-app-1.0-SNAPSHOT.jar">
+            <element id="module-output" name="web-app" />
+          </element>
+          <element id="archive" name="web-app-laf-1.0-SNAPSHOT.jar">
+            <element id="module-output" name="web-app-laf" />
+          </element>
           <element id="library" level="project" name="Maven: com.google.guava:guava:15.0" />
+          <element id="library" level="project" name="Maven: ch.qos.logback:logback-classic:1.0.13" />
+          <element id="library" level="project" name="Maven: ch.qos.logback:logback-core:1.0.13" />
+          <element id="library" level="project" name="Maven: org.slf4j:slf4j-api:1.7.5" />
+          <element id="library" level="project" name="Maven: org.slf4j:jcl-over-slf4j:1.7.5" />
+          <element id="library" level="project" name="Maven: org.slf4j:log4j-over-slf4j:1.7.5" />
+          <element id="library" level="project" name="Maven: org.slf4j:jul-to-slf4j:1.7.5" />
+          <element id="library" level="project" name="Maven: com.googlecode.objectify:objectify:4.0b3" />
           <element id="library" level="project" name="Maven: com.google.appengine:appengine-api-1.0-sdk:1.7.6" />
           <element id="library" level="project" name="Maven: com.google.appengine:appengine-api-labs:1.7.6" />
           <element id="library" level="project" name="Maven: javax.validation:validation-api:1.0.0.GA" />
@@ -36,12 +48,6 @@
           <element id="library" level="project" name="Maven: javax.ws.rs:jsr311-api:1.1.1" />
           <element id="library" level="project" name="Maven: org.hibernate:hibernate-validator:4.3.1.Final" />
           <element id="library" level="project" name="Maven: org.jboss.logging:jboss-logging:3.1.0.CR2" />
-          <element id="library" level="project" name="Maven: ch.qos.logback:logback-classic:1.0.13" />
-          <element id="library" level="project" name="Maven: ch.qos.logback:logback-core:1.0.13" />
-          <element id="library" level="project" name="Maven: org.slf4j:slf4j-api:1.7.5" />
-          <element id="library" level="project" name="Maven: org.slf4j:jcl-over-slf4j:1.7.5" />
-          <element id="library" level="project" name="Maven: org.slf4j:log4j-over-slf4j:1.7.5" />
-          <element id="library" level="project" name="Maven: org.slf4j:jul-to-slf4j:1.7.5" />
         </element>
       </element>
       <element id="gwt-compiler-output" facet="web-app/gwt/GWT" />

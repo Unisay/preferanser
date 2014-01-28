@@ -19,7 +19,10 @@
 
 package com.preferanser.server.guice;
 
+import com.google.appengine.api.users.UserService;
+import com.google.appengine.api.users.UserServiceFactory;
 import com.google.inject.AbstractModule;
+import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import com.google.inject.servlet.RequestScoped;
 import com.preferanser.server.service.AuthenticationService;
@@ -35,6 +38,10 @@ public class RestModule extends AbstractModule {
         for (Class<?> resource : new PackagesResourceConfig("com.preferanser.server.resource").getClasses())
             bind(resource).in(Singleton.class);
         bind(CurrentUserDto.class).toProvider(AuthenticationService.class).in(RequestScoped.class);
+    }
+
+    @Provides private UserService provideUserService() {
+        return UserServiceFactory.getUserService();
     }
 
 }

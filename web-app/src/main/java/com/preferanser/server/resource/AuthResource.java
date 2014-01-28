@@ -32,8 +32,12 @@ import javax.ws.rs.core.MediaType;
 @Produces(MediaType.APPLICATION_JSON)
 public class AuthResource {
 
+    private final AuthenticationService authenticationService;
+
     @Inject
-    private AuthenticationService authenticationService;
+    public AuthResource(AuthenticationService authenticationService) {
+        this.authenticationService = authenticationService;
+    }
 
     @GET
     @Path("current")

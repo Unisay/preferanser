@@ -20,6 +20,7 @@
 package com.preferanser.shared.domain.entity;
 
 
+import com.google.common.base.Objects;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Index;
 
@@ -48,5 +49,30 @@ public class User extends BaseEntity {
 
     public void setAdmin(boolean admin) {
         isAdmin = admin;
+    }
+
+    @Override public String toString() {
+        final StringBuilder sb = new StringBuilder("User{");
+        sb.append("googleId='").append(googleId).append('\'');
+        sb.append(", isAdmin=").append(isAdmin);
+        sb.append('}');
+        return sb.toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        User that = (User) o;
+
+        return Objects.equal(this.googleId, that.googleId) &&
+            Objects.equal(this.isAdmin, that.isAdmin) &&
+            Objects.equal(this.id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(googleId, isAdmin, id);
     }
 }

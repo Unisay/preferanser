@@ -20,7 +20,6 @@
 package com.preferanser.server.service;
 
 import com.google.appengine.api.users.UserService;
-import com.google.appengine.api.users.UserServiceFactory;
 import com.google.common.base.Optional;
 import com.google.inject.Provider;
 import com.preferanser.server.dao.UserDao;
@@ -31,11 +30,12 @@ import javax.inject.Inject;
 
 public class AuthenticationService implements Provider<CurrentUserDto> {
 
-    private final UserService userService = UserServiceFactory.getUserService();
     private final UserDao userDao;
+    private final UserService userService;
 
     @Inject
-    public AuthenticationService(UserDao userDao) {
+    public AuthenticationService(Provider<UserService> userServiceProvider, UserDao userDao) {
+        this.userService = userServiceProvider.get();
         this.userDao = userDao;
     }
 
@@ -43,16 +43,16 @@ public class AuthenticationService implements Provider<CurrentUserDto> {
     public CurrentUserDto get() {
         boolean isLoggedIn = userService.isUserLoggedIn();
 
-        CurrentUserDto currentUser = new CurrentUserDto(isLoggedIn, getCurrentUser().orNull());
-        currentUser.logoutUrl = userService.createLogoutURL("/");
-        currentUser.loginUrl = userService.createLoginURL("/");
+        CurrentUserDto currentUserDto = new CurrentUserDto(isLoggedIn, getCurrentUser().orNull());
+        currentUserDto.logoutUrl = userService.createLogoutURL("/");
+        currentUserDto.loginUrl = userService.createLoginURL("/");
 
         if (isLoggedIn) {
-            currentUser.isAdmin = userService.isUserAdmin();
-            currentUser.nickname = userService.getCurrentUser().getNickname();
+            currentUserDto.isAdmin = userService.isUserAdmin();
+            currentUserDto.nickname = userService.getCurrentUser().getNickname();
         }
 
-        return currentUser;
+        return currentUserDto;
     }
 
     public Optional<User> getCurrentUser() {
@@ -65,6 +65,7 @@ public class AuthenticationService implements Provider<CurrentUserDto> {
         if (user == null) {
             user = new User();
             user.setGoogleId(googleId);
+            user.setAdmin(userService.isUserAdmin());
             user = userDao.save(user);
         }
         return Optional.of(user);

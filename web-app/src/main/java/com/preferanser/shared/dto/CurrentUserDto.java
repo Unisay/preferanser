@@ -20,10 +20,10 @@
 package com.preferanser.shared.dto;
 
 import com.google.common.base.Objects;
-import com.preferanser.shared.domain.entity.BaseEntity;
 import com.preferanser.shared.domain.entity.User;
 
-public class CurrentUserDto extends BaseEntity implements Dto {
+@SuppressWarnings("unused")
+public class CurrentUserDto implements Dto {
 
     public Boolean isAdmin;
     public Boolean isLoggedIn;
@@ -54,6 +54,54 @@ public class CurrentUserDto extends BaseEntity implements Dto {
         nickname = currentUser.nickname;
     }
 
+    public Boolean getAdmin() {
+        return isAdmin;
+    }
+
+    public void setAdmin(Boolean admin) {
+        isAdmin = admin;
+    }
+
+    public Boolean getLoggedIn() {
+        return isLoggedIn;
+    }
+
+    public void setLoggedIn(Boolean loggedIn) {
+        isLoggedIn = loggedIn;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public String getLogoutUrl() {
+        return logoutUrl;
+    }
+
+    public void setLogoutUrl(String logoutUrl) {
+        this.logoutUrl = logoutUrl;
+    }
+
+    public String getLoginUrl() {
+        return loginUrl;
+    }
+
+    public void setLoginUrl(String loginUrl) {
+        this.loginUrl = loginUrl;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
     @Override public String toString() {
         return Objects.toStringHelper(this)
             .add("isAdmin", isAdmin)
@@ -63,5 +111,25 @@ public class CurrentUserDto extends BaseEntity implements Dto {
             .add("loginUrl", loginUrl)
             .add("nickname", nickname)
             .toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        CurrentUserDto that = (CurrentUserDto) o;
+
+        return Objects.equal(this.isAdmin, that.isAdmin) &&
+            Objects.equal(this.isLoggedIn, that.isLoggedIn) &&
+            Objects.equal(this.user, that.user) &&
+            Objects.equal(this.logoutUrl, that.logoutUrl) &&
+            Objects.equal(this.loginUrl, that.loginUrl) &&
+            Objects.equal(this.nickname, that.nickname);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(isAdmin, isLoggedIn, user, logoutUrl, loginUrl, nickname);
     }
 }

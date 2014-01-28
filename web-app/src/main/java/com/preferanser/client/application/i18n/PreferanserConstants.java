@@ -167,7 +167,7 @@ public interface PreferanserConstants extends ConstantsWithLookup {
 
     @DefaultStringValue("Delete") String delete();
 
-    @DefaultStringValue("Loading") String loading();
+    @DefaultStringValue("Wait a second...") String waiting();
 
     @DefaultStringValue("Loaded") String loaded();
 

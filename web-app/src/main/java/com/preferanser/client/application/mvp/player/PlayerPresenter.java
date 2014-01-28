@@ -148,7 +148,7 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
     }
 
     @Override public void switchToEditor() {
-        placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.EDITOR).build());
+        revealPlace(NameTokens.EDITOR);
     }
 
     @Override public void logout() {
@@ -168,6 +168,14 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
     @Override public void reset() {
         gameOptional.get().reset();
         refreshView();
+    }
+
+    @Override public void close() {
+        revealPlace(NameTokens.DEALS);
+    }
+
+    private void revealPlace(String place) {
+        placeManager.revealPlace(new PlaceRequest.Builder().nameToken(place).build());
     }
 
     private void refreshView() {

@@ -98,6 +98,10 @@
     float: left;
 }
 
+.leftHeader .gwt-Button {
+    margin-right: 8px;
+}
+
 .rightHeader {
     float: right;
 }
@@ -137,8 +141,4 @@
     position: relative;
     top: 45px;
     left: 190px;
-}
-
-.topButton {
-    margin-right: 8px;
 }

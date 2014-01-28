@@ -67,9 +67,9 @@
         <g:HorizontalPanel height="60" width="100%" verticalAlignment="ALIGN_MIDDLE">
 
             <g:FlowPanel addStyleNames="{style.leftHeader}">
-                <g:Button ui:field="saveButton" text="{constants.save}" addStyleNames="{style.topButton}" debugId="save"/>
-                <g:Button ui:field="cancelButton" text="{constants.cancel}" addStyleNames="{style.topButton}" debugId="cancel"/>
-                <g:Button ui:field="resetButton" text="{constants.reset}" addStyleNames="{style.topButton}" debugId="reset"/>
+                <g:Button ui:field="saveButton" text="{constants.save}" debugId="save"/>
+                <g:Button ui:field="cancelButton" text="{constants.cancel}" debugId="cancel"/>
+                <g:Button ui:field="resetButton" text="{constants.reset}" debugId="reset"/>
             </g:FlowPanel>
 
             <g:FlowPanel addStyleNames="{style.rightHeader}">

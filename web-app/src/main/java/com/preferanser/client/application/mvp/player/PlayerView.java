@@ -58,6 +58,7 @@ public class PlayerView extends BaseTableView<PlayerUiHandlers> implements Playe
     @UiField Anchor undoAnchor;
     @UiField Anchor redoAnchor;
     @UiField Button sluffButton;
+    @UiField Button closeButton;
 
     @Inject
     public PlayerView(Binder uiBinder, PreferanserResources resources, PreferanserConstants constants, I18nHelper i18nHelper) {
@@ -107,6 +108,10 @@ public class PlayerView extends BaseTableView<PlayerUiHandlers> implements Playe
             turnPointer.removeStyleName(style.notDisplayed());
         else
             turnPointer.addStyleName(style.notDisplayed());
+    }
+
+    @UiHandler("closeButton") void onCloseClicked(@SuppressWarnings("unused") ClickEvent event) {
+        getUiHandlers().close();
     }
 
     @UiHandler("editButton") void onEditClicked(@SuppressWarnings("unused") ClickEvent event) {

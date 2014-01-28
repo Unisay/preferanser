@@ -28,9 +28,10 @@
 
         <g:Label text="{constants.preferanser}" addStyleNames="{resources.css.titleSmaller}"/>
 
-        <g:HorizontalPanel height="60" spacing="10" width="100%">
+        <g:HorizontalPanel height="60" width="100%" verticalAlignment="ALIGN_MIDDLE">
 
             <g:FlowPanel addStyleNames="{style.leftHeader}">
+                <g:Button ui:field="closeButton" text="{constants.close}" debugId="close"/>
                 <g:Button ui:field="editButton" text="{constants.edit}" debugId="edit"/>
                 <g:Button ui:field="resetButton" text="{constants.reset}" debugId="reset"/>
             </g:FlowPanel>
@@ -70,13 +71,13 @@
             <p:center>
                 <p:Widgets>
                     <g:FlowPanel debugId="relative-elements-holder" addStyleNames="{style.relativeElementsHolder}">
+                        <g:Button ui:field="sluffButton" text="{constants.sluff}" debugId="sluff" addStyleNames="{style.sluffButton}"/>
                         <p:TurnPointer ui:field="turnPointerEast" turn="EAST"/>
                         <p:TurnPointer ui:field="turnPointerSouth" turn="SOUTH"/>
                         <p:TurnPointer ui:field="turnPointerWest" turn="WEST"/>
                         <g:Anchor ui:field="undoAnchor" title="{constants.undo}" debugId="undo" addStyleNames="{style.undoLink} fa fa-arrow-left"/>
                         <g:Anchor ui:field="redoAnchor" title="{constants.redo}" debugId="redo" addStyleNames="{style.redoLink} fa fa-arrow-right"/>
                     </g:FlowPanel>
-                    <g:Button ui:field="sluffButton" text="{constants.sluff}" debugId="sluff" addStyleNames="{style.sluffButton}"/>
                 </p:Widgets>
             </p:center>
 

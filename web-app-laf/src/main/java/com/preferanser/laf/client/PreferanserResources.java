@@ -74,6 +74,8 @@ public interface PreferanserResources extends ClientBundle {
         @ClassName("card-draggable") String cardDraggable();
 
         @ClassName("card-dragging") String cardDragging();
+
+        String loadingImage();
     }
 
     interface DataGridResources extends DataGrid.Resources {
@@ -87,6 +89,9 @@ public interface PreferanserResources extends ClientBundle {
     @Source("style.css") Style css();
 
     DataGridResources dataGrid();
+
+    @Source("images/sand_clock.png")
+    @ImageResource.ImageOptions(height = 128, width = 128) ImageResource sandClock();
 
     @Source("images/arrow_right.png")
     @ImageResource.ImageOptions(height = 32, width = 32) ImageResource arrowRight();

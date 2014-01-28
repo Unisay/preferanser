@@ -105,14 +105,9 @@ body {
     text-align: center;
 }
 
-.gwt-DialogBoxOverlay {
+.gwt-DialogBoxOverlay, .gwt-PopupPanelGlass {
     z-index: 100000000;
     background-color: rgba(0, 0, 0, 0.3);
-    filter: blur(3px);
-    -webkit-filter: blur(3px);
-    -moz-filter: blur(3px);
-    -o-filter: blur(3px);
-    -ms-filter: blur(3px);
 }
 
 @external .dialogTop;
@@ -181,4 +176,9 @@ body {
 
 .requestLoader {
 
+}
+
+.loadingImage {
+    margin: 1em auto;
+    display: block;
 }

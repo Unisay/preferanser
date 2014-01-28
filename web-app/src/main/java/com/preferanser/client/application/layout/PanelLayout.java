@@ -73,11 +73,11 @@ public abstract class PanelLayout<T extends IsWidget> implements Layout<T> {
         Element element = cardWidget.getElement();
         int currentX = element.getOffsetLeft();
         int currentY = element.getOffsetTop();
+        element.getStyle().setZIndex(z);
         if (currentX != x || currentY != y) {
             CardAnimation animation = new CardAnimation(element);
             animation.moveTo(x, y, ANIMATION_DURATION_MILLIS);
         }
-        element.getStyle().setZIndex(z);
     }
 
 }

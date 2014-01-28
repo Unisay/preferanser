@@ -64,7 +64,7 @@ public class DealResource {
         if (!currentUserOptional.isPresent())
             throw new NoAuthenticatedUserException();
 
-        if (deal.isShared() && !currentUserOptional.get().isAdmin())
+        if (deal.isShared() && !currentUserOptional.get().getAdmin())
             throw new NotAuthorizedUserException("Only admins can create shared deals");
 
         deal.setId(null);
@@ -82,7 +82,7 @@ public class DealResource {
         Optional<User> currentUserOptional = authenticationService.getCurrentUser();
 
         if (!currentUserOptional.isPresent())
-            throw new NoAuthenticatedUserException(); // TODO replace by standard JAX-RS exception
+            throw new NoAuthenticatedUserException(); // TODO force HTTP status
 
         Deal deal = dealDao.get(dealId);
         if (!deal.getUserId().equals(currentUserOptional.get().getGoogleId()))

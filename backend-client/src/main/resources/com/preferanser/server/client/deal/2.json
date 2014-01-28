@@ -1,6 +1,7 @@
 {
     "name": "Этюд №2.",
     "description": "Предложите план розыгрыша за вистующих.",
+    "shared": true,
     "firstTurn": "WEST",
     "players": "THREE",
     "eastContract": "WHIST",

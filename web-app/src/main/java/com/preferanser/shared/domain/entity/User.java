@@ -29,7 +29,7 @@ public class User extends BaseEntity {
 
     @Index
     private String googleId;
-    private boolean isAdmin;
+    private boolean admin;
 
     public User() {
         googleId = "";
@@ -43,18 +43,18 @@ public class User extends BaseEntity {
         this.googleId = googleId;
     }
 
-    public boolean isAdmin() {
-        return isAdmin;
+    public boolean getAdmin() {
+        return admin;
     }
 
     public void setAdmin(boolean admin) {
-        isAdmin = admin;
+        this.admin = admin;
     }
 
     @Override public String toString() {
         final StringBuilder sb = new StringBuilder("User{");
         sb.append("googleId='").append(googleId).append('\'');
-        sb.append(", isAdmin=").append(isAdmin);
+        sb.append(", getAdmin=").append(admin);
         sb.append('}');
         return sb.toString();
     }
@@ -67,12 +67,12 @@ public class User extends BaseEntity {
         User that = (User) o;
 
         return Objects.equal(this.googleId, that.googleId) &&
-            Objects.equal(this.isAdmin, that.isAdmin) &&
+            Objects.equal(this.admin, that.admin) &&
             Objects.equal(this.id, that.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(googleId, isAdmin, id);
+        return Objects.hashCode(googleId, admin, id);
     }
 }

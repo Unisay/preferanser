@@ -9,43 +9,50 @@ import com.gwtplatform.mvp.client.Presenter;
 import com.gwtplatform.mvp.client.View;
 import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.ProxyStandard;
-import com.gwtplatform.mvp.client.annotations.UseGatekeeper;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.preferanser.client.application.mvp.DealCreatedEvent;
 import com.preferanser.client.application.mvp.main.MainPresenter;
-import com.preferanser.client.gwtp.LoggedInGatekeeper;
 import com.preferanser.client.gwtp.NameTokens;
 import com.preferanser.client.service.DealService;
 import com.preferanser.client.service.Response;
 import com.preferanser.shared.domain.entity.Deal;
+import com.preferanser.shared.dto.CurrentUserDto;
 import org.fusesource.restygwt.client.Method;
 
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 public class DealPresenter extends Presenter<DealPresenter.DealView, DealPresenter.Proxy>
     implements DealUiHandlers, DealCreatedEvent.DealCreatedHandler {
 
     public interface DealView extends View, HasUiHandlers<DealUiHandlers> {
-        void displayDeals(List<Deal> deals);
+        void displayDeals(List<Deal> deals, boolean allowModifications);
     }
 
     @ProxyStandard
     @NameToken(NameTokens.DEALS)
-    @UseGatekeeper(LoggedInGatekeeper.class)
     public interface Proxy extends ProxyPlace<DealPresenter> {}
 
     private final DealService dealService;
     private final PlaceManager placeManager;
+    private final CurrentUserDto currentUserDto;
     private List<Deal> deals = Lists.newLinkedList();
 
     @Inject
-    public DealPresenter(EventBus eventBus, DealView view, Proxy proxy, PlaceManager placeManager, DealService dealService) {
+    public DealPresenter(EventBus eventBus,
+                         DealView view,
+                         Proxy proxy,
+                         PlaceManager placeManager,
+                         DealService dealService,
+                         CurrentUserDto currentUserDto
+    ) {
         super(eventBus, view, proxy, MainPresenter.MAIN_SLOT);
         this.placeManager = placeManager;
+        this.currentUserDto = currentUserDto;
         getView().setUiHandlers(this);
         this.dealService = dealService;
     }
@@ -92,10 +99,12 @@ public class DealPresenter extends Presenter<DealPresenter.DealView, DealPresent
     private void refreshView() {
         Collections.sort(deals, new Comparator<Deal>() {
             @Override public int compare(Deal deal1, Deal deal2) {
-                return deal2.getCreated().compareTo(deal1.getCreated());
+                Date created1 = deal2.getCreated();
+                Date created2 = deal1.getCreated();
+                return created1 != null ? created1.compareTo(created2) : -1;
             }
         });
-        getView().displayDeals(deals);
+        getView().displayDeals(deals, currentUserDto.isLoggedIn);
     }
 
 }

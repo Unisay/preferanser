@@ -104,7 +104,7 @@ public class CurrentUserDto implements Dto {
 
     @Override public String toString() {
         return Objects.toStringHelper(this)
-            .add("isAdmin", isAdmin)
+            .add("getAdmin", isAdmin)
             .add("isLoggedIn", isLoggedIn)
             .add("user", user)
             .add("logoutUrl", logoutUrl)

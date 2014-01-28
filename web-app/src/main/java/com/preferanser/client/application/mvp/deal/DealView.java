@@ -12,6 +12,7 @@ import com.gwtplatform.mvp.client.ViewWithUiHandlers;
 import com.preferanser.client.application.i18n.PreferanserConstants;
 import com.preferanser.shared.domain.entity.Deal;
 
+import java.util.Date;
 import java.util.List;
 
 public class DealView extends ViewWithUiHandlers<DealUiHandlers> implements DealPresenter.DealView {
@@ -42,7 +43,7 @@ public class DealView extends ViewWithUiHandlers<DealUiHandlers> implements Deal
         initWidget(uiBinder.createAndBindUi(this));
     }
 
-    @Override public void displayDeals(List<Deal> deals) {
+    @Override public void displayDeals(List<Deal> deals, boolean allowModifications) {
         dealTable.removeAllRows();
         for (int i = 0; i < deals.size(); i++) {
             Deal deal = deals.get(i);
@@ -51,12 +52,14 @@ public class DealView extends ViewWithUiHandlers<DealUiHandlers> implements Deal
             dealTable.setWidget(i, 0, new Label(deal.getName()));
             dealTable.setWidget(i, 1, createDateTimeLabel(deal));
             dealTable.setWidget(i, 2, createPlayButton(deal));
-            dealTable.setWidget(i, 3, createDeleteButton(deal));
+            if (allowModifications)
+                dealTable.setWidget(i, 3, createDeleteButton(deal));
         }
     }
 
     private Label createDateTimeLabel(Deal deal) {
-        Label label = new Label(DATE_TIME_FORMAT.format(deal.getCreated()));
+        Date created = deal.getCreated();
+        Label label = new Label(created == null ? "" : DATE_TIME_FORMAT.format(created));
         label.setWordWrap(false);
         return label;
     }

@@ -26,7 +26,7 @@ public class Clock {
     private static Date now;
 
     public static Date getNow() {
-        return now;
+        return now == null ? new Date() : now;
     }
 
     public static void setNow(Date now) {

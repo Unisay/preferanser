@@ -28,6 +28,7 @@ public class User extends BaseEntity {
 
     @Index
     private String googleId;
+    private boolean isAdmin;
 
     public User() {
         googleId = "";
@@ -41,4 +42,11 @@ public class User extends BaseEntity {
         this.googleId = googleId;
     }
 
+    public boolean isAdmin() {
+        return isAdmin;
+    }
+
+    public void setAdmin(boolean admin) {
+        isAdmin = admin;
+    }
 }

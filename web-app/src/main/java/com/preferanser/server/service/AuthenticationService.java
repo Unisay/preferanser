@@ -43,7 +43,7 @@ public class AuthenticationService implements Provider<CurrentUserDto> {
     public CurrentUserDto get() {
         boolean isLoggedIn = userService.isUserLoggedIn();
 
-        CurrentUserDto currentUser = new CurrentUserDto(isLoggedIn, getUser());
+        CurrentUserDto currentUser = new CurrentUserDto(isLoggedIn, getCurrentUser().orNull());
         currentUser.logoutUrl = userService.createLogoutURL("/");
         currentUser.loginUrl = userService.createLoginURL("/");
 
@@ -55,29 +55,19 @@ public class AuthenticationService implements Provider<CurrentUserDto> {
         return currentUser;
     }
 
-    public User getUser() {
-        boolean isLoggedIn = userService.isUserLoggedIn();
-
-        User user = new User();
-        if (isLoggedIn) {
-            String googleId = userService.getCurrentUser().getUserId();
-
-            user = userDao.findByGoogleId(googleId);
-            if (user == null) {
-                user = new User();
-                user.setGoogleId(googleId);
-                user = userDao.save(user);
-            }
-        }
-        return user;
-    }
-
-
-    public Optional<String> getCurrentUserId() {
+    public Optional<User> getCurrentUser() {
         if (!userService.isUserLoggedIn())
             return Optional.absent();
-        else
-            return Optional.of(userService.getCurrentUser().getUserId());
+
+        String googleId = userService.getCurrentUser().getUserId();
+
+        User user = userDao.findByGoogleId(googleId);
+        if (user == null) {
+            user = new User();
+            user.setGoogleId(googleId);
+            user = userDao.save(user);
+        }
+        return Optional.of(user);
     }
 
 }

@@ -23,12 +23,14 @@ import com.google.common.base.Optional;
 import com.google.inject.Inject;
 import com.preferanser.server.dao.DealDao;
 import com.preferanser.server.exception.NoAuthenticatedUserException;
+import com.preferanser.server.exception.NotAuthorizedUserException;
 import com.preferanser.server.service.AuthenticationService;
 import com.preferanser.shared.domain.entity.Deal;
+import com.preferanser.shared.domain.entity.User;
+import com.preferanser.shared.util.Clock;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
-import java.util.Date;
 import java.util.List;
 
 @Path("/deal")
@@ -45,8 +47,8 @@ public class DealResource {
     }
 
     @GET
-    public List<Deal> load() {
-        return dealDao.getAllDescDateCreated();
+    public List<Deal> getAllSharedDeals() {
+        return dealDao.getAllSharedDeals();
     }
 
     @GET
@@ -57,23 +59,35 @@ public class DealResource {
 
     @POST
     public Long save(Deal deal) {
-        Optional<String> currentUserId = authenticationService.getCurrentUserId();
-        if (!currentUserId.isPresent())
+        Optional<User> currentUserOptional = authenticationService.getCurrentUser();
+
+        if (!currentUserOptional.isPresent())
             throw new NoAuthenticatedUserException();
-        deal.setUserId(currentUserId.get());
-        deal.setCreated(new Date());
-        return dealDao.save(deal).getId();
+
+        if (deal.isShared() && !currentUserOptional.get().isAdmin())
+            throw new NotAuthorizedUserException("Only admins can create shared deals");
+
+        deal.setId(null);
+        deal.setUserId(currentUserOptional.get().getGoogleId());
+        deal.setCreated(Clock.getNow());
+        Deal savedDeal = dealDao.save(deal);
+
+        assert savedDeal != null : "dealDao.save(" + deal + ") returned null";
+        return savedDeal.getId();
     }
 
     @DELETE
     @Path("/{dealId}")
     public void delete(@PathParam("dealId") Long dealId) {
-        Optional<String> currentUserId = authenticationService.getCurrentUserId();
-        if (!currentUserId.isPresent())
+        Optional<User> currentUserOptional = authenticationService.getCurrentUser();
+
+        if (!currentUserOptional.isPresent())
             throw new NoAuthenticatedUserException(); // TODO replace by standard JAX-RS exception
+
         Deal deal = dealDao.get(dealId);
-        if (!deal.getUserId().equals(currentUserId.get()))
-            throw new NoAuthenticatedUserException(); // TODO replace by standard JAX-RS exception
+        if (!deal.getUserId().equals(currentUserOptional.get().getGoogleId()))
+            throw new NotAuthorizedUserException();
+
         dealDao.delete(deal);
     }
 

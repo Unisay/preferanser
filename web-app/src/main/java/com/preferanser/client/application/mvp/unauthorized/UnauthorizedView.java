@@ -19,16 +19,11 @@
 
 package com.preferanser.client.application.mvp.unauthorized;
 
-import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.Label;
 import com.gwtplatform.mvp.client.ViewImpl;
 
 public class UnauthorizedView extends ViewImpl implements UnauthorizedPresenter.TheView {
 
     public UnauthorizedView() {
-        FlowPanel panel = new FlowPanel();
-        panel.add(new Label("UNAUTHORIZED"));
-        initWidget(panel);
     }
 
 }

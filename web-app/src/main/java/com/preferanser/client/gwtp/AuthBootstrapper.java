@@ -57,5 +57,6 @@ public class AuthBootstrapper implements Bootstrapper {
             super.onFailure(method, exception);
             placeManager.revealCurrentPlace();
         }
+
     }
 }

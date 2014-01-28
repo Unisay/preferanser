@@ -9,13 +9,11 @@ import com.gwtplatform.mvp.client.View;
 import com.gwtplatform.mvp.client.annotations.ContentSlot;
 import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.ProxyStandard;
-import com.gwtplatform.mvp.client.annotations.UseGatekeeper;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 import com.preferanser.client.application.ApplicationPresenter;
-import com.preferanser.client.gwtp.LoggedInGatekeeper;
 import com.preferanser.client.gwtp.NameTokens;
 
 public class MainPresenter extends Presenter<MainPresenter.MainView, MainPresenter.Proxy> implements MainUiHandlers {
@@ -24,7 +22,6 @@ public class MainPresenter extends Presenter<MainPresenter.MainView, MainPresent
 
     @ProxyStandard
     @NameToken(NameTokens.DEALS)
-    @UseGatekeeper(LoggedInGatekeeper.class)
     public interface Proxy extends ProxyPlace<MainPresenter> {}
 
     @ContentSlot

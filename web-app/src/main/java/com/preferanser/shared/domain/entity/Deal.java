@@ -1,5 +1,6 @@
 package com.preferanser.shared.domain.entity;
 
+import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSetMultimap;
 import com.google.common.collect.Multimap;
@@ -13,6 +14,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import static com.google.common.collect.Lists.newArrayList;
+import static com.google.common.collect.Sets.newHashSet;
 
 @Entity
 @SuppressWarnings({"unused", "ClassWithTooManyFields", "ClassWithTooManyMethods"})
@@ -30,6 +34,7 @@ public class Deal extends BaseEntity implements Dto {
 
     @Index
     private Date created;
+    private boolean shared;
     private Hand firstTurn;
     private Players players;
     private Contract eastContract;
@@ -43,6 +48,26 @@ public class Deal extends BaseEntity implements Dto {
     private int currentTrickIndex;
 
     public Deal() {
+    }
+
+    public Deal(Deal deal) {
+        id = deal.id;
+        name = deal.name;
+        description = deal.description;
+        userId = deal.userId;
+        created = deal.created == null ? null : new Date(deal.created.getTime());
+        shared = deal.shared;
+        firstTurn = deal.firstTurn;
+        players = deal.players;
+        eastContract = deal.eastContract;
+        southContract = deal.southContract;
+        westContract = deal.westContract;
+        widow = deal.widow == null ? null : new Widow(deal.widow);
+        eastCards = deal.eastCards == null ? null : newHashSet(deal.eastCards);
+        southCards = deal.southCards == null ? null : newHashSet(deal.southCards);
+        westCards = deal.westCards == null ? null : newHashSet(deal.westCards);
+        turns = deal.turns == null ? null : newArrayList(deal.turns);
+        currentTrickIndex = deal.currentTrickIndex;
     }
 
     public String getName() {
@@ -75,6 +100,14 @@ public class Deal extends BaseEntity implements Dto {
 
     public void setCreated(Date created) {
         this.created = created;
+    }
+
+    public boolean isShared() {
+        return shared;
+    }
+
+    public void setShared(boolean shared) {
+        this.shared = shared;
     }
 
     public Hand getFirstTurn() {
@@ -187,4 +220,60 @@ public class Deal extends BaseEntity implements Dto {
         return builder.build();
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Deal that = (Deal) o;
+
+        return Objects.equal(this.name, that.name) &&
+            Objects.equal(this.description, that.description) &&
+            Objects.equal(this.userId, that.userId) &&
+            Objects.equal(this.created, that.created) &&
+            Objects.equal(this.shared, that.shared) &&
+            Objects.equal(this.firstTurn, that.firstTurn) &&
+            Objects.equal(this.players, that.players) &&
+            Objects.equal(this.eastContract, that.eastContract) &&
+            Objects.equal(this.southContract, that.southContract) &&
+            Objects.equal(this.westContract, that.westContract) &&
+            Objects.equal(this.widow, that.widow) &&
+            Objects.equal(this.eastCards, that.eastCards) &&
+            Objects.equal(this.southCards, that.southCards) &&
+            Objects.equal(this.westCards, that.westCards) &&
+            Objects.equal(this.turns, that.turns) &&
+            Objects.equal(this.currentTrickIndex, that.currentTrickIndex) &&
+            Objects.equal(this.id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(name, description, userId, created, shared, firstTurn,
+            players, eastContract, southContract, westContract, widow,
+            eastCards, southCards, westCards, turns, currentTrickIndex,
+            id);
+    }
+
+    @Override public String toString() {
+        final StringBuilder sb = new StringBuilder("Deal{");
+        sb.append("name='").append(name).append('\'');
+        sb.append(", description='").append(description).append('\'');
+        sb.append(", id='").append(id).append('\'');
+        sb.append(", userId='").append(userId).append('\'');
+        sb.append(", created=").append(created);
+        sb.append(", shared=").append(shared);
+        sb.append(", firstTurn=").append(firstTurn);
+        sb.append(", players=").append(players);
+        sb.append(", eastContract=").append(eastContract);
+        sb.append(", southContract=").append(southContract);
+        sb.append(", westContract=").append(westContract);
+        sb.append(", widow=").append(widow);
+        sb.append(", eastCards=").append(eastCards);
+        sb.append(", southCards=").append(southCards);
+        sb.append(", westCards=").append(westCards);
+        sb.append(", turns=").append(turns);
+        sb.append(", currentTrickIndex=").append(currentTrickIndex);
+        sb.append('}');
+        return sb.toString();
+    }
 }

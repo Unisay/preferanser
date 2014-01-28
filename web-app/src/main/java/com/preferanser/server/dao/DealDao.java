@@ -33,4 +33,9 @@ public class DealDao extends BaseDao<Deal> {
     public List<Deal> getAllDescDateCreated() {
         return ofy().query(Deal.class).order("-created").list();
     }
+
+    public List<Deal> getAllSharedDeals() {
+        return ofy().query(Deal.class).filter("shared", true).order("-created").list();
+    }
+
 }

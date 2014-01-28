@@ -1,5 +1,5 @@
 language: java
-script: mvn clean install -pl web-app -am
+script: mvn clean install -pl web-app -am -Dgwt.compiler.localWorkers=1
 cache:
   directories:
   - $HOME/.m2

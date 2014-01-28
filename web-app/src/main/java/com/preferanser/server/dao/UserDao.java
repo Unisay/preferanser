@@ -20,12 +20,17 @@
 package com.preferanser.server.dao;
 
 
+import com.google.inject.Inject;
+import com.preferanser.server.dao.objectify.OfyFactory;
 import com.preferanser.shared.domain.entity.User;
+
+import javax.validation.Validator;
 
 public class UserDao extends BaseDao<User> {
 
-    public UserDao() {
-        super(User.class);
+    @Inject
+    public UserDao(OfyFactory ofyFactory, Validator validator) {
+        super(User.class, ofyFactory, validator);
     }
 
     public User findByGoogleId(String googleId) {

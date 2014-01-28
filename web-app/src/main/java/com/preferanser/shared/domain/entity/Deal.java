@@ -34,7 +34,10 @@ public class Deal extends BaseEntity implements Dto {
 
     @Index
     private Date created;
+
+    @Index
     private boolean shared;
+
     private Hand firstTurn;
     private Players players;
     private Contract eastContract;

@@ -19,7 +19,6 @@
 
 package com.preferanser.server.dao;
 
-import com.google.common.collect.Lists;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.cmd.LoadType;
 import com.preferanser.server.dao.objectify.Ofy;
@@ -30,27 +29,25 @@ import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.inject.Inject;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 import java.util.*;
+
+import static com.google.common.collect.Lists.newArrayList;
 
 public abstract class BaseDao<T extends BaseEntity> {
 
     private static Logger logger = LoggerFactory.getLogger(BaseDao.class);
 
     private final Class<T> clazz;
-
-    @Inject
     private OfyFactory ofyFactory;
-
-    @Inject
     private Validator validator;
-
     private Ofy lazyOfy;
 
-    protected BaseDao(final Class<T> clazz) {
+    protected BaseDao(final Class<T> clazz, OfyFactory ofyFactory, Validator validator) {
         this.clazz = clazz;
+        this.ofyFactory = ofyFactory;
+        this.validator = validator;
     }
 
     public List<T> getAll() {
@@ -68,6 +65,10 @@ public abstract class BaseDao<T extends BaseEntity> {
             String message = String.format("Entity of type '%s' failed validation on save()", clazz.getSimpleName());
             throw new ValidationException(message);
         }
+    }
+
+    public Collection<T> save(T... entities) {
+        return save(newArrayList(entities));
     }
 
     public Collection<T> save(Iterable<T> entities) {
@@ -115,7 +116,7 @@ public abstract class BaseDao<T extends BaseEntity> {
     }
 
     public List<T> get(List<Key<T>> keys) {
-        return Lists.newArrayList(ofy().load().keys(keys).values());
+        return newArrayList(ofy().load().keys(keys).values());
     }
 
     protected Ofy ofy() {

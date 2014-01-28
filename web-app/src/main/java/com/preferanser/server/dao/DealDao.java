@@ -20,14 +20,18 @@
 package com.preferanser.server.dao;
 
 
+import com.google.inject.Inject;
+import com.preferanser.server.dao.objectify.OfyFactory;
 import com.preferanser.shared.domain.entity.Deal;
 
+import javax.validation.Validator;
 import java.util.List;
 
 public class DealDao extends BaseDao<Deal> {
 
-    public DealDao() {
-        super(Deal.class);
+    @Inject
+    public DealDao(OfyFactory ofyFactory, Validator validator) {
+        super(Deal.class, ofyFactory, validator);
     }
 
     public List<Deal> getAllDescDateCreated() {

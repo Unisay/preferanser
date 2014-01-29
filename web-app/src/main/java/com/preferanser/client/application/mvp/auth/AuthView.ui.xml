@@ -17,6 +17,7 @@
 
         .avatar {
             float: right;
+            border-radius: 7px;
         }
     </ui:style>
 

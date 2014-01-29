@@ -1,0 +1,32 @@
+{
+    "name": "Мизер Ласкера.",
+    "description": "Поймать мизер.",
+    "shared": true,
+    "firstTurn": "EAST",
+    "players": "THREE",
+    "eastContract": "PASS",
+    "southContract": "MISER",
+    "westContract": "PASS",
+    "widow": {
+        "card1": "HEART_KING",
+        "card2": "HEART_QUEEN"
+    },
+    "eastCards": [
+        "SPADE_ACE", "SPADE_KING", "SPADE_JACK", "SPADE_10",
+        "CLUB_ACE", "CLUB_10",
+        "DIAMOND_ACE", "DIAMOND_7",
+        "HEART_ACE", "HEART_7"
+    ],
+    "southCards": [
+        "SPADE_9", "SPADE_8", "SPADE_7",
+        "CLUB_JACK", "CLUB_9", "CLUB_8", "CLUB_7",
+        "DIAMOND_9", "DIAMOND_8",
+        "HEART_8"
+    ],
+    "westCards": [
+        "SPADE_QUEEN",
+        "CLUB_KING", "CLUB_QUEEN",
+        "DIAMOND_KING", "DIAMOND_QUEEN", "DIAMOND_JACK", "DIAMOND_10",
+        "HEART_JACK", "HEART_10", "HEART_9"
+    ]
+}

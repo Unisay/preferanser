@@ -56,5 +56,4 @@ public interface PlayerUiHandlers extends TableUiHandlers {
      */
     void close();
 
-    void logout(); // TODO move to a separate mvp
 }

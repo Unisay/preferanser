@@ -32,7 +32,6 @@ import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.preferanser.client.application.ApplicationPresenter;
-import com.preferanser.client.application.i18n.PreferanserMessages;
 import com.preferanser.client.application.mvp.DealCreatedEvent;
 import com.preferanser.client.application.mvp.TableView;
 import com.preferanser.client.application.mvp.editor.dialog.EditorDialogs;
@@ -44,7 +43,6 @@ import com.preferanser.shared.domain.*;
 import com.preferanser.shared.domain.entity.Deal;
 import com.preferanser.shared.domain.exception.GameBuilderException;
 import com.preferanser.shared.domain.exception.GameException;
-import com.preferanser.shared.dto.CurrentUserDto;
 import org.fusesource.restygwt.client.Method;
 
 import java.util.Date;
@@ -79,16 +77,13 @@ public class EditorPresenter extends Presenter<EditorPresenter.EditorView, Edito
                            Proxy proxy,
                            GameBuilder gameBuilder,
                            DealService dealService,
-                           PreferanserMessages messages,
-                           EditorDialogs editorDialogs,
-                           CurrentUserDto currentUserDto) {
+                           EditorDialogs editorDialogs) {
         super(eventBus, view, proxy, ApplicationPresenter.MAIN_SLOT);
         this.placeManager = placeManager;
         this.gameBuilder = gameBuilder;
         this.dealService = dealService;
         this.editorDialogs = editorDialogs;
         getView().setUiHandlers(this);
-        getView().displayAuthInfo(messages.loggedInAs(currentUserDto.nickname));
         initGameBuilder();
     }
 

@@ -1,0 +1,29 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+    <ui:style>
+        .authPanel {
+            margin-top: 57px;
+        }
+
+        .logout {
+            margin-left: .4em;
+        }
+
+        .logout, .login {
+            display: inline;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+    </ui:style>
+
+    <ui:with field="constants" type="com.preferanser.client.application.i18n.PreferanserConstants"/>
+
+    <g:DeckPanel ui:field="deck" animationEnabled="false" addStyleNames="{style.authPanel}">
+        <g:Hyperlink ui:field="login" text="{constants.login}" addStyleNames="{style.login}"/>
+        <g:FlowPanel>
+            <g:InlineHTML ui:field="authLabel"/>
+            <g:Hyperlink ui:field="logout" text="{constants.logout}" addStyleNames="{style.logout}"/>
+        </g:FlowPanel>
+    </g:DeckPanel>
+
+</ui:UiBinder>

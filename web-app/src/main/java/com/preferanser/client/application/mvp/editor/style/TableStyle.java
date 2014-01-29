@@ -24,6 +24,7 @@ import com.google.gwt.resources.client.CssResource;
 /**
  * Css resource for editor styles
  */
+@SuppressWarnings("unused")
 public interface TableStyle extends CssResource, TurnPointerStyle {
 
     @ClassName("gwt-Label") String gwtLabel();

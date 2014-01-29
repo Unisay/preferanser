@@ -28,21 +28,30 @@ import com.gwtplatform.mvp.client.annotations.ContentSlot;
 import com.gwtplatform.mvp.client.annotations.ProxyStandard;
 import com.gwtplatform.mvp.client.proxy.Proxy;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
+import com.preferanser.client.application.mvp.auth.AuthPresenter;
 
-public class ApplicationPresenter
-    extends Presenter<ApplicationPresenter.TheView, ApplicationPresenter.TheProxy> {
+public class ApplicationPresenter extends Presenter<ApplicationPresenter.TheView, ApplicationPresenter.TheProxy> {
 
     public interface TheView extends View {}
 
+    private AuthPresenter authPresenter;
+
     @ContentSlot
     public static final Type<RevealContentHandler<?>> MAIN_SLOT = new Type<RevealContentHandler<?>>();
+    public static final Object AUTH_SLOT = new Object();
 
     @ProxyStandard
     public interface TheProxy extends Proxy<ApplicationPresenter> {}
 
     @Inject
-    public ApplicationPresenter(EventBus eventBus, TheView view, TheProxy proxy) {
+    public ApplicationPresenter(EventBus eventBus, TheView view, TheProxy proxy, AuthPresenter authPresenter) {
         super(eventBus, view, proxy, RevealType.Root);
+        this.authPresenter = authPresenter;
+    }
+
+    @Override protected void onBind() {
+        super.onBind();
+        setInSlot(AUTH_SLOT, authPresenter);
     }
 
 }

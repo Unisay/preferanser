@@ -37,7 +37,6 @@
     </ui:style>
 
     <g:FlowPanel addStyleNames="{resources.css.layoutCenter}">
-        <g:Label text="{constants.preferanser}" addStyleNames="{resources.css.title}"/>
         <g:Label text="{constants.description}" addStyleNames="{style.description}"/>
         <g:Label text="{constants.createDealDescription}" addStyleNames="{style.description}"/>
         <g:Button ui:field="editorButton" text="{constants.createDeal}" addStyleNames="{style.editorButton}"/>

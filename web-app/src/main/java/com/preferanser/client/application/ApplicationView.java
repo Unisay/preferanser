@@ -31,8 +31,8 @@ public class ApplicationView extends ViewImpl implements ApplicationPresenter.Th
 
     public interface Binder extends UiBinder<Widget, ApplicationView> {}
 
-    @UiField
-    SimplePanel main;
+    @UiField SimplePanel body;
+    @UiField SimplePanel auth;
 
     @Inject
     public ApplicationView(Binder uiBinder) {
@@ -41,10 +41,13 @@ public class ApplicationView extends ViewImpl implements ApplicationPresenter.Th
 
     @Override
     public void setInSlot(Object slot, IsWidget content) {
-        if (slot == ApplicationPresenter.MAIN_SLOT) {
-            main.setWidget(content);
+        if (ApplicationPresenter.MAIN_SLOT == slot) {
+            body.setWidget(content);
+        } else if (ApplicationPresenter.AUTH_SLOT == slot) {
+            auth.setWidget(content);
         } else {
             super.setInSlot(slot, content);
         }
     }
+
 }

@@ -26,24 +26,11 @@
 
     <g:FlowPanel addStyleNames="{resources.css.layoutCenter}">
 
-        <g:Label text="{constants.preferanser}" addStyleNames="{resources.css.titleSmaller}"/>
-
-        <g:HorizontalPanel height="60" width="100%" verticalAlignment="ALIGN_MIDDLE">
-
-            <g:FlowPanel addStyleNames="{style.leftHeader}">
-                <g:Button ui:field="closeButton" text="{constants.close}" debugId="close"/>
-                <g:Button ui:field="editButton" text="{constants.edit}" debugId="edit"/>
-                <g:Button ui:field="resetButton" text="{constants.reset}" debugId="reset"/>
-            </g:FlowPanel>
-
-            <g:FlowPanel addStyleNames="{style.rightHeader}">
-                <g:InlineHTML ui:field="authLabel" addStyleNames="{style.authLabel}"/>
-                <g:HTML addStyleNames="{style.pipe}">|</g:HTML>
-                <g:Hyperlink ui:field="logout" text="{constants.logout}" addStyleNames="{style.logout}"/>
-            </g:FlowPanel>
-
-        </g:HorizontalPanel>
-
+        <g:FlowPanel height="60">
+            <g:Button ui:field="closeButton" text="{constants.close}" debugId="close"/>
+            <g:Button ui:field="editButton" text="{constants.edit}" debugId="edit"/>
+            <g:Button ui:field="resetButton" text="{constants.reset}" debugId="reset"/>
+        </g:FlowPanel>
 
         <p:TablePanel ui:field="table">
 

@@ -94,32 +94,6 @@
     -webkit-transform: rotate(180deg);
 }
 
-.leftHeader {
-    float: left;
-}
-
-.leftHeader .gwt-Button {
-    margin-right: 8px;
-}
-
-.rightHeader {
-    float: right;
-}
-
-.authLabel {
-}
-
-.logout {
-    display: inline;
-    cursor: pointer;
-}
-
-.pipe {
-    margin: 0 .5em;
-    display: inline;
-    color: white;
-}
-
 .undoLink, .redoLink {
     color: #ededed;
     cursor: pointer;

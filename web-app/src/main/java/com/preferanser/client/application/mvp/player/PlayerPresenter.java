@@ -21,7 +21,6 @@ package com.preferanser.client.application.mvp.player;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
-import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.HasUiHandlers;
@@ -32,7 +31,6 @@ import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.preferanser.client.application.ApplicationPresenter;
-import com.preferanser.client.application.i18n.PreferanserMessages;
 import com.preferanser.client.application.mvp.DealCreatedEvent;
 import com.preferanser.client.application.mvp.TableView;
 import com.preferanser.client.gwtp.NameTokens;
@@ -44,7 +42,6 @@ import com.preferanser.shared.domain.Hand;
 import com.preferanser.shared.domain.TableLocation;
 import com.preferanser.shared.domain.entity.Deal;
 import com.preferanser.shared.domain.exception.GameException;
-import com.preferanser.shared.dto.CurrentUserDto;
 import org.fusesource.restygwt.client.Method;
 
 import java.util.Map;
@@ -61,17 +58,13 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
 
     public interface PlayerView extends TableView, HasUiHandlers<PlayerUiHandlers> {
         void displayHandTricks(Map<Hand, Integer> handTricks);
-
         void disableCards(Set<Card> cards);
-
         void displayTurnNavigation(boolean showPrev, boolean showNext);
-
         void displaySluffButton(boolean visible);
     }
 
     private final PlaceManager placeManager;
     private final DealService dealService;
-    private final CurrentUserDto currentUserDto;
     private Optional<Long> dealId = Optional.absent();
     private Optional<Game> gameOptional = Optional.absent();
 
@@ -84,15 +77,11 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
                            EventBus eventBus,
                            PlayerView view,
                            Proxy proxy,
-                           DealService dealService,
-                           PreferanserMessages preferanserMessages,
-                           CurrentUserDto currentUserDto) {
+                           DealService dealService) {
         super(eventBus, view, proxy, ApplicationPresenter.MAIN_SLOT);
         this.placeManager = placeManager;
         this.dealService = dealService;
-        this.currentUserDto = currentUserDto;
         getView().setUiHandlers(this);
-        getView().displayAuthInfo(preferanserMessages.loggedInAs(currentUserDto.nickname));
     }
 
     @Override protected void onBind() {
@@ -149,10 +138,6 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
 
     @Override public void switchToEditor() {
         revealPlace(NameTokens.EDITOR);
-    }
-
-    @Override public void logout() {
-        Window.Location.assign(currentUserDto.logoutUrl);
     }
 
     @Override public void undo() {

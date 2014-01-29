@@ -27,7 +27,6 @@ import com.google.gwt.dom.client.Document;
 import com.google.gwt.event.dom.client.*;
 import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.*;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
 import com.preferanser.client.application.i18n.I18nHelper;
@@ -70,8 +69,6 @@ abstract public class BaseTableView<U extends TableUiHandlers> extends ViewWithU
 
     @UiField public TableStyle style;
     @UiField public TablePanel table;
-    @UiField public InlineHTML authLabel;
-    @UiField public Hyperlink logout;
 
     @UiField public TurnPointer turnPointerEast;
     @UiField public TurnPointer turnPointerSouth;
@@ -179,11 +176,6 @@ abstract public class BaseTableView<U extends TableUiHandlers> extends ViewWithU
     protected abstract void displayNoContract(Hand hand);
 
     @Override
-    public void displayAuthInfo(String authInfo) {
-        authLabel.setHTML(authInfo);
-    }
-
-    @Override
     public void displayTurn(Hand turn) {
         for (Map.Entry<Hand, TurnPointer> entry : handTurnPointerMap.entrySet())
             displayHandTurnPointer(entry.getKey(), entry.getValue(), turn);
@@ -286,10 +278,6 @@ abstract public class BaseTableView<U extends TableUiHandlers> extends ViewWithU
     }
 
     abstract protected Logger getLog();
-
-    @UiHandler("logout") public void onLogoutClicked(@SuppressWarnings("unused") ClickEvent event) {
-        // TODO implement AuthViewPresenter
-    }
 
     @UiFactory public TurnPointer turnPointer() {
         return new TurnPointer(style, resources.arrowRight());

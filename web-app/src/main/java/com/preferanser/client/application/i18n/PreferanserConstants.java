@@ -107,7 +107,9 @@ public interface PreferanserConstants extends ConstantsWithLookup {
 
     @DefaultStringValue("Deal editor") String editor();
 
-    @DefaultStringValue("Log out") String logout();
+    @DefaultStringValue("Вход") String login();
+
+    @DefaultStringValue("Выход") String logout();
 
     @DefaultStringValue("Properties") String properties();
 

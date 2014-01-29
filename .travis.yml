@@ -1,5 +1,8 @@
 language: java
-script: mvn clean install -pl web-app -am -Dgwt.compiler.localWorkers=1
+jdk:
+  - oraclejdk7
+install: mvn install -pl web-app -am -B -Dgwt.compiler.localWorkers=2 -DskipTests=true
+script: mvn test -B -pl web-app -am
 cache:
   directories:
   - $HOME/.m2

@@ -45,10 +45,11 @@ public class AuthenticationServiceTest {
 
         newUserId = 1234L;
 
-        currentGoogleUser = new com.google.appengine.api.users.User("nickname", "authDomain", "googleId");
+        currentGoogleUser = new com.google.appengine.api.users.User("user@gmail.com", "authDomain", "googleId");
 
         currentUser = new User();
         currentUser.setGoogleId(currentGoogleUser.getUserId());
+        currentUser.setEmail(currentGoogleUser.getEmail());
         currentUser.setAdmin(true);
 
         currentUserDto = new CurrentUserDto();

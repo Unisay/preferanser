@@ -22,8 +22,7 @@
           <element id="library" level="project" name="Maven: org.slf4j:log4j-over-slf4j:1.7.5" />
           <element id="library" level="project" name="Maven: org.slf4j:jul-to-slf4j:1.7.5" />
           <element id="library" level="project" name="Maven: com.googlecode.objectify:objectify:4.0b3" />
-          <element id="library" level="project" name="Maven: com.google.appengine:appengine-api-1.0-sdk:1.7.6" />
-          <element id="library" level="project" name="Maven: com.google.appengine:appengine-api-labs:1.7.6" />
+          <element id="library" level="project" name="Maven: com.google.appengine:appengine-api-1.0-sdk:1.8.9" />
           <element id="library" level="project" name="Maven: javax.validation:validation-api:1.0.0.GA" />
           <element id="library" level="project" name="Maven: org.json:json:20090211" />
           <element id="library" level="project" name="Maven: com.google.inject:guice:3.0" />

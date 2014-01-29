@@ -5,13 +5,12 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.ui.DeckPanel;
-import com.google.gwt.user.client.ui.Hyperlink;
-import com.google.gwt.user.client.ui.InlineHTML;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.*;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
 import com.preferanser.client.application.i18n.PreferanserMessages;
+
+import static com.preferanser.client.application.mvp.MD5Util.md5Hex;
 
 public class AuthView extends ViewWithUiHandlers<AuthUiHandlers> implements AuthPresenter.MyView {
 
@@ -26,6 +25,7 @@ public class AuthView extends ViewWithUiHandlers<AuthUiHandlers> implements Auth
     @UiField Hyperlink logout;
     @UiField Hyperlink login;
     @UiField DeckPanel deck;
+    @UiField Image avatar;
 
     @Inject AuthView(Binder binder, PreferanserMessages preferanserMessages) {
         this.preferanserMessages = preferanserMessages;
@@ -34,7 +34,8 @@ public class AuthView extends ViewWithUiHandlers<AuthUiHandlers> implements Auth
     }
 
     @Override
-    public void displayNickname(String nickname) {
+    public void displayAuthInfo(String email, String nickname) {
+        avatar.setUrl("http://www.gravatar.com/avatar/" + md5Hex(email) + "?s=64&d=blank");
         authLabel.setHTML(preferanserMessages.loggedInAs(nickname));
         deck.showWidget(LOGOUT_INDEX);
     }

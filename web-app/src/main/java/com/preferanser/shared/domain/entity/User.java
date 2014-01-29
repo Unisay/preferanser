@@ -29,6 +29,7 @@ public class User extends BaseEntity {
 
     @Index
     private String googleId;
+    private String email;
     private boolean admin;
 
     public User() {
@@ -51,12 +52,12 @@ public class User extends BaseEntity {
         this.admin = admin;
     }
 
-    @Override public String toString() {
-        final StringBuilder sb = new StringBuilder("User{");
-        sb.append("googleId='").append(googleId).append('\'');
-        sb.append(", getAdmin=").append(admin);
-        sb.append('}');
-        return sb.toString();
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     @Override
@@ -67,12 +68,23 @@ public class User extends BaseEntity {
         User that = (User) o;
 
         return Objects.equal(this.googleId, that.googleId) &&
+            Objects.equal(this.email, that.email) &&
             Objects.equal(this.admin, that.admin) &&
             Objects.equal(this.id, that.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(googleId, admin, id);
+        return Objects.hashCode(googleId, email, admin, id);
+    }
+
+    @Override
+    public String toString() {
+        return Objects.toStringHelper(this)
+            .addValue(googleId)
+            .addValue(email)
+            .addValue(admin)
+            .addValue(id)
+            .toString();
     }
 }

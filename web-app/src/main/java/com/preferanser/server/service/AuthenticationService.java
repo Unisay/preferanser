@@ -59,12 +59,14 @@ public class AuthenticationService implements Provider<CurrentUserDto> {
         if (!userService.isUserLoggedIn())
             return Optional.absent();
 
-        String googleId = userService.getCurrentUser().getUserId();
+        com.google.appengine.api.users.User currentUser = userService.getCurrentUser();
+        String googleId = currentUser.getUserId();
 
         User user = userDao.findByGoogleId(googleId);
         if (user == null) {
             user = new User();
             user.setGoogleId(googleId);
+            user.setEmail(currentUser.getEmail());
             user.setAdmin(userService.isUserAdmin());
             user = userDao.save(user);
         }

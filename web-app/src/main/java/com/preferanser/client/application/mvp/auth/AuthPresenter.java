@@ -15,7 +15,7 @@ public class AuthPresenter extends PresenterWidget<AuthPresenter.MyView> impleme
     private final CurrentUserDto currentUserDto;
 
     public interface MyView extends View, HasUiHandlers<AuthUiHandlers> {
-        void displayNickname(String nickname);
+        void displayAuthInfo(String email, String nickname);
     }
 
     @Inject public AuthPresenter(
@@ -27,7 +27,7 @@ public class AuthPresenter extends PresenterWidget<AuthPresenter.MyView> impleme
         this.currentUserDto = currentUserDto;
         getView().setUiHandlers(this);
         if (currentUserDto.isLoggedIn)
-            getView().displayNickname(currentUserDto.nickname);
+            getView().displayAuthInfo(currentUserDto.getUser().getEmail(), currentUserDto.nickname);
     }
 
     @Override public void login() {

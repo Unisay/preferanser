@@ -77,7 +77,6 @@ public class DealPresenter extends Presenter<DealPresenter.DealView, DealPresent
     }
 
     @Override public void playDeal(Deal deal) {
-        DealCreatedEvent.fire(this, deal);
         placeManager.revealPlace(
             new PlaceRequest.Builder()
                 .nameToken(NameTokens.PLAYER)

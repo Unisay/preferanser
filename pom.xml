@@ -60,12 +60,12 @@
         <gwt-test-utils.version>0.46-SNAPSHOT</gwt-test-utils.version>
 
         <!-- maven -->
-        <target.jdk>1.6</target.jdk>
+        <target.jdk>1.7</target.jdk>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <gwt-maven-plugin.version>2.5.1</gwt-maven-plugin.version>
         <maven-surefire-plugin.version>2.6</maven-surefire-plugin.version>
-        <maven-compiler-plugin.version>2.3.2</maven-compiler-plugin.version>
+        <maven-compiler-plugin.version>2.5.1</maven-compiler-plugin.version>
         <maven-resources-plugin.version>2.5</maven-resources-plugin.version>
         <maven-gae-plugin.version>0.9.6</maven-gae-plugin.version>
         <maven-processor-plugin.version>2.0.5</maven-processor-plugin.version>
@@ -87,6 +87,25 @@
             </releases>
         </repository>
     </repositories>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <version>${maven-compiler-plugin.version}</version>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <configuration>
+                        <source>${target.jdk}</source>
+                        <target>${target.jdk}</target>
+                        <encoding>${project.build.sourceEncoding}</encoding>
+                        <!-- Disable annotation processors during normal compilation -->
+                        <proc>none</proc>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
 
     <dependencyManagement>
         <dependencies>

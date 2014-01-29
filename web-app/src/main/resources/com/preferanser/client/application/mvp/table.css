@@ -8,8 +8,13 @@
     visibility: hidden;
 }
 
-.buttonsPanel td {
-    vertical-align: middle ! important;
+.buttonsPanel {
+    height: 34px;
+}
+
+@external .gwt-Button;
+.buttonsPanel > .gwt-Button {
+    margin-right: 8px;
 }
 
 .titleEast, .titleSouth, .titleWest, .handHeaderLeftPanel {

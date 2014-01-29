@@ -24,10 +24,6 @@
 
         @def gap 10px;
 
-        .table {
-            margin-top: gap;
-        }
-
         .west {
             float: left;
             margin-right: gap;
@@ -117,7 +113,7 @@
         }
     </ui:style>
 
-    <g:FlowPanel addStyleNames="{style.table} {style.fullSize}">
+    <g:FlowPanel addStyleNames="{style.fullSize}">
 
         <g:FlowPanel debugId="west" addStyleNames="{style.west}">
             <g:HorizontalPanel debugId="west-title" ui:field="westPanelHeader" addStyleNames="{style.handTitle} {style.westHPanel}"/>

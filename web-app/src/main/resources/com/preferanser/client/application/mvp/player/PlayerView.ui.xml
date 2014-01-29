@@ -26,8 +26,8 @@
 
     <g:FlowPanel addStyleNames="{resources.css.layoutCenter}">
 
-        <g:FlowPanel height="60">
-            <g:Button ui:field="closeButton" text="{constants.close}" debugId="close"/>
+        <g:FlowPanel debugId="buttons-panel" addStyleNames="{style.buttonsPanel}">
+        <g:Button ui:field="closeButton" text="{constants.close}" debugId="close"/>
             <g:Button ui:field="editButton" text="{constants.edit}" debugId="edit"/>
             <g:Button ui:field="resetButton" text="{constants.reset}" debugId="reset"/>
         </g:FlowPanel>

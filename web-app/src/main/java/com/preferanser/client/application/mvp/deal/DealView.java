@@ -17,6 +17,11 @@ import java.util.List;
 
 public class DealView extends ViewWithUiHandlers<DealUiHandlers> implements DealPresenter.DealView {
 
+    private static final int COLUMN_NAME = 0;
+    private static final int COLUMN_TIME = 1;
+    private static final int COLUMN_PLAY = 2;
+    private static final int COLUMN_DELETE = 3;
+
     public interface Binder extends UiBinder<Widget, DealView> {}
 
     interface DealViewStyle extends CssResource {
@@ -37,23 +42,25 @@ public class DealView extends ViewWithUiHandlers<DealUiHandlers> implements Deal
         this.constants = constants;
         dealTable = new FlexTable();
         HTMLTable.ColumnFormatter columnFormatter = dealTable.getColumnFormatter();
-        columnFormatter.setWidth(1, "40px");
-        columnFormatter.setWidth(2, "36px");
-        columnFormatter.setWidth(3, "36px");
+        columnFormatter.setWidth(COLUMN_TIME, "40px");
+        columnFormatter.setWidth(COLUMN_PLAY, "36px");
         initWidget(uiBinder.createAndBindUi(this));
     }
 
     @Override public void displayDeals(List<Deal> deals, boolean allowModifications) {
+        if (allowModifications)
+            dealTable.getColumnFormatter().setWidth(COLUMN_DELETE, "36px");
+
         dealTable.removeAllRows();
         for (int i = 0; i < deals.size(); i++) {
             Deal deal = deals.get(i);
             if (i % 2 == 0)
                 dealTable.getRowFormatter().addStyleName(i, style.odd());
-            dealTable.setWidget(i, 0, new Label(deal.getName()));
-            dealTable.setWidget(i, 1, createDateTimeLabel(deal));
-            dealTable.setWidget(i, 2, createPlayButton(deal));
+            dealTable.setWidget(i, COLUMN_NAME, new Label(deal.getName()));
+            dealTable.setWidget(i, COLUMN_TIME, createDateTimeLabel(deal));
+            dealTable.setWidget(i, COLUMN_PLAY, createPlayButton(deal));
             if (allowModifications)
-                dealTable.setWidget(i, 3, createDeleteButton(deal));
+                dealTable.setWidget(i, COLUMN_DELETE, createDeleteButton(deal));
         }
     }
 

@@ -30,8 +30,12 @@
         }
 
         .editorButton {
-            margin-bottom: .5em;
+            margin-bottom: 8px;
             float: right;
+        }
+
+        .main {
+            clear: right;
         }
 
     </ui:style>
@@ -40,7 +44,7 @@
         <g:Label text="{constants.description}" addStyleNames="{style.description}"/>
         <g:Label text="{constants.createDealDescription}" addStyleNames="{style.description}"/>
         <g:Button ui:field="editorButton" text="{constants.createDeal}" addStyleNames="{style.editorButton}"/>
-        <g:SimplePanel ui:field="main"/>
+        <g:SimplePanel ui:field="main" addStyleNames="{style.main}"/>
     </g:FlowPanel>
 
 </ui:UiBinder>

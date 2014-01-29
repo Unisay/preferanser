@@ -17,6 +17,16 @@
     margin-right: 8px;
 }
 
+.dealName {
+    line-height: 34px;
+    display: inline;
+    float: right;
+}
+
+.dealDescription {
+    padding: 1em;
+}
+
 .titleEast, .titleSouth, .titleWest, .handHeaderLeftPanel {
     float: left;
 }

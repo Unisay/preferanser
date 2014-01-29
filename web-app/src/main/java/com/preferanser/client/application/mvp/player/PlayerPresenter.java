@@ -57,6 +57,7 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
     private static final Logger log = Logger.getLogger("PlayerPresenter");
 
     public interface PlayerView extends TableView, HasUiHandlers<PlayerUiHandlers> {
+        void displayDealInfo(String name, String description);
         void displayHandTricks(Map<Hand, Integer> handTricks);
         void disableCards(Set<Card> cards);
         void displayTurnNavigation(boolean showPrev, boolean showNext);
@@ -102,10 +103,10 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
 
     @Override protected void onReveal() {
         super.onReveal();
-        if (gameOptional.isPresent()) {
+        Preconditions.checkState(dealId.isPresent(), "DealId is not initialized from URL parameter 'deal'");
+        if (gameOptional.isPresent() && dealId.get().equals(gameOptional.get().getId())) {
             refreshView();
         } else {
-            Preconditions.checkState(dealId.isPresent(), "DealId is not initialized from URL parameter 'deal'");
             dealService.getById(dealId.get(), new Response<Deal>() {
                 @Override public void onSuccess(Method method, Deal deal) {
                     gameOptional = Optional.of(new Game(deal));
@@ -167,6 +168,7 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
         log.finest("Refreshing view...");
         Game game = gameOptional.get();
         PlayerView view = getView();
+        view.displayDealInfo(game.getName(), game.getDescription());
         view.displayTurn(game.getTurn());
         view.displayCards(game.getHandCards(), game.getCenterCards(), game.getWidow());
         view.displaySluffButton(game.isTrickClosed());

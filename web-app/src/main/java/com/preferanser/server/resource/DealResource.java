@@ -34,7 +34,7 @@ import javax.ws.rs.core.MediaType;
 import java.util.List;
 
 @Path("/deal")
-@Produces(MediaType.APPLICATION_JSON)
+@Produces(MediaType.APPLICATION_JSON) // TODO specify encoding UTF-8
 public class DealResource {
 
     private final AuthenticationService authenticationService;

@@ -37,6 +37,7 @@ import static com.google.common.collect.Sets.newHashSet;
  */
 public class Game {
 
+    private Long id;
     private final String name;
     private final String description;
     private final Players players;
@@ -55,6 +56,7 @@ public class Game {
          Multimap<Hand, Card> handCardMultimap,
          Map<Card, Hand> centerCardHandMap
     ) {
+        this.id = null;
         this.name = name;
         this.description = description;
         this.players = players;
@@ -67,6 +69,7 @@ public class Game {
     }
 
     public Game(Deal deal) {
+        id = deal.getId();
         name = deal.getName();
         description = deal.getDescription();
         players = deal.getPlayers();
@@ -325,6 +328,18 @@ public class Game {
         first.clearTurnLog();
         trickLog.clear();
         trickLog.add(first);
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getDescription() {
+        return description;
     }
 
     public Deal toDeal() {

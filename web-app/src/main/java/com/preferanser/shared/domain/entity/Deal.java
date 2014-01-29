@@ -1,5 +1,6 @@
 package com.preferanser.shared.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSetMultimap;
@@ -201,6 +202,7 @@ public class Deal extends BaseEntity implements Dto {
         this.currentTrickIndex = currentTrickIndex;
     }
 
+    @JsonIgnore
     public Map<Hand, Contract> getHandContracts() {
         ImmutableMap.Builder<Hand, Contract> builder = ImmutableMap.builder();
         if (eastContract != null)
@@ -212,6 +214,7 @@ public class Deal extends BaseEntity implements Dto {
         return builder.build();
     }
 
+    @JsonIgnore
     public Multimap<Hand, Card> getHandCards() {
         ImmutableSetMultimap.Builder<Hand, Card> builder = ImmutableSetMultimap.builder();
         if (eastCards != null)

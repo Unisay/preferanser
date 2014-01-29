@@ -1,6 +1,6 @@
 {
-    "name": "Мизер Ласкера.",
-    "description": "Поймать мизер.",
+    "name": "Мизер Ласкера",
+    "description": "Поймать мизер",
     "shared": true,
     "firstTurn": "EAST",
     "players": "THREE",

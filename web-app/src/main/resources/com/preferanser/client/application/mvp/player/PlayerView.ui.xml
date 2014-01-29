@@ -27,9 +27,10 @@
     <g:FlowPanel addStyleNames="{resources.css.layoutCenter}">
 
         <g:FlowPanel debugId="buttons-panel" addStyleNames="{style.buttonsPanel}">
-        <g:Button ui:field="closeButton" text="{constants.close}" debugId="close"/>
+            <g:Button ui:field="closeButton" text="{constants.close}" debugId="close"/>
             <g:Button ui:field="editButton" text="{constants.edit}" debugId="edit"/>
             <g:Button ui:field="resetButton" text="{constants.reset}" debugId="reset"/>
+            <g:Label debugId="deal-name" ui:field="dealName" addStyleNames="{style.dealName}"/>
         </g:FlowPanel>
 
         <p:TablePanel ui:field="table">
@@ -67,6 +68,12 @@
                     </g:FlowPanel>
                 </p:Widgets>
             </p:center>
+
+            <p:tab title="{constants.dealDescription}" index="0">
+                <g:SimplePanel addStyleNames="{style.dealDescription}">
+                    <g:InlineLabel ui:field="dealDescription"/>
+                </g:SimplePanel>
+            </p:tab>
 
         </p:TablePanel>
 

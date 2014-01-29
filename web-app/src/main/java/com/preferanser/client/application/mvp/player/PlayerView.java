@@ -59,6 +59,8 @@ public class PlayerView extends BaseTableView<PlayerUiHandlers> implements Playe
     @UiField Anchor redoAnchor;
     @UiField Button sluffButton;
     @UiField Button closeButton;
+    @UiField Label dealName;
+    @UiField InlineLabel dealDescription;
 
     @Inject
     public PlayerView(Binder uiBinder, PreferanserResources resources, PreferanserConstants constants, I18nHelper i18nHelper) {
@@ -139,6 +141,11 @@ public class PlayerView extends BaseTableView<PlayerUiHandlers> implements Playe
             getLog().finer("Card location change: " + cardWidget.getCard() + " -> " + TableLocation.CENTER);
             getUiHandlers().changeCardLocation(cardWidget.getCard(), Optional.of(TableLocation.CENTER));
         }
+    }
+
+    @Override public void displayDealInfo(String name, String description) {
+        dealName.setText(name);
+        dealDescription.setText(description);
     }
 
     @Override public void displayHandTricks(Map<Hand, Integer> handTricks) {

@@ -1,4 +1,4 @@
-package com.preferanser.server.dao;
+package com.preferanser.testng;
 
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;

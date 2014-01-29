@@ -3,6 +3,8 @@ package com.preferanser.server.dao;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.preferanser.shared.domain.entity.Deal;
+import com.preferanser.testng.ClockTestNGListener;
+import com.preferanser.testng.DatastoreTestNGListener;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
@@ -17,7 +19,7 @@ import static org.testng.collections.Lists.newArrayList;
 import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
 import static org.unitils.reflectionassert.ReflectionComparatorMode.IGNORE_DEFAULTS;
 
-@Listeners(DatastoreTestNGListener.class)
+@Listeners({ClockTestNGListener.class, DatastoreTestNGListener.class})
 public class DealDaoTest {
 
     private DealDao dealDao;

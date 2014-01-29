@@ -8,9 +8,11 @@ import com.preferanser.server.service.AuthenticationService;
 import com.preferanser.shared.domain.entity.Deal;
 import com.preferanser.shared.domain.entity.User;
 import com.preferanser.shared.util.Clock;
+import com.preferanser.testng.ClockTestNGListener;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
 import java.util.List;
@@ -22,6 +24,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
 
+@Listeners(ClockTestNGListener.class)
 public class DealResourceTest {
 
     private DealResource dealResource;

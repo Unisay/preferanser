@@ -3,6 +3,8 @@ package com.preferanser.server.dao;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.preferanser.shared.domain.entity.User;
+import com.preferanser.testng.ClockTestNGListener;
+import com.preferanser.testng.DatastoreTestNGListener;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
@@ -12,7 +14,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.testng.Assert.assertNull;
 
-@Listeners(DatastoreTestNGListener.class)
+@Listeners({ClockTestNGListener.class, DatastoreTestNGListener.class})
 public class UserDaoTest {
 
     private UserDao userDao;

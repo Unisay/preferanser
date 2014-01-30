@@ -194,4 +194,5 @@ public interface PreferanserConstants extends ConstantsWithLookup {
     @DefaultStringValue("Данный расклад не может быть разыгран, так как он содержит следующие ошибки:") String dealWithErrors();
 
     @DefaultStringValue("Создать расклад") String createDeal();
+
 }

@@ -6,8 +6,6 @@
         }
 
         .logout {
-            margin-left: .4em;
-            display: inline;
         }
 
         .logout, .login {
@@ -19,19 +17,23 @@
             float: right;
             border-radius: 7px;
         }
+
+        .nickname {
+            font-weight: bold;
+        }
     </ui:style>
 
     <ui:with field="constants" type="com.preferanser.client.application.i18n.PreferanserConstants"/>
 
     <g:DeckPanel ui:field="deck" animationEnabled="false" addStyleNames="{style.authPanel}">
         <g:Hyperlink ui:field="login" text="{constants.login}" addStyleNames="{style.login}"/>
-        <g:VerticalPanel spacing="5">
+        <g:HorizontalPanel spacing="10" horizontalAlignment="ALIGN_RIGHT">
+            <g:Image ui:field="avatar" addStyleNames="{style.avatar}"/>
             <g:FlowPanel>
-                <g:InlineHTML ui:field="authLabel"/>
+                <g:InlineLabel ui:field="authLabel" addStyleNames="{style.nickname}"/>
                 <g:Hyperlink ui:field="logout" text="{constants.logout}" addStyleNames="{style.logout}"/>
             </g:FlowPanel>
-            <g:Image ui:field="avatar" addStyleNames="{style.avatar}"/>
-        </g:VerticalPanel>
+        </g:HorizontalPanel>
     </g:DeckPanel>
 
 </ui:UiBinder>

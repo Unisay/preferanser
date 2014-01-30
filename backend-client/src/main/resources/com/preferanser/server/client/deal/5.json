@@ -1,0 +1,50 @@
+{
+    "name": "Мизер Софьи Ковалевской",
+    "description": "Предложенный ниже расклад случился еще в позапрошлом веке в санкт-петербургском кафе “Доминик”. Как вспоминает очевидец, кавалерийский полковник С. Боровой - вся компания, игравшая в преферансовой комнате, считала этот мизер “небитым”. Однако, заглянувшая на преферанс строго одетая дама показала (с разрешения игроков) интересный и четкий план... С тех пор любители пульки зовут указанный метод розыгрыша именем этой дамы - знаменитого русского математика Софьи Ковалевской.",
+    "shared": true,
+    "firstTurn": "EAST",
+    "players": "THREE",
+    "eastContract": "PASS",
+    "southContract": "MISER",
+    "westContract": "PASS",
+    "widow": {
+        "card1": "CLUB_ACE",
+        "card2": "CLUB_KING"
+    },
+    "eastCards": [
+        "DIAMOND_JACK",
+        "DIAMOND_10",
+        "SPADE_QUEEN",
+        "CLUB_9",
+        "CLUB_7",
+        "DIAMOND_QUEEN",
+        "DIAMOND_KING",
+        "SPADE_JACK",
+        "HEART_JACK",
+        "HEART_7"
+    ],
+    "southCards": [
+        "SPADE_9",
+        "SPADE_7",
+        "HEART_9",
+        "SPADE_8",
+        "CLUB_8",
+        "DIAMOND_8",
+        "HEART_8",
+        "DIAMOND_9",
+        "DIAMOND_7",
+        "SPADE_10"
+    ],
+    "westCards": [
+        "SPADE_KING",
+        "CLUB_QUEEN",
+        "CLUB_JACK",
+        "DIAMOND_ACE",
+        "HEART_10",
+        "CLUB_10",
+        "SPADE_ACE",
+        "HEART_KING",
+        "HEART_ACE",
+        "HEART_QUEEN"
+    ]
+}

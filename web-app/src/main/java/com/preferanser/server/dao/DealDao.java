@@ -43,7 +43,6 @@ public class DealDao extends BaseDao<Deal> {
         return ofy().query(Deal.class).filter("shared", true).order("-created").list();
     }
 
-    // TODO: test this method
     public List<Deal> getUserDeals(User user) {
         return ofy().query(Deal.class).filter("userId", user.getGoogleId()).order("-created").list();
     }

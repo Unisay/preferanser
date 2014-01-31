@@ -39,7 +39,7 @@ public class DealResource {
     }
 
     @GET
-    public List<Deal> getUserDeals() {
+    public List<Deal> getCurrentUserOrSharedDeals() {
         return dealService.getCurrentUserOrSharedDeals();
     }
 

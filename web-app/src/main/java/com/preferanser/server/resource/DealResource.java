@@ -19,15 +19,9 @@
 
 package com.preferanser.server.resource;
 
-import com.google.common.base.Optional;
 import com.google.inject.Inject;
-import com.preferanser.server.dao.DealDao;
-import com.preferanser.server.exception.NoAuthenticatedUserException;
-import com.preferanser.server.exception.NotAuthorizedUserException;
-import com.preferanser.server.service.AuthenticationService;
+import com.preferanser.server.service.DealService;
 import com.preferanser.shared.domain.entity.Deal;
-import com.preferanser.shared.domain.entity.User;
-import com.preferanser.shared.util.Clock;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -37,58 +31,33 @@ import java.util.List;
 @Produces(MediaType.APPLICATION_JSON) // TODO specify encoding UTF-8
 public class DealResource {
 
-    private final AuthenticationService authenticationService;
-    private final DealDao dealDao;
+    private final DealService dealService;
 
     @Inject
-    public DealResource(AuthenticationService authenticationService, DealDao dealDao) {
-        this.authenticationService = authenticationService;
-        this.dealDao = dealDao;
+    public DealResource(DealService dealService) {
+        this.dealService = dealService;
     }
 
     @GET
-    public List<Deal> getAllSharedDeals() {
-        return dealDao.getAllSharedDeals();
+    public List<Deal> getUserDeals() {
+        return dealService.getCurrentUserOrSharedDeals();
     }
 
     @GET
     @Path("/{dealId}")
     public Deal getById(@PathParam("dealId") Long dealId) {
-        return dealDao.get(dealId);
+        return dealService.get(dealId);
     }
 
     @POST
     public Long save(Deal deal) {
-        Optional<User> currentUserOptional = authenticationService.getCurrentUser();
-
-        if (!currentUserOptional.isPresent())
-            throw new NoAuthenticatedUserException();
-
-        if (deal.isShared() && !currentUserOptional.get().getAdmin())
-            throw new NotAuthorizedUserException("Only admins can create shared deals");
-
-        deal.setId(null);
-        deal.setUserId(currentUserOptional.get().getGoogleId());
-        deal.setCreated(Clock.getNow());
-        Deal savedDeal = dealDao.save(deal);
-
-        assert savedDeal != null : "dealDao.save(" + deal + ") returned null";
-        return savedDeal.getId();
+        return dealService.save(deal).getId();
     }
 
     @DELETE
     @Path("/{dealId}")
     public void delete(@PathParam("dealId") Long dealId) {
-        Optional<User> currentUserOptional = authenticationService.getCurrentUser();
-
-        if (!currentUserOptional.isPresent())
-            throw new NoAuthenticatedUserException(); // TODO force HTTP status
-
-        Deal deal = dealDao.get(dealId);
-        if (!deal.getUserId().equals(currentUserOptional.get().getGoogleId()))
-            throw new NotAuthorizedUserException();
-
-        dealDao.delete(deal);
+        dealService.delete(dealId);
     }
 
 }

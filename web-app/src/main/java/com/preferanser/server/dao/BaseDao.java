@@ -54,6 +54,7 @@ public abstract class BaseDao<T extends BaseEntity> {
         return ofy().query(clazz).list();
     }
 
+    // TODO: save with user as parent
     public T save(T object) {
         Set<ConstraintViolation<T>> constraintViolations = validator.validate(object);
         if (CollectionUtils.isEmpty(constraintViolations)) {

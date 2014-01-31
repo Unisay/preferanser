@@ -30,6 +30,9 @@ public class AuthenticationServiceTest {
     private UserService userService;
 
     @Mock
+    private DealService dealService;
+
+    @Mock
     private Provider<UserService> userServiceProvider;
 
     private User currentUser;
@@ -41,7 +44,7 @@ public class AuthenticationServiceTest {
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         when(userServiceProvider.get()).thenReturn(userService);
-        authenticationService = new AuthenticationService(userServiceProvider, userDao);
+        authenticationService = new AuthenticationService(userServiceProvider, dealService, userDao);
 
         newUserId = 1234L;
 
@@ -96,6 +99,9 @@ public class AuthenticationServiceTest {
         verify(userDao).findByGoogleId(currentUser.getGoogleId());
         verify(userDao).save(Matchers.any(User.class));
         verifyNoMoreInteractions(userDao);
+
+        verify(dealService).importSharedDeals(Matchers.any(User.class));
+        verifyNoMoreInteractions(dealService);
     }
 
     @Test
@@ -111,6 +117,7 @@ public class AuthenticationServiceTest {
 
         verify(userDao).findByGoogleId(currentUser.getGoogleId());
         verifyNoMoreInteractions(userDao);
+        verifyNoMoreInteractions(dealService);
     }
 
     @Test

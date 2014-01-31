@@ -23,6 +23,7 @@ package com.preferanser.server.dao;
 import com.google.inject.Inject;
 import com.preferanser.server.dao.objectify.OfyFactory;
 import com.preferanser.shared.domain.entity.Deal;
+import com.preferanser.shared.domain.entity.User;
 
 import javax.validation.Validator;
 import java.util.List;
@@ -38,8 +39,13 @@ public class DealDao extends BaseDao<Deal> {
         return ofy().query(Deal.class).order("-created").list();
     }
 
-    public List<Deal> getAllSharedDeals() {
+    public List<Deal> getSharedDeals() {
         return ofy().query(Deal.class).filter("shared", true).order("-created").list();
+    }
+
+    // TODO: test this method
+    public List<Deal> getUserDeals(User user) {
+        return ofy().query(Deal.class).filter("userId", user.getGoogleId()).order("-created").list();
     }
 
 }

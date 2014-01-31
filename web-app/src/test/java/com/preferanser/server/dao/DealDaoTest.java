@@ -66,7 +66,7 @@ public class DealDaoTest {
 
         dealDao.save(deal1, deal2, deal3);
 
-        List<Deal> actualDeals = dealDao.getAllSharedDeals();
+        List<Deal> actualDeals = dealDao.getSharedDeals();
         List<Deal> expectedDeals = newArrayList(deal2, deal1);
         assertReflectionEquals(expectedDeals, actualDeals);
     }

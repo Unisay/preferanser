@@ -32,9 +32,11 @@ public class AuthenticationService implements Provider<CurrentUserDto> {
 
     private final UserDao userDao;
     private final UserService userService;
+    private DealService dealService;
 
     @Inject
-    public AuthenticationService(Provider<UserService> userServiceProvider, UserDao userDao) {
+    public AuthenticationService(Provider<UserService> userServiceProvider, DealService dealService, UserDao userDao) {
+        this.dealService = dealService;
         this.userService = userServiceProvider.get();
         this.userDao = userDao;
     }
@@ -69,6 +71,7 @@ public class AuthenticationService implements Provider<CurrentUserDto> {
             user.setEmail(currentUser.getEmail());
             user.setAdmin(userService.isUserAdmin());
             user = userDao.save(user);
+            dealService.importSharedDeals(user);
         }
         return Optional.of(user);
     }

@@ -39,7 +39,7 @@ import com.preferanser.client.restygwt.RequestLoaderRestyGwtListener;
 import com.preferanser.client.restygwt.RestyGwtDispatcher;
 import com.preferanser.client.restygwt.RestyGwtLoggingRequestListener;
 import com.preferanser.client.restygwt.RestyGwtRequestListener;
-import com.preferanser.shared.domain.GameBuilder;
+import com.preferanser.shared.domain.Editor;
 import com.preferanser.shared.dto.CurrentUserDto;
 
 public class ClientModule extends AbstractPresenterModule {
@@ -65,15 +65,15 @@ public class ClientModule extends AbstractPresenterModule {
 //        bind(RequestLoader.class).to(StatusMessageRequestLoader.class).in(Singleton.class);
         bind(RequestLoader.class).to(DialogBoxRequestLoader.class).in(Singleton.class);
         bind(RestyGwtDispatcher.class).toProvider(RestyGwtDispatcher.Provider.class).asEagerSingleton();
-        bind(GameBuilder.class).toProvider(GameBuilderProvider.class).in(Singleton.class);
+        bind(Editor.class).toProvider(GameBuilderProvider.class).in(Singleton.class);
         bind(ResourceLoader.class).asEagerSingleton();
     }
 
-    static class GameBuilderProvider implements Provider<GameBuilder> {
-        @Override public GameBuilder get() {
-            GameBuilder gameBuilder = new GameBuilder();
-            gameBuilder.setThreePlayers(); // TODO: remove this initialization
-            return gameBuilder;
+    static class GameBuilderProvider implements Provider<Editor> {
+        @Override public Editor get() {
+            Editor editor = new Editor();
+            editor.setThreePlayers(); // TODO: remove this initialization
+            return editor;
         }
     }
 

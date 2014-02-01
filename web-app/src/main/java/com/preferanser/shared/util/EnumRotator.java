@@ -54,7 +54,7 @@ public class EnumRotator<E extends Enum<E>> {
         currentOrdinal = value.ordinal();
     }
 
-    public void setSkipValues(E... valuesToSkip) {
+    @SafeVarargs public final void setSkipValues(E... valuesToSkip) {
         if (valuesToSkip.length >= values.length) {
             throw new IllegalArgumentException("Can't skip all values!");
         }

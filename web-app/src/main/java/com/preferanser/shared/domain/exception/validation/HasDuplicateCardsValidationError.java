@@ -29,7 +29,7 @@ import java.util.Set;
 
 import static com.google.common.collect.Lists.newArrayList;
 
-public class HasDuplicateCardsValidationError extends GameBuilderValidationError {
+public class HasDuplicateCardsValidationError extends EditorValidationError {
 
     private Set<Card> duplicateCards;
 

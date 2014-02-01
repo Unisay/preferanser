@@ -72,10 +72,11 @@ public class EditorView extends BaseTableView<EditorUiHandlers> implements Edito
         }
     }
 
-    @Override public void displayDealName(final String name) {
+    @Override public void displayDealInfo(String name, String description) {
         dealName.setFocus(true);
         dealName.setText(name);
         dealName.selectAll();
+        dealDescription.setText(description);
     }
 
     @Override protected void displayHandContract(Hand hand, Contract contract) {

@@ -20,7 +20,8 @@ public class DealView extends ViewWithUiHandlers<DealUiHandlers> implements Deal
     private static final int COLUMN_NAME = 0;
     private static final int COLUMN_TIME = 1;
     private static final int COLUMN_PLAY = 2;
-    private static final int COLUMN_DELETE = 3;
+    private static final int COLUMN_EDIT = 3;
+    private static final int COLUMN_DELETE = 4;
 
     public interface Binder extends UiBinder<Widget, DealView> {}
 
@@ -48,8 +49,11 @@ public class DealView extends ViewWithUiHandlers<DealUiHandlers> implements Deal
     }
 
     @Override public void displayDeals(List<Deal> deals, boolean allowModifications) {
-        if (allowModifications)
-            dealTable.getColumnFormatter().setWidth(COLUMN_DELETE, "36px");
+        if (allowModifications) {
+            HTMLTable.ColumnFormatter formatter = dealTable.getColumnFormatter();
+            formatter.setWidth(COLUMN_EDIT, "36px");
+            formatter.setWidth(COLUMN_DELETE, "36px");
+        }
 
         dealTable.removeAllRows();
         for (int i = 0; i < deals.size(); i++) {
@@ -59,8 +63,10 @@ public class DealView extends ViewWithUiHandlers<DealUiHandlers> implements Deal
             dealTable.setWidget(i, COLUMN_NAME, new Label(deal.getName()));
             dealTable.setWidget(i, COLUMN_TIME, createDateTimeLabel(deal));
             dealTable.setWidget(i, COLUMN_PLAY, createPlayButton(deal));
-            if (allowModifications)
+            if (allowModifications) {
+                dealTable.setWidget(i, COLUMN_EDIT, createEditButton(deal));
                 dealTable.setWidget(i, COLUMN_DELETE, createDeleteButton(deal));
+            }
         }
     }
 
@@ -76,6 +82,16 @@ public class DealView extends ViewWithUiHandlers<DealUiHandlers> implements Deal
         button.addClickHandler(new ClickHandler() {
             @Override public void onClick(ClickEvent event) {
                 getUiHandlers().playDeal(deal);
+            }
+        });
+        return button;
+    }
+
+    private Button createEditButton(final Deal deal) {
+        Button button = new Button(constants.edit());
+        button.addClickHandler(new ClickHandler() {
+            @Override public void onClick(ClickEvent event) {
+                getUiHandlers().editDeal(deal);
             }
         });
         return button;

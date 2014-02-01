@@ -54,6 +54,14 @@ public class DealResource {
         return dealService.save(deal).getId();
     }
 
+    // TODO: consider using @BeanParam
+    @PUT
+    @Path("/{dealId}")
+    public void update(@PathParam("dealId") Long dealId, Deal deal) {
+        deal.setId(dealId);
+        dealService.update(deal);
+    }
+
     @DELETE
     @Path("/{dealId}")
     public void delete(@PathParam("dealId") Long dealId) {

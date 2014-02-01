@@ -22,7 +22,7 @@ package com.preferanser.shared.domain.exception.validation;
 import com.preferanser.client.application.i18n.PreferanserConstants;
 import com.preferanser.client.application.i18n.PreferanserMessages;
 
-public class NumPlayersNotSpecifiedValidationError extends GameBuilderValidationError {
+public class NumPlayersNotSpecifiedValidationError extends EditorValidationError {
 
     @Override public String formatLocalMessage(PreferanserConstants constants, PreferanserMessages messages) {
         return messages.numPlayersNotSpecified();

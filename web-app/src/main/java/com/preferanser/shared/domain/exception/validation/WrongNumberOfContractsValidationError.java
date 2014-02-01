@@ -22,7 +22,7 @@ package com.preferanser.shared.domain.exception.validation;
 import com.preferanser.client.application.i18n.PreferanserConstants;
 import com.preferanser.client.application.i18n.PreferanserMessages;
 
-public class WrongNumberOfContractsValidationError extends GameBuilderValidationError {
+public class WrongNumberOfContractsValidationError extends EditorValidationError {
 
     @Override public String formatLocalMessage(PreferanserConstants constants, PreferanserMessages messages) {
         return messages.wrongNumberOfContracts();

@@ -21,23 +21,23 @@ package com.preferanser.shared.domain.exception;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Objects;
-import com.preferanser.shared.domain.exception.validation.GameBuilderValidationError;
+import com.preferanser.shared.domain.exception.validation.EditorValidationError;
 
 import java.util.Collection;
 
-public class GameBuilderException extends Exception {
+public class EditorException extends Exception {
 
-    private Collection<GameBuilderValidationError> builderErrors;
+    private Collection<EditorValidationError> builderErrors;
 
     @SuppressWarnings("unused") // required for serialization
-    public GameBuilderException() {
+    public EditorException() {
     }
 
-    public GameBuilderException(Collection<GameBuilderValidationError> builderErrors) {
+    public EditorException(Collection<EditorValidationError> builderErrors) {
         this.builderErrors = builderErrors;
     }
 
-    public Collection<GameBuilderValidationError> getBuilderErrors() {
+    public Collection<EditorValidationError> getBuilderErrors() {
         return builderErrors;
     }
 

@@ -25,24 +25,24 @@ import com.google.gwt.event.shared.HasHandlers;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 import com.preferanser.shared.domain.entity.Deal;
 
-public class DealCreatedEvent extends GwtEvent<DealCreatedEvent.DealCreatedHandler> {
+public class DealEvent extends GwtEvent<DealEvent.DealCreatedHandler> {
 
     private Deal deal;
 
     @SuppressWarnings("unused")
-    protected DealCreatedEvent() {
+    protected DealEvent() {
         // Possibly for serialization.
     }
 
-    public DealCreatedEvent(Deal deal) {
+    public DealEvent(Deal deal) {
         this.deal = deal;
     }
 
     public static void fire(HasHandlers source, Deal deal1) {
-        source.fireEvent(new DealCreatedEvent(deal1));
+        source.fireEvent(new DealEvent(deal1));
     }
 
-    public static void fire(HasHandlers source, DealCreatedEvent eventInstance) {
+    public static void fire(HasHandlers source, DealEvent eventInstance) {
         source.fireEvent(eventInstance);
     }
 
@@ -51,7 +51,7 @@ public class DealCreatedEvent extends GwtEvent<DealCreatedEvent.DealCreatedHandl
     }
 
     public interface DealCreatedHandler extends EventHandler {
-        public void onDealCreated(DealCreatedEvent event);
+        public void onDealEvent(DealEvent event);
     }
 
     private static final Type<DealCreatedHandler> TYPE = new Type<DealCreatedHandler>();
@@ -67,7 +67,7 @@ public class DealCreatedEvent extends GwtEvent<DealCreatedEvent.DealCreatedHandl
 
     @Override
     protected void dispatch(DealCreatedHandler handler) {
-        handler.onDealCreated(this);
+        handler.onDealEvent(this);
     }
 
     public Deal getDeal() {

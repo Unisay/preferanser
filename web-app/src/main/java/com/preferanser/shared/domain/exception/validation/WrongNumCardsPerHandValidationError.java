@@ -29,7 +29,7 @@ import java.util.Map;
 
 import static com.google.common.collect.Lists.newArrayList;
 
-public class WrongNumCardsPerHandValidationError extends GameBuilderValidationError {
+public class WrongNumCardsPerHandValidationError extends EditorValidationError {
 
     private Map<Hand, Integer> wrongHands;
 

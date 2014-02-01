@@ -45,6 +45,10 @@ public interface DealService extends RestService {
     @POST
     @RequestId(SAVE_DEAL) void persist(Deal deal, MethodCallback<Long> callback);
 
+    @PUT
+    @Path("/{dealId}")
+    @RequestId(SAVE_DEAL) void update(@PathParam("dealId") Long dealId, Deal deal, MethodCallback<Void> callback);
+
     @GET
     @RequestId(LOAD_DEALS) void load(MethodCallback<List<Deal>> callback);
 

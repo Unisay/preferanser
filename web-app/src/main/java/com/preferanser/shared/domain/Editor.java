@@ -24,13 +24,18 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Maps;
+import com.preferanser.shared.domain.entity.Deal;
 import com.preferanser.shared.domain.exception.DuplicateGameTurnException;
-import com.preferanser.shared.domain.exception.GameBuilderException;
+import com.preferanser.shared.domain.exception.EditorException;
 import com.preferanser.shared.domain.exception.validation.*;
+import com.preferanser.shared.util.Clock;
 import com.preferanser.shared.util.EnumRotator;
 import com.preferanser.shared.util.GameUtils;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -38,11 +43,12 @@ import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Maps.newHashMap;
 import static com.google.common.collect.Sets.newHashSet;
 
-public class GameBuilder {
+public class Editor {
 
     private static final int NUM_OF_CARDS_PER_HAND = 10;
     private static final int NUM_OF_CONTRACTS = 3;
 
+    private Long id;
     private String name;
     private String description;
     private Widow widow;
@@ -52,11 +58,11 @@ public class GameBuilder {
     private Map<Hand, Contract> handContracts;
     private LinkedHashMultimap<Hand, Card> handCardMultimap;
 
-    public GameBuilder() {
+    public Editor() {
         reset();
     }
 
-    public GameBuilder reset() {
+    public Editor reset() {
         name = null;
         description = null;
         firstTurn = null;
@@ -68,32 +74,40 @@ public class GameBuilder {
         return this;
     }
 
-    public GameBuilder setFirstTurn(Hand firstTurn) {
+    public Editor setFirstTurn(Hand firstTurn) {
         this.firstTurn = firstTurn;
         return this;
     }
 
-    public GameBuilder setThreePlayers() {
+    public Editor setThreePlayers() {
         players = Players.THREE;
         return this;
     }
 
-    public GameBuilder setFourPlayers() {
+    public Editor setFourPlayers() {
         players = Players.FOUR;
         return this;
     }
 
-    public GameBuilder setName(String name) {
+    public String getName() {
+        return name;
+    }
+
+    public Editor setName(String name) {
         this.name = name;
         return this;
     }
 
-    public GameBuilder setDescription(String description) {
+    public String getDescription() {
+        return description;
+    }
+
+    public Editor setDescription(String description) {
         this.description = description;
         return this;
     }
 
-    public GameBuilder setWidow(Widow widow) {
+    public Editor setWidow(Widow widow) {
         this.widow = widow;
         return this;
     }
@@ -102,24 +116,44 @@ public class GameBuilder {
         return widow;
     }
 
-    public GameBuilder setHandContract(Hand hand, Contract contract) {
+    public Editor setHandContract(Hand hand, Contract contract) {
         Preconditions.checkNotNull(hand);
         Preconditions.checkNotNull(contract);
         handContracts.put(hand, contract);
         return this;
     }
 
-    public GameBuilder putCards(Hand hand, Collection<Card> cards) {
+    public Editor setDeal(Deal deal) {
+        id = deal.getId();
+        name = deal.getName();
+        description = deal.getDescription();
+        firstTurn = deal.getFirstTurn();
+        widow = deal.getWidow();
+        handContracts.clear();
+        if (deal.getEastContract() != null)
+            handContracts.put(Hand.EAST, deal.getEastContract());
+        if (deal.getSouthContract() != null)
+            handContracts.put(Hand.SOUTH, deal.getSouthContract());
+        if (deal.getWestContract() != null)
+            handContracts.put(Hand.WEST, deal.getWestContract());
+        handCardMultimap.clear();
+        handCardMultimap.putAll(Hand.EAST, deal.getEastCards());
+        handCardMultimap.putAll(Hand.SOUTH, deal.getSouthCards());
+        handCardMultimap.putAll(Hand.WEST, deal.getWestCards());
+        return this;
+    }
+
+    public Editor putCards(Hand hand, Collection<Card> cards) {
         handCardMultimap.putAll(hand, cards);
         return this;
     }
 
-    public GameBuilder putCards(Hand hand, Card... cards) {
+    public Editor putCards(Hand hand, Card... cards) {
         putCards(hand, newArrayList(cards));
         return this;
     }
 
-    public GameBuilder clearCards(TableLocation... tableLocations) {
+    public Editor clearCards(TableLocation... tableLocations) {
         if (tableLocations.length == 0) {
             handCardMultimap.clear();
         } else {
@@ -188,8 +222,8 @@ public class GameBuilder {
         return true;
     }
 
-    private Optional<List<GameBuilderValidationError>> validate() {
-        List<GameBuilderValidationError> errors = newArrayList();
+    private Optional<List<EditorValidationError>> validate() {
+        List<EditorValidationError> errors = newArrayList();
 
         if (Strings.isNullOrEmpty(name))
             errors.add(new DealNameNotSpecifiedValidationError()); // TODO: also check invalid names
@@ -282,24 +316,31 @@ public class GameBuilder {
         return wrongHands;
     }
 
-    public Game build() throws GameBuilderException {
-        Optional<List<GameBuilderValidationError>> validationErrors = validate();
+    public Deal build() throws EditorException {
+        Optional<List<EditorValidationError>> validationErrors = validate();
         if (validationErrors.isPresent())
-            throw new GameBuilderException(validationErrors.get());
+            throw new EditorException(validationErrors.get());
 
         EnumRotator<Hand> handRotator = new EnumRotator<Hand>(Hand.values(), firstTurn);
         handRotator.setSkipValues(Hand.WIDOW);
 
-        return new Game(
-            name,
-            description,
-            players,
-            widow,
-            handContracts,
-            handRotator,
-            handCardMultimap,
-            centerCardHandMap
-        );
+        Deal deal = new Deal();
+        deal.setId(id);
+        deal.setCreated(Clock.getNow());
+        deal.setName(name);
+        deal.setDescription(description);
+        deal.setPlayers(players);
+        deal.setFirstTurn(firstTurn);
+        deal.setShared(false); // consider setting it in the interface
+        deal.setWidow(widow);
+        deal.setEastContract(handContracts.get(Hand.EAST));
+        deal.setSouthContract(handContracts.get(Hand.SOUTH));
+        deal.setWestContract(handContracts.get(Hand.WEST));
+        deal.setEastCards(handCardMultimap.get(Hand.EAST));
+        deal.setSouthCards(handCardMultimap.get(Hand.SOUTH));
+        deal.setWestCards(handCardMultimap.get(Hand.WEST));
+        deal.setCurrentTrickIndex(0);
+        return deal;
     }
 
     public Hand getFirstTurn() {
@@ -315,7 +356,6 @@ public class GameBuilder {
     }
 
     public Map<Card, Hand> getCenterCards() {
-        return new LinkedHashMap<Card, Hand>(centerCardHandMap);
+        return Maps.newLinkedHashMap(centerCardHandMap);
     }
-
 }

@@ -35,7 +35,7 @@ import static com.google.common.collect.Sets.newHashSet;
 /**
  * Represents game state
  */
-public class Game {
+public class Player {
 
     private Long id;
     private final String name;
@@ -47,14 +47,14 @@ public class Game {
     private final LinkedList<Trick> trickLog;
     private int currentTrickIndex;
 
-    Game(String name,
-         String description,
-         Players players,
-         Widow widow,
-         Map<Hand, Contract> handContracts,
-         EnumRotator<Hand> turnRotator,
-         Multimap<Hand, Card> handCardMultimap,
-         Map<Card, Hand> centerCardHandMap
+    Player(String name,
+           String description,
+           Players players,
+           Widow widow,
+           Map<Hand, Contract> handContracts,
+           EnumRotator<Hand> turnRotator,
+           Multimap<Hand, Card> handCardMultimap,
+           Map<Card, Hand> centerCardHandMap
     ) {
         this.id = null;
         this.name = name;
@@ -68,7 +68,7 @@ public class Game {
         currentTrickIndex = 0;
     }
 
-    public Game(Deal deal) {
+    public Player(Deal deal) {
         id = deal.getId();
         name = deal.getName();
         description = deal.getDescription();

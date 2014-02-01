@@ -31,7 +31,7 @@ import com.preferanser.client.application.i18n.PreferanserConstants;
 import com.preferanser.client.application.i18n.PreferanserMessages;
 import com.preferanser.client.application.widgets.EscapableDialogBox;
 import com.preferanser.client.application.widgets.UlListPanel;
-import com.preferanser.shared.domain.exception.validation.GameBuilderValidationError;
+import com.preferanser.shared.domain.exception.validation.EditorValidationError;
 
 import java.util.Collection;
 
@@ -53,9 +53,9 @@ public class ValidationDialogView extends PopupViewWithUiHandlers<ValidationDial
     }
 
     @Override
-    public void displayValidationErrors(Collection<GameBuilderValidationError> validationErrors) {
+    public void displayValidationErrors(Collection<EditorValidationError> validationErrors) {
         listPanel.clear();
-        for (GameBuilderValidationError validationError : validationErrors)
+        for (EditorValidationError validationError : validationErrors)
             displayValidationError(validationError.formatLocalMessage(constants, messages));
     }
 

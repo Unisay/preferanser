@@ -30,6 +30,8 @@ import java.util.Set;
 
 public interface TableView extends View {
 
+    void displayDealInfo(String name, String description);
+
     void displayTurn(Hand turn);
 
     void displayContracts(Map<Hand, Contract> handContracts);

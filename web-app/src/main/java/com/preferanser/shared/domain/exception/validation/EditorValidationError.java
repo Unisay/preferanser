@@ -24,7 +24,7 @@ import com.preferanser.client.application.i18n.PreferanserMessages;
 
 import java.io.Serializable;
 
-public abstract class GameBuilderValidationError implements Serializable {
+public abstract class EditorValidationError implements Serializable {
 
     public abstract String formatLocalMessage(PreferanserConstants constants, PreferanserMessages messages);
 

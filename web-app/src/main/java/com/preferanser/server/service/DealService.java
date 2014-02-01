@@ -75,6 +75,23 @@ public class DealService {
         return savedDeal;
     }
 
+    public void update(Deal deal) {
+        Optional<User> currentUserOptional = authenticationServiceProvider.get().getCurrentUser();
+
+        if (!currentUserOptional.isPresent())
+            throw new NoAuthenticatedUserException();
+
+        String currentUserId = currentUserOptional.get().getGoogleId();
+
+        Deal existingDeal = dealDao.get(deal.getId());
+        if (!existingDeal.getUserId().equals(currentUserId))
+            throw new NotAuthorizedUserException();
+
+        deal.setUserId(currentUserId);
+        deal.setCreated(Clock.getNow());
+        dealDao.save(deal);
+    }
+
     public void delete(Long dealId) {
         Optional<User> currentUserOptional = authenticationServiceProvider.get().getCurrentUser();
 

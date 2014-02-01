@@ -2,9 +2,7 @@ package com.preferanser.shared.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.Objects;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSetMultimap;
-import com.google.common.collect.Multimap;
+import com.google.common.collect.*;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Index;
 import com.preferanser.shared.domain.*;
@@ -19,6 +17,9 @@ import java.util.Set;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Sets.newHashSet;
 
+/**
+ * TODO: consider making it immutable with Builder pattern
+ */
 @Entity
 @SuppressWarnings({"unused", "ClassWithTooManyFields", "ClassWithTooManyMethods"})
 public class Deal extends BaseEntity implements Dto {
@@ -52,6 +53,11 @@ public class Deal extends BaseEntity implements Dto {
     private int currentTrickIndex;
 
     public Deal() {
+        widow = new Widow();
+        eastCards = newHashSet();
+        westCards = newHashSet();
+        southCards = newHashSet();
+        turns = newArrayList();
     }
 
     public Deal(Deal deal) {
@@ -66,11 +72,11 @@ public class Deal extends BaseEntity implements Dto {
         eastContract = deal.eastContract;
         southContract = deal.southContract;
         westContract = deal.westContract;
-        widow = deal.widow == null ? null : new Widow(deal.widow);
-        eastCards = deal.eastCards == null ? null : newHashSet(deal.eastCards);
-        southCards = deal.southCards == null ? null : newHashSet(deal.southCards);
-        westCards = deal.westCards == null ? null : newHashSet(deal.westCards);
-        turns = deal.turns == null ? null : newArrayList(deal.turns);
+        widow = deal.widow == null ? new Widow() : new Widow(deal.widow);
+        eastCards = deal.eastCards == null ? Sets.<Card>newHashSet() : newHashSet(deal.eastCards);
+        southCards = deal.southCards == null ? Sets.<Card>newHashSet() : newHashSet(deal.southCards);
+        westCards = deal.westCards == null ? Sets.<Card>newHashSet() : newHashSet(deal.westCards);
+        turns = deal.turns == null ? Lists.<Turn>newArrayList() : newArrayList(deal.turns);
         currentTrickIndex = deal.currentTrickIndex;
     }
 
@@ -167,7 +173,7 @@ public class Deal extends BaseEntity implements Dto {
     }
 
     public void setEastCards(Set<Card> eastCards) {
-        this.eastCards = eastCards;
+        this.eastCards = eastCards == null ? Sets.<Card>newHashSet() : eastCards;
     }
 
     public Set<Card> getSouthCards() {
@@ -175,7 +181,7 @@ public class Deal extends BaseEntity implements Dto {
     }
 
     public void setSouthCards(Set<Card> southCards) {
-        this.southCards = southCards;
+        this.southCards = southCards == null ? Sets.<Card>newHashSet() : southCards;
     }
 
     public Set<Card> getWestCards() {
@@ -183,7 +189,7 @@ public class Deal extends BaseEntity implements Dto {
     }
 
     public void setWestCards(Set<Card> westCards) {
-        this.westCards = westCards;
+        this.westCards = westCards == null ? Sets.<Card>newHashSet() : westCards;
     }
 
     public List<Turn> getTurns() {
@@ -191,7 +197,7 @@ public class Deal extends BaseEntity implements Dto {
     }
 
     public void setTurns(List<Turn> turns) {
-        this.turns = turns;
+        this.turns = turns == null ? Lists.<Turn>newArrayList() : turns;
     }
 
     public int getCurrentTrickIndex() {
@@ -217,11 +223,11 @@ public class Deal extends BaseEntity implements Dto {
     @JsonIgnore
     public Multimap<Hand, Card> getHandCards() {
         ImmutableSetMultimap.Builder<Hand, Card> builder = ImmutableSetMultimap.builder();
-        if (eastCards != null)
+        if (!eastCards.isEmpty())
             builder.putAll(Hand.EAST, eastCards);
-        if (southCards != null)
+        if (!southCards.isEmpty())
             builder.putAll(Hand.SOUTH, southCards);
-        if (westCards != null)
+        if (!westCards.isEmpty())
             builder.putAll(Hand.WEST, westCards);
         return builder.build();
     }
@@ -282,4 +288,5 @@ public class Deal extends BaseEntity implements Dto {
         sb.append('}');
         return sb.toString();
     }
+
 }

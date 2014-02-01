@@ -31,10 +31,15 @@ import org.slf4j.LoggerFactory;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import static com.google.common.collect.Lists.newArrayList;
+import static com.google.common.collect.Maps.newHashMap;
 
+@SuppressWarnings("unused")
 public abstract class BaseDao<T extends BaseEntity> {
 
     private static Logger logger = LoggerFactory.getLogger(BaseDao.class);
@@ -68,7 +73,7 @@ public abstract class BaseDao<T extends BaseEntity> {
         }
     }
 
-    public Collection<T> save(T... entities) {
+    @SafeVarargs public final Collection<T> save(T... entities) {
         return save(newArrayList(entities));
     }
 
@@ -96,11 +101,11 @@ public abstract class BaseDao<T extends BaseEntity> {
     }
 
     public List<T> getSubset(List<Long> ids) {
-        return new ArrayList<T>(ofy().query(clazz).ids(ids).values());
+        return newArrayList(ofy().query(clazz).ids(ids).values());
     }
 
     public Map<Long, T> getSubsetMap(List<Long> ids) {
-        return new HashMap<Long, T>(ofy().query(clazz).ids(ids));
+        return newHashMap(ofy().query(clazz).ids(ids));
     }
 
     public void delete(T object) {

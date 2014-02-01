@@ -36,7 +36,7 @@
     <properties>
         <objectify.version>4.0b3</objectify.version>
         <jersey.version>1.18</jersey.version>
-        <restygwt.version>1.3</restygwt.version>
+        <restygwt.version>1.4</restygwt.version>
         <jackson.version>2.0.0</jackson.version>
         <javax.el.version>3.0.0</javax.el.version>
         <hibernate-validator.version>4.3.1.Final</hibernate-validator.version>
@@ -49,6 +49,11 @@
             <id>google-releases</id>
             <name>Google Releases</name>
             <url>https://oss.sonatype.org/content/repositories/google-releases</url>
+        </repository>
+        <repository>
+            <id>JBoss-releases</id>
+            <name>JBoss Releases</name>
+            <url>https://repository.jboss.org/nexus/content/repositories/fs-public</url>
         </repository>
     </repositories>
 

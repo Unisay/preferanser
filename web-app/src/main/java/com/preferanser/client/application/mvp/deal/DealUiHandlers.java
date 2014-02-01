@@ -7,6 +7,8 @@ public interface DealUiHandlers extends UiHandlers {
 
     void playDeal(Deal deal);
 
+    void editDeal(Deal deal);
+
     void deleteDeal(Deal deal);
 
 }

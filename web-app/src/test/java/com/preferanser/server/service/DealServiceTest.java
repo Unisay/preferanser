@@ -155,6 +155,11 @@ public class DealServiceTest {
     }
 
     @Test
+    public void testUpdate() throws Exception {
+        // TODO write unit-test
+    }
+
+    @Test
     public void testGet() throws Exception {
         Deal deal = buildDeal(1L, "admin1", "name1", true);
         when(dealDao.get(deal.getId())).thenReturn(deal);

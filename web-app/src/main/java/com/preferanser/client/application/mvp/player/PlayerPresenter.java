@@ -31,14 +31,14 @@ import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.preferanser.client.application.ApplicationPresenter;
-import com.preferanser.client.application.mvp.DealCreatedEvent;
+import com.preferanser.client.application.mvp.DealEvent;
 import com.preferanser.client.application.mvp.TableView;
 import com.preferanser.client.gwtp.NameTokens;
 import com.preferanser.client.service.DealService;
 import com.preferanser.client.service.Response;
 import com.preferanser.shared.domain.Card;
-import com.preferanser.shared.domain.Game;
 import com.preferanser.shared.domain.Hand;
+import com.preferanser.shared.domain.Player;
 import com.preferanser.shared.domain.TableLocation;
 import com.preferanser.shared.domain.entity.Deal;
 import com.preferanser.shared.domain.exception.GameException;
@@ -52,12 +52,11 @@ import java.util.logging.Logger;
  * Presenter for the mvp page
  */
 public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, PlayerPresenter.Proxy>
-    implements PlayerUiHandlers, DealCreatedEvent.DealCreatedHandler {
+    implements PlayerUiHandlers, DealEvent.DealCreatedHandler {
 
     private static final Logger log = Logger.getLogger("PlayerPresenter");
 
     public interface PlayerView extends TableView, HasUiHandlers<PlayerUiHandlers> {
-        void displayDealInfo(String name, String description);
         void displayHandTricks(Map<Hand, Integer> handTricks);
         void disableCards(Set<Card> cards);
         void displayTurnNavigation(boolean showPrev, boolean showNext);
@@ -67,18 +66,14 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
     private final PlaceManager placeManager;
     private final DealService dealService;
     private Optional<Long> dealId = Optional.absent();
-    private Optional<Game> gameOptional = Optional.absent();
+    private Optional<Player> gameOptional = Optional.absent();
 
     @ProxyStandard
     @NameToken(NameTokens.PLAYER)
     public interface Proxy extends ProxyPlace<PlayerPresenter> {}
 
     @Inject
-    public PlayerPresenter(PlaceManager placeManager,
-                           EventBus eventBus,
-                           PlayerView view,
-                           Proxy proxy,
-                           DealService dealService) {
+    public PlayerPresenter(PlaceManager placeManager, EventBus eventBus, PlayerView view, Proxy proxy, DealService dealService) {
         super(eventBus, view, proxy, ApplicationPresenter.MAIN_SLOT);
         this.placeManager = placeManager;
         this.dealService = dealService;
@@ -87,17 +82,21 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
 
     @Override protected void onBind() {
         super.onBind();
-        addRegisteredHandler(DealCreatedEvent.getType(), this);
+        addRegisteredHandler(DealEvent.getType(), this);
     }
 
     @Override
     public void prepareFromRequest(PlaceRequest request) {
         super.prepareFromRequest(request);
         String dealIdString = request.getParameter("deal", "");
-        try {
-            this.dealId = Optional.of(Long.parseLong(dealIdString));
-        } catch (NumberFormatException e) {
-            placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.DEALS).build());
+        if (!dealIdString.isEmpty()) {
+            try {
+                this.dealId = Optional.of(Long.parseLong(dealIdString));
+            } catch (NumberFormatException e) {
+                revealPlace(NameTokens.DEALS);
+            }
+        } else {
+            revealPlace(NameTokens.DEALS);
         }
     }
 
@@ -109,16 +108,16 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
         } else {
             dealService.getById(dealId.get(), new Response<Deal>() {
                 @Override public void onSuccess(Method method, Deal deal) {
-                    gameOptional = Optional.of(new Game(deal));
+                    gameOptional = Optional.of(new Player(deal));
                     refreshView();
                 }
             });
         }
     }
 
-    @Override public void onDealCreated(DealCreatedEvent dealCreatedEvent) {
-        Deal deal = dealCreatedEvent.getDeal();
-        gameOptional = Optional.of(new Game(deal));
+    @Override public void onDealEvent(DealEvent dealEvent) {
+        Deal deal = dealEvent.getDeal();
+        gameOptional = Optional.of(new Player(deal));
     }
 
     @Override public void sluff() {
@@ -166,16 +165,16 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
 
     private void refreshView() {
         log.finest("Refreshing view...");
-        Game game = gameOptional.get();
+        Player player = gameOptional.get();
         PlayerView view = getView();
-        view.displayDealInfo(game.getName(), game.getDescription());
-        view.displayTurn(game.getTurn());
-        view.displayCards(game.getHandCards(), game.getCenterCards(), game.getWidow());
-        view.displaySluffButton(game.isTrickClosed());
-        view.displayContracts(game.getHandContracts());
-        view.displayHandTricks(game.getHandTrickCounts());
-        view.displayTurnNavigation(game.hasUndoTurns(), game.hasRedoTurns());
-        view.disableCards(game.getDisabledCards());
+        view.displayDealInfo(player.getName(), player.getDescription());
+        view.displayTurn(player.getTurn());
+        view.displayCards(player.getHandCards(), player.getCenterCards(), player.getWidow());
+        view.displaySluffButton(player.isTrickClosed());
+        view.displayContracts(player.getHandContracts());
+        view.displayHandTricks(player.getHandTrickCounts());
+        view.displayTurnNavigation(player.hasUndoTurns(), player.hasRedoTurns());
+        view.disableCards(player.getDisabledCards());
     }
 
 }

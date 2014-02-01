@@ -32,7 +32,7 @@ import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.preferanser.client.application.ApplicationPresenter;
-import com.preferanser.client.application.mvp.DealCreatedEvent;
+import com.preferanser.client.application.mvp.DealEvent;
 import com.preferanser.client.application.mvp.TableView;
 import com.preferanser.client.application.mvp.editor.dialog.EditorDialogs;
 import com.preferanser.client.gwtp.LoggedInGatekeeper;
@@ -41,7 +41,7 @@ import com.preferanser.client.service.DealService;
 import com.preferanser.client.service.Response;
 import com.preferanser.shared.domain.*;
 import com.preferanser.shared.domain.entity.Deal;
-import com.preferanser.shared.domain.exception.GameBuilderException;
+import com.preferanser.shared.domain.exception.EditorException;
 import com.preferanser.shared.domain.exception.GameException;
 import org.fusesource.restygwt.client.Method;
 
@@ -55,12 +55,11 @@ import java.util.logging.Logger;
 public class EditorPresenter extends Presenter<EditorPresenter.EditorView, EditorPresenter.Proxy> implements EditorUiHandlers, HasHandContracts {
 
     private static final Logger log = Logger.getLogger("EditorPresenter");
+    private Optional<Long> dealId = Optional.absent();
 
-    public interface EditorView extends HasUiHandlers<EditorUiHandlers>, TableView {
-        void displayDealName(String name);
-    }
+    public interface EditorView extends HasUiHandlers<EditorUiHandlers>, TableView {}
 
-    private GameBuilder gameBuilder;
+    private Editor editor;
     private final PlaceManager placeManager;
     private final DealService dealService;
     private final EditorDialogs editorDialogs;
@@ -75,21 +74,21 @@ public class EditorPresenter extends Presenter<EditorPresenter.EditorView, Edito
                            EventBus eventBus,
                            EditorView view,
                            Proxy proxy,
-                           GameBuilder gameBuilder,
+                           Editor editor,
                            DealService dealService,
                            EditorDialogs editorDialogs) {
         super(eventBus, view, proxy, ApplicationPresenter.MAIN_SLOT);
         this.placeManager = placeManager;
-        this.gameBuilder = gameBuilder;
+        this.editor = editor;
         this.dealService = dealService;
         this.editorDialogs = editorDialogs;
         getView().setUiHandlers(this);
-        initGameBuilder();
+        initEditor();
     }
 
     @Override
     public void reset() {
-        initGameBuilder();
+        initEditor();
         refreshView();
     }
 
@@ -97,18 +96,43 @@ public class EditorPresenter extends Presenter<EditorPresenter.EditorView, Edito
         revealPlace(NameTokens.DEALS);
     }
 
-    private void initGameBuilder() {
-        gameBuilder.reset();
-        gameBuilder.setThreePlayers();
-        gameBuilder.setFirstTurn(Hand.SOUTH);
-        gameBuilder.putCards(Hand.SOUTH, Card.values());
+    private void initEditor() {
+        editor.reset();
+        editor.setName(DateTimeFormat.getFormat(DateTimeFormat.PredefinedFormat.DATE_TIME_MEDIUM).format(new Date()));
+        editor.setThreePlayers();
+        editor.setFirstTurn(Hand.SOUTH);
+        editor.putCards(Hand.SOUTH, Card.values());
+    }
+
+    @Override
+    public void prepareFromRequest(PlaceRequest request) {
+        super.prepareFromRequest(request);
+        String dealIdString = request.getParameter("deal", "");
+        if (!dealIdString.isEmpty()) {
+            try {
+                this.dealId = Optional.of(Long.parseLong(dealIdString));
+            } catch (NumberFormatException e) {
+                placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.DEALS).build());
+            }
+        } else {
+            dealId = Optional.absent();
+        }
     }
 
     @Override
     protected void onReveal() {
         super.onReveal();
-        refreshView();
-        getView().displayDealName(DateTimeFormat.getFormat(DateTimeFormat.PredefinedFormat.DATE_TIME_MEDIUM).format(new Date()));
+        if (dealId.isPresent()) {
+            dealService.getById(dealId.get(), new Response<Deal>() {
+                @Override public void onSuccess(Method method, Deal deal) {
+                    editor.setDeal(deal);
+                    refreshView();
+                }
+            });
+        } else {
+            initEditor();
+            refreshView();
+        }
     }
 
     @Override
@@ -118,15 +142,15 @@ public class EditorPresenter extends Presenter<EditorPresenter.EditorView, Edito
 
     @Override
     public void chooseTurn(Hand hand) {
-        gameBuilder.setFirstTurn(hand);
-        getView().displayTurn(gameBuilder.getFirstTurn());
+        editor.setFirstTurn(hand);
+        getView().displayTurn(editor.getFirstTurn());
     }
 
     @Override
     public void changeCardLocation(Card card, Optional<TableLocation> maybeNewLocation) {
         if (maybeNewLocation.isPresent()) {
             try {
-                gameBuilder.moveCard(card, maybeNewLocation.get());
+                editor.moveCard(card, maybeNewLocation.get());
             } catch (GameException e) {
                 log.finer(e.getMessage());
             }
@@ -136,7 +160,7 @@ public class EditorPresenter extends Presenter<EditorPresenter.EditorView, Edito
 
     @Override
     public boolean setHandContract(Hand hand, Contract contract) {
-        gameBuilder.setHandContract(hand, contract);
+        editor.setHandContract(hand, contract);
         refreshContracts();
         return true;
     }
@@ -144,15 +168,26 @@ public class EditorPresenter extends Presenter<EditorPresenter.EditorView, Edito
     @Override
     public void save(String name, String description) {
         try {
-            final Deal deal = gameBuilder.setName(name).setDescription(description).build().toDeal();
-            dealService.persist(deal, new Response<Long>() { // TODO handle failures
-                @Override public void onSuccess(Method method, Long dealId) {
-                    deal.setId(dealId);
-                    DealCreatedEvent.fire(EditorPresenter.this, deal);
-                    revealPlace(NameTokens.DEALS);
-                }
-            });
-        } catch (GameBuilderException e) {
+            final Deal deal = editor.setName(name).setDescription(description).build();
+            if (dealId.isPresent()) {
+                // Update existing deal
+                dealService.update(deal.getId(), deal, new Response<Void>() { // TODO handle failures
+                    @Override public void onSuccess(Method method, Void none) {
+                        DealEvent.fire(EditorPresenter.this, deal);
+                        revealPlace(NameTokens.DEALS);
+                    }
+                });
+            } else {
+                // Create new deal
+                dealService.persist(deal, new Response<Long>() { // TODO handle failures
+                    @Override public void onSuccess(Method method, Long dealId) {
+                        deal.setId(dealId);
+                        DealEvent.fire(EditorPresenter.this, deal);
+                        revealPlace(NameTokens.DEALS);
+                    }
+                });
+            }
+        } catch (EditorException e) {
             editorDialogs.showValidationDialog(e.getBuilderErrors());
         }
     }
@@ -162,22 +197,18 @@ public class EditorPresenter extends Presenter<EditorPresenter.EditorView, Edito
     }
 
     private void refreshView() {
-        refreshTurn();
+        getView().displayDealInfo(editor.getName(), editor.getDescription());
+        getView().displayTurn(editor.getFirstTurn());
         refreshContracts();
         refreshCards();
     }
 
-    private void refreshTurn() {
-        Hand firstTurn = gameBuilder.getFirstTurn();
-        getView().displayTurn(firstTurn);
-    }
-
     private void refreshContracts() {
-        getView().displayContracts(gameBuilder.getHandContracts());
+        getView().displayContracts(editor.getHandContracts());
     }
 
     private void refreshCards() {
-        getView().displayCards(gameBuilder.getHandCards(), gameBuilder.getCenterCards(), gameBuilder.getWidow());
+        getView().displayCards(editor.getHandCards(), editor.getCenterCards(), editor.getWidow());
     }
 
 }

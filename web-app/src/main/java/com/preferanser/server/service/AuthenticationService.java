@@ -50,7 +50,7 @@ public class AuthenticationService implements Provider<CurrentUserDto> {
         currentUserDto.loginUrl = userService.createLoginURL("/");
 
         if (isLoggedIn) {
-            currentUserDto.isAdmin = userService.isUserAdmin();
+            currentUserDto.admin = userService.isUserAdmin();
             currentUserDto.nickname = userService.getCurrentUser().getNickname();
         }
 

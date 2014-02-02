@@ -25,29 +25,29 @@ import com.preferanser.shared.domain.entity.User;
 @SuppressWarnings("unused")
 public class CurrentUserDto implements Dto {
 
-    public Boolean isAdmin;
-    public Boolean isLoggedIn;
+    public Boolean admin;
+    public Boolean loggedIn;
     public User user;
     public String logoutUrl;
     public String loginUrl;
     public String nickname;
 
     public CurrentUserDto() {
-        isAdmin = false;
-        isLoggedIn = false;
+        admin = false;
+        loggedIn = false;
         user = new User();
         loginUrl = "";
         logoutUrl = "";
     }
 
-    public CurrentUserDto(Boolean isLoggedIn, User user) {
-        this.isLoggedIn = isLoggedIn;
+    public CurrentUserDto(Boolean loggedIn, User user) {
+        this.loggedIn = loggedIn;
         this.user = user;
     }
 
     public void copyFrom(CurrentUserDto currentUser) {
-        isAdmin = currentUser.isAdmin;
-        isLoggedIn = currentUser.isLoggedIn;
+        admin = currentUser.admin;
+        loggedIn = currentUser.loggedIn;
         user = currentUser.user;
         logoutUrl = currentUser.logoutUrl;
         loginUrl = currentUser.loginUrl;
@@ -55,19 +55,19 @@ public class CurrentUserDto implements Dto {
     }
 
     public Boolean getAdmin() {
-        return isAdmin;
+        return admin;
     }
 
     public void setAdmin(Boolean admin) {
-        isAdmin = admin;
+        this.admin = admin;
     }
 
     public Boolean getLoggedIn() {
-        return isLoggedIn;
+        return loggedIn;
     }
 
     public void setLoggedIn(Boolean loggedIn) {
-        isLoggedIn = loggedIn;
+        this.loggedIn = loggedIn;
     }
 
     public User getUser() {
@@ -104,8 +104,8 @@ public class CurrentUserDto implements Dto {
 
     @Override public String toString() {
         return Objects.toStringHelper(this)
-            .add("getAdmin", isAdmin)
-            .add("isLoggedIn", isLoggedIn)
+            .add("getAdmin", admin)
+            .add("loggedIn", loggedIn)
             .add("user", user)
             .add("logoutUrl", logoutUrl)
             .add("loginUrl", loginUrl)
@@ -120,8 +120,8 @@ public class CurrentUserDto implements Dto {
 
         CurrentUserDto that = (CurrentUserDto) o;
 
-        return Objects.equal(this.isAdmin, that.isAdmin) &&
-            Objects.equal(this.isLoggedIn, that.isLoggedIn) &&
+        return Objects.equal(this.admin, that.admin) &&
+            Objects.equal(this.loggedIn, that.loggedIn) &&
             Objects.equal(this.user, that.user) &&
             Objects.equal(this.logoutUrl, that.logoutUrl) &&
             Objects.equal(this.loginUrl, that.loginUrl) &&
@@ -130,6 +130,6 @@ public class CurrentUserDto implements Dto {
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(isAdmin, isLoggedIn, user, logoutUrl, loginUrl, nickname);
+        return Objects.hashCode(admin, loggedIn, user, logoutUrl, loginUrl, nickname);
     }
 }

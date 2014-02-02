@@ -129,7 +129,7 @@ public class DealPresenter extends Presenter<DealPresenter.DealView, DealPresent
                 return created1.compareTo(created2);
             }
         });
-        getView().displayDeals(deals, currentUserDto.isLoggedIn);
+        getView().displayDeals(deals, currentUserDto.loggedIn);
     }
 
 }

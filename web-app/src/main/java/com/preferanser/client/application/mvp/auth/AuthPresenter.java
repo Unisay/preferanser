@@ -26,7 +26,7 @@ public class AuthPresenter extends PresenterWidget<AuthPresenter.MyView> impleme
         super(eventBus, view);
         this.currentUserDto = currentUserDto;
         getView().setUiHandlers(this);
-        if (currentUserDto.isLoggedIn)
+        if (currentUserDto.loggedIn)
             getView().displayAuthInfo(currentUserDto.getUser().getEmail(), currentUserDto.nickname);
     }
 

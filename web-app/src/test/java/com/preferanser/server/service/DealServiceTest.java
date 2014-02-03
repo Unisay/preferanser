@@ -10,6 +10,7 @@ import com.preferanser.shared.domain.entity.Deal;
 import com.preferanser.shared.domain.entity.User;
 import com.preferanser.shared.util.Clock;
 import com.preferanser.testng.ClockTestNGListener;
+import com.preferanser.testng.DatastoreTestNGListener;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
@@ -24,7 +25,7 @@ import static com.google.common.collect.Sets.newHashSet;
 import static org.mockito.Mockito.*;
 import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
 
-@Listeners({ClockTestNGListener.class})
+@Listeners({ClockTestNGListener.class, DatastoreTestNGListener.class})
 public class DealServiceTest {
 
     private DealService dealService;

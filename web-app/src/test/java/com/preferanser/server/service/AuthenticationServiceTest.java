@@ -68,8 +68,6 @@ public class AuthenticationServiceTest {
 
     @Test
     public void testGet() throws Exception {
-        currentUser.setId(newUserId);
-
         when(userDao.save(Matchers.any(User.class))).thenAnswer(new UserDaoSaveAnswer());
         when(userService.isUserLoggedIn()).thenReturn(true);
         when(userService.getCurrentUser()).thenReturn(currentGoogleUser);
@@ -79,16 +77,21 @@ public class AuthenticationServiceTest {
 
         CurrentUserDto actualCurrentUserDto = authenticationService.get();
         assertReflectionEquals(currentUserDto, actualCurrentUserDto);
+
+        verify(userDao).save(Matchers.any(User.class));
+        verify(userService, atLeastOnce()).isUserLoggedIn();
+        verify(userService, atLeastOnce()).getCurrentUser();
+        verify(userService, atLeastOnce()).isUserAdmin();
+        verify(userService).createLoginURL("/");
+        verify(userService).createLogoutURL("/");
     }
 
     @Test
     public void testGetCurrentUser_FirstTime() throws Exception {
-        currentUser.setId(newUserId);
-
         when(userService.isUserLoggedIn()).thenReturn(true);
         when(userService.isUserAdmin()).thenReturn(true);
         when(userService.getCurrentUser()).thenReturn(currentGoogleUser);
-        when(userDao.findById(currentUser.getId())).thenReturn(null);
+        when(userDao.findById(currentGoogleUser.getUserId())).thenReturn(null);
         when(userDao.save(Matchers.any(User.class))).thenAnswer(new UserDaoSaveAnswer());
 
         Optional<User> maybeCurrentUser = authenticationService.getCurrentUser();
@@ -96,7 +99,7 @@ public class AuthenticationServiceTest {
             "authenticationService.getCurrentUser() returned Optional.absent() when Object was expected");
         assertReflectionEquals(currentUser, maybeCurrentUser.get());
 
-        verify(userDao).findById(currentUser.getId());
+        verify(userDao).findById(currentGoogleUser.getUserId());
         verify(userDao).save(Matchers.any(User.class));
         verifyNoMoreInteractions(userDao);
 
@@ -131,9 +134,7 @@ public class AuthenticationServiceTest {
 
     private class UserDaoSaveAnswer implements Answer<User> {
         @Override public User answer(InvocationOnMock invocation) throws Throwable {
-            User user = (User) invocation.getArguments()[0];
-            user.setId(newUserId);
-            return user;
+            return (User) invocation.getArguments()[0];
         }
     }
 }

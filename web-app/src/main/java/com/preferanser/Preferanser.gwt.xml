@@ -32,6 +32,7 @@
     <inherits name="com.google.common.collect.Collect"/>
     <inherits name="com.gwtplatform.mvp.MvpWithEntryPoint"/>
     <inherits name="org.fusesource.restygwt.RestyGWT"/>
+    <inherits name="com.googlecode.objectify.Objectify"/>
 
     <set-property name="gwt.logging.logLevel" value="FINEST"/>
     <set-property name="gwt.logging.enabled" value="TRUE"/>

@@ -20,16 +20,21 @@
 package com.preferanser.shared.domain;
 
 import com.google.common.collect.ImmutableMap;
+import com.googlecode.objectify.Key;
 import com.preferanser.shared.domain.entity.Deal;
 import com.preferanser.shared.domain.entity.DealTestHelper;
+import com.preferanser.shared.domain.entity.User;
 import com.preferanser.shared.domain.exception.EditorException;
 import com.preferanser.shared.domain.exception.validation.EditorValidationError;
 import com.preferanser.shared.domain.exception.validation.HasConflictingContractsValidationError;
 import com.preferanser.shared.domain.exception.validation.HasDuplicateCardsValidationError;
 import com.preferanser.shared.domain.exception.validation.WrongNumCardsPerHandValidationError;
 import com.preferanser.shared.util.Clock;
+import com.preferanser.testng.ClockTestNGListener;
+import com.preferanser.testng.DatastoreTestNGListener;
 import org.apache.commons.lang.ArrayUtils;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
 import java.util.*;
@@ -45,6 +50,7 @@ import static org.unitils.reflectionassert.ReflectionAssert.assertLenientEquals;
 import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
 import static org.unitils.reflectionassert.ReflectionComparatorMode.LENIENT_ORDER;
 
+@Listeners({ClockTestNGListener.class, DatastoreTestNGListener.class})
 public class EditorTest {
 
     private Editor editor;
@@ -115,8 +121,7 @@ public class EditorTest {
         Deal actualDeal = editor.setDeal(originalDeal).build();
 
         Deal expectedDeal = new Deal(originalDeal);
-        expectedDeal.setCreated(null);
-
+        expectedDeal.setOwner((Key<User>) null);
         assertLenientEquals(expectedDeal, actualDeal);
     }
 

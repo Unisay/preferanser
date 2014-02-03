@@ -29,7 +29,7 @@ public class DealService {
     public void importSharedDeals(User user) {
         Set<Deal> importedDeals = newHashSet();
         for (Deal sharedDeal : dealDao.getSharedDeals()) {
-            if (!user.getId().equals(sharedDeal.getOwner().getId())) {
+            if (!user.getId().equals(sharedDeal.getOwner().getName())) {
                 importedDeals.add(importDeal(sharedDeal, user));
             }
         }

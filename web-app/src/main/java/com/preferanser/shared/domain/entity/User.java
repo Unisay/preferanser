@@ -38,7 +38,7 @@ public class User implements com.preferanser.shared.domain.entity.Entity {
     }
 
     public static Key<User> key(String id) {
-        return Key.create(User.class, id);
+        return id == null ? null : Key.create(User.class, id);
     }
 
     public Key<User> key() {

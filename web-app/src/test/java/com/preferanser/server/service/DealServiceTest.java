@@ -154,9 +154,33 @@ public class DealServiceTest {
         verify(dealDao).delete(deal);
     }
 
+    @Test(expectedExceptions = NoAuthenticatedUserException.class)
+    public void testUpdate_NoAuthenticatedUser() throws Exception {
+        when(authenticationService.getCurrentUser()).thenReturn(Optional.<User>absent());
+        dealService.update(buildDeal(1L, user.getGoogleId(), "name1", false));
+    }
+
+    @Test(expectedExceptions = NotAuthorizedUserException.class)
+    public void testUpdate_NotAuthorizedUser() throws Exception {
+        Deal deal = buildDeal(1L, "userId", "name1", false);
+        when(authenticationService.getCurrentUser()).thenReturn(Optional.of(user));
+        when(dealDao.get(deal.getId())).thenReturn(deal);
+        dealService.update(deal);
+    }
+
     @Test
     public void testUpdate() throws Exception {
-        // TODO write unit-test
+        Deal deal = buildDeal(1L, user.getGoogleId(), "name1", false);
+
+        when(authenticationService.getCurrentUser()).thenReturn(Optional.of(user));
+        when(dealDao.get(deal.getId())).thenReturn(deal);
+
+        dealService.update(deal);
+
+        Deal dealToUpdate = buildDeal(1L, user.getGoogleId(), "name1", false);
+        verify(dealDao).get(deal.getId());
+        verify(dealDao).save(dealToUpdate);
+        verifyNoMoreInteractions(dealDao);
     }
 
     @Test

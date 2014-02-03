@@ -64,10 +64,10 @@ public class AuthenticationService implements Provider<CurrentUserDto> {
         com.google.appengine.api.users.User currentUser = userService.getCurrentUser();
         String googleId = currentUser.getUserId();
 
-        User user = userDao.findByGoogleId(googleId);
+        User user = userDao.findById(googleId);
         if (user == null) {
             user = new User();
-            user.setGoogleId(googleId);
+            user.setId(googleId);
             user.setEmail(currentUser.getEmail());
             user.setAdmin(userService.isUserAdmin());
             user = userDao.save(user);

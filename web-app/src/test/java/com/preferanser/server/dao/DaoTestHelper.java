@@ -8,11 +8,11 @@ import java.util.Date;
 
 abstract class DaoTestHelper {
 
-    static Deal buildDeal(String name, Date created) {
+    static Deal buildDeal(String name, Date created, String ownerId) {
         Deal deal = new Deal();
         deal.setName(name);
         deal.setDescription(name + "_desc");
-        deal.setUserId("googleUserId");
+        deal.setOwner(User.key(ownerId));
         deal.setPlayers(Players.THREE);
         deal.setCreated(created);
         return deal;
@@ -21,7 +21,7 @@ abstract class DaoTestHelper {
     static User buildUser(String googleId, boolean admin) {
         User user = new User();
         user.setAdmin(admin);
-        user.setGoogleId(googleId);
+        user.setId(googleId);
         return user;
     }
 }

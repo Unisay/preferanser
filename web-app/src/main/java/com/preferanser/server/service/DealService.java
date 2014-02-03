@@ -29,18 +29,18 @@ public class DealService {
     public void importSharedDeals(User user) {
         Set<Deal> importedDeals = newHashSet();
         for (Deal sharedDeal : dealDao.getSharedDeals()) {
-            if (!user.getGoogleId().equals(sharedDeal.getUserId())) {
-                importedDeals.add(importDeal(sharedDeal, user.getGoogleId()));
+            if (!user.getId().equals(sharedDeal.getOwner().getId())) {
+                importedDeals.add(importDeal(sharedDeal, user));
             }
         }
         dealDao.save(importedDeals);
     }
 
-    private Deal importDeal(Deal sharedDeal, String userId) {
+    private Deal importDeal(Deal sharedDeal, User user) {
         Deal deal = new Deal(sharedDeal);
         deal.setId(null);
         deal.setShared(false);
-        deal.setUserId(userId);
+        deal.setOwner(user.key());
         return deal;
     }
 
@@ -67,7 +67,7 @@ public class DealService {
             throw new NotAuthorizedUserException("Only admins can create shared deals");
 
         deal.setId(null);
-        deal.setUserId(currentUserOptional.get().getGoogleId());
+        deal.setOwner(currentUserOptional.get());
         deal.setCreated(Clock.getNow());
         Deal savedDeal = dealDao.save(deal);
 
@@ -81,13 +81,13 @@ public class DealService {
         if (!currentUserOptional.isPresent())
             throw new NoAuthenticatedUserException();
 
-        String currentUserId = currentUserOptional.get().getGoogleId();
+        User currentUser = currentUserOptional.get();
 
         Deal existingDeal = dealDao.get(deal.getId());
-        if (!existingDeal.getUserId().equals(currentUserId))
+        if (!existingDeal.getOwner().getName().equals(currentUser.getId()))
             throw new NotAuthorizedUserException();
 
-        deal.setUserId(currentUserId);
+        deal.setOwner(currentUser);
         deal.setCreated(Clock.getNow());
         dealDao.save(deal);
     }
@@ -98,8 +98,9 @@ public class DealService {
         if (!currentUserOptional.isPresent())
             throw new NoAuthenticatedUserException(); // TODO force HTTP status
 
+        User currentUser = currentUserOptional.get();
         Deal deal = dealDao.get(dealId);
-        if (!deal.getUserId().equals(currentUserOptional.get().getGoogleId()))
+        if (!deal.getOwner().getName().equals(currentUser.getId()))
             throw new NotAuthorizedUserException();
 
         dealDao.delete(deal);

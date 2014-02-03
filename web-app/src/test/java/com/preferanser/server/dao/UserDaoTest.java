@@ -12,7 +12,6 @@ import org.testng.annotations.Test;
 import static com.preferanser.server.dao.DaoTestHelper.buildUser;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
-import static org.testng.Assert.assertNull;
 
 @Listeners({ClockTestNGListener.class, DatastoreTestNGListener.class})
 public class UserDaoTest {
@@ -25,10 +24,10 @@ public class UserDaoTest {
         userDao = injector.getInstance(UserDao.class);
     }
 
-    @Test
-    public void testFindByGoogleId_Null() throws Exception {
-        User user = userDao.findByGoogleId("googleId");
-        assertNull(user);
+    @Test(expectedExceptions = com.googlecode.objectify.NotFoundException.class,
+        expectedExceptionsMessageRegExp = "^No entity was found matching the key.*")
+    public void testFindByGoogleId_NotFound() throws Exception {
+        userDao.findById("123");
     }
 
     @Test
@@ -36,7 +35,7 @@ public class UserDaoTest {
         User user = buildUser("googleId", true);
         userDao.save(user);
 
-        User actualUser = userDao.findByGoogleId("googleId");
+        User actualUser = userDao.findById("googleId");
         assertThat(actualUser, equalTo(user));
     }
 

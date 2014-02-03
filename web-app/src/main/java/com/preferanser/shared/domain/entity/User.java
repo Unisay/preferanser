@@ -21,27 +21,36 @@ package com.preferanser.shared.domain.entity;
 
 
 import com.google.common.base.Objects;
+import com.googlecode.objectify.Key;
 import com.googlecode.objectify.annotation.Entity;
-import com.googlecode.objectify.annotation.Index;
+import com.googlecode.objectify.annotation.Id;
 
 @Entity
-public class User extends BaseEntity {
+public class User implements com.preferanser.shared.domain.entity.Entity {
 
-    @Index
-    private String googleId;
+    @Id
+    private String id;
     private String email;
     private boolean admin;
 
     public User() {
-        googleId = "";
+        id = "";
     }
 
-    public String getGoogleId() {
-        return googleId;
+    public static Key<User> key(String id) {
+        return Key.create(User.class, id);
     }
 
-    public void setGoogleId(String googleId) {
-        this.googleId = googleId;
+    public Key<User> key() {
+        return User.key(id);
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public boolean getAdmin() {
@@ -67,24 +76,22 @@ public class User extends BaseEntity {
 
         User that = (User) o;
 
-        return Objects.equal(this.googleId, that.googleId) &&
+        return Objects.equal(this.id, that.id) &&
             Objects.equal(this.email, that.email) &&
-            Objects.equal(this.admin, that.admin) &&
-            Objects.equal(this.id, that.id);
+            Objects.equal(this.admin, that.admin);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(googleId, email, admin, id);
+        return Objects.hashCode(id, email, admin);
     }
 
     @Override
     public String toString() {
         return Objects.toStringHelper(this)
-            .addValue(googleId)
+            .addValue(id)
             .addValue(email)
             .addValue(admin)
-            .addValue(id)
             .toString();
     }
 }

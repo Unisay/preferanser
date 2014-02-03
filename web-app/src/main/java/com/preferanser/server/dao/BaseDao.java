@@ -24,7 +24,6 @@ import com.googlecode.objectify.cmd.LoadType;
 import com.preferanser.server.dao.objectify.Ofy;
 import com.preferanser.server.dao.objectify.OfyFactory;
 import com.preferanser.server.exception.ValidationException;
-import com.preferanser.shared.domain.entity.BaseEntity;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,7 +39,7 @@ import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Maps.newHashMap;
 
 @SuppressWarnings("unused")
-public abstract class BaseDao<T extends BaseEntity> {
+public abstract class BaseDao<T extends com.preferanser.shared.domain.entity.Entity> {
 
     private static Logger logger = LoggerFactory.getLogger(BaseDao.class);
 

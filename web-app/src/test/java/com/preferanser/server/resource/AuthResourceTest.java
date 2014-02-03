@@ -26,7 +26,7 @@ public class AuthResourceTest {
         MockitoAnnotations.initMocks(this);
 
         User currentUser = new User();
-        currentUser.setGoogleId("googleId");
+        currentUser.setId("googleId");
         currentUser.setAdmin(true);
 
         currentUserDto = new CurrentUserDto();

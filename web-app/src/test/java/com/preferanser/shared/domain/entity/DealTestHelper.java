@@ -17,7 +17,7 @@ public abstract class DealTestHelper {
     public static Deal buildDeal(long id, String userId, String description, String name) {
         Deal deal = new Deal();
         deal.setId(id);
-        deal.setUserId(userId);
+        deal.setOwner(User.key(userId));
         deal.setName(name);
         deal.setDescription(description);
         deal.setCreated(Clock.getNow());

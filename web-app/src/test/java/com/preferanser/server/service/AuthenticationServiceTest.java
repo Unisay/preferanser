@@ -36,7 +36,7 @@ public class AuthenticationServiceTest {
     private Provider<UserService> userServiceProvider;
 
     private User currentUser;
-    private Long newUserId;
+    private String newUserId;
     private com.google.appengine.api.users.User currentGoogleUser;
     private CurrentUserDto currentUserDto;
 
@@ -46,12 +46,12 @@ public class AuthenticationServiceTest {
         when(userServiceProvider.get()).thenReturn(userService);
         authenticationService = new AuthenticationService(userServiceProvider, dealService, userDao);
 
-        newUserId = 1234L;
+        newUserId = "newUserId";
 
         currentGoogleUser = new com.google.appengine.api.users.User("user@gmail.com", "authDomain", "googleId");
 
         currentUser = new User();
-        currentUser.setGoogleId(currentGoogleUser.getUserId());
+        currentUser.setId(currentGoogleUser.getUserId());
         currentUser.setEmail(currentGoogleUser.getEmail());
         currentUser.setAdmin(true);
 
@@ -88,7 +88,7 @@ public class AuthenticationServiceTest {
         when(userService.isUserLoggedIn()).thenReturn(true);
         when(userService.isUserAdmin()).thenReturn(true);
         when(userService.getCurrentUser()).thenReturn(currentGoogleUser);
-        when(userDao.findByGoogleId(currentUser.getGoogleId())).thenReturn(null);
+        when(userDao.findById(currentUser.getId())).thenReturn(null);
         when(userDao.save(Matchers.any(User.class))).thenAnswer(new UserDaoSaveAnswer());
 
         Optional<User> maybeCurrentUser = authenticationService.getCurrentUser();
@@ -96,7 +96,7 @@ public class AuthenticationServiceTest {
             "authenticationService.getCurrentUser() returned Optional.absent() when Object was expected");
         assertReflectionEquals(currentUser, maybeCurrentUser.get());
 
-        verify(userDao).findByGoogleId(currentUser.getGoogleId());
+        verify(userDao).findById(currentUser.getId());
         verify(userDao).save(Matchers.any(User.class));
         verifyNoMoreInteractions(userDao);
 
@@ -108,14 +108,14 @@ public class AuthenticationServiceTest {
     public void testGetCurrentUser_NextTime() throws Exception {
         when(userService.isUserLoggedIn()).thenReturn(true);
         when(userService.getCurrentUser()).thenReturn(currentGoogleUser);
-        when(userDao.findByGoogleId(currentUser.getGoogleId())).thenReturn(currentUser);
+        when(userDao.findById(currentUser.getId())).thenReturn(currentUser);
 
         Optional<User> maybeCurrentUser = authenticationService.getCurrentUser();
         assertTrue(maybeCurrentUser.isPresent(),
             "authenticationService.getCurrentUser() returned Optional.absent() when Object was expected");
         assertReflectionEquals(currentUser, maybeCurrentUser.get());
 
-        verify(userDao).findByGoogleId(currentUser.getGoogleId());
+        verify(userDao).findById(currentUser.getId());
         verifyNoMoreInteractions(userDao);
         verifyNoMoreInteractions(dealService);
     }

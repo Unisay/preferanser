@@ -3,10 +3,12 @@ package com.preferanser.shared.domain.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.Objects;
 import com.google.common.collect.*;
+import com.googlecode.objectify.Key;
 import com.googlecode.objectify.annotation.Entity;
+import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
+import com.googlecode.objectify.annotation.Parent;
 import com.preferanser.shared.domain.*;
-import com.preferanser.shared.dto.Dto;
 
 import javax.validation.constraints.Size;
 import java.util.Date;
@@ -22,7 +24,13 @@ import static com.google.common.collect.Sets.newHashSet;
  */
 @Entity
 @SuppressWarnings({"unused", "ClassWithTooManyFields", "ClassWithTooManyMethods"})
-public class Deal extends BaseEntity implements Dto {
+public class Deal implements com.preferanser.shared.domain.entity.Entity {
+
+    @Id
+    private Long id;
+
+    @Parent
+    private com.googlecode.objectify.Key<User> owner;
 
     @Index
     @Size(min = 2, max = 32)
@@ -30,9 +38,6 @@ public class Deal extends BaseEntity implements Dto {
 
     @Size(max = 512)
     private String description;
-
-    @Index
-    private String userId;
 
     @Index
     private Date created;
@@ -64,7 +69,7 @@ public class Deal extends BaseEntity implements Dto {
         id = deal.id;
         name = deal.name;
         description = deal.description;
-        userId = deal.userId;
+        owner = deal.owner;
         created = deal.created == null ? null : new Date(deal.created.getTime());
         shared = deal.shared;
         firstTurn = deal.firstTurn;
@@ -78,6 +83,14 @@ public class Deal extends BaseEntity implements Dto {
         westCards = deal.westCards == null ? Sets.<Card>newHashSet() : newHashSet(deal.westCards);
         turns = deal.turns == null ? Lists.<Turn>newArrayList() : newArrayList(deal.turns);
         currentTrickIndex = deal.currentTrickIndex;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -96,12 +109,16 @@ public class Deal extends BaseEntity implements Dto {
         this.description = description;
     }
 
-    public String getUserId() {
-        return userId;
+    public Key<User> getOwner() {
+        return owner;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setOwner(Key<User> userKey) {
+        this.owner = userKey;
+    }
+
+    public void setOwner(User user) {
+        setOwner(user.key());
     }
 
     public Date getCreated() {
@@ -241,7 +258,7 @@ public class Deal extends BaseEntity implements Dto {
 
         return Objects.equal(this.name, that.name) &&
             Objects.equal(this.description, that.description) &&
-            Objects.equal(this.userId, that.userId) &&
+            Objects.equal(this.owner, that.owner) &&
             Objects.equal(this.created, that.created) &&
             Objects.equal(this.shared, that.shared) &&
             Objects.equal(this.firstTurn, that.firstTurn) &&
@@ -260,7 +277,7 @@ public class Deal extends BaseEntity implements Dto {
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(name, description, userId, created, shared, firstTurn,
+        return Objects.hashCode(name, description, owner, created, shared, firstTurn,
             players, eastContract, southContract, westContract, widow,
             eastCards, southCards, westCards, turns, currentTrickIndex,
             id);
@@ -271,7 +288,7 @@ public class Deal extends BaseEntity implements Dto {
         sb.append("name='").append(name).append('\'');
         sb.append(", description='").append(description).append('\'');
         sb.append(", id='").append(id).append('\'');
-        sb.append(", userId='").append(userId).append('\'');
+        sb.append(", owner='").append(owner).append('\'');
         sb.append(", created=").append(created);
         sb.append(", shared=").append(shared);
         sb.append(", firstTurn=").append(firstTurn);
@@ -288,5 +305,4 @@ public class Deal extends BaseEntity implements Dto {
         sb.append('}');
         return sb.toString();
     }
-
 }

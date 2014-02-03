@@ -38,16 +38,16 @@ public class DealDaoTest {
 
     @Test
     public void testSave() throws Exception {
-        Deal savedDeal = dealDao.save(buildDeal("name", new Date(1)));
+        Deal savedDeal = dealDao.save(buildDeal("name", new Date(1), "userId"));
         assertThat(savedDeal.getId(), is(not(nullValue())));
-        assertReflectionEquals(buildDeal("name", new Date(1)), savedDeal, IGNORE_DEFAULTS);
+        assertReflectionEquals(buildDeal("name", new Date(1), "userId"), savedDeal, IGNORE_DEFAULTS);
     }
 
     @Test
     public void testGetAllDescDateCreated() throws Exception {
-        Deal deal1 = buildDeal("deal1", new Date(1000));
-        Deal deal2 = buildDeal("deal2", new Date(2000));
-        Deal deal3 = buildDeal("deal3", new Date(3000));
+        Deal deal1 = buildDeal("deal1", new Date(1000), "userId");
+        Deal deal2 = buildDeal("deal2", new Date(2000), "userId");
+        Deal deal3 = buildDeal("deal3", new Date(3000), "userId");
 
         dealDao.save(deal1, deal2, deal3);
 
@@ -58,9 +58,9 @@ public class DealDaoTest {
 
     @Test
     public void testGetSharedDeals() throws Exception {
-        Deal deal1 = buildDeal("deal1", new Date(1000));
-        Deal deal2 = buildDeal("deal2", new Date(2000));
-        Deal deal3 = buildDeal("deal3", new Date(3000));
+        Deal deal1 = buildDeal("deal1", new Date(1000), "userId");
+        Deal deal2 = buildDeal("deal2", new Date(2000), "userId");
+        Deal deal3 = buildDeal("deal3", new Date(3000), "userId");
 
         deal1.setShared(true);
         deal2.setShared(true);
@@ -74,21 +74,17 @@ public class DealDaoTest {
 
     @Test
     public void testGetUserDeals() throws Exception {
-        Deal deal1 = buildDeal("deal1", new Date(1000));
-        Deal deal2 = buildDeal("deal2", new Date(2000));
-        Deal deal3 = buildDeal("deal3", new Date(3000));
-        deal3.setUserId("otherUser");
-
         User user = new User();
-        user.setGoogleId(deal1.getUserId());
+        user.setId("123456");
 
-        deal1.setShared(true);
-        deal2.setShared(true);
+        Deal deal1 = buildDeal("deal1", new Date(1000), user.getId());
+        Deal deal2 = buildDeal("deal2", new Date(2000), user.getId());
+        Deal deal3 = buildDeal("deal3", new Date(3000), "otherUserId");
 
         dealDao.save(deal1, deal2, deal3);
 
         List<Deal> actualDeals = dealDao.getUserDeals(user);
         List<Deal> expectedDeals = newArrayList(deal2, deal1);
-        assertReflectionEquals(expectedDeals, actualDeals);
+        assertReflectionEquals(expectedDeals, newArrayList(actualDeals)); // newArray to unwrap Proxy<?>
     }
 }

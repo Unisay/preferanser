@@ -115,7 +115,6 @@ public class EditorTest {
         Deal actualDeal = editor.setDeal(originalDeal).build();
 
         Deal expectedDeal = new Deal(originalDeal);
-        expectedDeal.setUserId(null);
         expectedDeal.setCreated(null);
 
         assertLenientEquals(expectedDeal, actualDeal);

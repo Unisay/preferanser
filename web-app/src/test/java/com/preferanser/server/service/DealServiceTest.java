@@ -46,7 +46,7 @@ public class DealServiceTest {
             }
         });
         user = new User();
-        user.setGoogleId("googleId");
+        user.setId("googleId");
     }
 
     @Test
@@ -55,13 +55,13 @@ public class DealServiceTest {
             buildDeal(1L, "admin1", "name1", true),
             buildDeal(2L, "admin2", "name2", true),
             buildDeal(3L, "admin2", "name3", true),
-            buildDeal(4L, user.getGoogleId(), "name4", true) // skip importing own shared deal
+            buildDeal(4L, user.getId(), "name4", true) // skip importing own shared deal
         );
 
         Set<Deal> importedDeals = newHashSet(
-            buildDeal(null, user.getGoogleId(), "name1", false),
-            buildDeal(null, user.getGoogleId(), "name2", false),
-            buildDeal(null, user.getGoogleId(), "name3", false)
+            buildDeal(null, user.getId(), "name1", false),
+            buildDeal(null, user.getId(), "name2", false),
+            buildDeal(null, user.getId(), "name3", false)
         );
 
         when(dealDao.getSharedDeals()).thenReturn(sharedDeals);
@@ -76,8 +76,8 @@ public class DealServiceTest {
     @Test
     public void testSave() throws Exception {
         Deal unsavedDeal = buildDeal(1L, null, "name1", false);
-        Deal expectedUnsavedDeal = buildDeal(null, user.getGoogleId(), "name1", false);
-        Deal expectedSavedDeal = buildDeal(1L, user.getGoogleId(), "name1", false);
+        Deal expectedUnsavedDeal = buildDeal(null, user.getId(), "name1", false);
+        Deal expectedSavedDeal = buildDeal(1L, user.getId(), "name1", false);
 
         when(authenticationService.getCurrentUser()).thenReturn(Optional.of(user));
         when(dealDao.save(expectedUnsavedDeal)).thenReturn(expectedSavedDeal);
@@ -97,8 +97,8 @@ public class DealServiceTest {
     public void testSave_SharedByAdmin() throws Exception {
         user.setAdmin(true);
         Deal unsavedDeal = buildDeal(1L, null, "name1", true);
-        Deal expectedUnsavedDeal = buildDeal(null, user.getGoogleId(), "name1", true);
-        Deal expectedSavedDeal = buildDeal(1L, user.getGoogleId(), "name1", true);
+        Deal expectedUnsavedDeal = buildDeal(null, user.getId(), "name1", true);
+        Deal expectedSavedDeal = buildDeal(1L, user.getId(), "name1", true);
 
         when(authenticationService.getCurrentUser()).thenReturn(Optional.of(user));
         when(dealDao.save(expectedUnsavedDeal)).thenReturn(expectedSavedDeal);
@@ -144,7 +144,7 @@ public class DealServiceTest {
 
     @Test
     public void testDelete() throws Exception {
-        Deal deal = buildDeal(1L, user.getGoogleId(), "name1", false);
+        Deal deal = buildDeal(1L, user.getId(), "name1", false);
 
         when(authenticationService.getCurrentUser()).thenReturn(Optional.of(user));
         when(dealDao.get(deal.getId())).thenReturn(deal);
@@ -157,7 +157,7 @@ public class DealServiceTest {
     @Test(expectedExceptions = NoAuthenticatedUserException.class)
     public void testUpdate_NoAuthenticatedUser() throws Exception {
         when(authenticationService.getCurrentUser()).thenReturn(Optional.<User>absent());
-        dealService.update(buildDeal(1L, user.getGoogleId(), "name1", false));
+        dealService.update(buildDeal(1L, user.getId(), "name1", false));
     }
 
     @Test(expectedExceptions = NotAuthorizedUserException.class)
@@ -170,14 +170,14 @@ public class DealServiceTest {
 
     @Test
     public void testUpdate() throws Exception {
-        Deal deal = buildDeal(1L, user.getGoogleId(), "name1", false);
+        Deal deal = buildDeal(1L, user.getId(), "name1", false);
 
         when(authenticationService.getCurrentUser()).thenReturn(Optional.of(user));
         when(dealDao.get(deal.getId())).thenReturn(deal);
 
         dealService.update(deal);
 
-        Deal dealToUpdate = buildDeal(1L, user.getGoogleId(), "name1", false);
+        Deal dealToUpdate = buildDeal(1L, user.getId(), "name1", false);
         verify(dealDao).get(deal.getId());
         verify(dealDao).save(dealToUpdate);
         verifyNoMoreInteractions(dealDao);
@@ -244,7 +244,8 @@ public class DealServiceTest {
         Deal deal = new Deal();
         deal.setId(dealId);
         deal.setShared(shared);
-        deal.setUserId(userId);
+        if (userId != null)
+            deal.setOwner(User.key(userId));
         deal.setName(name);
         deal.setDescription("description");
         deal.setCreated(Clock.getNow());

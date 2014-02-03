@@ -33,8 +33,8 @@ public class UserDao extends BaseDao<User> {
         super(User.class, ofyFactory, validator);
     }
 
-    public User findByGoogleId(String googleId) {
-        return ofy().query(User.class).filter("googleId =", googleId).first().now();
+    public User findById(String id) {
+        return ofy().load().key(User.key(id)).safe();
     }
 
 }

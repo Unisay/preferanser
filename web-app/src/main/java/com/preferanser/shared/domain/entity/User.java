@@ -21,7 +21,6 @@ package com.preferanser.shared.domain.entity;
 
 
 import com.google.common.base.Objects;
-import com.googlecode.objectify.Key;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 
@@ -35,14 +34,6 @@ public class User implements com.preferanser.shared.domain.entity.Entity {
 
     public User() {
         id = "";
-    }
-
-    public static Key<User> key(String id) {
-        return id == null ? null : Key.create(User.class, id);
-    }
-
-    public Key<User> key() {
-        return User.key(id);
     }
 
     public String getId() {

@@ -42,6 +42,7 @@
         <hibernate-validator.version>4.3.1.Final</hibernate-validator.version>
         <juel.version>2.2.6</juel.version>
         <appengine-api.version>1.8.9</appengine-api.version>
+        <gwt.logLevel>DEBUG</gwt.logLevel>
     </properties>
 
     <repositories>
@@ -289,7 +290,7 @@
                     <mode>htmlunit</mode>
 
                     <extraJvmArgs>-Xss1024K -Xmx1024M -XX:MaxPermSize=256M</extraJvmArgs>
-                    <logLevel>INFO</logLevel>
+                    <logLevel>${gwt.logLevel}</logLevel>
                     <style>${gwt.style}</style>
 
                     <copyWebapp>true</copyWebapp>

@@ -1,6 +1,7 @@
 package com.preferanser.shared.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.appengine.api.datastore.KeyFactory;
 import com.google.common.base.Objects;
 import com.google.common.collect.*;
 import com.googlecode.objectify.Key;
@@ -118,7 +119,7 @@ public class Deal implements com.preferanser.shared.domain.entity.Entity {
     }
 
     public void setOwner(User user) {
-        setOwner(user.key());
+        setOwner(Key.<User>create(KeyFactory.createKey("User", user.getId())));
     }
 
     public Date getCreated() {

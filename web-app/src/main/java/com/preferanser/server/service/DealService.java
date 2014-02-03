@@ -1,8 +1,10 @@
 package com.preferanser.server.service;
 
+import com.google.appengine.api.datastore.KeyFactory;
 import com.google.common.base.Optional;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
+import com.googlecode.objectify.Key;
 import com.preferanser.server.dao.DealDao;
 import com.preferanser.server.exception.NoAuthenticatedUserException;
 import com.preferanser.server.exception.NotAuthorizedUserException;
@@ -40,7 +42,7 @@ public class DealService {
         Deal deal = new Deal(sharedDeal);
         deal.setId(null);
         deal.setShared(false);
-        deal.setOwner(user.key());
+        deal.setOwner(Key.<User>create(KeyFactory.createKey("User", user.getId())));
         return deal;
     }
 

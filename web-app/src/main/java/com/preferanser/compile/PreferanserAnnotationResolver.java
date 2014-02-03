@@ -1,10 +1,11 @@
-package com.preferanser.client.restygwt;
+package com.preferanser.compile;
 
 import com.google.common.collect.Maps;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.UnableToCompleteException;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JMethod;
+import com.preferanser.client.restygwt.RequestIdValue;
 import org.fusesource.restygwt.rebind.AnnotationResolver;
 
 import java.util.HashMap;

@@ -20,7 +20,9 @@
 package com.preferanser.server.dao;
 
 
+import com.google.appengine.api.datastore.KeyFactory;
 import com.google.inject.Inject;
+import com.googlecode.objectify.Key;
 import com.preferanser.server.dao.objectify.OfyFactory;
 import com.preferanser.shared.domain.entity.User;
 
@@ -34,7 +36,7 @@ public class UserDao extends BaseDao<User> {
     }
 
     public User findById(String id) {
-        return ofy().load().key(User.key(id)).safe();
+        return ofy().load().key(Key.<User>create(KeyFactory.createKey("User", id))).safe();
     }
 
 }

@@ -20,6 +20,7 @@
 
 <module rename-to='Preferanser'>
 
+    <inherits name="com.googlecode.objectify.Objectify"/>
     <inherits name="com.preferanser.laf.Green"/>
     <inherits name="com.google.gwt.user.User"/>
     <inherits name="com.google.gwt.inject.Inject"/>
@@ -32,7 +33,6 @@
     <inherits name="com.google.common.collect.Collect"/>
     <inherits name="com.gwtplatform.mvp.MvpWithEntryPoint"/>
     <inherits name="org.fusesource.restygwt.RestyGWT"/>
-    <inherits name="com.googlecode.objectify.Objectify"/>
 
     <set-property name="gwt.logging.logLevel" value="FINEST"/>
     <set-property name="gwt.logging.enabled" value="TRUE"/>
@@ -50,5 +50,5 @@
 
     <set-configuration-property name="gwtp.bootstrapper" value="com.preferanser.client.gwtp.AuthBootstrapper"/>
     <set-configuration-property name="gin.ginjector.modules" value="com.preferanser.client.gin.ClientModule"/>
-    <set-configuration-property name="org.fusesource.restygwt.annotationresolver" value="com.preferanser.client.restygwt.PreferanserAnnotationResolver"/>
+    <set-configuration-property name="org.fusesource.restygwt.annotationresolver" value="com.preferanser.compile.PreferanserAnnotationResolver"/>
 </module>

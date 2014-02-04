@@ -20,7 +20,7 @@
 package com.preferanser.client.service;
 
 import com.preferanser.client.restygwt.RequestId;
-import com.preferanser.shared.domain.entity.Deal;
+import com.preferanser.shared.domain.Deal;
 import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.RestService;
 

@@ -26,7 +26,7 @@ import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import com.google.inject.servlet.RequestScoped;
 import com.preferanser.server.service.AuthenticationService;
-import com.preferanser.shared.dto.CurrentUserDto;
+import com.preferanser.shared.domain.User;
 import com.sun.jersey.api.core.PackagesResourceConfig;
 
 import javax.validation.Validator;
@@ -37,7 +37,7 @@ public class RestModule extends AbstractModule {
         bind(Validator.class).toProvider(HibernateValidatorProvider.class).in(Singleton.class);
         for (Class<?> resource : new PackagesResourceConfig("com.preferanser.server.resource").getClasses())
             bind(resource).in(Singleton.class);
-        bind(CurrentUserDto.class).toProvider(AuthenticationService.class).in(RequestScoped.class);
+        bind(User.class).toProvider(AuthenticationService.class).in(RequestScoped.class);
     }
 
     @Provides private UserService provideUserService() {

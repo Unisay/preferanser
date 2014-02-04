@@ -40,7 +40,7 @@ import com.preferanser.client.restygwt.RestyGwtDispatcher;
 import com.preferanser.client.restygwt.RestyGwtLoggingRequestListener;
 import com.preferanser.client.restygwt.RestyGwtRequestListener;
 import com.preferanser.shared.domain.Editor;
-import com.preferanser.shared.dto.CurrentUserDto;
+import com.preferanser.shared.domain.User;
 
 public class ClientModule extends AbstractPresenterModule {
 
@@ -56,7 +56,7 @@ public class ClientModule extends AbstractPresenterModule {
 
         bind(I18nHelper.class).asEagerSingleton();
         bind(Bootstrapper.class).to(AuthBootstrapper.class).in(Singleton.class);
-        bind(CurrentUserDto.class).asEagerSingleton();
+        bind(User.class).asEagerSingleton();
 
         GinMultibinder<RestyGwtRequestListener> requestListenerMultibinder = GinMultibinder.newSetBinder(binder(), RestyGwtRequestListener.class);
         requestListenerMultibinder.addBinding().to(RestyGwtLoggingRequestListener.class);

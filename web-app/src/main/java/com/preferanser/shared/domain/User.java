@@ -17,38 +17,37 @@
  *     along with this program.  If not, see [http://www.gnu.org/licenses/].
  */
 
-package com.preferanser.shared.dto;
+package com.preferanser.shared.domain;
 
 import com.google.common.base.Objects;
-import com.preferanser.shared.domain.entity.User;
 
 @SuppressWarnings("unused")
-public class CurrentUserDto implements Dto {
+public class User {
 
-    public Boolean admin;
-    public Boolean loggedIn;
-    public User user;
-    public String logoutUrl;
-    public String loginUrl;
-    public String nickname;
+    private Boolean admin;
+    private Boolean loggedIn;
+    private String logoutUrl;
+    private String loginUrl;
+    private String email;
+    private String nickname;
 
-    public CurrentUserDto() {
-        admin = false;
-        loggedIn = false;
-        user = new User();
-        loginUrl = "";
-        logoutUrl = "";
+    public User() {
+        this.admin = false;
+        this.loggedIn = false;
     }
 
-    public CurrentUserDto(Boolean loggedIn, User user) {
+    public User(Boolean admin, Boolean loggedIn, String logoutUrl, String loginUrl, String email, String nickname) {
+        this.admin = admin;
         this.loggedIn = loggedIn;
-        this.user = user;
+        this.logoutUrl = logoutUrl;
+        this.loginUrl = loginUrl;
+        this.email = email;
+        this.nickname = nickname;
     }
 
-    public void copyFrom(CurrentUserDto currentUser) {
+    public void copyFrom(User currentUser) {
         admin = currentUser.admin;
         loggedIn = currentUser.loggedIn;
-        user = currentUser.user;
         logoutUrl = currentUser.logoutUrl;
         loginUrl = currentUser.loginUrl;
         nickname = currentUser.nickname;
@@ -70,14 +69,6 @@ public class CurrentUserDto implements Dto {
         this.loggedIn = loggedIn;
     }
 
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
     public String getLogoutUrl() {
         return logoutUrl;
     }
@@ -94,6 +85,14 @@ public class CurrentUserDto implements Dto {
         this.loginUrl = loginUrl;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     public String getNickname() {
         return nickname;
     }
@@ -106,7 +105,6 @@ public class CurrentUserDto implements Dto {
         return Objects.toStringHelper(this)
             .add("getAdmin", admin)
             .add("loggedIn", loggedIn)
-            .add("user", user)
             .add("logoutUrl", logoutUrl)
             .add("loginUrl", loginUrl)
             .add("nickname", nickname)
@@ -118,11 +116,10 @@ public class CurrentUserDto implements Dto {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        CurrentUserDto that = (CurrentUserDto) o;
+        User that = (User) o;
 
         return Objects.equal(this.admin, that.admin) &&
             Objects.equal(this.loggedIn, that.loggedIn) &&
-            Objects.equal(this.user, that.user) &&
             Objects.equal(this.logoutUrl, that.logoutUrl) &&
             Objects.equal(this.loginUrl, that.loginUrl) &&
             Objects.equal(this.nickname, that.nickname);
@@ -130,6 +127,6 @@ public class CurrentUserDto implements Dto {
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(admin, loggedIn, user, logoutUrl, loginUrl, nickname);
+        return Objects.hashCode(admin, loggedIn, logoutUrl, loginUrl, nickname);
     }
 }

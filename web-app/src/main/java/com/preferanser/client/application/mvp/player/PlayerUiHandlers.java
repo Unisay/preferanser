@@ -27,7 +27,7 @@ import com.preferanser.client.application.mvp.editor.TableUiHandlers;
 public interface PlayerUiHandlers extends TableUiHandlers {
 
     /**
-     * User moved cards to sluff
+     * UserEntity moved cards to sluff
      */
     void sluff();
 

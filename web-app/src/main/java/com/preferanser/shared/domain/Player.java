@@ -21,7 +21,6 @@ package com.preferanser.shared.domain;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.*;
-import com.preferanser.shared.domain.entity.Deal;
 import com.preferanser.shared.domain.exception.*;
 import com.preferanser.shared.util.EnumRotator;
 import com.preferanser.shared.util.GameUtils;

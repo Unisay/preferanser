@@ -22,20 +22,20 @@ package com.preferanser.client.gwtp;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.gwtplatform.mvp.client.proxy.Gatekeeper;
-import com.preferanser.shared.dto.CurrentUserDto;
+import com.preferanser.shared.domain.User;
 
 @Singleton
 public class LoggedInGatekeeper implements Gatekeeper {
 
-    private final CurrentUserDto currentUser;
+    private final User currentUser;
 
     @Inject
-    public LoggedInGatekeeper(CurrentUserDto currentUser) {
+    public LoggedInGatekeeper(User currentUser) {
         this.currentUser = currentUser;
     }
 
     @Override
     public boolean canReveal() {
-        return currentUser.loggedIn;
+        return currentUser.getLoggedIn();
     }
 }

@@ -1,8 +1,7 @@
 package com.preferanser.server.resource;
 
 import com.preferanser.server.service.AuthenticationService;
-import com.preferanser.shared.domain.entity.User;
-import com.preferanser.shared.dto.CurrentUserDto;
+import com.preferanser.shared.domain.User;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
@@ -16,7 +15,7 @@ import static org.mockito.Mockito.when;
 public class AuthResourceTest {
 
     private AuthResource authResource;
-    private CurrentUserDto currentUserDto;
+    private User user;
 
     @Mock
     private AuthenticationService authenticationService;
@@ -25,26 +24,15 @@ public class AuthResourceTest {
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
 
-        User currentUser = new User();
-        currentUser.setId("googleId");
-        currentUser.setAdmin(true);
-
-        currentUserDto = new CurrentUserDto();
-        currentUserDto.setAdmin(true);
-        currentUserDto.setLoggedIn(true);
-        currentUserDto.setLoginUrl("login");
-        currentUserDto.setLogoutUrl("logout");
-        currentUserDto.setNickname("nickname");
-        currentUserDto.setUser(currentUser);
-
+        user = new User(true, true, "logout", "login", "email", "nickname");
         authResource = new AuthResource(authenticationService);
     }
 
     @Test
     public void testGetCurrentUserInfo() throws Exception {
-        when(authenticationService.get()).thenReturn(currentUserDto);
-        CurrentUserDto currentUserInfo = authResource.getCurrentUserInfo();
-        assertThat(currentUserInfo, equalTo(currentUserDto));
+        when(authenticationService.get()).thenReturn(user);
+        User currentUserInfo = authResource.getCurrentUserInfo();
+        assertThat(currentUserInfo, equalTo(user));
         verify(authenticationService).get();
     }
 

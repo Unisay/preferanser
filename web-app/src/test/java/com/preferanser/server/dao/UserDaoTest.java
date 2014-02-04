@@ -1,8 +1,9 @@
 package com.preferanser.server.dao;
 
+import com.google.common.base.Optional;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.preferanser.shared.domain.entity.User;
+import com.preferanser.server.entity.UserEntity;
 import com.preferanser.testng.ClockTestNGListener;
 import com.preferanser.testng.DatastoreTestNGListener;
 import org.testng.annotations.BeforeMethod;
@@ -12,6 +13,8 @@ import org.testng.annotations.Test;
 import static com.preferanser.server.dao.DaoTestHelper.buildUser;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertTrue;
 
 @Listeners({ClockTestNGListener.class, DatastoreTestNGListener.class})
 public class UserDaoTest {
@@ -24,19 +27,19 @@ public class UserDaoTest {
         userDao = injector.getInstance(UserDao.class);
     }
 
-    @Test(expectedExceptions = com.googlecode.objectify.NotFoundException.class,
-        expectedExceptionsMessageRegExp = "^No entity was found matching the key.*")
+    @Test
     public void testFindByGoogleId_NotFound() throws Exception {
-        userDao.findById("123");
+        assertFalse(userDao.findById("123").isPresent());
     }
 
     @Test
     public void testFindByGoogleId() throws Exception {
-        User user = buildUser("googleId", true);
+        UserEntity user = buildUser("googleId", true);
         userDao.save(user);
 
-        User actualUser = userDao.findById("googleId");
-        assertThat(actualUser, equalTo(user));
+        Optional<UserEntity> userEntityOptional = userDao.findById("googleId");
+        assertTrue(userEntityOptional.isPresent());
+        assertThat(userEntityOptional.get(), equalTo(user));
     }
 
 }

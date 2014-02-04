@@ -31,7 +31,7 @@ import com.gwtplatform.mvp.client.annotations.ProxyStandard;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.preferanser.client.application.ApplicationPresenter;
 import com.preferanser.client.gwtp.NameTokens;
-import com.preferanser.shared.dto.CurrentUserDto;
+import com.preferanser.shared.domain.User;
 
 /**
  * Presenter for the unauthorized page
@@ -45,17 +45,17 @@ public class UnauthorizedPresenter extends Presenter<UnauthorizedPresenter.TheVi
 
     public interface TheView extends View {}
 
-    private final CurrentUserDto currentUserDto;
+    private final User user;
 
     @Inject
-    public UnauthorizedPresenter(EventBus eventBus, TheView view, TheProxy proxy, CurrentUserDto currentUserDto) {
+    public UnauthorizedPresenter(EventBus eventBus, TheView view, TheProxy proxy, User user) {
         super(eventBus, view, proxy, ApplicationPresenter.MAIN_SLOT);
-        this.currentUserDto = currentUserDto;
+        this.user = user;
     }
 
     @Override protected void onReveal() {
         String returnUrl = URL.encode(Window.Location.getHref());
-        String loginUrl = currentUserDto.loginUrl.replace("%2F", returnUrl);
+        String loginUrl = user.getLoginUrl().replace("%2F", returnUrl);
         Window.Location.assign(loginUrl);
     }
 }

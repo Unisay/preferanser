@@ -20,23 +20,24 @@
 package com.preferanser.server.dao;
 
 
-import com.google.appengine.api.datastore.KeyFactory;
+import com.google.common.base.Optional;
 import com.google.inject.Inject;
 import com.googlecode.objectify.Key;
 import com.preferanser.server.dao.objectify.OfyFactory;
-import com.preferanser.shared.domain.entity.User;
+import com.preferanser.server.entity.UserEntity;
 
 import javax.validation.Validator;
 
-public class UserDao extends BaseDao<User> {
+public class UserDao extends BaseDao<UserEntity> {
 
     @Inject
     public UserDao(OfyFactory ofyFactory, Validator validator) {
-        super(User.class, ofyFactory, validator);
+        super(UserEntity.class, ofyFactory, validator);
     }
 
-    public User findById(String id) {
-        return ofy().load().key(Key.<User>create(KeyFactory.createKey("User", id))).safe();
+    public Optional<UserEntity> findById(String id) {
+        Key<UserEntity> key = Key.create(UserEntity.class, id);
+        return get(key);
     }
 
 }

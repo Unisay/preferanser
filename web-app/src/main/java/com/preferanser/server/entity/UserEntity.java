@@ -17,7 +17,7 @@
  *     along with this program.  If not, see [http://www.gnu.org/licenses/].
  */
 
-package com.preferanser.shared.domain.entity;
+package com.preferanser.server.entity;
 
 
 import com.google.common.base.Objects;
@@ -25,14 +25,14 @@ import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 
 @Entity
-public class User implements com.preferanser.shared.domain.entity.Entity {
+public class UserEntity implements com.preferanser.server.entity.Entity {
 
     @Id
     private String id;
     private String email;
     private boolean admin;
 
-    public User() {
+    public UserEntity() {
         id = "";
     }
 
@@ -65,7 +65,7 @@ public class User implements com.preferanser.shared.domain.entity.Entity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        User that = (User) o;
+        UserEntity that = (UserEntity) o;
 
         return Objects.equal(this.id, that.id) &&
             Objects.equal(this.email, that.email) &&

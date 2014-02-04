@@ -1,11 +1,6 @@
 package com.preferanser.shared.domain.entity;
 
-import com.google.appengine.api.datastore.KeyFactory;
-import com.googlecode.objectify.Key;
-import com.preferanser.shared.domain.Contract;
-import com.preferanser.shared.domain.Hand;
-import com.preferanser.shared.domain.Players;
-import com.preferanser.shared.domain.Widow;
+import com.preferanser.shared.domain.*;
 import com.preferanser.shared.util.Clock;
 
 import static com.google.common.collect.Sets.newHashSet;
@@ -16,10 +11,9 @@ public abstract class DealTestHelper {
     private DealTestHelper() {
     }
 
-    public static Deal buildDeal(long id, String userId, String description, String name) {
+    public static Deal buildDeal(long id, String description, String name) {
         Deal deal = new Deal();
         deal.setId(id);
-        deal.setOwner(userId == null ? null : Key.<User>create(KeyFactory.createKey("User", userId)));
         deal.setName(name);
         deal.setDescription(description);
         deal.setCreated(Clock.getNow());
@@ -70,7 +64,7 @@ public abstract class DealTestHelper {
     }
 
     public static Deal buildDeal(long id) {
-        return buildDeal(id, "userId", "description", "Miser of Sofia Kovalevskaia");
+        return buildDeal(id, "description", "Miser of Sofia Kovalevskaia");
     }
 
 }

@@ -24,21 +24,21 @@ import com.gwtplatform.mvp.client.Bootstrapper;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.preferanser.client.service.AuthService;
 import com.preferanser.client.service.Response;
-import com.preferanser.shared.dto.CurrentUserDto;
+import com.preferanser.shared.domain.User;
 import org.fusesource.restygwt.client.Method;
 
 public class AuthBootstrapper implements Bootstrapper {
 
     private final PlaceManager placeManager;
     private final AuthService authService;
-    private final CurrentUserDto currentUserDto;
+    private final User user;
     private final CurrentUserDtoResponse currentUserDtoResponse;
 
     @Inject
-    public AuthBootstrapper(PlaceManager placeManager, AuthService authService, CurrentUserDto currentUserDto) {
+    public AuthBootstrapper(PlaceManager placeManager, AuthService authService, User user) {
         this.placeManager = placeManager;
         this.authService = authService;
-        this.currentUserDto = currentUserDto;
+        this.user = user;
         this.currentUserDtoResponse = new CurrentUserDtoResponse();
     }
 
@@ -46,10 +46,10 @@ public class AuthBootstrapper implements Bootstrapper {
         authService.getCurrentUser(currentUserDtoResponse);
     }
 
-    private class CurrentUserDtoResponse extends Response<CurrentUserDto> {
+    private class CurrentUserDtoResponse extends Response<User> {
 
-        @Override public void handle(CurrentUserDto response) {
-            currentUserDto.copyFrom(response);
+        @Override public void handle(User response) {
+            user.copyFrom(response);
             placeManager.revealCurrentPlace();
         }
 

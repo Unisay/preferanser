@@ -21,7 +21,6 @@ package com.preferanser.shared.domain;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.LinkedHashMultimap;
-import com.preferanser.shared.domain.entity.Deal;
 import com.preferanser.shared.domain.exception.DuplicateGameTurnException;
 import com.preferanser.shared.domain.exception.IllegalSuitException;
 import com.preferanser.shared.domain.exception.NotInTurnException;

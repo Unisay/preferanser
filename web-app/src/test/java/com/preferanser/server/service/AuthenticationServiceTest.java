@@ -4,8 +4,8 @@ import com.google.appengine.api.users.UserService;
 import com.google.common.base.Optional;
 import com.google.inject.Provider;
 import com.preferanser.server.dao.UserDao;
-import com.preferanser.shared.domain.entity.User;
-import com.preferanser.shared.dto.CurrentUserDto;
+import com.preferanser.server.entity.UserEntity;
+import com.preferanser.shared.domain.User;
 import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -35,10 +35,9 @@ public class AuthenticationServiceTest {
     @Mock
     private Provider<UserService> userServiceProvider;
 
-    private User currentUser;
-    private String newUserId;
+    private UserEntity currentUser;
     private com.google.appengine.api.users.User currentGoogleUser;
-    private CurrentUserDto currentUserDto;
+    private User user;
 
     @BeforeMethod
     public void setUp() throws Exception {
@@ -46,39 +45,32 @@ public class AuthenticationServiceTest {
         when(userServiceProvider.get()).thenReturn(userService);
         authenticationService = new AuthenticationService(userServiceProvider, dealService, userDao);
 
-        newUserId = "newUserId";
-
         currentGoogleUser = new com.google.appengine.api.users.User("user@gmail.com", "authDomain", "googleId");
 
-        currentUser = new User();
+        currentUser = new UserEntity();
         currentUser.setId(currentGoogleUser.getUserId());
         currentUser.setEmail(currentGoogleUser.getEmail());
         currentUser.setAdmin(true);
 
-        currentUserDto = new CurrentUserDto();
-        currentUserDto.setAdmin(true);
-        currentUserDto.setLoggedIn(true);
-        currentUserDto.setLoginUrl("/login");
-        currentUserDto.setLogoutUrl("/logout");
-        currentUserDto.setNickname(currentGoogleUser.getNickname());
-        currentUserDto.setUser(currentUser);
+        user = new User(true, true, "/logout", "/login", currentGoogleUser.getEmail(), currentGoogleUser.getNickname());
 
         when(userService.getCurrentUser()).thenReturn(currentGoogleUser);
     }
 
     @Test
     public void testGet() throws Exception {
-        when(userDao.save(Matchers.any(User.class))).thenAnswer(new UserDaoSaveAnswer());
+        when(userDao.save(Matchers.any(UserEntity.class))).thenAnswer(new UserDaoSaveAnswer());
         when(userService.isUserLoggedIn()).thenReturn(true);
         when(userService.getCurrentUser()).thenReturn(currentGoogleUser);
         when(userService.isUserAdmin()).thenReturn(true);
         when(userService.createLoginURL("/")).thenReturn("/login");
         when(userService.createLogoutURL("/")).thenReturn("/logout");
+        when(userDao.findById(currentGoogleUser.getUserId())).thenReturn(Optional.<UserEntity>absent());
 
-        CurrentUserDto actualCurrentUserDto = authenticationService.get();
-        assertReflectionEquals(currentUserDto, actualCurrentUserDto);
+        User actualUser = authenticationService.get();
+        assertReflectionEquals(user, actualUser);
 
-        verify(userDao).save(Matchers.any(User.class));
+        verify(userDao).save(Matchers.any(UserEntity.class));
         verify(userService, atLeastOnce()).isUserLoggedIn();
         verify(userService, atLeastOnce()).getCurrentUser();
         verify(userService, atLeastOnce()).isUserAdmin();
@@ -87,23 +79,35 @@ public class AuthenticationServiceTest {
     }
 
     @Test
+    public void testGet_NotPresent() throws Exception {
+        when(userService.isUserAdmin()).thenReturn(true);
+        when(userService.createLoginURL("/")).thenReturn("/login");
+        when(userService.createLogoutURL("/")).thenReturn("/logout");
+        when(userService.isUserLoggedIn()).thenReturn(false);
+
+        User expectedUser = new User(false, false, "/logout", "/login", null, null);
+        User actualUser = authenticationService.get();
+        assertReflectionEquals(expectedUser, actualUser);
+    }
+
+    @Test
     public void testGetCurrentUser_FirstTime() throws Exception {
         when(userService.isUserLoggedIn()).thenReturn(true);
         when(userService.isUserAdmin()).thenReturn(true);
         when(userService.getCurrentUser()).thenReturn(currentGoogleUser);
-        when(userDao.findById(currentGoogleUser.getUserId())).thenReturn(null);
-        when(userDao.save(Matchers.any(User.class))).thenAnswer(new UserDaoSaveAnswer());
+        when(userDao.findById(currentGoogleUser.getUserId())).thenReturn(Optional.<UserEntity>absent());
+        when(userDao.save(Matchers.any(UserEntity.class))).thenAnswer(new UserDaoSaveAnswer());
 
-        Optional<User> maybeCurrentUser = authenticationService.getCurrentUser();
+        Optional<UserEntity> maybeCurrentUser = authenticationService.getCurrentUser();
         assertTrue(maybeCurrentUser.isPresent(),
             "authenticationService.getCurrentUser() returned Optional.absent() when Object was expected");
         assertReflectionEquals(currentUser, maybeCurrentUser.get());
 
         verify(userDao).findById(currentGoogleUser.getUserId());
-        verify(userDao).save(Matchers.any(User.class));
+        verify(userDao).save(Matchers.any(UserEntity.class));
         verifyNoMoreInteractions(userDao);
 
-        verify(dealService).importSharedDeals(Matchers.any(User.class));
+        verify(dealService).importSharedDeals(Matchers.any(UserEntity.class));
         verifyNoMoreInteractions(dealService);
     }
 
@@ -111,9 +115,9 @@ public class AuthenticationServiceTest {
     public void testGetCurrentUser_NextTime() throws Exception {
         when(userService.isUserLoggedIn()).thenReturn(true);
         when(userService.getCurrentUser()).thenReturn(currentGoogleUser);
-        when(userDao.findById(currentUser.getId())).thenReturn(currentUser);
+        when(userDao.findById(currentUser.getId())).thenReturn(Optional.of(currentUser));
 
-        Optional<User> maybeCurrentUser = authenticationService.getCurrentUser();
+        Optional<UserEntity> maybeCurrentUser = authenticationService.getCurrentUser();
         assertTrue(maybeCurrentUser.isPresent(),
             "authenticationService.getCurrentUser() returned Optional.absent() when Object was expected");
         assertReflectionEquals(currentUser, maybeCurrentUser.get());
@@ -127,14 +131,15 @@ public class AuthenticationServiceTest {
     public void testGetCurrentUser_NotPresent() throws Exception {
         when(userService.isUserLoggedIn()).thenReturn(false);
 
-        Optional<User> maybeCurrentUser = authenticationService.getCurrentUser();
+        Optional<UserEntity> maybeCurrentUser = authenticationService.getCurrentUser();
         assertFalse(maybeCurrentUser.isPresent(),
             "authenticationService.getCurrentUser() returned Object when Optional.absent() was expected");
     }
 
-    private class UserDaoSaveAnswer implements Answer<User> {
-        @Override public User answer(InvocationOnMock invocation) throws Throwable {
-            return (User) invocation.getArguments()[0];
+
+    private class UserDaoSaveAnswer implements Answer<UserEntity> {
+        @Override public UserEntity answer(InvocationOnMock invocation) throws Throwable {
+            return (UserEntity) invocation.getArguments()[0];
         }
     }
 }

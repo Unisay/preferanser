@@ -22,29 +22,29 @@ package com.preferanser.server.dao;
 
 import com.google.inject.Inject;
 import com.preferanser.server.dao.objectify.OfyFactory;
-import com.preferanser.shared.domain.entity.Deal;
-import com.preferanser.shared.domain.entity.User;
+import com.preferanser.server.entity.DealEntity;
+import com.preferanser.server.entity.UserEntity;
 
 import javax.validation.Validator;
 import java.util.List;
 
-public class DealDao extends BaseDao<Deal> {
+public class DealDao extends BaseDao<DealEntity> {
 
     @Inject
     public DealDao(OfyFactory ofyFactory, Validator validator) {
-        super(Deal.class, ofyFactory, validator);
+        super(DealEntity.class, ofyFactory, validator);
     }
 
-    public List<Deal> getAllDescDateCreated() {
-        return ofy().query(Deal.class).order("-created").list();
+    public List<DealEntity> getAllDescDateCreated() {
+        return query().order("-created").list();
     }
 
-    public List<Deal> getSharedDeals() {
-        return ofy().query(Deal.class).filter("shared", true).order("-created").list();
+    public List<DealEntity> getSharedDeals() {
+        return query().filter("shared", true).order("-created").list();
     }
 
-    public List<Deal> getUserDeals(User user) {
-        return ofy().query(Deal.class).ancestor(user).order("-created").list();
+    public List<DealEntity> getUserDeals(UserEntity user) {
+        return query().ancestor(user).order("-created").list();
     }
 
 }

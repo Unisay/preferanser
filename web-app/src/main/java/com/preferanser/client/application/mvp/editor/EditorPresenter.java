@@ -40,7 +40,6 @@ import com.preferanser.client.gwtp.NameTokens;
 import com.preferanser.client.service.DealService;
 import com.preferanser.client.service.Response;
 import com.preferanser.shared.domain.*;
-import com.preferanser.shared.domain.entity.Deal;
 import com.preferanser.shared.domain.exception.EditorException;
 import com.preferanser.shared.domain.exception.GameException;
 import org.fusesource.restygwt.client.Method;

@@ -20,10 +20,7 @@
 package com.preferanser.shared.domain;
 
 import com.google.common.collect.ImmutableMap;
-import com.googlecode.objectify.Key;
-import com.preferanser.shared.domain.entity.Deal;
 import com.preferanser.shared.domain.entity.DealTestHelper;
-import com.preferanser.shared.domain.entity.User;
 import com.preferanser.shared.domain.exception.EditorException;
 import com.preferanser.shared.domain.exception.validation.EditorValidationError;
 import com.preferanser.shared.domain.exception.validation.HasConflictingContractsValidationError;
@@ -117,12 +114,8 @@ public class EditorTest {
     @Test
     public void testSetDeal() throws Exception {
         Deal originalDeal = DealTestHelper.buildDeal(1);
-
         Deal actualDeal = editor.setDeal(originalDeal).build();
-
-        Deal expectedDeal = new Deal(originalDeal);
-        expectedDeal.setOwner((Key<User>) null);
-        assertLenientEquals(expectedDeal, actualDeal);
+        assertLenientEquals(originalDeal, actualDeal);
     }
 
     @Test

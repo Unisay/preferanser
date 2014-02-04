@@ -10,7 +10,7 @@ import com.google.gwt.user.client.ui.*;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
 import com.preferanser.client.application.i18n.PreferanserConstants;
-import com.preferanser.shared.domain.entity.Deal;
+import com.preferanser.shared.domain.Deal;
 
 import java.util.Date;
 import java.util.List;

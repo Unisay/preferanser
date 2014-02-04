@@ -19,10 +19,12 @@
 
 package com.preferanser.server.dao;
 
+import com.google.common.base.Optional;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.cmd.LoadType;
 import com.preferanser.server.dao.objectify.Ofy;
 import com.preferanser.server.dao.objectify.OfyFactory;
+import com.preferanser.server.entity.Entity;
 import com.preferanser.server.exception.ValidationException;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
@@ -39,7 +41,7 @@ import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Maps.newHashMap;
 
 @SuppressWarnings("unused")
-public abstract class BaseDao<T extends com.preferanser.shared.domain.entity.Entity> {
+public abstract class BaseDao<T extends Entity> {
 
     private static Logger logger = LoggerFactory.getLogger(BaseDao.class);
 
@@ -80,11 +82,11 @@ public abstract class BaseDao<T extends com.preferanser.shared.domain.entity.Ent
         return ofy().save().entities(entities).now().values();
     }
 
-    public T get(Key<T> key) {
+    public Optional<T> get(Key<T> key) {
         return ofy().get(key);
     }
 
-    public T get(Long id) {
+    public Optional<T> get(Long id) {
         // work around for objectify caching and new query not having the latest data
         ofy().clear();
 

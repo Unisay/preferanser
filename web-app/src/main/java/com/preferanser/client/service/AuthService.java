@@ -20,7 +20,7 @@
 package com.preferanser.client.service;
 
 import com.preferanser.client.restygwt.RequestId;
-import com.preferanser.shared.dto.CurrentUserDto;
+import com.preferanser.shared.domain.User;
 import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.RestService;
 
@@ -38,7 +38,6 @@ public interface AuthService extends RestService {
 
     @GET
     @Path("/current")
-    @RequestId(GET_CURRENT_USER)
-    void getCurrentUser(MethodCallback<CurrentUserDto> callback);
+    @RequestId(GET_CURRENT_USER) void getCurrentUser(MethodCallback<User> callback);
 
 }

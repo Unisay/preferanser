@@ -8,7 +8,7 @@ import com.preferanser.shared.domain.TableLocation;
 public interface TableUiHandlers extends UiHandlers {
 
     /**
-     * User changed card location
+     * UserEntity changed card location
      *
      * @param card        card
      * @param newLocation new location is optional

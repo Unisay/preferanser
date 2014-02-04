@@ -1,11 +1,9 @@
-package com.preferanser.shared.domain.entity;
+package com.preferanser.server.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.google.appengine.api.datastore.KeyFactory;
 import com.google.common.base.Objects;
-import com.google.common.collect.*;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import com.googlecode.objectify.Key;
-import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
 import com.googlecode.objectify.annotation.Parent;
@@ -14,24 +12,20 @@ import com.preferanser.shared.domain.*;
 import javax.validation.constraints.Size;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Sets.newHashSet;
 
-/**
- * TODO: consider making it immutable with Builder pattern
- */
-@Entity
+@com.googlecode.objectify.annotation.Entity
 @SuppressWarnings({"unused", "ClassWithTooManyFields", "ClassWithTooManyMethods"})
-public class Deal implements com.preferanser.shared.domain.entity.Entity {
+public class DealEntity implements Entity {
 
     @Id
     private Long id;
 
     @Parent
-    private com.googlecode.objectify.Key<User> owner;
+    private Key<UserEntity> owner;
 
     @Index
     @Size(min = 2, max = 32)
@@ -58,7 +52,7 @@ public class Deal implements com.preferanser.shared.domain.entity.Entity {
     private List<Turn> turns;
     private int currentTrickIndex;
 
-    public Deal() {
+    public DealEntity() {
         widow = new Widow();
         eastCards = newHashSet();
         westCards = newHashSet();
@@ -66,7 +60,7 @@ public class Deal implements com.preferanser.shared.domain.entity.Entity {
         turns = newArrayList();
     }
 
-    public Deal(Deal deal) {
+    public DealEntity(DealEntity deal) {
         id = deal.id;
         name = deal.name;
         description = deal.description;
@@ -110,16 +104,12 @@ public class Deal implements com.preferanser.shared.domain.entity.Entity {
         this.description = description;
     }
 
-    public Key<User> getOwner() {
+    public Key<UserEntity> getOwner() {
         return owner;
     }
 
-    public void setOwner(Key<User> userKey) {
-        this.owner = userKey;
-    }
-
-    public void setOwner(User user) {
-        setOwner(Key.<User>create(KeyFactory.createKey("User", user.getId())));
+    public void setOwner(UserEntity user) {
+        owner = Key.create(UserEntity.class, user.getId());
     }
 
     public Date getCreated() {
@@ -226,36 +216,12 @@ public class Deal implements com.preferanser.shared.domain.entity.Entity {
         this.currentTrickIndex = currentTrickIndex;
     }
 
-    @JsonIgnore
-    public Map<Hand, Contract> getHandContracts() {
-        ImmutableMap.Builder<Hand, Contract> builder = ImmutableMap.builder();
-        if (eastContract != null)
-            builder.put(Hand.EAST, eastContract);
-        if (southContract != null)
-            builder.put(Hand.SOUTH, southContract);
-        if (westContract != null)
-            builder.put(Hand.WEST, westContract);
-        return builder.build();
-    }
-
-    @JsonIgnore
-    public Multimap<Hand, Card> getHandCards() {
-        ImmutableSetMultimap.Builder<Hand, Card> builder = ImmutableSetMultimap.builder();
-        if (!eastCards.isEmpty())
-            builder.putAll(Hand.EAST, eastCards);
-        if (!southCards.isEmpty())
-            builder.putAll(Hand.SOUTH, southCards);
-        if (!westCards.isEmpty())
-            builder.putAll(Hand.WEST, westCards);
-        return builder.build();
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Deal that = (Deal) o;
+        DealEntity that = (DealEntity) o;
 
         return Objects.equal(this.name, that.name) &&
             Objects.equal(this.description, that.description) &&
@@ -285,7 +251,7 @@ public class Deal implements com.preferanser.shared.domain.entity.Entity {
     }
 
     @Override public String toString() {
-        final StringBuilder sb = new StringBuilder("Deal{");
+        final StringBuilder sb = new StringBuilder("DealEntity{");
         sb.append("name='").append(name).append('\'');
         sb.append(", description='").append(description).append('\'');
         sb.append(", id='").append(id).append('\'');
@@ -306,4 +272,5 @@ public class Deal implements com.preferanser.shared.domain.entity.Entity {
         sb.append('}');
         return sb.toString();
     }
+
 }

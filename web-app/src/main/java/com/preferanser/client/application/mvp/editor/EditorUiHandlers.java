@@ -27,14 +27,14 @@ import com.preferanser.shared.domain.Hand;
 public interface EditorUiHandlers extends TableUiHandlers {
 
     /**
-     * User chose contract for hand
+     * UserEntity chose contract for hand
      *
      * @param hand for which contract is chosen
      */
     void chooseContract(Hand hand);
 
     /**
-     * User chose first turn
+     * UserEntity chose first turn
      *
      * @param hand who turns first
      */

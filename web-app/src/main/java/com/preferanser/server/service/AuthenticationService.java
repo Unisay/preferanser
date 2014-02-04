@@ -23,12 +23,12 @@ import com.google.appengine.api.users.UserService;
 import com.google.common.base.Optional;
 import com.google.inject.Provider;
 import com.preferanser.server.dao.UserDao;
-import com.preferanser.shared.domain.entity.User;
-import com.preferanser.shared.dto.CurrentUserDto;
+import com.preferanser.server.entity.UserEntity;
+import com.preferanser.shared.domain.User;
 
 import javax.inject.Inject;
 
-public class AuthenticationService implements Provider<CurrentUserDto> {
+public class AuthenticationService implements Provider<User> {
 
     private final UserDao userDao;
     private final UserService userService;
@@ -42,38 +42,38 @@ public class AuthenticationService implements Provider<CurrentUserDto> {
     }
 
     @Override
-    public CurrentUserDto get() {
+    public User get() {
+        Optional<UserEntity> userEntityOptional = getCurrentUser();
+
         boolean isLoggedIn = userService.isUserLoggedIn();
-
-        CurrentUserDto currentUserDto = new CurrentUserDto(isLoggedIn, getCurrentUser().orNull());
-        currentUserDto.logoutUrl = userService.createLogoutURL("/");
-        currentUserDto.loginUrl = userService.createLoginURL("/");
-
-        if (isLoggedIn) {
-            currentUserDto.admin = userService.isUserAdmin();
-            currentUserDto.nickname = userService.getCurrentUser().getNickname();
-        }
-
-        return currentUserDto;
+        String logoutURL = userService.createLogoutURL("/");
+        String loginUrl = userService.createLoginURL("/");
+        boolean admin = isLoggedIn && userService.isUserAdmin();
+        com.google.appengine.api.users.User currentUser = userService.getCurrentUser();
+        String nickname = isLoggedIn ? currentUser.getNickname() : null;
+        String email = userEntityOptional.isPresent() ? userEntityOptional.get().getEmail() : null;
+        return new User(admin, isLoggedIn, logoutURL, loginUrl, email, nickname);
     }
 
-    public Optional<User> getCurrentUser() {
+    public Optional<UserEntity> getCurrentUser() {
         if (!userService.isUserLoggedIn())
             return Optional.absent();
 
         com.google.appengine.api.users.User currentUser = userService.getCurrentUser();
         String googleId = currentUser.getUserId();
 
-        User user = userDao.findById(googleId);
-        if (user == null) {
-            user = new User();
+        Optional<UserEntity> userOptional = userDao.findById(googleId);
+        if (userOptional.isPresent()) {
+            return userOptional;
+        } else {
+            UserEntity user = new UserEntity();
             user.setId(googleId);
             user.setEmail(currentUser.getEmail());
             user.setAdmin(userService.isUserAdmin());
             user = userDao.save(user);
             dealService.importSharedDeals(user);
+            return Optional.of(user);
         }
-        return Optional.of(user);
     }
 
 }

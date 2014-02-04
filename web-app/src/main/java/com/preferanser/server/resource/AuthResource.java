@@ -21,7 +21,7 @@ package com.preferanser.server.resource;
 
 import com.google.inject.Inject;
 import com.preferanser.server.service.AuthenticationService;
-import com.preferanser.shared.dto.CurrentUserDto;
+import com.preferanser.shared.domain.User;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -41,7 +41,7 @@ public class AuthResource {
 
     @GET
     @Path("current")
-    public CurrentUserDto getCurrentUserInfo() {
+    public User getCurrentUserInfo() {
         return authenticationService.get();
     }
 

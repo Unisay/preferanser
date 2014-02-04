@@ -17,6 +17,8 @@ public abstract class MD5Util {
     }
 
     public static String md5Hex(String message) {
+        if (message == null)
+            return null;
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");
             return hex(md.digest(message.getBytes("CP1252")));

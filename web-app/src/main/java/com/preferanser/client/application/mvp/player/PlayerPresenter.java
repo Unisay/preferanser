@@ -36,11 +36,7 @@ import com.preferanser.client.application.mvp.TableView;
 import com.preferanser.client.gwtp.NameTokens;
 import com.preferanser.client.service.DealService;
 import com.preferanser.client.service.Response;
-import com.preferanser.shared.domain.Card;
-import com.preferanser.shared.domain.Hand;
-import com.preferanser.shared.domain.Player;
-import com.preferanser.shared.domain.TableLocation;
-import com.preferanser.shared.domain.entity.Deal;
+import com.preferanser.shared.domain.*;
 import com.preferanser.shared.domain.exception.GameException;
 import org.fusesource.restygwt.client.Method;
 

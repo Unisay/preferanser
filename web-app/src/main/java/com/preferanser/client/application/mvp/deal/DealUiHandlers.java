@@ -1,7 +1,7 @@
 package com.preferanser.client.application.mvp.deal;
 
 import com.gwtplatform.mvp.client.UiHandlers;
-import com.preferanser.shared.domain.entity.Deal;
+import com.preferanser.shared.domain.Deal;
 
 public interface DealUiHandlers extends UiHandlers {
 

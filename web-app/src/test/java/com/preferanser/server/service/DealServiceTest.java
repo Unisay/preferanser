@@ -1,15 +1,13 @@
 package com.preferanser.server.service;
 
-import com.google.appengine.api.datastore.KeyFactory;
 import com.google.common.base.Optional;
 import com.google.inject.Provider;
-import com.googlecode.objectify.Key;
 import com.preferanser.server.dao.DealDao;
+import com.preferanser.server.entity.DealEntity;
+import com.preferanser.server.entity.UserEntity;
 import com.preferanser.server.exception.NoAuthenticatedUserException;
 import com.preferanser.server.exception.NotAuthorizedUserException;
 import com.preferanser.shared.domain.*;
-import com.preferanser.shared.domain.entity.Deal;
-import com.preferanser.shared.domain.entity.User;
 import com.preferanser.shared.util.Clock;
 import com.preferanser.testng.ClockTestNGListener;
 import com.preferanser.testng.DatastoreTestNGListener;
@@ -32,7 +30,7 @@ public class DealServiceTest {
 
     private DealService dealService;
 
-    private User user;
+    private UserEntity user;
 
     @Mock
     private DealDao dealDao;
@@ -48,23 +46,23 @@ public class DealServiceTest {
                 return authenticationService;
             }
         });
-        user = new User();
+        user = new UserEntity();
         user.setId("googleId");
     }
 
     @Test
     public void testImportSharedDeals() throws Exception {
-        List<Deal> sharedDeals = newArrayList(
-            buildDeal(1L, "admin1", "name1", true),
-            buildDeal(2L, "admin2", "name2", true),
-            buildDeal(3L, "admin2", "name3", true),
-            buildDeal(4L, user.getId(), "name4", true) // skip importing own shared deal
+        List<DealEntity> sharedDeals = newArrayList(
+            buildDealEntity(1L, "admin1", "name1", true),
+            buildDealEntity(2L, "admin2", "name2", true),
+            buildDealEntity(3L, "admin2", "name3", true),
+            buildDealEntity(4L, user.getId(), "name4", true) // skip importing own shared deal
         );
 
-        Set<Deal> importedDeals = newHashSet(
-            buildDeal(null, user.getId(), "name1", false),
-            buildDeal(null, user.getId(), "name2", false),
-            buildDeal(null, user.getId(), "name3", false)
+        Set<DealEntity> importedDeals = newHashSet(
+            buildDealEntity(null, user.getId(), "name1", false),
+            buildDealEntity(null, user.getId(), "name2", false),
+            buildDealEntity(null, user.getId(), "name3", false)
         );
 
         when(dealDao.getSharedDeals()).thenReturn(sharedDeals);
@@ -78,14 +76,14 @@ public class DealServiceTest {
 
     @Test
     public void testSave() throws Exception {
-        Deal unsavedDeal = buildDeal(1L, null, "name1", false);
-        Deal expectedUnsavedDeal = buildDeal(null, user.getId(), "name1", false);
-        Deal expectedSavedDeal = buildDeal(1L, user.getId(), "name1", false);
+        DealEntity unsavedDeal = buildDealEntity(1L, null, "name1", false);
+        DealEntity expectedUnsavedDeal = buildDealEntity(null, user.getId(), "name1", false);
+        DealEntity expectedSavedDeal = buildDealEntity(1L, user.getId(), "name1", false);
 
         when(authenticationService.getCurrentUser()).thenReturn(Optional.of(user));
         when(dealDao.save(expectedUnsavedDeal)).thenReturn(expectedSavedDeal);
 
-        Deal savedDeal = dealService.save(unsavedDeal);
+        DealEntity savedDeal = dealService.save(unsavedDeal);
 
         verify(authenticationService).getCurrentUser();
         verifyNoMoreInteractions(authenticationService);
@@ -99,14 +97,14 @@ public class DealServiceTest {
     @Test
     public void testSave_SharedByAdmin() throws Exception {
         user.setAdmin(true);
-        Deal unsavedDeal = buildDeal(1L, null, "name1", true);
-        Deal expectedUnsavedDeal = buildDeal(null, user.getId(), "name1", true);
-        Deal expectedSavedDeal = buildDeal(1L, user.getId(), "name1", true);
+        DealEntity unsavedDeal = buildDealEntity(1L, null, "name1", true);
+        DealEntity expectedUnsavedDeal = buildDealEntity(null, user.getId(), "name1", true);
+        DealEntity expectedSavedDeal = buildDealEntity(1L, user.getId(), "name1", true);
 
         when(authenticationService.getCurrentUser()).thenReturn(Optional.of(user));
         when(dealDao.save(expectedUnsavedDeal)).thenReturn(expectedSavedDeal);
 
-        Deal savedDeal = dealService.save(unsavedDeal);
+        DealEntity savedDeal = dealService.save(unsavedDeal);
 
         verify(authenticationService).getCurrentUser();
         verifyNoMoreInteractions(authenticationService);
@@ -119,38 +117,38 @@ public class DealServiceTest {
 
     @Test(expectedExceptions = NoAuthenticatedUserException.class)
     public void testSave_NoAuthenticatedUser() throws Exception {
-        when(authenticationService.getCurrentUser()).thenReturn(Optional.<User>absent());
-        dealService.save(buildDeal(null, "admin1", "name1", false));
+        when(authenticationService.getCurrentUser()).thenReturn(Optional.<UserEntity>absent());
+        dealService.save(buildDealEntity(null, "admin1", "name1", false));
     }
 
     @Test(expectedExceptions = NotAuthorizedUserException.class)
     public void testSave_NotAuthorizedUserUser() throws Exception {
         when(authenticationService.getCurrentUser()).thenReturn(Optional.of(user));
-        dealService.save(buildDeal(null, "admin1", "name1", true));
+        dealService.save(buildDealEntity(null, "admin1", "name1", true));
     }
 
     @Test(expectedExceptions = NoAuthenticatedUserException.class)
     public void testDelete_NotAuthenticated() throws Exception {
-        when(authenticationService.getCurrentUser()).thenReturn(Optional.<User>absent());
+        when(authenticationService.getCurrentUser()).thenReturn(Optional.<UserEntity>absent());
         dealService.delete(1L);
     }
 
     @Test(expectedExceptions = NotAuthorizedUserException.class)
     public void testDelete_NotAuthorized() throws Exception {
-        Deal deal = buildDeal(1L, "userId", "name1", false);
+        DealEntity deal = buildDealEntity(1L, "userId", "name1", false);
 
         when(authenticationService.getCurrentUser()).thenReturn(Optional.of(user));
-        when(dealDao.get(deal.getId())).thenReturn(deal);
+        when(dealDao.get(deal.getId())).thenReturn(Optional.of(deal));
 
         dealService.delete(deal.getId());
     }
 
     @Test
     public void testDelete() throws Exception {
-        Deal deal = buildDeal(1L, user.getId(), "name1", false);
+        DealEntity deal = buildDealEntity(1L, user.getId(), "name1", false);
 
         when(authenticationService.getCurrentUser()).thenReturn(Optional.of(user));
-        when(dealDao.get(deal.getId())).thenReturn(deal);
+        when(dealDao.get(deal.getId())).thenReturn(Optional.of(deal));
 
         dealService.delete(deal.getId());
 
@@ -159,28 +157,29 @@ public class DealServiceTest {
 
     @Test(expectedExceptions = NoAuthenticatedUserException.class)
     public void testUpdate_NoAuthenticatedUser() throws Exception {
-        when(authenticationService.getCurrentUser()).thenReturn(Optional.<User>absent());
-        dealService.update(buildDeal(1L, user.getId(), "name1", false));
+        when(authenticationService.getCurrentUser()).thenReturn(Optional.<UserEntity>absent());
+        dealService.update(buildDealEntity(1L, user.getId(), "name1", false));
     }
 
     @Test(expectedExceptions = NotAuthorizedUserException.class)
     public void testUpdate_NotAuthorizedUser() throws Exception {
-        Deal deal = buildDeal(1L, "userId", "name1", false);
+        DealEntity deal = buildDealEntity(1L, "userId", "name1", false);
         when(authenticationService.getCurrentUser()).thenReturn(Optional.of(user));
-        when(dealDao.get(deal.getId())).thenReturn(deal);
+        when(dealDao.get(deal.getId())).thenReturn(Optional.of(deal));
+
         dealService.update(deal);
     }
 
     @Test
     public void testUpdate() throws Exception {
-        Deal deal = buildDeal(1L, user.getId(), "name1", false);
+        DealEntity deal = buildDealEntity(1L, user.getId(), "name1", false);
 
         when(authenticationService.getCurrentUser()).thenReturn(Optional.of(user));
-        when(dealDao.get(deal.getId())).thenReturn(deal);
+        when(dealDao.get(deal.getId())).thenReturn(Optional.of(deal));
 
         dealService.update(deal);
 
-        Deal dealToUpdate = buildDeal(1L, user.getId(), "name1", false);
+        DealEntity dealToUpdate = buildDealEntity(1L, user.getId(), "name1", false);
         verify(dealDao).get(deal.getId());
         verify(dealDao).save(dealToUpdate);
         verifyNoMoreInteractions(dealDao);
@@ -188,10 +187,10 @@ public class DealServiceTest {
 
     @Test
     public void testGet() throws Exception {
-        Deal deal = buildDeal(1L, "admin1", "name1", true);
-        when(dealDao.get(deal.getId())).thenReturn(deal);
+        DealEntity deal = buildDealEntity(1L, "admin1", "name1", true);
+        when(dealDao.get(deal.getId())).thenReturn(Optional.of(deal));
 
-        Deal actualDeal = dealService.get(deal.getId());
+        DealEntity actualDeal = dealService.get(deal.getId());
 
         verify(dealDao).get(deal.getId());
         verifyNoMoreInteractions(dealDao);
@@ -200,17 +199,22 @@ public class DealServiceTest {
     }
 
     @Test
+    public void testGet_NotFound() throws Exception {
+        // TODO
+    }
+
+    @Test
     public void testGetCurrentUserOrSharedDeals_WithCurrentUser() throws Exception {
-        List<Deal> userDeals = newArrayList(
-            buildDeal(1L, "admin1", "name1", true),
-            buildDeal(2L, "admin2", "name2", true),
-            buildDeal(3L, "admin2", "name3", true)
+        List<DealEntity> userDeals = newArrayList(
+            buildDealEntity(1L, "admin1", "name1", true),
+            buildDealEntity(2L, "admin2", "name2", true),
+            buildDealEntity(3L, "admin2", "name3", true)
         );
 
         when(authenticationService.getCurrentUser()).thenReturn(Optional.of(user));
         when(dealDao.getUserDeals(user)).thenReturn(userDeals);
 
-        List<Deal> deals = dealService.getCurrentUserOrSharedDeals();
+        List<DealEntity> deals = dealService.getCurrentUserOrSharedDeals();
 
         verify(authenticationService).getCurrentUser();
         verifyNoMoreInteractions(authenticationService);
@@ -223,16 +227,16 @@ public class DealServiceTest {
 
     @Test
     public void testGetCurrentUserOrSharedDeals_NoCurrentUser() throws Exception {
-        List<Deal> sharedDeals = newArrayList(
-            buildDeal(1L, "admin1", "name1", true),
-            buildDeal(2L, "admin2", "name2", true),
-            buildDeal(3L, "admin2", "name3", true)
+        List<DealEntity> sharedDeals = newArrayList(
+            buildDealEntity(1L, "admin1", "name1", true),
+            buildDealEntity(2L, "admin2", "name2", true),
+            buildDealEntity(3L, "admin2", "name3", true)
         );
 
-        when(authenticationService.getCurrentUser()).thenReturn(Optional.<User>absent());
+        when(authenticationService.getCurrentUser()).thenReturn(Optional.<UserEntity>absent());
         when(dealDao.getSharedDeals()).thenReturn(sharedDeals);
 
-        List<Deal> deals = dealService.getCurrentUserOrSharedDeals();
+        List<DealEntity> deals = dealService.getCurrentUserOrSharedDeals();
 
         verify(authenticationService).getCurrentUser();
         verifyNoMoreInteractions(authenticationService);
@@ -243,12 +247,18 @@ public class DealServiceTest {
         assertReflectionEquals(sharedDeals, deals);
     }
 
-    private Deal buildDeal(Long dealId, String userId, String name, boolean shared) {
-        Deal deal = new Deal();
+    private DealEntity buildDealEntity(Long dealId, String userId, String name, boolean shared) {
+
+        DealEntity deal = new DealEntity();
         deal.setId(dealId);
         deal.setShared(shared);
-        if (userId != null)
-            deal.setOwner(Key.<User>create(KeyFactory.createKey("User", userId)));
+
+        if (userId != null) {
+            UserEntity owner = new UserEntity();
+            owner.setId(userId);
+            deal.setOwner(owner);
+        }
+
         deal.setName(name);
         deal.setDescription("description");
         deal.setCreated(Clock.getNow());

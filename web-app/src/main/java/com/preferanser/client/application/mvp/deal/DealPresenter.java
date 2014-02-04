@@ -17,8 +17,8 @@ import com.preferanser.client.application.mvp.main.MainPresenter;
 import com.preferanser.client.gwtp.NameTokens;
 import com.preferanser.client.service.DealService;
 import com.preferanser.client.service.Response;
-import com.preferanser.shared.domain.entity.Deal;
-import com.preferanser.shared.dto.CurrentUserDto;
+import com.preferanser.shared.domain.Deal;
+import com.preferanser.shared.domain.User;
 import org.fusesource.restygwt.client.Method;
 
 import java.util.Collections;
@@ -41,7 +41,7 @@ public class DealPresenter extends Presenter<DealPresenter.DealView, DealPresent
 
     private final DealService dealService;
     private final PlaceManager placeManager;
-    private final CurrentUserDto currentUserDto;
+    private final User user;
     private List<Deal> deals = Lists.newLinkedList();
 
     @Inject
@@ -50,11 +50,11 @@ public class DealPresenter extends Presenter<DealPresenter.DealView, DealPresent
                          Proxy proxy,
                          PlaceManager placeManager,
                          DealService dealService,
-                         CurrentUserDto currentUserDto
+                         User user
     ) {
         super(eventBus, view, proxy, MainPresenter.MAIN_SLOT);
         this.placeManager = placeManager;
-        this.currentUserDto = currentUserDto;
+        this.user = user;
         getView().setUiHandlers(this);
         this.dealService = dealService;
     }
@@ -129,7 +129,7 @@ public class DealPresenter extends Presenter<DealPresenter.DealView, DealPresent
                 return created1.compareTo(created2);
             }
         });
-        getView().displayDeals(deals, currentUserDto.loggedIn);
+        getView().displayDeals(deals, user.getLoggedIn());
     }
 
 }

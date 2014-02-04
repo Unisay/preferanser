@@ -1,15 +1,14 @@
 package com.preferanser.server.service;
 
-import com.google.appengine.api.datastore.KeyFactory;
 import com.google.common.base.Optional;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
-import com.googlecode.objectify.Key;
 import com.preferanser.server.dao.DealDao;
+import com.preferanser.server.entity.DealEntity;
+import com.preferanser.server.entity.UserEntity;
+import com.preferanser.server.exception.EntityNotFoundException;
 import com.preferanser.server.exception.NoAuthenticatedUserException;
 import com.preferanser.server.exception.NotAuthorizedUserException;
-import com.preferanser.shared.domain.entity.Deal;
-import com.preferanser.shared.domain.entity.User;
 import com.preferanser.shared.util.Clock;
 
 import java.util.List;
@@ -28,9 +27,9 @@ public class DealService {
         this.authenticationServiceProvider = authenticationServiceProvider;
     }
 
-    public void importSharedDeals(User user) {
-        Set<Deal> importedDeals = newHashSet();
-        for (Deal sharedDeal : dealDao.getSharedDeals()) {
+    public void importSharedDeals(UserEntity user) {
+        Set<DealEntity> importedDeals = newHashSet();
+        for (DealEntity sharedDeal : dealDao.getSharedDeals()) {
             if (!user.getId().equals(sharedDeal.getOwner().getName())) {
                 importedDeals.add(importDeal(sharedDeal, user));
             }
@@ -38,16 +37,16 @@ public class DealService {
         dealDao.save(importedDeals);
     }
 
-    private Deal importDeal(Deal sharedDeal, User user) {
-        Deal deal = new Deal(sharedDeal);
+    private DealEntity importDeal(DealEntity sharedDeal, UserEntity user) {
+        DealEntity deal = new DealEntity(sharedDeal);
         deal.setId(null);
         deal.setShared(false);
-        deal.setOwner(Key.<User>create(KeyFactory.createKey("User", user.getId())));
+        deal.setOwner(user);
         return deal;
     }
 
-    public List<Deal> getCurrentUserOrSharedDeals() {
-        Optional<User> userOptional = authenticationServiceProvider.get().getCurrentUser();
+    public List<DealEntity> getCurrentUserOrSharedDeals() {
+        Optional<UserEntity> userOptional = authenticationServiceProvider.get().getCurrentUser();
         if (userOptional.isPresent()) {
             return dealDao.getUserDeals(userOptional.get());
         } else {
@@ -55,12 +54,15 @@ public class DealService {
         }
     }
 
-    public Deal get(Long dealId) {
-        return dealDao.get(dealId);
+    public DealEntity get(Long dealId) {
+        Optional<DealEntity> dealEntityOptional = dealDao.get(dealId);
+        if (!dealEntityOptional.isPresent())
+            throw new EntityNotFoundException();
+        return dealEntityOptional.get();
     }
 
-    public Deal save(Deal deal) {
-        Optional<User> currentUserOptional = authenticationServiceProvider.get().getCurrentUser();
+    public DealEntity save(DealEntity deal) {
+        Optional<UserEntity> currentUserOptional = authenticationServiceProvider.get().getCurrentUser();
 
         if (!currentUserOptional.isPresent())
             throw new NoAuthenticatedUserException();
@@ -71,22 +73,25 @@ public class DealService {
         deal.setId(null);
         deal.setOwner(currentUserOptional.get());
         deal.setCreated(Clock.getNow());
-        Deal savedDeal = dealDao.save(deal);
+        DealEntity savedDeal = dealDao.save(deal);
 
         assert savedDeal != null : "dealDao.save(" + deal + ") returned null";
         return savedDeal;
     }
 
-    public void update(Deal deal) {
-        Optional<User> currentUserOptional = authenticationServiceProvider.get().getCurrentUser();
+    public void update(DealEntity deal) {
+        Optional<UserEntity> currentUserOptional = authenticationServiceProvider.get().getCurrentUser();
 
         if (!currentUserOptional.isPresent())
             throw new NoAuthenticatedUserException();
 
-        User currentUser = currentUserOptional.get();
+        UserEntity currentUser = currentUserOptional.get();
 
-        Deal existingDeal = dealDao.get(deal.getId());
-        if (!existingDeal.getOwner().getName().equals(currentUser.getId()))
+        Optional<DealEntity> maybeDeal = dealDao.get(deal.getId());
+        if (!maybeDeal.isPresent())
+            throw new EntityNotFoundException();
+
+        if (!maybeDeal.get().getOwner().getName().equals(currentUser.getId()))
             throw new NotAuthorizedUserException();
 
         deal.setOwner(currentUser);
@@ -95,17 +100,20 @@ public class DealService {
     }
 
     public void delete(Long dealId) {
-        Optional<User> currentUserOptional = authenticationServiceProvider.get().getCurrentUser();
+        Optional<UserEntity> currentUserOptional = authenticationServiceProvider.get().getCurrentUser();
 
         if (!currentUserOptional.isPresent())
             throw new NoAuthenticatedUserException(); // TODO force HTTP status
 
-        User currentUser = currentUserOptional.get();
-        Deal deal = dealDao.get(dealId);
-        if (!deal.getOwner().getName().equals(currentUser.getId()))
+        UserEntity currentUser = currentUserOptional.get();
+        Optional<DealEntity> maybeDeal = dealDao.get(dealId);
+        if (!maybeDeal.isPresent())
+            throw new EntityNotFoundException();
+
+        if (!maybeDeal.get().getOwner().getName().equals(currentUser.getId()))
             throw new NotAuthorizedUserException();
 
-        dealDao.delete(deal);
+        dealDao.delete(maybeDeal.get());
     }
 
 }

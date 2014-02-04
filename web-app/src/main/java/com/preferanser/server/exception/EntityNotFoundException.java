@@ -17,10 +17,11 @@
  *     along with this program.  If not, see [http://www.gnu.org/licenses/].
  */
 
-package com.preferanser.shared.dto;
+package com.preferanser.server.exception;
 
+public class EntityNotFoundException extends ServerException {
 
-import java.io.Serializable;
-
-public interface Dto extends Serializable {
+    @Override public String getMessage() {
+        return "Entity not found";
+    }
 }

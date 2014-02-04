@@ -23,7 +23,7 @@ import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HasHandlers;
 import com.google.web.bindery.event.shared.HandlerRegistration;
-import com.preferanser.shared.domain.entity.Deal;
+import com.preferanser.shared.domain.Deal;
 
 public class DealEvent extends GwtEvent<DealEvent.DealCreatedHandler> {
 

@@ -21,7 +21,8 @@ package com.preferanser.server.resource;
 
 import com.google.inject.Inject;
 import com.preferanser.server.service.DealService;
-import com.preferanser.shared.domain.entity.Deal;
+import com.preferanser.server.transformer.DealTransformer;
+import com.preferanser.shared.domain.Deal;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -32,26 +33,28 @@ import java.util.List;
 public class DealResource {
 
     private final DealService dealService;
+    private final DealTransformer dealTransformer;
 
     @Inject
-    public DealResource(DealService dealService) {
+    public DealResource(DealService dealService, DealTransformer dealTransformer) {
         this.dealService = dealService;
+        this.dealTransformer = dealTransformer;
     }
 
     @GET
     public List<Deal> getCurrentUserOrSharedDeals() {
-        return dealService.getCurrentUserOrSharedDeals();
+        return dealTransformer.fromEntities(dealService.getCurrentUserOrSharedDeals());
     }
 
     @GET
     @Path("/{dealId}")
     public Deal getById(@PathParam("dealId") Long dealId) {
-        return dealService.get(dealId);
+        return dealTransformer.fromEntity(dealService.get(dealId));
     }
 
     @POST
     public Long save(Deal deal) {
-        return dealService.save(deal).getId();
+        return dealService.save(dealTransformer.toEntity(deal)).getId();
     }
 
     // TODO: consider using @BeanParam
@@ -59,7 +62,7 @@ public class DealResource {
     @Path("/{dealId}")
     public void update(@PathParam("dealId") Long dealId, Deal deal) {
         deal.setId(dealId);
-        dealService.update(deal);
+        dealService.update(dealTransformer.toEntity(deal));
     }
 
     @DELETE

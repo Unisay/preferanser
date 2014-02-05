@@ -20,7 +20,9 @@
 package com.preferanser.server.dao;
 
 
+import com.google.common.base.Optional;
 import com.google.inject.Inject;
+import com.googlecode.objectify.Key;
 import com.preferanser.server.dao.objectify.OfyFactory;
 import com.preferanser.server.entity.DealEntity;
 import com.preferanser.server.entity.UserEntity;
@@ -45,6 +47,12 @@ public class DealDao extends BaseDao<DealEntity> {
 
     public List<DealEntity> getUserDeals(UserEntity user) {
         return query().ancestor(user).order("-created").list();
+    }
+
+    public Optional<DealEntity> get(UserEntity user, Long dealId) {
+        Key<UserEntity> parentKey = Key.create(UserEntity.class, user.getId());
+        Key<DealEntity> entityKey = Key.create(parentKey, DealEntity.class, dealId);
+        return get(entityKey);
     }
 
 }

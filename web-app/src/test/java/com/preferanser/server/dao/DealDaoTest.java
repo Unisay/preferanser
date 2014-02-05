@@ -26,11 +26,13 @@ import static org.unitils.reflectionassert.ReflectionComparatorMode.IGNORE_DEFAU
 public class DealDaoTest {
 
     private DealDao dealDao;
+    private UserEntity user;
 
     @BeforeMethod
     public void setUp() throws Exception {
         Injector injector = Guice.createInjector(new DaoTestModule());
         dealDao = injector.getInstance(DealDao.class);
+        user = DaoTestHelper.buildUser("userId", true);
     }
 
     @Test
@@ -40,16 +42,16 @@ public class DealDaoTest {
 
     @Test
     public void testSave() throws Exception {
-        DealEntity savedDeal = dealDao.save(buildDealEntity("name", new Date(1), "userId"));
+        DealEntity savedDeal = dealDao.save(buildDealEntity("name", new Date(1), user));
         assertThat(savedDeal.getId(), is(not(nullValue())));
-        assertReflectionEquals(buildDealEntity("name", new Date(1), "userId"), savedDeal, IGNORE_DEFAULTS);
+        assertReflectionEquals(buildDealEntity("name", new Date(1), user), savedDeal, IGNORE_DEFAULTS);
     }
 
     @Test
     public void testGetAllDescDateCreated() throws Exception {
-        DealEntity deal1 = buildDealEntity("deal1", new Date(1000), "userId");
-        DealEntity deal2 = buildDealEntity("deal2", new Date(2000), "userId");
-        DealEntity deal3 = buildDealEntity("deal3", new Date(3000), "userId");
+        DealEntity deal1 = buildDealEntity("deal1", new Date(1000), user);
+        DealEntity deal2 = buildDealEntity("deal2", new Date(2000), user);
+        DealEntity deal3 = buildDealEntity("deal3", new Date(3000), user);
 
         dealDao.save(deal1, deal2, deal3);
 
@@ -60,9 +62,9 @@ public class DealDaoTest {
 
     @Test
     public void testGetSharedDeals() throws Exception {
-        DealEntity deal1 = buildDealEntity("deal1", new Date(1000), "userId");
-        DealEntity deal2 = buildDealEntity("deal2", new Date(2000), "userId");
-        DealEntity deal3 = buildDealEntity("deal3", new Date(3000), "userId");
+        DealEntity deal1 = buildDealEntity("deal1", new Date(1000), user);
+        DealEntity deal2 = buildDealEntity("deal2", new Date(2000), user);
+        DealEntity deal3 = buildDealEntity("deal3", new Date(3000), user);
 
         deal1.setShared(true);
         deal2.setShared(true);
@@ -79,8 +81,8 @@ public class DealDaoTest {
         UserEntity user = new UserEntity();
         user.setId("123456");
 
-        DealEntity deal1 = buildDealEntity("deal1", new Date(1000), user.getId());
-        DealEntity deal2 = buildDealEntity("deal2", new Date(2000), user.getId());
+        DealEntity deal1 = buildDealEntity("deal1", new Date(1000), user);
+        DealEntity deal2 = buildDealEntity("deal2", new Date(2000), user);
         DealEntity deal3 = buildDealEntity("deal3", new Date(3000), "otherUserId");
 
         dealDao.save(deal1, deal2, deal3);
@@ -91,12 +93,12 @@ public class DealDaoTest {
     }
 
     @Test
-    public void testDelete() throws Exception {
-        DealEntity deal = buildDealEntity("deal1", new Date(1000), "userId");
-        DealEntity dealEntity = dealDao.save(deal);
-        assertTrue(dealDao.get(dealEntity.getId()).isPresent(), "Saved DealEntity is not present in the DB");
-        dealDao.delete(dealEntity.getId());
-        assertFalse(dealDao.get(dealEntity.getId()).isPresent(), "Deleted DealEntity is still present in the DB");
+    public void testDeleteNow() throws Exception {
+        DealEntity deal = buildDealEntity("deal1", new Date(1000), user);
+        DealEntity savedDeal = dealDao.save(deal);
+        assertTrue(dealDao.get(user, savedDeal.getId()).isPresent(), "Saved DealEntity is not present in the DB");
+        dealDao.deleteNow(savedDeal);
+        assertFalse(dealDao.get(user, savedDeal.getId()).isPresent(), "Deleted DealEntity is still present in the DB");
     }
 
 }

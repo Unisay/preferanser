@@ -24,6 +24,7 @@ import com.google.common.base.Optional;
 import com.google.inject.Provider;
 import com.preferanser.server.dao.UserDao;
 import com.preferanser.server.entity.UserEntity;
+import com.preferanser.server.exception.NoAuthenticatedUserException;
 import com.preferanser.shared.domain.User;
 
 import javax.inject.Inject;
@@ -76,4 +77,12 @@ public class AuthenticationService implements Provider<User> {
         }
     }
 
+    public UserEntity getCurrentUserOrThrow() {
+        Optional<UserEntity> currentUserOptional = getCurrentUser();
+
+        if (!currentUserOptional.isPresent())
+            throw new NoAuthenticatedUserException();
+
+        return currentUserOptional.get();
+    }
 }

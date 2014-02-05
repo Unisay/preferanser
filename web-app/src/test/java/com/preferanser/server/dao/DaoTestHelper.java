@@ -11,7 +11,10 @@ abstract class DaoTestHelper {
     static DealEntity buildDealEntity(String name, Date created, String ownerId) {
         UserEntity userEntity = new UserEntity();
         userEntity.setId(ownerId);
+        return buildDealEntity(name, created, userEntity);
+    }
 
+    static DealEntity buildDealEntity(String name, Date created, UserEntity userEntity) {
         DealEntity deal = new DealEntity();
         deal.setName(name);
         deal.setDescription(name + "_desc");

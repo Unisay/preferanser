@@ -136,6 +136,10 @@ public class AuthenticationServiceTest {
             "authenticationService.getCurrentUser() returned Object when Optional.absent() was expected");
     }
 
+    @Test
+    public void testGetCurrentUserOrThrow() throws Exception {
+        // TODO test
+    }
 
     private class UserDaoSaveAnswer implements Answer<UserEntity> {
         @Override public UserEntity answer(InvocationOnMock invocation) throws Throwable {

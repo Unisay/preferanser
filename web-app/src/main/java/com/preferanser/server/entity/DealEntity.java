@@ -223,7 +223,8 @@ public class DealEntity implements Entity {
 
         DealEntity that = (DealEntity) o;
 
-        return Objects.equal(this.name, that.name) &&
+        return Objects.equal(this.id, that.id) &&
+            Objects.equal(this.name, that.name) &&
             Objects.equal(this.description, that.description) &&
             Objects.equal(this.owner, that.owner) &&
             Objects.equal(this.created, that.created) &&
@@ -238,23 +239,21 @@ public class DealEntity implements Entity {
             Objects.equal(this.southCards, that.southCards) &&
             Objects.equal(this.westCards, that.westCards) &&
             Objects.equal(this.turns, that.turns) &&
-            Objects.equal(this.currentTrickIndex, that.currentTrickIndex) &&
-            Objects.equal(this.id, that.id);
+            Objects.equal(this.currentTrickIndex, that.currentTrickIndex);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(name, description, owner, created, shared, firstTurn,
+        return Objects.hashCode(id, name, description, owner, created, shared, firstTurn,
             players, eastContract, southContract, westContract, widow,
-            eastCards, southCards, westCards, turns, currentTrickIndex,
-            id);
+            eastCards, southCards, westCards, turns, currentTrickIndex);
     }
 
     @Override public String toString() {
         final StringBuilder sb = new StringBuilder("DealEntity{");
-        sb.append("name='").append(name).append('\'');
+        sb.append("id='").append(id).append('\'');
+        sb.append(", name='").append(name).append('\'');
         sb.append(", description='").append(description).append('\'');
-        sb.append(", id='").append(id).append('\'');
         sb.append(", owner='").append(owner).append('\'');
         sb.append(", created=").append(created);
         sb.append(", shared=").append(shared);

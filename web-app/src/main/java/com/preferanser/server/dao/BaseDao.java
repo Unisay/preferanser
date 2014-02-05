@@ -60,7 +60,7 @@ public abstract class BaseDao<T extends Entity> {
         return ofy().query(clazz).list();
     }
 
-    // TODO: save with user as parent
+    // TODO: move validation logic into Service layer
     public T save(T object) {
         Set<ConstraintViolation<T>> constraintViolations = validator.validate(object);
         if (CollectionUtils.isEmpty(constraintViolations)) {
@@ -82,11 +82,11 @@ public abstract class BaseDao<T extends Entity> {
         return ofy().save().entities(entities).now().values();
     }
 
-    public Optional<T> get(Key<T> key) {
+    protected Optional<T> get(Key<T> key) {
         return ofy().get(key);
     }
 
-    public Optional<T> get(Long id) {
+    protected Optional<T> get(Long id) {
         // work around for objectify caching and new query not having the latest data
         ofy().clear();
 
@@ -109,8 +109,12 @@ public abstract class BaseDao<T extends Entity> {
         return newHashMap(ofy().query(clazz).ids(ids));
     }
 
-    public void delete(T object) {
+    public void deleteAsync(T object) {
         ofy().delete().entity(object);
+    }
+
+    public void deleteNow(T object) {
+        ofy().delete().entity(object).now();
     }
 
     public void delete(Long id) {

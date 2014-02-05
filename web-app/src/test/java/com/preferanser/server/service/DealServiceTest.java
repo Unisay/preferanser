@@ -5,6 +5,7 @@ import com.google.inject.Provider;
 import com.preferanser.server.dao.DealDao;
 import com.preferanser.server.entity.DealEntity;
 import com.preferanser.server.entity.UserEntity;
+import com.preferanser.server.exception.EntityNotFoundException;
 import com.preferanser.server.exception.NoAuthenticatedUserException;
 import com.preferanser.server.exception.NotAuthorizedUserException;
 import com.preferanser.shared.domain.*;
@@ -152,6 +153,7 @@ public class DealServiceTest {
 
         dealService.delete(deal.getId());
 
+        verify(authenticationService).getCurrentUserOrThrow();
         verify(dealDao).deleteAsync(deal);
     }
 
@@ -168,6 +170,8 @@ public class DealServiceTest {
         when(dealDao.get(user, deal.getId())).thenReturn(Optional.of(deal));
 
         dealService.update(deal);
+
+        verify(authenticationService).getCurrentUserOrThrow();
     }
 
     @Test
@@ -179,6 +183,7 @@ public class DealServiceTest {
 
         dealService.update(deal);
 
+        verify(authenticationService).getCurrentUserOrThrow();
         DealEntity dealToUpdate = buildDealEntity(1L, user.getId(), "name1", false);
         verify(dealDao).get(user, deal.getId());
         verify(dealDao).save(dealToUpdate);
@@ -199,9 +204,17 @@ public class DealServiceTest {
         assertReflectionEquals(deal, actualDeal);
     }
 
-    @Test
+    @Test(expectedExceptions = EntityNotFoundException.class)
     public void testGet_NotFound() throws Exception {
-        // TODO
+        long dealId = 9999999L;
+
+        when(authenticationService.getCurrentUserOrThrow()).thenReturn(user);
+        when(dealDao.get(user, dealId)).thenReturn(Optional.<DealEntity>absent());
+
+        dealService.get(dealId);
+
+        verify(authenticationService).getCurrentUserOrThrow();
+        verify(dealDao).get(user, dealId);
     }
 
     @Test

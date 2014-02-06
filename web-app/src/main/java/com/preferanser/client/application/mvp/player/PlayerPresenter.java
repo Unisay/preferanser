@@ -133,7 +133,13 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
     }
 
     @Override public void switchToEditor() {
-        revealPlace(NameTokens.EDITOR);
+        PlaceRequest.Builder builder = new PlaceRequest.Builder();
+        if (dealId.isPresent()) {
+            builder.nameToken(NameTokens.EDITOR).with("deal", Long.toString(dealId.get()));
+        } else {
+            builder.nameToken(NameTokens.DEALS);
+        }
+        placeManager.revealPlace(builder.build());
     }
 
     @Override public void undo() {

@@ -5,6 +5,7 @@ import com.google.common.base.Optional;
 import com.google.inject.Provider;
 import com.preferanser.server.dao.UserDao;
 import com.preferanser.server.entity.UserEntity;
+import com.preferanser.server.exception.NoAuthenticatedUserException;
 import com.preferanser.shared.domain.User;
 import org.mockito.Matchers;
 import org.mockito.Mock;
@@ -137,8 +138,24 @@ public class AuthenticationServiceTest {
     }
 
     @Test
-    public void testGetCurrentUserOrThrow() throws Exception {
-        // TODO test
+    public void testGetCurrentUserOrThrow_LoggedIn() throws Exception {
+        when(userService.isUserLoggedIn()).thenReturn(true);
+        when(userService.getCurrentUser()).thenReturn(currentGoogleUser);
+        when(userDao.findById(currentUser.getId())).thenReturn(Optional.of(currentUser));
+
+        UserEntity userEntity = authenticationService.getCurrentUserOrThrow();
+
+        assertReflectionEquals(currentUser, userEntity);
+
+        verify(userDao).findById(currentUser.getId());
+        verifyNoMoreInteractions(userDao);
+        verifyNoMoreInteractions(dealService);
+    }
+
+    @Test(expectedExceptions = NoAuthenticatedUserException.class)
+    public void testGetCurrentUserOrThrow_NotLoggedIn() throws Exception {
+        when(userService.isUserLoggedIn()).thenReturn(false);
+        authenticationService.getCurrentUserOrThrow();
     }
 
     private class UserDaoSaveAnswer implements Answer<UserEntity> {

@@ -60,7 +60,6 @@ public abstract class BaseDao<T extends Entity> {
         return ofy().query(clazz).list();
     }
 
-    // TODO: move validation logic into Service layer
     public T save(T object) {
         Set<ConstraintViolation<T>> constraintViolations = validator.validate(object);
         if (CollectionUtils.isEmpty(constraintViolations)) {

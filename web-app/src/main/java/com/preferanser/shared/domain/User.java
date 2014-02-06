@@ -45,12 +45,14 @@ public class User {
         this.nickname = nickname;
     }
 
-    public void copyFrom(User currentUser) {
+    public User copyFrom(User currentUser) {
         admin = currentUser.admin;
+        email = currentUser.email;
         loggedIn = currentUser.loggedIn;
         logoutUrl = currentUser.logoutUrl;
         loginUrl = currentUser.loginUrl;
         nickname = currentUser.nickname;
+        return this;
     }
 
     public Boolean getAdmin() {
@@ -104,6 +106,7 @@ public class User {
     @Override public String toString() {
         return Objects.toStringHelper(this)
             .add("getAdmin", admin)
+            .add("email", email)
             .add("loggedIn", loggedIn)
             .add("logoutUrl", logoutUrl)
             .add("loginUrl", loginUrl)
@@ -119,6 +122,7 @@ public class User {
         User that = (User) o;
 
         return Objects.equal(this.admin, that.admin) &&
+            Objects.equal(this.email, that.email) &&
             Objects.equal(this.loggedIn, that.loggedIn) &&
             Objects.equal(this.logoutUrl, that.logoutUrl) &&
             Objects.equal(this.loginUrl, that.loginUrl) &&
@@ -127,6 +131,6 @@ public class User {
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(admin, loggedIn, logoutUrl, loginUrl, nickname);
+        return Objects.hashCode(admin, email, loggedIn, logoutUrl, loginUrl, nickname);
     }
 }

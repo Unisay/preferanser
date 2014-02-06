@@ -27,7 +27,6 @@ import com.google.inject.Singleton;
 import com.google.inject.servlet.RequestScoped;
 import com.preferanser.server.service.AuthenticationService;
 import com.preferanser.shared.domain.User;
-import com.sun.jersey.api.core.PackagesResourceConfig;
 
 import javax.validation.Validator;
 
@@ -35,7 +34,7 @@ public class RestModule extends AbstractModule {
 
     @Override protected void configure() {
         bind(Validator.class).toProvider(HibernateValidatorProvider.class).in(Singleton.class);
-        for (Class<?> resource : new PackagesResourceConfig("com.preferanser.server.resource").getClasses())
+        for (Class<?> resource : new JerseyResourceConfig().getClasses())
             bind(resource).in(Singleton.class);
         bind(User.class).toProvider(AuthenticationService.class).in(RequestScoped.class);
     }

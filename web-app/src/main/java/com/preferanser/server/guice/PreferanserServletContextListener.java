@@ -20,14 +20,21 @@
 package com.preferanser.server.guice;
 
 import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
+import com.google.appengine.repackaged.com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableMap;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Scopes;
 import com.google.inject.servlet.GuiceServletContextListener;
+import com.sun.jersey.api.container.filter.GZIPContentEncodingFilter;
+import com.sun.jersey.api.core.PackagesResourceConfig;
 import com.sun.jersey.guice.JerseyServletModule;
 import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
 import com.sun.jersey.spi.container.servlet.WebComponent;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 public class PreferanserServletContextListener extends GuiceServletContextListener {
 
@@ -39,8 +46,15 @@ public class PreferanserServletContextListener extends GuiceServletContextListen
         @Override protected void configureServlets() {
             bind(GuiceContainer.class);
             bind(JacksonJsonProvider.class).toProvider(JacksonJsonProviderProvider.class).in(Scopes.SINGLETON);
-            serve("/Preferanser/*").with(GuiceContainer.class, ImmutableMap.of(
-                    WebComponent.RESOURCE_CONFIG_CLASS, JerseyResourceConfig.class.getName()));
+            List<String> responseFilters = Arrays.asList(
+                EncodingJerseyResponseFilter.class.getName(),
+                GZIPContentEncodingFilter.class.getName()
+            );
+            Map<String, String> params = ImmutableMap.of(
+                WebComponent.RESOURCE_CONFIG_CLASS, JerseyResourceConfig.class.getName(),
+                PackagesResourceConfig.PROPERTY_CONTAINER_RESPONSE_FILTERS, Joiner.on(",").join(responseFilters)
+            );
+            serve("/Preferanser/*").with(GuiceContainer.class, params);
         }
     }
 

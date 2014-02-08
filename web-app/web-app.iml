@@ -45,8 +45,6 @@
       <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/resources" type="java-resource" />
-      <excludeFolder url="file://$MODULE_DIR$/target/.generated" />
-      <excludeFolder url="file://$MODULE_DIR$/target/gwt-unitCache" />
       <excludeFolder url="file://$MODULE_DIR$/target/test-classes" />
       <excludeFolder url="file://$MODULE_DIR$/target/web-app-1.0-SNAPSHOT" />
     </content>
@@ -70,14 +68,14 @@
     <orderEntry type="library" scope="PROVIDED" name="Maven: com.google.gwt:gwt-dev:2.5.1" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: com.gwtplatform:gwtp-mvp-client:1.1.1" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: com.gwtplatform:gwtp-clients-common:1.1.1" level="project" />
-    <orderEntry type="library" name="Maven: com.google.inject:guice:3.0" level="project" />
+    <orderEntry type="library" name="Maven: com.google.inject:guice:4.0-beta" level="project" />
     <orderEntry type="library" name="Maven: javax.inject:javax.inject:1" level="project" />
     <orderEntry type="library" name="Maven: aopalliance:aopalliance:1.0" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.apache.velocity:velocity:1.7" level="project" />
     <orderEntry type="library" name="Maven: commons-collections:commons-collections:3.2.1" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: commons-lang:commons-lang:2.3" level="project" />
-    <orderEntry type="library" name="Maven: com.google.inject.extensions:guice-servlet:3.0" level="project" />
-    <orderEntry type="library" name="Maven: com.google.inject.extensions:guice-assistedinject:3.0" level="project" />
+    <orderEntry type="library" name="Maven: com.google.inject.extensions:guice-servlet:4.0-beta" level="project" />
+    <orderEntry type="library" name="Maven: com.google.inject.extensions:guice-assistedinject:4.0-beta" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: com.google.gwt.inject:gin:2.1.2" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Maven: javax.servlet:servlet-api:2.5" level="project" />
     <orderEntry type="library" name="Maven: org.fusesource.restygwt:restygwt:1.4" level="project" />

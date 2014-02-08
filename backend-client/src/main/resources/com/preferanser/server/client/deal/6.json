@@ -1,0 +1,17 @@
+{
+    "name": "Мизер Де Голля",
+    "description": "Знаменитый француз Шарль Де Голль, уже будучи в зените славы, расписывал пульку с высокопоставленными особами, имена которых мы не будем называть из дипломатических соображений. После очередной раздачи Де Голлль вознамерился сыграть мизер на изображенном раскладе.\n\nСоперники Де Голлля, посовещавшись пришли к мысли , что мизер не ловится. После фиксации этого факта в протоколе игры Шарль Де Голль самолично продемонстрировал, как этот мизер можно было поймать!",
+    "shared": true,
+    "firstTurn": "WEST",
+    "players": "THREE",
+    "eastContract": "MISER",
+    "southContract": "PASS",
+    "westContract": "PASS",
+    "widow": {
+        "card1": "HEART_ACE",
+        "card2": "SPADE_10"
+    },
+    "eastCards": ["CLUB_9", "DIAMOND_JACK", "DIAMOND_10", "SPADE_9", "SPADE_8", "CLUB_8", "HEART_8", "HEART_9", "DIAMOND_7", "HEART_7"],
+    "southCards": ["DIAMOND_QUEEN", "CLUB_7", "CLUB_QUEEN", "SPADE_7", "HEART_10", "HEART_JACK", "CLUB_10", "SPADE_JACK", "DIAMOND_8", "CLUB_JACK"],
+    "westCards": ["DIAMOND_ACE", "DIAMOND_9", "SPADE_ACE", "CLUB_KING", "SPADE_QUEEN", "CLUB_ACE", "DIAMOND_KING", "HEART_QUEEN", "HEART_KING", "SPADE_KING"]
+}

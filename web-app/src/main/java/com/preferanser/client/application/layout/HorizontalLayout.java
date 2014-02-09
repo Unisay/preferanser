@@ -61,7 +61,7 @@ public class HorizontalLayout extends SortingPanelLayout<CardWidget> {
 
     @Override
     protected int getStartX() {
-        return super.getStartX() + (getWidth() - getCardsWidth()) / 2;
+        return panel.getAbsoluteLeft() + (getWidth() - getCardsWidth()) / 2;
     }
 
     @Override

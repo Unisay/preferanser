@@ -20,11 +20,7 @@ public class AuthPresenter extends PresenterWidget<AuthPresenter.MyView> impleme
         void displayAuthInfo(String email, String nickname);
     }
 
-    @Inject public AuthPresenter(
-        EventBus eventBus,
-        MyView view,
-        User user
-    ) {
+    @Inject public AuthPresenter(EventBus eventBus, MyView view, User user) {
         super(eventBus, view);
         this.user = user;
         getView().setUiHandlers(this);

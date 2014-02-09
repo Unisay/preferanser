@@ -21,7 +21,7 @@ public abstract class MD5Util {
             return null;
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");
-            return hex(md.digest(message.getBytes("CP1252")));
+            return hex(md.digest(message.getBytes("UTF-8")));
         } catch (NoSuchAlgorithmException e) {
             log.severe(e.getMessage());
         } catch (UnsupportedEncodingException e) {

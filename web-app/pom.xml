@@ -258,6 +258,13 @@
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>com.google.appengine</groupId>
+            <artifactId>appengine-tools-sdk</artifactId>
+            <version>${appengine-api.version}</version>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
     <build>

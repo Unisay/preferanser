@@ -99,6 +99,7 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
     @Override protected void onReveal() {
         super.onReveal();
         Preconditions.checkState(dealId.isPresent(), "DealId is not initialized from URL parameter 'deal'");
+        prepositionCards();
         if (gameOptional.isPresent() && dealId.get().equals(gameOptional.get().getId())) {
             refreshView();
         } else {
@@ -163,6 +164,10 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
 
     private void revealPlace(String place) {
         placeManager.revealPlace(new PlaceRequest.Builder().nameToken(place).build());
+    }
+
+    private void prepositionCards() {
+        getView().prepositionCards(Card.values());
     }
 
     private void refreshView() {

@@ -38,4 +38,5 @@ public interface TableView extends View {
 
     void displayCards(Map<Hand, Set<Card>> handCards, Map<Card, Hand> centerCards, Widow widow);
 
+    void prepositionCards(Card... cards);
 }

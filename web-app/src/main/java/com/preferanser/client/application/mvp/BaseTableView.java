@@ -24,9 +24,11 @@ import com.google.common.base.Optional;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.EnumHashBiMap;
 import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.*;
 import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
 import com.preferanser.client.application.i18n.I18nHelper;
@@ -94,11 +96,31 @@ abstract public class BaseTableView<U extends TableUiHandlers> extends ViewWithU
         populateHandTurnPointers();
     }
 
-    public void displayCards(Map<Hand, Set<Card>> handCards, Map<Card, Hand> centerCards, Widow widow) {
+    @Override public void displayCards(Map<Hand, Set<Card>> handCards, Map<Card, Hand> centerCards, Widow widow) {
         detachCardWidgets();
         displayHandCards(handCards);
         displayCenterCards(centerCards);
         displayWidow(widow);
+    }
+
+    @Override public void prepositionCards(Card... cards) {
+        for (Card card : cards) {
+            CardWidget cardWidget = getOrCreateCardWidget(card);
+            Style cardStyle = cardWidget.getElement().getStyle();
+            cardStyle.setTop(Window.getClientHeight() + 10, Style.Unit.PX);
+            cardStyle.setLeft(Math.round((Window.getClientWidth() - cardWidget.getOffsetWidth()) / 2), Style.Unit.PX);
+        }
+    }
+
+    private CardWidget getOrCreateCardWidget(Card card) {
+        CardWidget cardWidget;
+        if (cardWidgetBiMap.containsKey(card)) {
+            cardWidget = cardWidgetBiMap.get(card);
+        } else {
+            cardWidget = createCardWidget(card);
+            cardWidgetBiMap.put(card, cardWidget);
+        }
+        return cardWidget;
     }
 
     protected void detachCardWidgets() {
@@ -148,21 +170,14 @@ abstract public class BaseTableView<U extends TableUiHandlers> extends ViewWithU
     }
 
     private void displayCard(HasWidgets panel, Card card) {
-        CardWidget cardWidget;
-        if (cardWidgetBiMap.containsKey(card)) {
-            cardWidget = cardWidgetBiMap.get(card);
-        } else {
-            cardWidget = createCardWidget(card);
-            cardWidgetBiMap.put(card, cardWidget);
-        }
-        displayCardWidget(panel, cardWidget);
+        displayCardWidget(panel, getOrCreateCardWidget(card));
     }
 
     protected void displayCardWidget(HasWidgets panel, CardWidget cardWidget) {
         panel.add(cardWidget);
     }
 
-    public void displayContracts(Map<Hand, Contract> handContracts) {
+    @Override public void displayContracts(Map<Hand, Contract> handContracts) {
         for (Hand hand : Hand.PLAYING_HANDS) {
             if (handContracts.containsKey(hand))
                 displayHandContract(hand, handContracts.get(hand));
@@ -175,8 +190,7 @@ abstract public class BaseTableView<U extends TableUiHandlers> extends ViewWithU
 
     protected abstract void displayNoContract(Hand hand);
 
-    @Override
-    public void displayTurn(Hand turn) {
+    @Override public void displayTurn(Hand turn) {
         for (Map.Entry<Hand, TurnPointer> entry : handTurnPointerMap.entrySet())
             displayHandTurnPointer(entry.getKey(), entry.getValue(), turn);
     }
@@ -185,21 +199,18 @@ abstract public class BaseTableView<U extends TableUiHandlers> extends ViewWithU
         turnPointer.setActive(hand == turn);
     }
 
-    @Override
-    public void onCardMouseDown(CardWidget cardWidget, MouseDownEvent event) {
+    @Override public void onCardMouseDown(CardWidget cardWidget, MouseDownEvent event) {
         imageDragController.onCardWidgetMouseDown(cardWidget, event);
         if (!cardWidget.isDisabled())
             putCardImageOnTop(cardWidget);
     }
 
-    @Override
-    public void onCardDragStart(CardWidget cardWidget, DragStartEvent event) {
+    @Override public void onCardDragStart(CardWidget cardWidget, DragStartEvent event) {
         event.stopPropagation();
         event.preventDefault();
     }
 
-    @Override
-    public void onCardDoubleClick(CardWidget cardWidget, DoubleClickEvent event) {
+    @Override public void onCardDoubleClick(CardWidget cardWidget, DoubleClickEvent event) {
     }
 
     private void installMouseMoveHandler(RootPanel rootPanel) {

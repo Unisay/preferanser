@@ -21,8 +21,10 @@ package com.preferanser.server.resource;
 
 import com.google.inject.Inject;
 import com.preferanser.server.service.DealService;
+import com.preferanser.server.transformer.DealInfoTransformer;
 import com.preferanser.server.transformer.DealTransformer;
 import com.preferanser.shared.domain.Deal;
+import com.preferanser.shared.domain.DealInfo;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -34,22 +36,24 @@ public class DealResource {
 
     private final DealService dealService;
     private final DealTransformer dealTransformer;
+    private final DealInfoTransformer dealInfoTransformer;
 
     @Inject
-    public DealResource(DealService dealService, DealTransformer dealTransformer) {
+    public DealResource(DealService dealService, DealTransformer dealTransformer, DealInfoTransformer dealInfoTransformer) {
         this.dealService = dealService;
         this.dealTransformer = dealTransformer;
+        this.dealInfoTransformer = dealInfoTransformer;
     }
 
     @GET
-    public List<Deal> getCurrentUserOrSharedDeals() {
-        return dealTransformer.fromEntities(dealService.getCurrentUserOrSharedDeals());
+    public List<DealInfo> getCurrentUserOrSharedDeals() {
+        return dealInfoTransformer.fromEntities(dealService.getCurrentUserOrSharedDeals());
     }
 
     @GET
-    @Path("/{dealId}")
-    public Deal getById(@PathParam("dealId") Long dealId) {
-        return dealTransformer.fromEntity(dealService.get(dealId));
+    @Path("/{userId}/{dealId}")
+    public Deal getById(@PathParam("userId") Long userId, @PathParam("dealId") Long dealId) {
+        return dealTransformer.fromEntity(dealService.get(userId, dealId));
     }
 
     @POST

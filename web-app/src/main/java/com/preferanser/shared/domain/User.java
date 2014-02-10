@@ -21,8 +21,11 @@ package com.preferanser.shared.domain;
 
 import com.google.common.base.Objects;
 
+import java.io.Serializable;
+
 @SuppressWarnings("unused")
-public class User {
+public class User implements Serializable {
+
 
     private Boolean admin;
     private Boolean loggedIn;

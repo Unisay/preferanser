@@ -3,6 +3,7 @@ package com.preferanser.server.service;
 import com.google.common.base.Optional;
 import com.google.inject.Provider;
 import com.preferanser.server.dao.DealDao;
+import com.preferanser.server.dao.UserDao;
 import com.preferanser.server.entity.DealEntity;
 import com.preferanser.server.entity.UserEntity;
 import com.preferanser.server.exception.EntityNotFoundException;
@@ -37,12 +38,15 @@ public class DealServiceTest {
     private DealDao dealDao;
 
     @Mock
+    private UserDao userDao;
+
+    @Mock
     private AuthenticationService authenticationService;
 
     @BeforeMethod
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
-        dealService = new DealService(dealDao, new Provider<AuthenticationService>() {
+        dealService = new DealService(dealDao, userDao, new Provider<AuthenticationService>() {
             @Override public AuthenticationService get() {
                 return authenticationService;
             }

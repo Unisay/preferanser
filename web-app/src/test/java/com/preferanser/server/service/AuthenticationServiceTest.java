@@ -49,7 +49,8 @@ public class AuthenticationServiceTest {
         currentGoogleUser = new com.google.appengine.api.users.User("user@gmail.com", "authDomain", "googleId");
 
         currentUser = new UserEntity();
-        currentUser.setId(currentGoogleUser.getUserId());
+        currentUser.setId(1L);
+        currentUser.setGoogleId(currentGoogleUser.getUserId());
         currentUser.setEmail(currentGoogleUser.getEmail());
         currentUser.setAdmin(true);
 
@@ -66,7 +67,7 @@ public class AuthenticationServiceTest {
         when(userService.isUserAdmin()).thenReturn(true);
         when(userService.createLoginURL("/")).thenReturn("/login");
         when(userService.createLogoutURL("/")).thenReturn("/logout");
-        when(userDao.findById(currentGoogleUser.getUserId())).thenReturn(Optional.<UserEntity>absent());
+        when(userDao.findByGoogleId(currentGoogleUser.getUserId())).thenReturn(Optional.<UserEntity>absent());
 
         User actualUser = authenticationService.get();
         assertReflectionEquals(user, actualUser);
@@ -96,15 +97,16 @@ public class AuthenticationServiceTest {
         when(userService.isUserLoggedIn()).thenReturn(true);
         when(userService.isUserAdmin()).thenReturn(true);
         when(userService.getCurrentUser()).thenReturn(currentGoogleUser);
-        when(userDao.findById(currentGoogleUser.getUserId())).thenReturn(Optional.<UserEntity>absent());
+        when(userDao.findByGoogleId(currentUser.getGoogleId())).thenReturn(Optional.<UserEntity>absent());
         when(userDao.save(Matchers.any(UserEntity.class))).thenAnswer(new UserDaoSaveAnswer());
 
         Optional<UserEntity> maybeCurrentUser = authenticationService.getCurrentUser();
-        assertTrue(maybeCurrentUser.isPresent(),
-            "authenticationService.getCurrentUser() returned Optional.absent() when Object was expected");
-        assertReflectionEquals(currentUser, maybeCurrentUser.get());
 
-        verify(userDao).findById(currentGoogleUser.getUserId());
+        UserEntity expectedCurrentUser = new UserEntity(UserDaoSaveAnswer.GENERATED_ID, currentGoogleUser.getUserId(), currentGoogleUser.getEmail(), true);
+        assertTrue(maybeCurrentUser.isPresent(), "authenticationService.getCurrentUser() returned Optional.absent() when Object was expected");
+        assertReflectionEquals(expectedCurrentUser, maybeCurrentUser.get());
+
+        verify(userDao).findByGoogleId(currentGoogleUser.getUserId());
         verify(userDao).save(Matchers.any(UserEntity.class));
         verifyNoMoreInteractions(userDao);
 
@@ -116,14 +118,14 @@ public class AuthenticationServiceTest {
     public void testGetCurrentUser_NextTime() throws Exception {
         when(userService.isUserLoggedIn()).thenReturn(true);
         when(userService.getCurrentUser()).thenReturn(currentGoogleUser);
-        when(userDao.findById(currentUser.getId())).thenReturn(Optional.of(currentUser));
+        when(userDao.findByGoogleId(currentUser.getGoogleId())).thenReturn(Optional.of(currentUser));
 
         Optional<UserEntity> maybeCurrentUser = authenticationService.getCurrentUser();
-        assertTrue(maybeCurrentUser.isPresent(),
-            "authenticationService.getCurrentUser() returned Optional.absent() when Object was expected");
+
+        assertTrue(maybeCurrentUser.isPresent(), "authenticationService.getCurrentUser() returned Optional.absent() when Object was expected");
         assertReflectionEquals(currentUser, maybeCurrentUser.get());
 
-        verify(userDao).findById(currentUser.getId());
+        verify(userDao).findByGoogleId(currentUser.getGoogleId());
         verifyNoMoreInteractions(userDao);
         verifyNoMoreInteractions(dealService);
     }
@@ -141,13 +143,13 @@ public class AuthenticationServiceTest {
     public void testGetCurrentUserOrThrow_LoggedIn() throws Exception {
         when(userService.isUserLoggedIn()).thenReturn(true);
         when(userService.getCurrentUser()).thenReturn(currentGoogleUser);
-        when(userDao.findById(currentUser.getId())).thenReturn(Optional.of(currentUser));
+        when(userDao.findByGoogleId(currentUser.getGoogleId())).thenReturn(Optional.of(currentUser));
 
         UserEntity userEntity = authenticationService.getCurrentUserOrThrow();
 
         assertReflectionEquals(currentUser, userEntity);
 
-        verify(userDao).findById(currentUser.getId());
+        verify(userDao).findByGoogleId(currentUser.getGoogleId());
         verifyNoMoreInteractions(userDao);
         verifyNoMoreInteractions(dealService);
     }
@@ -158,9 +160,13 @@ public class AuthenticationServiceTest {
         authenticationService.getCurrentUserOrThrow();
     }
 
-    private class UserDaoSaveAnswer implements Answer<UserEntity> {
+    private static class UserDaoSaveAnswer implements Answer<UserEntity> {
+        public static final Long GENERATED_ID = 1000L;
+
         @Override public UserEntity answer(InvocationOnMock invocation) throws Throwable {
-            return (UserEntity) invocation.getArguments()[0];
+            UserEntity userEntity = (UserEntity) invocation.getArguments()[0];
+            userEntity.setId(GENERATED_ID);
+            return userEntity;
         }
     }
 }

@@ -63,12 +63,12 @@ public class AuthenticationService implements Provider<User> {
         com.google.appengine.api.users.User currentUser = userService.getCurrentUser();
         String googleId = currentUser.getUserId();
 
-        Optional<UserEntity> userOptional = userDao.findById(googleId);
+        Optional<UserEntity> userOptional = userDao.findByGoogleId(googleId);
         if (userOptional.isPresent()) {
             return userOptional;
         } else {
             UserEntity user = new UserEntity();
-            user.setId(googleId);
+            user.setGoogleId(googleId);
             user.setEmail(currentUser.getEmail());
             user.setAdmin(userService.isUserAdmin());
             user = userDao.save(user);

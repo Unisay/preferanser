@@ -56,6 +56,12 @@ public class DealResource {
         return dealTransformer.fromEntity(dealService.get(dealId));
     }
 
+    @GET
+    @Path("/{userId}/{dealId}")
+    public Deal getById(@PathParam("userId") Long userId, @PathParam("dealId") Long dealId) {
+        return dealTransformer.fromEntity(dealService.get(userId, dealId));
+    }
+
     @POST
     public Long save(Deal deal) {
         return dealService.save(dealTransformer.toEntity(deal)).getId();

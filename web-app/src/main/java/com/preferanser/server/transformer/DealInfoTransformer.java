@@ -14,7 +14,7 @@ public class DealInfoTransformer extends BaseTransformer<DealInfo, DealEntity> {
             entity.getId(),
             entity.getName(),
             entity.getDescription(),
-            entity.getOwner().getName(),
+            entity.getOwner().getId(),
             entity.getCreated()
         );
     }

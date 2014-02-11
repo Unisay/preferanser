@@ -85,7 +85,7 @@ public abstract class BaseDao<T extends Entity> {
         return ofy().get(key);
     }
 
-    protected Optional<T> get(Long id) {
+    public Optional<T> get(Long id) {
         // work around for objectify caching and new query not having the latest data
         ofy().clear();
 

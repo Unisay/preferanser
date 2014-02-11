@@ -34,6 +34,7 @@ import com.preferanser.client.application.ApplicationPresenter;
 import com.preferanser.client.application.mvp.DealEvent;
 import com.preferanser.client.application.mvp.TableView;
 import com.preferanser.client.gwtp.NameTokens;
+import com.preferanser.client.gwtp.PlaceRequestHelper;
 import com.preferanser.client.service.DealService;
 import com.preferanser.client.service.Response;
 import com.preferanser.shared.domain.*;
@@ -61,7 +62,8 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
 
     private final PlaceManager placeManager;
     private final DealService dealService;
-    private Optional<Long> dealId = Optional.absent();
+    private Optional<Long> userIdOptional = Optional.absent();
+    private Optional<Long> dealIdOptional = Optional.absent();
     private Optional<Player> gameOptional = Optional.absent();
 
     @ProxyStandard
@@ -84,31 +86,33 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
     @Override
     public void prepareFromRequest(PlaceRequest request) {
         super.prepareFromRequest(request);
-        String dealIdString = request.getParameter("deal", "");
-        if (!dealIdString.isEmpty()) {
-            try {
-                this.dealId = Optional.of(Long.parseLong(dealIdString));
-            } catch (NumberFormatException e) {
-                revealPlace(NameTokens.DEALS);
-            }
-        } else {
-            revealPlace(NameTokens.DEALS);
-        }
+        PlaceRequestHelper helper = new PlaceRequestHelper(request);
+        userIdOptional = helper.parseLongParameter("user");
+        dealIdOptional = helper.parseLongParameter("deal");
     }
 
     @Override protected void onReveal() {
         super.onReveal();
-        Preconditions.checkState(dealId.isPresent(), "DealId is not initialized from URL parameter 'deal'");
+        Preconditions.checkState(dealIdOptional.isPresent(), "DealId is not initialized from URL parameter 'deal'");
         prepositionCards();
-        if (gameOptional.isPresent() && dealId.get().equals(gameOptional.get().getId())) {
+        if (gameOptional.isPresent() && dealIdOptional.get().equals(gameOptional.get().getId())) {
             refreshView();
         } else {
-            dealService.getById(dealId.get(), new Response<Deal>() {
-                @Override public void onSuccess(Method method, Deal deal) {
-                    gameOptional = Optional.of(new Player(deal));
-                    refreshView();
-                }
-            });
+            if (userIdOptional.isPresent()) {
+                dealService.getUserDeal(userIdOptional.get(), dealIdOptional.get(), new Response<Deal>() {
+                    @Override public void onSuccess(Method method, Deal deal) {
+                        gameOptional = Optional.of(new Player(deal));
+                        refreshView();
+                    }
+                });
+            } else {
+                dealService.getCurrentUserDeal(dealIdOptional.get(), new Response<Deal>() {
+                    @Override public void onSuccess(Method method, Deal deal) {
+                        gameOptional = Optional.of(new Player(deal));
+                        refreshView();
+                    }
+                });
+            }
         }
     }
 
@@ -135,8 +139,12 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
 
     @Override public void switchToEditor() {
         PlaceRequest.Builder builder = new PlaceRequest.Builder();
-        if (dealId.isPresent()) {
-            builder.nameToken(NameTokens.EDITOR).with("deal", Long.toString(dealId.get()));
+        if (userIdOptional.isPresent() || dealIdOptional.isPresent()) {
+            builder.nameToken(NameTokens.EDITOR);
+            if (dealIdOptional.isPresent())
+                builder.with("deal", dealIdOptional.get().toString());
+            if (userIdOptional.isPresent())
+                builder.with("user", userIdOptional.get().toString());
         } else {
             builder.nameToken(NameTokens.DEALS);
         }

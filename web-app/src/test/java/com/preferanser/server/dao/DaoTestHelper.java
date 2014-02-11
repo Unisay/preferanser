@@ -8,10 +8,8 @@ import java.util.Date;
 
 abstract class DaoTestHelper {
 
-    static DealEntity buildDealEntity(String name, Date created, String ownerId) {
-        UserEntity userEntity = new UserEntity();
-        userEntity.setId(ownerId);
-        return buildDealEntity(name, created, userEntity);
+    static DealEntity buildDealEntity(String name, Date created, Number ownerId) {
+        return buildDealEntity(name, created, buildUser(ownerId, true));
     }
 
     static DealEntity buildDealEntity(String name, Date created, UserEntity userEntity) {
@@ -24,10 +22,11 @@ abstract class DaoTestHelper {
         return deal;
     }
 
-    static UserEntity buildUser(String googleId, boolean admin) {
+    static UserEntity buildUser(Number id, boolean admin) {
         UserEntity user = new UserEntity();
+        user.setId(id.longValue());
+        user.setGoogleId("google_" + id);
         user.setAdmin(admin);
-        user.setId(googleId);
         return user;
     }
 }

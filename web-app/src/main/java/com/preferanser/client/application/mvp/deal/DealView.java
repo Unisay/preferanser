@@ -10,7 +10,7 @@ import com.google.gwt.user.client.ui.*;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
 import com.preferanser.client.application.i18n.PreferanserConstants;
-import com.preferanser.shared.domain.Deal;
+import com.preferanser.shared.domain.DealInfo;
 
 import java.util.Date;
 import java.util.List;
@@ -27,7 +27,6 @@ public class DealView extends ViewWithUiHandlers<DealUiHandlers> implements Deal
 
     interface DealViewStyle extends CssResource {
         String odd();
-
         String deals();
     }
 
@@ -48,7 +47,7 @@ public class DealView extends ViewWithUiHandlers<DealUiHandlers> implements Deal
         initWidget(uiBinder.createAndBindUi(this));
     }
 
-    @Override public void displayDeals(List<Deal> deals, boolean allowModifications) {
+    @Override public void displayDeals(List<DealInfo> deals, boolean allowModifications) {
         if (allowModifications) {
             HTMLTable.ColumnFormatter formatter = dealTable.getColumnFormatter();
             formatter.setWidth(COLUMN_EDIT, "36px");
@@ -57,7 +56,7 @@ public class DealView extends ViewWithUiHandlers<DealUiHandlers> implements Deal
 
         dealTable.removeAllRows();
         for (int i = 0; i < deals.size(); i++) {
-            Deal deal = deals.get(i);
+            DealInfo deal = deals.get(i);
             if (i % 2 == 0)
                 dealTable.getRowFormatter().addStyleName(i, style.odd());
             dealTable.setWidget(i, COLUMN_NAME, new Label(deal.getName()));
@@ -70,14 +69,14 @@ public class DealView extends ViewWithUiHandlers<DealUiHandlers> implements Deal
         }
     }
 
-    private Label createDateTimeLabel(Deal deal) {
+    private Label createDateTimeLabel(DealInfo deal) {
         Date created = deal.getCreated();
         Label label = new Label(created == null ? "" : DATE_TIME_FORMAT.format(created));
         label.setWordWrap(false);
         return label;
     }
 
-    private Button createPlayButton(final Deal deal) {
+    private Button createPlayButton(final DealInfo deal) {
         Button button = new Button(constants.play());
         button.addClickHandler(new ClickHandler() {
             @Override public void onClick(ClickEvent event) {
@@ -87,7 +86,7 @@ public class DealView extends ViewWithUiHandlers<DealUiHandlers> implements Deal
         return button;
     }
 
-    private Button createEditButton(final Deal deal) {
+    private Button createEditButton(final DealInfo deal) {
         Button button = new Button(constants.edit());
         button.addClickHandler(new ClickHandler() {
             @Override public void onClick(ClickEvent event) {
@@ -97,7 +96,7 @@ public class DealView extends ViewWithUiHandlers<DealUiHandlers> implements Deal
         return button;
     }
 
-    private Button createDeleteButton(final Deal deal) {
+    private Button createDeleteButton(final DealInfo deal) {
         final Button button = new Button(constants.delete());
         button.addClickHandler(new ClickHandler() {
             @Override public void onClick(ClickEvent event) {

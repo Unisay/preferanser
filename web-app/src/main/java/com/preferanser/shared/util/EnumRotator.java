@@ -22,6 +22,7 @@ package com.preferanser.shared.util;
 import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
 
+// TODO: unit test coverage
 public class EnumRotator<E extends Enum<E>> {
 
     private E[] values;

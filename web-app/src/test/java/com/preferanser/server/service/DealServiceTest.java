@@ -3,6 +3,7 @@ package com.preferanser.server.service;
 import com.google.common.base.Optional;
 import com.google.inject.Provider;
 import com.preferanser.server.dao.DealDao;
+import com.preferanser.server.dao.UserDao;
 import com.preferanser.server.entity.DealEntity;
 import com.preferanser.server.entity.UserEntity;
 import com.preferanser.server.exception.EntityNotFoundException;
@@ -32,9 +33,13 @@ public class DealServiceTest {
     private DealService dealService;
 
     private UserEntity user;
+    private UserEntity otherUser;
 
     @Mock
     private DealDao dealDao;
+
+    @Mock
+    private UserDao userDao;
 
     @Mock
     private AuthenticationService authenticationService;
@@ -42,22 +47,24 @@ public class DealServiceTest {
     @BeforeMethod
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
-        dealService = new DealService(dealDao, new Provider<AuthenticationService>() {
+        dealService = new DealService(dealDao, userDao, new Provider<AuthenticationService>() {
             @Override public AuthenticationService get() {
                 return authenticationService;
             }
         });
         user = new UserEntity();
-        user.setId("googleId");
+        user.setId(123L);
+        otherUser = new UserEntity();
+        otherUser.setId(234L);
     }
 
     @Test
     public void testImportSharedDeals() throws Exception {
         List<DealEntity> sharedDeals = newArrayList(
-            buildDealEntity(1L, "admin1", "name1", true),
-            buildDealEntity(2L, "admin2", "name2", true),
-            buildDealEntity(3L, "admin2", "name3", true),
-            buildDealEntity(4L, user.getId(), "name4", true) // skip importing own shared deal
+            buildDealEntity(1, 333, "name1", true),
+            buildDealEntity(2, 444, "name2", true),
+            buildDealEntity(3, 555, "name3", true),
+            buildDealEntity(4, user.getId(), "name4", true) // skip importing own shared deal
         );
 
         Set<DealEntity> importedDeals = newHashSet(
@@ -119,13 +126,13 @@ public class DealServiceTest {
     @Test(expectedExceptions = NoAuthenticatedUserException.class)
     public void testSave_NoAuthenticatedUser() throws Exception {
         when(authenticationService.getCurrentUserOrThrow()).thenThrow(new NoAuthenticatedUserException());
-        dealService.save(buildDealEntity(null, "admin1", "name1", false));
+        dealService.save(buildDealEntity(null, 111L, "name1", false));
     }
 
     @Test(expectedExceptions = NotAuthorizedUserException.class)
     public void testSave_NotAuthorizedUserUser() throws Exception {
         when(authenticationService.getCurrentUserOrThrow()).thenReturn(user);
-        dealService.save(buildDealEntity(null, "admin1", "name1", true));
+        dealService.save(buildDealEntity(null, 111L, "name1", true));
     }
 
     @Test(expectedExceptions = NoAuthenticatedUserException.class)
@@ -136,7 +143,7 @@ public class DealServiceTest {
 
     @Test(expectedExceptions = NotAuthorizedUserException.class)
     public void testDelete_NotAuthorized() throws Exception {
-        DealEntity deal = buildDealEntity(1L, "userId", "name1", false);
+        DealEntity deal = buildDealEntity(1, otherUser.getId(), "name1", false);
 
         when(authenticationService.getCurrentUserOrThrow()).thenReturn(user);
         when(dealDao.get(user, deal.getId())).thenReturn(Optional.of(deal));
@@ -160,12 +167,13 @@ public class DealServiceTest {
     @Test(expectedExceptions = NoAuthenticatedUserException.class)
     public void testUpdate_NoAuthenticatedUser() throws Exception {
         when(authenticationService.getCurrentUserOrThrow()).thenThrow(new NoAuthenticatedUserException());
-        dealService.update(buildDealEntity(1L, user.getId(), "name1", false));
+        dealService.update(buildDealEntity(1, user.getId(), "name1", false));
     }
 
     @Test(expectedExceptions = NotAuthorizedUserException.class)
     public void testUpdate_NotAuthorizedUser() throws Exception {
-        DealEntity deal = buildDealEntity(1L, "userId", "name1", false);
+        DealEntity deal = buildDealEntity(1, otherUser.getId(), "name1", false);
+
         when(authenticationService.getCurrentUserOrThrow()).thenReturn(user);
         when(dealDao.get(user, deal.getId())).thenReturn(Optional.of(deal));
 
@@ -176,7 +184,7 @@ public class DealServiceTest {
 
     @Test
     public void testUpdate() throws Exception {
-        DealEntity deal = buildDealEntity(1L, user.getId(), "name1", false);
+        DealEntity deal = buildDealEntity(1, user.getId(), "name1", false);
 
         when(authenticationService.getCurrentUserOrThrow()).thenReturn(user);
         when(dealDao.get(user, deal.getId())).thenReturn(Optional.of(deal));
@@ -184,15 +192,15 @@ public class DealServiceTest {
         dealService.update(deal);
 
         verify(authenticationService).getCurrentUserOrThrow();
-        DealEntity dealToUpdate = buildDealEntity(1L, user.getId(), "name1", false);
+        DealEntity dealToUpdate = buildDealEntity(1, user.getId(), "name1", false);
         verify(dealDao).get(user, deal.getId());
         verify(dealDao).save(dealToUpdate);
         verifyNoMoreInteractions(dealDao);
     }
 
     @Test
-    public void testGet() throws Exception {
-        DealEntity deal = buildDealEntity(1L, "admin1", "name1", true);
+    public void testGet_CurrentUser() throws Exception {
+        DealEntity deal = buildDealEntity(1, 123, "name1", true);
         when(dealDao.get(user, deal.getId())).thenReturn(Optional.of(deal));
 
         when(authenticationService.getCurrentUserOrThrow()).thenReturn(user);
@@ -202,6 +210,11 @@ public class DealServiceTest {
         verifyNoMoreInteractions(dealDao);
 
         assertReflectionEquals(deal, actualDeal);
+    }
+
+    @Test
+    public void testGet_User() throws Exception {
+        // TODO: unit-test
     }
 
     @Test(expectedExceptions = EntityNotFoundException.class)
@@ -220,9 +233,9 @@ public class DealServiceTest {
     @Test
     public void testGetCurrentUserOrSharedDeals_WithCurrentUser() throws Exception {
         List<DealEntity> userDeals = newArrayList(
-            buildDealEntity(1L, "admin1", "name1", true),
-            buildDealEntity(2L, "admin2", "name2", true),
-            buildDealEntity(3L, "admin2", "name3", true)
+            buildDealEntity(1, 111, "name1", true),
+            buildDealEntity(2, 222, "name2", true),
+            buildDealEntity(3, 333, "name3", true)
         );
 
         when(authenticationService.getCurrentUser()).thenReturn(Optional.of(user));
@@ -242,9 +255,9 @@ public class DealServiceTest {
     @Test
     public void testGetCurrentUserOrSharedDeals_NoCurrentUser() throws Exception {
         List<DealEntity> sharedDeals = newArrayList(
-            buildDealEntity(1L, "admin1", "name1", true),
-            buildDealEntity(2L, "admin2", "name2", true),
-            buildDealEntity(3L, "admin2", "name3", true)
+            buildDealEntity(1, 111, "name1", true),
+            buildDealEntity(2, 222, "name2", true),
+            buildDealEntity(3, 222, "name3", true)
         );
 
         when(authenticationService.getCurrentUser()).thenReturn(Optional.<UserEntity>absent());
@@ -261,15 +274,15 @@ public class DealServiceTest {
         assertReflectionEquals(sharedDeals, deals);
     }
 
-    private DealEntity buildDealEntity(Long dealId, String userId, String name, boolean shared) {
+    private DealEntity buildDealEntity(Number dealId, Number userId, String name, boolean shared) {
 
         DealEntity deal = new DealEntity();
-        deal.setId(dealId);
+        deal.setId(dealId == null ? null : dealId.longValue());
         deal.setShared(shared);
 
         if (userId != null) {
             UserEntity owner = new UserEntity();
-            owner.setId(userId);
+            owner.setId(userId.longValue());
             deal.setOwner(owner);
         }
 

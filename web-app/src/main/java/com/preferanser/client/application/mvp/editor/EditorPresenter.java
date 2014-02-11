@@ -37,6 +37,7 @@ import com.preferanser.client.application.mvp.TableView;
 import com.preferanser.client.application.mvp.editor.dialog.EditorDialogs;
 import com.preferanser.client.gwtp.LoggedInGatekeeper;
 import com.preferanser.client.gwtp.NameTokens;
+import com.preferanser.client.gwtp.PlaceRequestHelper;
 import com.preferanser.client.service.DealService;
 import com.preferanser.client.service.Response;
 import com.preferanser.shared.domain.*;
@@ -54,7 +55,8 @@ import java.util.logging.Logger;
 public class EditorPresenter extends Presenter<EditorPresenter.EditorView, EditorPresenter.Proxy> implements EditorUiHandlers, HasHandContracts {
 
     private static final Logger log = Logger.getLogger("EditorPresenter");
-    private Optional<Long> dealId = Optional.absent();
+    private Optional<Long> userIdOptional = Optional.absent();
+    private Optional<Long> dealIdOptional = Optional.absent();
 
     public interface EditorView extends HasUiHandlers<EditorUiHandlers>, TableView {}
 
@@ -106,31 +108,33 @@ public class EditorPresenter extends Presenter<EditorPresenter.EditorView, Edito
     @Override
     public void prepareFromRequest(PlaceRequest request) {
         super.prepareFromRequest(request);
-        String dealIdString = request.getParameter("deal", "");
-        if (!dealIdString.isEmpty()) {
-            try {
-                this.dealId = Optional.of(Long.parseLong(dealIdString));
-            } catch (NumberFormatException e) {
-                placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.DEALS).build());
-            }
-        } else {
-            dealId = Optional.absent();
-        }
+        PlaceRequestHelper helper = new PlaceRequestHelper(request);
+        userIdOptional = helper.parseLongParameter("user");
+        dealIdOptional = helper.parseLongParameter("deal");
     }
 
     @Override
     protected void onReveal() {
         super.onReveal();
-        if (dealId.isPresent()) {
-            dealService.getById(dealId.get(), new Response<Deal>() {
+        if (!dealIdOptional.isPresent()) {
+            initEditor();
+            refreshView();
+            return;
+        }
+        if (userIdOptional.isPresent()) {
+            dealService.getUserDeal(userIdOptional.get(), dealIdOptional.get(), new Response<Deal>() {
                 @Override public void onSuccess(Method method, Deal deal) {
                     editor.setDeal(deal);
                     refreshView();
                 }
             });
         } else {
-            initEditor();
-            refreshView();
+            dealService.getCurrentUserDeal(dealIdOptional.get(), new Response<Deal>() {
+                @Override public void onSuccess(Method method, Deal deal) {
+                    editor.setDeal(deal);
+                    refreshView();
+                }
+            });
         }
     }
 
@@ -168,7 +172,7 @@ public class EditorPresenter extends Presenter<EditorPresenter.EditorView, Edito
     public void save(String name, String description) {
         try {
             final Deal deal = editor.setName(name).setDescription(description).build();
-            if (dealId.isPresent()) {
+            if (dealIdOptional.isPresent()) {
                 // Update existing deal
                 dealService.update(deal.getId(), deal, new Response<Void>() { // TODO handle failures
                     @Override public void onSuccess(Method method, Void none) {

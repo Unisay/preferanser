@@ -16,11 +16,6 @@
         </sourceRoots>
       </configuration>
     </facet>
-    <facet type="google-app-engine" name="Google App Engine">
-      <configuration>
-        <sdk-home-path>$USER_HOME$/lib/appengine-java-sdk-1.8.9</sdk-home-path>
-      </configuration>
-    </facet>
     <facet type="gwt" name="GWT">
       <configuration>
         <setting name="additionalCompilerParameters" value="-Xss1024K -XX:MaxPermSize=256M" />
@@ -35,8 +30,13 @@
         </packaging>
       </configuration>
     </facet>
+    <facet type="google-app-engine" name="Google App Engine">
+      <configuration>
+        <sdk-home-path>$USER_HOME$/lib/appengine-java-sdk-1.8.9</sdk-home-path>
+      </configuration>
+    </facet>
   </component>
-  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_7" inherit-compiler-output="false">
+  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_6" inherit-compiler-output="false">
     <output url="file://$MODULE_DIR$/target/web-app-1.0-SNAPSHOT/WEB-INF/classes" />
     <output-test url="file://$MODULE_DIR$/target/test-classes" />
     <content url="file://$MODULE_DIR$">
@@ -54,6 +54,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" scope="TEST" name="Maven: com.google.appengine:appengine-tools-sdk:1.8.9" level="project" />
     <orderEntry type="module" module-name="web-app-laf" />
     <orderEntry type="library" name="Maven: com.google.guava:guava:15.0" level="project" />
     <orderEntry type="library" name="Maven: ch.qos.logback:logback-classic:1.0.13" level="project" />

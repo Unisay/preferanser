@@ -29,15 +29,15 @@ public class UserDaoTest {
 
     @Test
     public void testFindByGoogleId_NotFound() throws Exception {
-        assertFalse(userDao.findById("123").isPresent());
+        assertFalse(userDao.findByGoogleId("nonExistingGoogleId").isPresent());
     }
 
     @Test
     public void testFindByGoogleId() throws Exception {
-        UserEntity user = buildUser("googleId", true);
+        UserEntity user = buildUser(123L, true);
         userDao.save(user);
 
-        Optional<UserEntity> userEntityOptional = userDao.findById("googleId");
+        Optional<UserEntity> userEntityOptional = userDao.findByGoogleId(user.getGoogleId());
         assertTrue(userEntityOptional.isPresent());
         assertThat(userEntityOptional.get(), equalTo(user));
     }

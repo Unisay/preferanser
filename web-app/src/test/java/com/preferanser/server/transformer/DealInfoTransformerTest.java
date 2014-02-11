@@ -35,7 +35,7 @@ public class DealInfoTransformerTest {
 
     private DealEntity buildDealEntity() {
         UserEntity owner = new UserEntity();
-        owner.setId("ownerId");
+        owner.setId(999L);
 
         DealEntity entity = new DealEntity();
         entity.setId(1L);
@@ -47,6 +47,6 @@ public class DealInfoTransformerTest {
     }
 
     private DealInfo buildDealInfo() {
-        return new DealInfo(1L, "name", "description", "ownerId", Clock.getNow());
+        return new DealInfo(1L, "name", "description", 999L, Clock.getNow());
     }
 }

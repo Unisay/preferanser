@@ -1,14 +1,14 @@
 package com.preferanser.client.application.mvp.deal;
 
 import com.gwtplatform.mvp.client.UiHandlers;
-import com.preferanser.shared.domain.Deal;
+import com.preferanser.shared.domain.DealInfo;
 
 public interface DealUiHandlers extends UiHandlers {
 
-    void playDeal(Deal deal);
+    void playDeal(DealInfo deal);
 
-    void editDeal(Deal deal);
+    void editDeal(DealInfo deal);
 
-    void deleteDeal(Deal deal);
+    void deleteDeal(DealInfo deal);
 
 }

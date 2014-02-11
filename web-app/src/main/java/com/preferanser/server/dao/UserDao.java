@@ -35,9 +35,13 @@ public class UserDao extends BaseDao<UserEntity> {
         super(UserEntity.class, ofyFactory, validator);
     }
 
-    public Optional<UserEntity> findById(String id) {
+    public Optional<UserEntity> findById(Long id) {
         Key<UserEntity> key = Key.create(UserEntity.class, id);
         return get(key);
+    }
+
+    public Optional<UserEntity> findByGoogleId(String googleId) {
+        return Optional.fromNullable(query().filter("googleId", googleId).limit(1).first().now());
     }
 
 }

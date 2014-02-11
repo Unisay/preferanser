@@ -14,6 +14,7 @@ import java.util.Date;
 import java.util.List;
 
 import static com.preferanser.server.dao.DaoTestHelper.buildDealEntity;
+import static com.preferanser.server.dao.DaoTestHelper.buildUser;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.testng.Assert.assertFalse;
@@ -32,7 +33,7 @@ public class DealDaoTest {
     public void setUp() throws Exception {
         Injector injector = Guice.createInjector(new DaoTestModule());
         dealDao = injector.getInstance(DealDao.class);
-        user = DaoTestHelper.buildUser("userId", true);
+        user = DaoTestHelper.buildUser(123L, true);
     }
 
     @Test
@@ -78,12 +79,9 @@ public class DealDaoTest {
 
     @Test
     public void testGetUserDeals() throws Exception {
-        UserEntity user = new UserEntity();
-        user.setId("123456");
-
         DealEntity deal1 = buildDealEntity("deal1", new Date(1000), user);
         DealEntity deal2 = buildDealEntity("deal2", new Date(2000), user);
-        DealEntity deal3 = buildDealEntity("deal3", new Date(3000), "otherUserId");
+        DealEntity deal3 = buildDealEntity("deal3", new Date(3000), buildUser(234, false));
 
         dealDao.save(deal1, deal2, deal3);
 

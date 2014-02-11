@@ -18,11 +18,11 @@
         <processorPath useClasspath="true" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
+    <bytecodeTargetLevel target="1.7">
       <module name="backend-client" target="1.7" />
       <module name="web-app" target="1.7" />
       <module name="web-app-laf" target="1.7" />
-      <module name="web-test" target="1.6" />
+      <module name="web-test" target="1.7" />
     </bytecodeTargetLevel>
   </component>
 </project>

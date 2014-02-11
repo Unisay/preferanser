@@ -20,6 +20,7 @@
 package com.preferanser.server.dao.objectify;
 
 import com.google.common.base.Optional;
+import com.google.common.base.Preconditions;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.cmd.LoadType;
@@ -40,6 +41,7 @@ public class Ofy extends ObjectifyWrapper<Ofy, OfyFactory> {
     }
 
     public <T> Optional<T> get(Class<T> clazz, long id) {
+        Preconditions.checkArgument(id > 0, "Invalid entity id");
         return Optional.fromNullable(load().type(clazz).id(id).now());
     }
 }

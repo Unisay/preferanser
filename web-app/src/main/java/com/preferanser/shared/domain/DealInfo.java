@@ -10,17 +10,37 @@ public class DealInfo implements Serializable {
     private Long id;
     private String name;
     private String description;
-    private String ownerId;
+    private Long ownerId;
     private Date created;
 
     public DealInfo() {
     }
 
-    public DealInfo(Long id, String name, String description, String ownerId, Date created) {
+    public DealInfo(Long id, String name, String description, Long ownerId, Date created) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.ownerId = ownerId;
+        this.created = created;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setOwnerId(Long ownerId) {
+        this.ownerId = ownerId;
+    }
+
+    public void setCreated(Date created) {
         this.created = created;
     }
 
@@ -36,7 +56,7 @@ public class DealInfo implements Serializable {
         return description;
     }
 
-    public String getOwnerId() {
+    public Long getOwnerId() {
         return ownerId;
     }
 

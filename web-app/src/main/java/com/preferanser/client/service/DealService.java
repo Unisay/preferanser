@@ -21,6 +21,7 @@ package com.preferanser.client.service;
 
 import com.preferanser.client.restygwt.RequestId;
 import com.preferanser.shared.domain.Deal;
+import com.preferanser.shared.domain.DealInfo;
 import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.RestService;
 
@@ -50,11 +51,15 @@ public interface DealService extends RestService {
     @RequestId(SAVE_DEAL) void update(@PathParam("dealId") Long dealId, Deal deal, MethodCallback<Void> callback);
 
     @GET
-    @RequestId(LOAD_DEALS) void load(MethodCallback<List<Deal>> callback);
+    @RequestId(LOAD_DEALS) void load(MethodCallback<List<DealInfo>> callback);
 
     @GET
     @Path("/{dealId}")
-    @RequestId(GET_DEAL) void getById(@PathParam("dealId") Long dealId, MethodCallback<Deal> callback);
+    @RequestId(GET_DEAL) void getCurrentUserDeal(@PathParam("dealId") Long dealId, MethodCallback<Deal> callback);
+
+    @GET
+    @Path("/{userId}/{dealId}")
+    @RequestId(GET_DEAL) void getUserDeal(@PathParam("userId") Long userId, @PathParam("dealId") Long dealId, MethodCallback<Deal> callback);
 
     @DELETE
     @Path("/{dealId}")

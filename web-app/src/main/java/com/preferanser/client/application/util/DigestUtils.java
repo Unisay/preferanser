@@ -1,11 +1,11 @@
-package com.preferanser.client.application.mvp;
+package com.preferanser.client.application.util;
 
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.logging.Logger;
 
-public abstract class MD5Util {
+public abstract class DigestUtils {
 
     private static final Logger log = Logger.getLogger("EditorView");
 

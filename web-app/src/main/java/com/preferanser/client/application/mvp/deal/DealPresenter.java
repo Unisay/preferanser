@@ -1,6 +1,5 @@
 package com.preferanser.client.application.mvp.deal;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
@@ -17,7 +16,7 @@ import com.preferanser.client.application.mvp.main.MainPresenter;
 import com.preferanser.client.gwtp.NameTokens;
 import com.preferanser.client.service.DealService;
 import com.preferanser.client.service.Response;
-import com.preferanser.shared.domain.Deal;
+import com.preferanser.shared.domain.DealInfo;
 import com.preferanser.shared.domain.User;
 import org.fusesource.restygwt.client.Method;
 
@@ -32,7 +31,7 @@ public class DealPresenter extends Presenter<DealPresenter.DealView, DealPresent
     implements DealUiHandlers, DealEvent.DealCreatedHandler {
 
     public interface DealView extends View, HasUiHandlers<DealUiHandlers> {
-        void displayDeals(List<Deal> deals, boolean allowModifications);
+        void displayDeals(List<DealInfo> deals, boolean allowModifications);
     }
 
     @ProxyStandard
@@ -42,7 +41,7 @@ public class DealPresenter extends Presenter<DealPresenter.DealView, DealPresent
     private final DealService dealService;
     private final PlaceManager placeManager;
     private final User user;
-    private List<Deal> deals = Lists.newLinkedList();
+    private List<DealInfo> deals = Lists.newLinkedList();
 
     @Inject
     public DealPresenter(EventBus eventBus,
@@ -62,51 +61,32 @@ public class DealPresenter extends Presenter<DealPresenter.DealView, DealPresent
     @Override protected void onBind() {
         super.onBind();
         addRegisteredHandler(DealEvent.getType(), this);
-        dealService.load(new Response<List<Deal>>() {
-            @Override protected void handle(List<Deal> loadedDeals) {
-                deals.clear();
-                deals.addAll(loadedDeals);
-                refreshView();
-            }
-        });
+        loadDeals();
     }
 
     @Override public void onDealEvent(DealEvent event) {
-        Deal deal = event.getDeal();
-        checkNotNull(deal.getId(), "Deal has null id, can't add it!");
-
-        Optional<Deal> found = Optional.absent();
-        for (Deal theDeal : deals) {
-            if (theDeal.getId().equals(deal.getId())) {
-                found = Optional.of(theDeal);
-                break;
-            }
-        }
-
-        if (found.isPresent())
-            deals.remove(found.get());
-
-        deals.add(deal);
-        refreshView();
+        loadDeals();
     }
 
-    @Override public void playDeal(Deal deal) {
+    @Override public void playDeal(DealInfo dealInfo) {
         placeManager.revealPlace(
             new PlaceRequest.Builder()
                 .nameToken(NameTokens.PLAYER)
-                .with("deal", Long.toString(deal.getId()))
+                .with("user", dealInfo.getOwnerId().toString())
+                .with("deal", Long.toString(dealInfo.getId()))
                 .build());
     }
 
-    @Override public void editDeal(Deal deal) {
+    @Override public void editDeal(DealInfo dealInfo) {
         placeManager.revealPlace(
             new PlaceRequest.Builder()
                 .nameToken(NameTokens.EDITOR)
-                .with("deal", Long.toString(deal.getId()))
+                .with("user", dealInfo.getOwnerId().toString())
+                .with("deal", Long.toString(dealInfo.getId()))
                 .build());
     }
 
-    @Override public void deleteDeal(final Deal deal) {
+    @Override public void deleteDeal(final DealInfo deal) {
         Long dealId = deal.getId();
         checkNotNull(dealId, "Deal has null id, can't delete it!");
         dealService.delete(dealId, new Response<Void>() {
@@ -117,9 +97,19 @@ public class DealPresenter extends Presenter<DealPresenter.DealView, DealPresent
         });
     }
 
+    private void loadDeals() {
+        dealService.load(new Response<List<DealInfo>>() {
+            @Override protected void handle(List<DealInfo> loadedDeals) {
+                deals.clear();
+                deals.addAll(loadedDeals);
+                refreshView();
+            }
+        });
+    }
+
     private void refreshView() {
-        Collections.sort(deals, new Comparator<Deal>() {
-            @Override public int compare(Deal deal1, Deal deal2) {
+        Collections.sort(deals, new Comparator<DealInfo>() {
+            @Override public int compare(DealInfo deal1, DealInfo deal2) {
                 Date created1 = deal2.getCreated();
                 Date created2 = deal1.getCreated();
                 if (created1 == null)

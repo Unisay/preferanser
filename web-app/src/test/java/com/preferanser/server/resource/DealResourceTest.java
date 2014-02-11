@@ -34,6 +34,7 @@ public class DealResourceTest {
     @Mock
     private DealInfoTransformer dealInfoTransformer;
 
+    private long userId1;
     private long dealId1;
     private long dealId2;
     private Deal deal1;
@@ -51,6 +52,7 @@ public class DealResourceTest {
         MockitoAnnotations.initMocks(this);
 
         dealResource = new DealResource(dealService, dealTransformer, dealInfoTransformer);
+        userId1 = 111;
         dealId1 = 1;
         dealId2 = 2;
         deal1 = buildDeal(dealId1);
@@ -86,9 +88,9 @@ public class DealResourceTest {
 
     @Test
     public void testGetById() throws Exception {
-        when(dealService.get(dealId1)).thenReturn(dealEntity1);
-        Deal actualDeal = dealResource.getById(dealId1);
-        verify(dealService).get(dealId1);
+        when(dealService.get(userId1, dealId1)).thenReturn(dealEntity1);
+        Deal actualDeal = dealResource.getById(userId1, dealId1);
+        verify(dealService).get(userId1, dealId1);
         assertReflectionEquals(actualDeal, deal1);
     }
 
@@ -106,6 +108,11 @@ public class DealResourceTest {
         verify(dealService).delete(1L);
     }
 
+    @Test
+    public void testUpdate() throws Exception {
+        // TODO: unit-test
+    }
+
     private static Deal buildDeal(long id) {
         Deal deal = new Deal();
         deal.setId(id);
@@ -114,8 +121,8 @@ public class DealResourceTest {
         return deal;
     }
 
-    private static DealInfo buildDealInfo(long id) {
-        return new DealInfo(id, "name", "description", "userId", Clock.getNow());
+    private DealInfo buildDealInfo(long id) {
+        return new DealInfo(id, "name", "description", userId1, Clock.getNow());
     }
 
     private static DealEntity buildDealEntity(long id) {

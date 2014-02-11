@@ -9,7 +9,7 @@ import com.google.gwt.user.client.ui.*;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
 
-import static com.preferanser.client.application.mvp.MD5Util.md5Hex;
+import static com.preferanser.client.application.util.DigestUtils.md5Hex;
 
 public class AuthView extends ViewWithUiHandlers<AuthUiHandlers> implements AuthPresenter.MyView {
 

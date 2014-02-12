@@ -19,9 +19,13 @@
 
 package com.preferanser.server.exception;
 
-public class NoAuthenticatedUserException extends ServerException {
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response;
 
-    @Override public String getMessage() {
-        return "No authenticated user";
+public class ForbiddenException extends WebApplicationException {
+
+    public ForbiddenException() {
+        super(Response.Status.FORBIDDEN);
     }
+
 }

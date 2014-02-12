@@ -6,9 +6,9 @@ import com.preferanser.server.dao.DealDao;
 import com.preferanser.server.dao.UserDao;
 import com.preferanser.server.entity.DealEntity;
 import com.preferanser.server.entity.UserEntity;
-import com.preferanser.server.exception.EntityNotFoundException;
-import com.preferanser.server.exception.NoAuthenticatedUserException;
-import com.preferanser.server.exception.NotAuthorizedUserException;
+import com.preferanser.server.exception.ForbiddenException;
+import com.preferanser.server.exception.NotFoundException;
+import com.preferanser.server.exception.UnauthorizedException;
 import com.preferanser.shared.domain.*;
 import com.preferanser.shared.util.Clock;
 import com.preferanser.testng.ClockTestNGListener;
@@ -123,25 +123,25 @@ public class DealServiceTest {
         assertReflectionEquals(expectedSavedDeal, savedDeal);
     }
 
-    @Test(expectedExceptions = NoAuthenticatedUserException.class)
+    @Test(expectedExceptions = ForbiddenException.class)
     public void testSave_NoAuthenticatedUser() throws Exception {
-        when(authenticationService.getCurrentUserOrThrow()).thenThrow(new NoAuthenticatedUserException());
+        when(authenticationService.getCurrentUserOrThrow()).thenThrow(new ForbiddenException());
         dealService.save(buildDealEntity(null, 111L, "name1", false));
     }
 
-    @Test(expectedExceptions = NotAuthorizedUserException.class)
+    @Test(expectedExceptions = UnauthorizedException.class)
     public void testSave_NotAuthorizedUserUser() throws Exception {
         when(authenticationService.getCurrentUserOrThrow()).thenReturn(user);
         dealService.save(buildDealEntity(null, 111L, "name1", true));
     }
 
-    @Test(expectedExceptions = NoAuthenticatedUserException.class)
+    @Test(expectedExceptions = ForbiddenException.class)
     public void testDelete_NotAuthenticated() throws Exception {
-        when(authenticationService.getCurrentUserOrThrow()).thenThrow(new NoAuthenticatedUserException());
+        when(authenticationService.getCurrentUserOrThrow()).thenThrow(new ForbiddenException());
         dealService.delete(1L);
     }
 
-    @Test(expectedExceptions = NotAuthorizedUserException.class)
+    @Test(expectedExceptions = UnauthorizedException.class)
     public void testDelete_NotAuthorized() throws Exception {
         DealEntity deal = buildDealEntity(1, otherUser.getId(), "name1", false);
 
@@ -164,13 +164,13 @@ public class DealServiceTest {
         verify(dealDao).deleteAsync(deal);
     }
 
-    @Test(expectedExceptions = NoAuthenticatedUserException.class)
+    @Test(expectedExceptions = ForbiddenException.class)
     public void testUpdate_NoAuthenticatedUser() throws Exception {
-        when(authenticationService.getCurrentUserOrThrow()).thenThrow(new NoAuthenticatedUserException());
+        when(authenticationService.getCurrentUserOrThrow()).thenThrow(new ForbiddenException());
         dealService.update(buildDealEntity(1, user.getId(), "name1", false));
     }
 
-    @Test(expectedExceptions = NotAuthorizedUserException.class)
+    @Test(expectedExceptions = UnauthorizedException.class)
     public void testUpdate_NotAuthorizedUser() throws Exception {
         DealEntity deal = buildDealEntity(1, otherUser.getId(), "name1", false);
 
@@ -217,7 +217,7 @@ public class DealServiceTest {
         // TODO: unit-test
     }
 
-    @Test(expectedExceptions = EntityNotFoundException.class)
+    @Test(expectedExceptions = NotFoundException.class)
     public void testGet_NotFound() throws Exception {
         long dealId = 9999999L;
 

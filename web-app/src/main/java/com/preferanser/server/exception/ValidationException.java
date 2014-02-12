@@ -19,10 +19,12 @@
 
 package com.preferanser.server.exception;
 
-public class ValidationException extends ServerException {
+import javax.ws.rs.core.Response;
+
+public class ValidationException extends WebApplicationExceptionWithMessage {
 
     public ValidationException(String message) {
-        super(message);
+        super(Response.Status.BAD_REQUEST, message);
     }
 
 }

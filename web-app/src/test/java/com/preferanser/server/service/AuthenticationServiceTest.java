@@ -5,7 +5,7 @@ import com.google.common.base.Optional;
 import com.google.inject.Provider;
 import com.preferanser.server.dao.UserDao;
 import com.preferanser.server.entity.UserEntity;
-import com.preferanser.server.exception.NoAuthenticatedUserException;
+import com.preferanser.server.exception.ForbiddenException;
 import com.preferanser.shared.domain.User;
 import org.mockito.Matchers;
 import org.mockito.Mock;
@@ -154,7 +154,7 @@ public class AuthenticationServiceTest {
         verifyNoMoreInteractions(dealService);
     }
 
-    @Test(expectedExceptions = NoAuthenticatedUserException.class)
+    @Test(expectedExceptions = ForbiddenException.class)
     public void testGetCurrentUserOrThrow_NotLoggedIn() throws Exception {
         when(userService.isUserLoggedIn()).thenReturn(false);
         authenticationService.getCurrentUserOrThrow();

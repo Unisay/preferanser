@@ -7,8 +7,8 @@ import com.preferanser.server.dao.DealDao;
 import com.preferanser.server.dao.UserDao;
 import com.preferanser.server.entity.DealEntity;
 import com.preferanser.server.entity.UserEntity;
-import com.preferanser.server.exception.EntityNotFoundException;
-import com.preferanser.server.exception.NotAuthorizedUserException;
+import com.preferanser.server.exception.NotFoundException;
+import com.preferanser.server.exception.UnauthorizedException;
 import com.preferanser.shared.util.Clock;
 
 import java.util.List;
@@ -66,14 +66,14 @@ public class DealService {
         if (userEntityOptional.isPresent()) {
             return get(userEntityOptional.get(), dealId);
         } else {
-            throw new EntityNotFoundException();
+            throw new NotFoundException();
         }
     }
 
     private DealEntity get(UserEntity owner, Long dealId) {
         Optional<DealEntity> dealEntityOptional = dealDao.get(owner, dealId);
         if (!dealEntityOptional.isPresent())
-            throw new EntityNotFoundException();
+            throw new NotFoundException();
         return dealEntityOptional.get();
     }
 
@@ -81,7 +81,7 @@ public class DealService {
         UserEntity currentUser = authenticationServiceProvider.get().getCurrentUserOrThrow();
 
         if (deal.isShared() && !currentUser.getAdmin())
-            throw new NotAuthorizedUserException("Only admins can create shared deals");
+            throw new UnauthorizedException("Only admins can create shared deals");
 
         deal.setId(null);
         deal.setOwner(currentUser);
@@ -97,10 +97,10 @@ public class DealService {
 
         Optional<DealEntity> maybeDeal = dealDao.get(currentUser, deal.getId());
         if (!maybeDeal.isPresent())
-            throw new EntityNotFoundException();
+            throw new NotFoundException();
 
         if (!currentUser.getId().equals(maybeDeal.get().getOwner().getId()))
-            throw new NotAuthorizedUserException();
+            throw new UnauthorizedException();
 
         deal.setOwner(currentUser);
         deal.setCreated(Clock.getNow());
@@ -112,10 +112,10 @@ public class DealService {
 
         Optional<DealEntity> maybeDeal = dealDao.get(currentUser, dealId);
         if (!maybeDeal.isPresent())
-            throw new EntityNotFoundException();
+            throw new NotFoundException();
 
         if (!currentUser.getId().equals(maybeDeal.get().getOwner().getId()))
-            throw new NotAuthorizedUserException();
+            throw new UnauthorizedException();
 
         dealDao.deleteAsync(maybeDeal.get());
     }

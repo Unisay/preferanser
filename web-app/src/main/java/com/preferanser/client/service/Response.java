@@ -22,25 +22,16 @@ package com.preferanser.client.service;
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.MethodCallback;
 
-import java.util.logging.Logger;
-
 /**
- * Service response adapter
- *
- * @author Yuriy Lazarev <ylazarev@groupon.com>
+ * Service response adapter.
  */
 public class Response<T> implements MethodCallback<T> {
-
-    private static final Logger log = Logger.getLogger("Response");
-
-    @Override public void onFailure(Method method, Throwable exception) {
-        log.severe("Backend exception: " + exception.getMessage());
-    }
 
     @Override public void onSuccess(Method method, T response) {
         handle(response);
     }
 
-    protected void handle(T response) {
-    }
+    @Override public void onFailure(Method method, Throwable exception) { }
+
+    protected void handle(T response) { }
 }

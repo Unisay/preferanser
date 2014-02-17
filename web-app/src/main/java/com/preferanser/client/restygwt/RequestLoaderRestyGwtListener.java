@@ -1,9 +1,13 @@
 package com.preferanser.client.restygwt;
 
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.http.client.Response;
 import com.google.inject.Inject;
 import com.preferanser.client.application.widgets.RequestLoader;
+import org.fusesource.restygwt.client.Method;
 
-public class RequestLoaderRestyGwtListener extends RestyGwtRequestIdListenerAdapter {
+public class RequestLoaderRestyGwtListener extends RestyGwtRequestListenerAdapter {
 
     private final RequestLoader requestLoader;
 
@@ -12,15 +16,19 @@ public class RequestLoaderRestyGwtListener extends RestyGwtRequestIdListenerAdap
         this.requestLoader = requestLoader;
     }
 
-    @Override protected void beforeRequestIdSent(RequestIdValue requestIdValue) {
+    @Override public void beforeRequestSent(Method method, RequestBuilder builder) {
         requestLoader.startLoader();
     }
 
-    @Override protected void beforeResponseHandled(RequestIdValue requestIdValue) {
+    @Override public void afterResponseHandled(Method method, Request request, Response response) {
         requestLoader.stopLoader();
     }
 
-    @Override protected void beforeRequestIdErrorHandled(RequestIdValue requestIdValue) {
+    @Override public void afterClientErrorHandled(Method method, Request request, Response response) {
+        requestLoader.stopLoader();
+    }
+
+    @Override public void afterServerErrorHandled(Method method, Request request, Throwable exception) {
         requestLoader.stopLoader();
     }
 

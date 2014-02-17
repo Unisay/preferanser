@@ -66,14 +66,14 @@ public class DealService {
         if (userEntityOptional.isPresent()) {
             return get(userEntityOptional.get(), dealId);
         } else {
-            throw new NotFoundException();
+            throw new NotFoundException(DealEntity.class, dealId);
         }
     }
 
     private DealEntity get(UserEntity owner, Long dealId) {
         Optional<DealEntity> dealEntityOptional = dealDao.get(owner, dealId);
         if (!dealEntityOptional.isPresent())
-            throw new NotFoundException();
+            throw new NotFoundException(DealEntity.class, dealId);
         return dealEntityOptional.get();
     }
 
@@ -97,10 +97,10 @@ public class DealService {
 
         Optional<DealEntity> maybeDeal = dealDao.get(currentUser, deal.getId());
         if (!maybeDeal.isPresent())
-            throw new NotFoundException();
+            throw new NotFoundException(DealEntity.class, deal.getId());
 
         if (!currentUser.getId().equals(maybeDeal.get().getOwner().getId()))
-            throw new UnauthorizedException();
+            throw new UnauthorizedException("Can't update deal of other user");
 
         deal.setOwner(currentUser);
         deal.setCreated(Clock.getNow());
@@ -112,10 +112,10 @@ public class DealService {
 
         Optional<DealEntity> maybeDeal = dealDao.get(currentUser, dealId);
         if (!maybeDeal.isPresent())
-            throw new NotFoundException();
+            throw new NotFoundException(DealEntity.class, dealId);
 
         if (!currentUser.getId().equals(maybeDeal.get().getOwner().getId()))
-            throw new UnauthorizedException();
+            throw new UnauthorizedException("Can't delete deal of other user");
 
         dealDao.deleteAsync(maybeDeal.get());
     }

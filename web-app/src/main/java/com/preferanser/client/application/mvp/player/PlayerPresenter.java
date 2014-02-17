@@ -20,7 +20,6 @@
 package com.preferanser.client.application.mvp.player;
 
 import com.google.common.base.Optional;
-import com.google.common.base.Preconditions;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.HasUiHandlers;
@@ -30,6 +29,7 @@ import com.gwtplatform.mvp.client.annotations.ProxyStandard;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
+import com.gwtplatform.mvp.client.proxy.ResetPresentersEvent;
 import com.preferanser.client.application.ApplicationPresenter;
 import com.preferanser.client.application.mvp.DealEvent;
 import com.preferanser.client.application.mvp.TableView;
@@ -89,31 +89,29 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
         PlaceRequestHelper helper = new PlaceRequestHelper(request);
         userIdOptional = helper.parseLongParameter("user");
         dealIdOptional = helper.parseLongParameter("deal");
-    }
-
-    @Override protected void onReveal() {
-        super.onReveal();
-        Preconditions.checkState(dealIdOptional.isPresent(), "DealId is not initialized from URL parameter 'deal'");
-        prepositionCards();
-        if (gameOptional.isPresent() && dealIdOptional.get().equals(gameOptional.get().getId())) {
-            refreshView();
-        } else {
+        if (!gameOptional.isPresent() || !dealIdOptional.get().equals(gameOptional.get().getId())) {
             if (userIdOptional.isPresent()) {
                 dealService.getUserDeal(userIdOptional.get(), dealIdOptional.get(), new Response<Deal>() {
                     @Override public void onSuccess(Method method, Deal deal) {
                         gameOptional = Optional.of(new Player(deal));
-                        refreshView();
+                        ResetPresentersEvent.fire(PlayerPresenter.this);
                     }
                 });
             } else {
                 dealService.getCurrentUserDeal(dealIdOptional.get(), new Response<Deal>() {
                     @Override public void onSuccess(Method method, Deal deal) {
                         gameOptional = Optional.of(new Player(deal));
-                        refreshView();
+                        ResetPresentersEvent.fire(PlayerPresenter.this);
                     }
                 });
             }
         }
+    }
+
+    @Override protected void onReset() {
+        super.onReset();
+        prepositionCards();
+        refreshView();
     }
 
     @Override public void onDealEvent(DealEvent dealEvent) {
@@ -179,17 +177,21 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
     }
 
     private void refreshView() {
-        log.finest("Refreshing view...");
-        Player player = gameOptional.get();
-        PlayerView view = getView();
-        view.displayDealInfo(player.getName(), player.getDescription());
-        view.displayTurn(player.getTurn());
-        view.displayCards(player.getHandCards(), player.getCenterCards(), player.getWidow());
-        view.displaySluffButton(player.isTrickClosed());
-        view.displayContracts(player.getHandContracts());
-        view.displayHandTricks(player.getHandTrickCounts());
-        view.displayTurnNavigation(player.hasUndoTurns(), player.hasRedoTurns());
-        view.disableCards(player.getDisabledCards());
+        if (gameOptional.isPresent()) {
+            log.finest("Refreshing view...");
+            Player player = gameOptional.get();
+            PlayerView view = getView();
+            view.displayDealInfo(player.getName(), player.getDescription());
+            view.displayTurn(player.getTurn());
+            view.displayCards(player.getHandCards(), player.getCenterCards(), player.getWidow());
+            view.displaySluffButton(player.isTrickClosed());
+            view.displayContracts(player.getHandContracts());
+            view.displayHandTricks(player.getHandTrickCounts());
+            view.displayTurnNavigation(player.hasUndoTurns(), player.hasRedoTurns());
+            view.disableCards(player.getDisabledCards());
+        } else {
+            log.fine("PlayerPresenter.refreshView() skipped as gameOptional is not present");
+        }
     }
 
 }

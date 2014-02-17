@@ -6,7 +6,6 @@ import com.preferanser.server.dao.DealDao;
 import com.preferanser.server.dao.UserDao;
 import com.preferanser.server.entity.DealEntity;
 import com.preferanser.server.entity.UserEntity;
-import com.preferanser.server.exception.ForbiddenException;
 import com.preferanser.server.exception.NotFoundException;
 import com.preferanser.server.exception.UnauthorizedException;
 import com.preferanser.shared.domain.*;
@@ -123,9 +122,9 @@ public class DealServiceTest {
         assertReflectionEquals(expectedSavedDeal, savedDeal);
     }
 
-    @Test(expectedExceptions = ForbiddenException.class)
+    @Test(expectedExceptions = UnauthorizedException.class)
     public void testSave_NoAuthenticatedUser() throws Exception {
-        when(authenticationService.getCurrentUserOrThrow()).thenThrow(new ForbiddenException());
+        when(authenticationService.getCurrentUserOrThrow()).thenThrow(new UnauthorizedException("Authentication required"));
         dealService.save(buildDealEntity(null, 111L, "name1", false));
     }
 
@@ -135,9 +134,9 @@ public class DealServiceTest {
         dealService.save(buildDealEntity(null, 111L, "name1", true));
     }
 
-    @Test(expectedExceptions = ForbiddenException.class)
+    @Test(expectedExceptions = UnauthorizedException.class)
     public void testDelete_NotAuthenticated() throws Exception {
-        when(authenticationService.getCurrentUserOrThrow()).thenThrow(new ForbiddenException());
+        when(authenticationService.getCurrentUserOrThrow()).thenThrow(new UnauthorizedException("Authentication required"));
         dealService.delete(1L);
     }
 
@@ -164,9 +163,9 @@ public class DealServiceTest {
         verify(dealDao).deleteAsync(deal);
     }
 
-    @Test(expectedExceptions = ForbiddenException.class)
+    @Test(expectedExceptions = UnauthorizedException.class)
     public void testUpdate_NoAuthenticatedUser() throws Exception {
-        when(authenticationService.getCurrentUserOrThrow()).thenThrow(new ForbiddenException());
+        when(authenticationService.getCurrentUserOrThrow()).thenThrow(new UnauthorizedException("Authentication required"));
         dealService.update(buildDealEntity(1, user.getId(), "name1", false));
     }
 

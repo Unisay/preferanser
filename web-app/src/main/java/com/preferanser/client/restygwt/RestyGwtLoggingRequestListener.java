@@ -32,12 +32,12 @@ public class RestyGwtLoggingRequestListener extends RestyGwtRequestListenerAdapt
     }
 
     @Override
-    public void beforeErrorHandled(Method method, Request request, Throwable exception) {
+    public void beforeServerErrorHandled(Method method, Request request, Throwable exception) {
         log.finest("Before error handled");
     }
 
     @Override
-    public void afterErrorHandled(Method method, Request request, Throwable exception) {
+    public void afterServerErrorHandled(Method method, Request request, Throwable exception) {
         log.finest("After error handled");
     }
 }

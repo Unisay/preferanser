@@ -66,12 +66,20 @@ public abstract class RestyGwtRequestIdListenerAdapter implements RestyGwtReques
             afterResponseHandled(requestIdValue);
     }
 
+    @Override
+    public void beforeClientErrorHandled(Method method, Request request, Response response) {
+    }
+
+    @Override
+    public void afterClientErrorHandled(Method method, Request request, Response response) {
+    }
+
     @SuppressWarnings("unused")
     protected void afterResponseHandled(RequestIdValue requestIdValue) {
     }
 
     @Override
-    public final void beforeErrorHandled(Method method, Request request, Throwable exception) {
+    public final void beforeServerErrorHandled(Method method, Request request, Throwable exception) {
         RequestIdValue requestIdValue = getRequestIdValue(method);
         if (requestIds.contains(requestIdValue))
             beforeRequestIdErrorHandled(requestIdValue);
@@ -82,7 +90,7 @@ public abstract class RestyGwtRequestIdListenerAdapter implements RestyGwtReques
     }
 
     @Override
-    public final void afterErrorHandled(Method method, Request request, Throwable exception) {
+    public final void afterServerErrorHandled(Method method, Request request, Throwable exception) {
         RequestIdValue requestIdValue = getRequestIdValue(method);
         if (requestIds.contains(requestIdValue))
             afterRequestIdErrorHandled(requestIdValue);

@@ -35,9 +35,9 @@ import com.preferanser.client.application.widgets.DialogBoxRequestLoader;
 import com.preferanser.client.application.widgets.RequestLoader;
 import com.preferanser.client.gwtp.AuthBootstrapper;
 import com.preferanser.client.gwtp.NameTokens;
+import com.preferanser.client.restygwt.ErrorHandlingRestyGwtRequestListener;
 import com.preferanser.client.restygwt.RequestLoaderRestyGwtListener;
 import com.preferanser.client.restygwt.RestyGwtDispatcher;
-import com.preferanser.client.restygwt.RestyGwtLoggingRequestListener;
 import com.preferanser.client.restygwt.RestyGwtRequestListener;
 import com.preferanser.shared.domain.Editor;
 import com.preferanser.shared.domain.User;
@@ -59,8 +59,9 @@ public class ClientModule extends AbstractPresenterModule {
         bind(User.class).asEagerSingleton();
 
         GinMultibinder<RestyGwtRequestListener> requestListenerMultibinder = GinMultibinder.newSetBinder(binder(), RestyGwtRequestListener.class);
-        requestListenerMultibinder.addBinding().to(RestyGwtLoggingRequestListener.class);
+//        requestListenerMultibinder.addBinding().to(RestyGwtLoggingRequestListener.class);
         requestListenerMultibinder.addBinding().to(RequestLoaderRestyGwtListener.class);
+        requestListenerMultibinder.addBinding().to(ErrorHandlingRestyGwtRequestListener.class);
 
 //        bind(RequestLoader.class).to(StatusMessageRequestLoader.class).in(Singleton.class);
         bind(RequestLoader.class).to(DialogBoxRequestLoader.class).in(Singleton.class);

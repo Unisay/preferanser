@@ -20,12 +20,16 @@
 package com.preferanser.server.exception;
 
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 public class NotFoundException extends WebApplicationException {
 
-    public NotFoundException() {
-        super(Response.Status.NOT_FOUND);
+    public NotFoundException(String message) {
+        super(Response.status(Response.Status.NOT_FOUND).type(MediaType.TEXT_PLAIN_TYPE).entity(message).build());
     }
 
+    public NotFoundException(Class<?> aClass, Long id) {
+        this(String.format("%s not found by id %d", aClass.getSimpleName(), id));
+    }
 }

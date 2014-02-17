@@ -61,16 +61,9 @@ public abstract class BaseDao<T extends Entity> {
     }
 
     public T save(T object) {
-        Set<ConstraintViolation<T>> constraintViolations = validator.validate(object);
-        if (CollectionUtils.isEmpty(constraintViolations)) {
-            ofy().save().entity(object).now();
-            return object;
-        } else {
-            for (ConstraintViolation<T> constraintViolation : constraintViolations)
-                logger.warn(constraintViolation.getMessage());
-            String message = String.format("Entity of type '%s' failed validation on save()", clazz.getSimpleName());
-            throw new ValidationException(message);
-        }
+        validate(object);
+        ofy().save().entity(object).now();
+        return object;
     }
 
     @SafeVarargs public final Collection<T> save(T... entities) {
@@ -78,7 +71,20 @@ public abstract class BaseDao<T extends Entity> {
     }
 
     public Collection<T> save(Iterable<T> entities) {
+        for (T entity : entities) {
+            validate(entity);
+        }
         return ofy().save().entities(entities).now().values();
+    }
+
+    protected void validate(T object) {
+        Set<ConstraintViolation<T>> constraintViolations = validator.validate(object);
+        if (!CollectionUtils.isEmpty(constraintViolations)) {
+            for (ConstraintViolation<T> constraintViolation : constraintViolations)
+                logger.warn(constraintViolation.getMessage());
+            String message = String.format("Entity of type '%s' failed validation on save()", clazz.getSimpleName());
+            throw new ValidationException(message);
+        }
     }
 
     protected Optional<T> get(Key<T> key) {

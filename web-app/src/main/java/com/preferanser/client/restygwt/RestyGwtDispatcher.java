@@ -47,21 +47,30 @@ public class RestyGwtDispatcher implements Dispatcher {
         builder.setCallback(new RequestCallback() {
             @Override
             public void onResponseReceived(Request request, Response response) {
-                for (RestyGwtRequestListener requestListener : requestListeners)
-                    requestListener.beforeResponseHandled(method, request, response);
-                callback.onResponseReceived(request, response);
-                for (RestyGwtRequestListener requestListener : requestListeners)
-                    requestListener.afterResponseHandled(method, request, response);
+                if (response.getStatusCode() == Response.SC_OK) {
+                    for (RestyGwtRequestListener requestListener : requestListeners)
+                        requestListener.beforeResponseHandled(method, request, response);
+                    callback.onResponseReceived(request, response);
+                    for (RestyGwtRequestListener requestListener : requestListeners)
+                        requestListener.afterResponseHandled(method, request, response);
+                } else {
+                    for (RestyGwtRequestListener requestListener : requestListeners)
+                        requestListener.beforeClientErrorHandled(method, request, response);
+                    callback.onResponseReceived(request, response);
+                    for (RestyGwtRequestListener requestListener : requestListeners)
+                        requestListener.afterClientErrorHandled(method, request, response);
+                }
             }
 
             @Override
             public void onError(Request request, Throwable exception) {
                 for (RestyGwtRequestListener requestListener : requestListeners)
-                    requestListener.beforeErrorHandled(method, request, exception);
+                    requestListener.beforeServerErrorHandled(method, request, exception);
                 callback.onError(request, exception);
                 for (RestyGwtRequestListener requestListener : requestListeners)
-                    requestListener.afterErrorHandled(method, request, exception);
+                    requestListener.afterServerErrorHandled(method, request, exception);
             }
+
         });
 
         for (RestyGwtRequestListener requestListener : requestListeners)

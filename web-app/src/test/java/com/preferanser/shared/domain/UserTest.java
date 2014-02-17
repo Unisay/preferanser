@@ -49,7 +49,7 @@ public class UserTest {
         assertThat(user, not(equalTo(buildUser())));
     }
 
-    @DataProvider(name = "user-properties", parallel = true)
+    @DataProvider(name = "user-properties")
     public Object[][] data() {
         return new Object[][]{
             {false, "user@email.com", true, "loginUrl", "logoutUrl", "nickname"},

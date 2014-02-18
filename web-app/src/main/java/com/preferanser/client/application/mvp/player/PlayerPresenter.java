@@ -89,22 +89,25 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
         PlaceRequestHelper helper = new PlaceRequestHelper(request);
         userIdOptional = helper.parseLongParameter("user");
         dealIdOptional = helper.parseLongParameter("deal");
-        if (!gameOptional.isPresent() || !dealIdOptional.get().equals(gameOptional.get().getId())) {
-            if (userIdOptional.isPresent()) {
-                dealService.getUserDeal(userIdOptional.get(), dealIdOptional.get(), new Response<Deal>() {
-                    @Override public void onSuccess(Method method, Deal deal) {
-                        gameOptional = Optional.of(new Player(deal));
-                        ResetPresentersEvent.fire(PlayerPresenter.this);
-                    }
-                });
-            } else {
-                dealService.getCurrentUserDeal(dealIdOptional.get(), new Response<Deal>() {
-                    @Override public void onSuccess(Method method, Deal deal) {
-                        gameOptional = Optional.of(new Player(deal));
-                        ResetPresentersEvent.fire(PlayerPresenter.this);
-                    }
-                });
-            }
+    }
+
+    @Override protected void onReveal() {
+        super.onReveal();
+        gameOptional = Optional.absent();
+        if (userIdOptional.isPresent()) {
+            dealService.getUserDeal(userIdOptional.get(), dealIdOptional.get(), new Response<Deal>() {
+                @Override public void onSuccess(Method method, Deal deal) {
+                    gameOptional = Optional.of(new Player(deal));
+                    ResetPresentersEvent.fire(PlayerPresenter.this);
+                }
+            });
+        } else {
+            dealService.getCurrentUserDeal(dealIdOptional.get(), new Response<Deal>() {
+                @Override public void onSuccess(Method method, Deal deal) {
+                    gameOptional = Optional.of(new Player(deal));
+                    ResetPresentersEvent.fire(PlayerPresenter.this);
+                }
+            });
         }
     }
 

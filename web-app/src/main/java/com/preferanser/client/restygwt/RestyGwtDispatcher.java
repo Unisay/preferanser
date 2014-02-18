@@ -16,6 +16,13 @@ public class RestyGwtDispatcher implements Dispatcher {
     @SuppressWarnings("unused") // required by RestyGWT
     public static final RestyGwtDispatcher INSTANCE = new RestyGwtDispatcher();
 
+    private static final List<Integer> SUCCESS_CODES = newArrayList(
+        Response.SC_OK,
+        Response.SC_ACCEPTED,
+        Response.SC_CREATED,
+        Response.SC_NO_CONTENT
+    );
+
     private List<RestyGwtRequestListener> requestListeners;
 
     /**
@@ -47,7 +54,7 @@ public class RestyGwtDispatcher implements Dispatcher {
         builder.setCallback(new RequestCallback() {
             @Override
             public void onResponseReceived(Request request, Response response) {
-                if (response.getStatusCode() == Response.SC_OK) {
+                if (SUCCESS_CODES.contains(response.getStatusCode())) {
                     for (RestyGwtRequestListener requestListener : requestListeners)
                         requestListener.beforeResponseHandled(method, request, response);
                     callback.onResponseReceived(request, response);

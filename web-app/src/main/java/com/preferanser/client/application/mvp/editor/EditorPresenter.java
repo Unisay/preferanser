@@ -116,6 +116,7 @@ public class EditorPresenter extends Presenter<EditorPresenter.EditorView, Edito
     @Override
     protected void onReveal() {
         super.onReveal();
+        prepositionCards();
         if (!dealIdOptional.isPresent()) {
             initEditor();
             refreshView();
@@ -197,6 +198,10 @@ public class EditorPresenter extends Presenter<EditorPresenter.EditorView, Edito
 
     private void revealPlace(String place) {
         placeManager.revealPlace(new PlaceRequest.Builder().nameToken(place).build());
+    }
+
+    private void prepositionCards() {
+        getView().prepositionCards(Card.values());
     }
 
     private void refreshView() {

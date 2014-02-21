@@ -131,6 +131,11 @@ public class TablePanel extends Composite {
         centerTabPanel.selectTab(0);
     }
 
+    @UiChild
+    public void addWidowChild(Widget widget) {
+        widowPanel.add(widget);
+    }
+
     public void addHandCardsToCenter(Collection<HandCard> handCards) {
         for (HandCard handCard : handCards)
             centerCardsPanel.add(handCard.getCardWidget());

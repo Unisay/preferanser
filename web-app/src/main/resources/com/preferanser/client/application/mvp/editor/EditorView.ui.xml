@@ -59,11 +59,19 @@
             height: 265px;
         }
 
+        .raspassOption {
+            margin: 1em auto;
+        }
+
+        .raspassOptionLabel {
+            font-size: 90%;
+        }
+
     </ui:style>
     <g:FlowPanel addStyleNames="{resources.css.layoutCenter}">
 
         <g:FlowPanel debugId="buttons-panel" addStyleNames="{style.buttonsPanel}">
-        <g:Button ui:field="saveButton" text="{constants.save}" debugId="save"/>
+            <g:Button ui:field="saveButton" text="{constants.save}" debugId="save"/>
             <g:Button ui:field="cancelButton" text="{constants.cancel}" debugId="cancel"/>
             <g:Button ui:field="resetButton" text="{constants.reset}" debugId="reset"/>
         </g:FlowPanel>
@@ -125,6 +133,13 @@
                     </g:FlowPanel>
                 </g:FlowPanel>
             </p:tab>
+
+            <p:widowchild>
+                <g:HorizontalPanel addStyleNames="{editorStyle.raspassOption}">
+                    <g:CheckBox ui:field="widowRaspassOption"/>
+                    <g:InlineLabel text="{constants.widowRaspassOption}" addStyleNames="{editorStyle.raspassOptionLabel}"/>
+                </g:HorizontalPanel>
+            </p:widowchild>
 
         </p:TablePanel>
 

@@ -54,6 +54,8 @@ public class EditorView extends BaseTableView<EditorUiHandlers> implements Edito
     @UiField TextBox dealName;
     @UiField TextArea dealDescription;
 
+    @UiField CheckBox widowRaspassOption;
+
     @Inject
     public EditorView(Binder uiBinder, PreferanserResources resources, PreferanserConstants constants, I18nHelper i18nHelper) {
         super(constants, resources, i18nHelper);
@@ -122,6 +124,10 @@ public class EditorView extends BaseTableView<EditorUiHandlers> implements Edito
 
     @UiHandler("westContractAnchor") void onWestContractLinkClicked(@SuppressWarnings("unused") ClickEvent event) {
         getUiHandlers().chooseContract(Hand.WEST);
+    }
+
+    @UiHandler("widowRaspassOption") void onRaspassOptionClicked(@SuppressWarnings("unused") ClickEvent event) {
+        getUiHandlers().setRaspassOption(widowRaspassOption.getValue());
     }
 
     @Override protected Logger getLog() {

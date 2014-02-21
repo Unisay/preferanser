@@ -195,4 +195,5 @@ public interface PreferanserConstants extends ConstantsWithLookup {
 
     @DefaultStringValue("Создать расклад") String createDeal();
 
+    @DefaultStringValue("На распасах первые два хода из прикупа") String widowRaspassOption();
 }

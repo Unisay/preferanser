@@ -87,8 +87,7 @@ public class EditorPresenter extends Presenter<EditorPresenter.EditorView, Edito
         initEditor();
     }
 
-    @Override
-    public void reset() {
+    @Override public void reset() {
         initEditor();
         refreshView();
     }
@@ -105,16 +104,14 @@ public class EditorPresenter extends Presenter<EditorPresenter.EditorView, Edito
         editor.putCards(Hand.SOUTH, Card.values());
     }
 
-    @Override
-    public void prepareFromRequest(PlaceRequest request) {
+    @Override public void prepareFromRequest(PlaceRequest request) {
         super.prepareFromRequest(request);
         PlaceRequestHelper helper = new PlaceRequestHelper(request);
         userIdOptional = helper.parseLongParameter("user");
         dealIdOptional = helper.parseLongParameter("deal");
     }
 
-    @Override
-    protected void onReveal() {
+    @Override protected void onReveal() {
         super.onReveal();
         prepositionCards();
         if (!dealIdOptional.isPresent()) {
@@ -139,19 +136,16 @@ public class EditorPresenter extends Presenter<EditorPresenter.EditorView, Edito
         }
     }
 
-    @Override
-    public void chooseContract(Hand hand) {
+    @Override public void chooseContract(Hand hand) {
         editorDialogs.showContractDialog(hand);
     }
 
-    @Override
-    public void chooseTurn(Hand hand) {
+    @Override public void chooseTurn(Hand hand) {
         editor.setFirstTurn(hand);
         getView().displayTurn(editor.getFirstTurn());
     }
 
-    @Override
-    public void changeCardLocation(Card card, Optional<TableLocation> maybeNewLocation) {
+    @Override public void changeCardLocation(Card card, Optional<TableLocation> maybeNewLocation) {
         if (maybeNewLocation.isPresent()) {
             try {
                 editor.moveCard(card, maybeNewLocation.get());
@@ -162,15 +156,13 @@ public class EditorPresenter extends Presenter<EditorPresenter.EditorView, Edito
         refreshCards();
     }
 
-    @Override
-    public boolean setHandContract(Hand hand, Contract contract) {
+    @Override public boolean setHandContract(Hand hand, Contract contract) {
         editor.setHandContract(hand, contract);
         refreshContracts();
         return true;
     }
 
-    @Override
-    public void save(String name, String description) {
+    @Override public void save(String name, String description) {
         try {
             final Deal deal = editor.setName(name).setDescription(description).build();
             if (dealIdOptional.isPresent()) {
@@ -194,6 +186,13 @@ public class EditorPresenter extends Presenter<EditorPresenter.EditorView, Edito
         } catch (EditorException e) {
             editorDialogs.showValidationDialog(e.getBuilderErrors());
         }
+    }
+
+    @Override public void setRaspassOption(boolean checked) {
+        if (checked)
+            editor.setFourPlayers();
+        else
+            editor.setThreePlayers();
     }
 
     private void revealPlace(String place) {

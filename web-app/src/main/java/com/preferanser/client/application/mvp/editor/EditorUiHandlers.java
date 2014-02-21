@@ -55,4 +55,5 @@ public interface EditorUiHandlers extends TableUiHandlers {
      */
     void reset();
 
+    void setRaspassOption(boolean checked);
 }

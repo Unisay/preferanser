@@ -49,9 +49,6 @@ import java.util.Date;
 import java.util.logging.Logger;
 
 
-/**
- * Table presenter
- */
 public class EditorPresenter extends Presenter<EditorPresenter.EditorView, EditorPresenter.Proxy> implements EditorUiHandlers, HasHandContracts {
 
     private static final Logger log = Logger.getLogger("EditorPresenter");
@@ -167,7 +164,7 @@ public class EditorPresenter extends Presenter<EditorPresenter.EditorView, Edito
             final Deal deal = editor.setName(name).setDescription(description).build();
             if (dealIdOptional.isPresent()) {
                 // Update existing deal
-                dealService.update(deal.getId(), deal, new Response<Void>() { // TODO handle failures
+                dealService.update(deal.getId(), deal, new Response<Void>() {
                     @Override public void onSuccess(Method method, Void none) {
                         DealEvent.fire(EditorPresenter.this, deal);
                         revealPlace(NameTokens.DEALS);
@@ -175,7 +172,7 @@ public class EditorPresenter extends Presenter<EditorPresenter.EditorView, Edito
                 });
             } else {
                 // Create new deal
-                dealService.persist(deal, new Response<Long>() { // TODO handle failures
+                dealService.persist(deal, new Response<Long>() {
                     @Override public void onSuccess(Method method, Long dealId) {
                         deal.setId(dealId);
                         DealEvent.fire(EditorPresenter.this, deal);

@@ -32,7 +32,7 @@ import static com.google.common.collect.Maps.newHashMap;
 import static com.google.common.collect.Sets.newHashSet;
 
 /**
- * Represents game state
+ * Represents game player
  */
 public class Player {
 
@@ -165,12 +165,16 @@ public class Player {
         validateHandTurn(fromHand, card);
 
         boolean removed = handCardMultimap.get(fromHand).remove(card);
+        if (!removed)
+            removed = widow.remove(card);
         assert removed : "Failed to remove " + card + " from " + fromHand;
         currentTrick().applyTurn(fromHand, card);
         truncateTrickLog();
     }
 
     private Hand getCardHand(Card card) {
+        if (widow.containsCard(card))
+            return Hand.WIDOW;
         for (Map.Entry<Hand, Card> entry : handCardMultimap.entries()) {
             if (entry.getValue() == card)
                 return entry.getKey();
@@ -318,6 +322,21 @@ public class Player {
         return trickLog.get(currentTrickIndex - 1);
     }
 
+    public void tryWidowTurn() throws GameException {
+        if (players == Players.FOUR && isRaspass() && getTurn() == Hand.WIDOW) {
+            if (currentTrickIndex == 0)
+                makeTurn(widow.card1);
+            else if (currentTrickIndex == 1)
+                makeTurn(widow.card2);
+        }
+    }
+
+    private boolean isRaspass() {
+        return handContracts.get(Hand.EAST) == Contract.PASS
+            && handContracts.get(Hand.SOUTH) == Contract.PASS
+            && handContracts.get(Hand.WEST) == Contract.PASS;
+    }
+
     public void reset() {
         boolean turnUndone;
         do {
@@ -361,5 +380,4 @@ public class Player {
         deal.setCurrentTrickIndex(currentTrickIndex);
         return deal;
     }
-
 }

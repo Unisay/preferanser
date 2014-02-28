@@ -59,7 +59,7 @@ public class PlayerTest {
     public void setUp() throws Exception {
         name = "name";
         description = "description";
-        widow = new Widow();
+        widow = new Widow(DIAMOND_ACE, DIAMOND_JACK);
         handContractMap = createHandContractMap();
         turnRotator = createTurnRotator(SOUTH, WIDOW);
         handCardMultimap = createHandCardMultimap();
@@ -67,9 +67,9 @@ public class PlayerTest {
         player = new Player(name, description, Players.THREE, widow, handContractMap, turnRotator, handCardMultimap, centerCardHandMap);
     }
 
-    @Test(expectedExceptions = IllegalArgumentException.class, expectedExceptionsMessageRegExp = "^No hand holds DIAMOND_ACE.*$")
+    @Test(expectedExceptions = IllegalArgumentException.class, expectedExceptionsMessageRegExp = "^No hand holds DIAMOND_9.*$")
     public void testMakeTurn_FromHandWrongCard() throws Exception {
-        player.makeTurn(DIAMOND_ACE);
+        player.makeTurn(DIAMOND_9);
     }
 
     @Test
@@ -236,6 +236,19 @@ public class PlayerTest {
     @Test
     public void testGetTurn() throws Exception {
         assertThat(player.getTurn(), equalTo(SOUTH));
+        player.makeTurn(CLUB_ACE);
+        assertThat(player.getTurn(), equalTo(WEST));
+        player.makeTurn(CLUB_9);
+        assertThat(player.getTurn(), equalTo(EAST));
+        player.makeTurn(CLUB_8);
+        assertThat(player.getTurn(), equalTo(SOUTH));
+    }
+
+    @Test
+    public void testGetTurn_Raspass() throws Exception {
+        handContractMap = ImmutableMap.of(EAST, Contract.PASS, SOUTH, Contract.PASS, WEST, Contract.PASS);
+        player = new Player(name, description, Players.FOUR, widow, handContractMap, turnRotator, handCardMultimap, centerCardHandMap);
+        assertThat(player.getTurn(), equalTo(Hand.WIDOW));
         player.makeTurn(CLUB_ACE);
         assertThat(player.getTurn(), equalTo(WEST));
         player.makeTurn(CLUB_9);

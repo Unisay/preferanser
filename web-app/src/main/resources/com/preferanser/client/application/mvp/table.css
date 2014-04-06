@@ -109,6 +109,14 @@
     -webkit-transform: rotate(180deg);
 }
 
+@external .turnPointerWidow;
+.turnPointerWidow {
+    top: 5px;
+    transform: rotate(270deg);
+    -ms-transform: rotate(270deg);
+    -webkit-transform: rotate(270deg);
+}
+
 .undoLink, .redoLink {
     color: #ededed;
     cursor: pointer;

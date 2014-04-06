@@ -72,6 +72,7 @@ abstract public class BaseTableView<U extends TableUiHandlers> extends ViewWithU
     @UiField public TableStyle style;
     @UiField public TablePanel table;
 
+    @UiField public TurnPointer turnPointerWidow;
     @UiField public TurnPointer turnPointerEast;
     @UiField public TurnPointer turnPointerSouth;
     @UiField public TurnPointer turnPointerWest;
@@ -283,6 +284,7 @@ abstract public class BaseTableView<U extends TableUiHandlers> extends ViewWithU
     }
 
     protected void populateHandTurnPointers() {
+        handTurnPointerMap.put(Hand.WIDOW, turnPointerWidow);
         handTurnPointerMap.put(Hand.EAST, turnPointerEast);
         handTurnPointerMap.put(Hand.SOUTH, turnPointerSouth);
         handTurnPointerMap.put(Hand.WEST, turnPointerWest);

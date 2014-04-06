@@ -64,7 +64,7 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
     private final DealService dealService;
     private Optional<Long> userIdOptional = Optional.absent();
     private Optional<Long> dealIdOptional = Optional.absent();
-    private Optional<Player> gameOptional = Optional.absent();
+    private Optional<Player> playerOptional = Optional.absent();
 
     @ProxyStandard
     @NameToken(NameTokens.PLAYER)
@@ -93,18 +93,18 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
 
     @Override protected void onReveal() {
         super.onReveal();
-        gameOptional = Optional.absent();
+        playerOptional = Optional.absent();
         if (userIdOptional.isPresent()) {
             dealService.getUserDeal(userIdOptional.get(), dealIdOptional.get(), new Response<Deal>() {
                 @Override public void onSuccess(Method method, Deal deal) {
-                    gameOptional = Optional.of(new Player(deal));
+                    playerOptional = Optional.of(new Player(deal));
                     ResetPresentersEvent.fire(PlayerPresenter.this);
                 }
             });
         } else {
             dealService.getCurrentUserDeal(dealIdOptional.get(), new Response<Deal>() {
                 @Override public void onSuccess(Method method, Deal deal) {
-                    gameOptional = Optional.of(new Player(deal));
+                    playerOptional = Optional.of(new Player(deal));
                     ResetPresentersEvent.fire(PlayerPresenter.this);
                 }
             });
@@ -119,18 +119,20 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
 
     @Override public void onDealEvent(DealEvent dealEvent) {
         Deal deal = dealEvent.getDeal();
-        gameOptional = Optional.of(new Player(deal));
+        playerOptional = Optional.of(new Player(deal));
     }
 
     @Override public void sluff() {
-        if (gameOptional.get().sluffTrick())
+        if (playerOptional.get().sluffTrick())
             refreshView();
     }
 
     @Override public void changeCardLocation(Card card, Optional<TableLocation> newLocation) {
         if (newLocation.isPresent() && newLocation.get() == TableLocation.CENTER) {
             try {
-                gameOptional.get().makeTurn(card);
+                Player player = playerOptional.get();
+                player.makeTurn(card);
+                player.tryWidowTurn();
             } catch (GameException e) {
                 log.finer(e.getMessage());
             }
@@ -153,17 +155,17 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
     }
 
     @Override public void undo() {
-        gameOptional.get().undoTurn();
+        playerOptional.get().undoTurn();
         refreshView();
     }
 
     @Override public void redo() {
-        gameOptional.get().redoTurn();
+        playerOptional.get().redoTurn();
         refreshView();
     }
 
     @Override public void reset() {
-        gameOptional.get().reset();
+        playerOptional.get().reset();
         refreshView();
     }
 
@@ -180,9 +182,15 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
     }
 
     private void refreshView() {
-        if (gameOptional.isPresent()) {
+        if (playerOptional.isPresent()) {
+            Player player = playerOptional.get();
+            try {
+                log.finest("Checking widow turn...");
+                player.tryWidowTurn();
+            } catch (GameException e) {
+                log.finer(e.getMessage());
+            }
             log.finest("Refreshing view...");
-            Player player = gameOptional.get();
             PlayerView view = getView();
             view.displayDealInfo(player.getName(), player.getDescription());
             view.displayTurn(player.getTurn());
@@ -193,7 +201,7 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
             view.displayTurnNavigation(player.hasUndoTurns(), player.hasRedoTurns());
             view.disableCards(player.getDisabledCards());
         } else {
-            log.fine("PlayerPresenter.refreshView() skipped as gameOptional is not present");
+            log.fine("PlayerPresenter.refreshView() skipped as playerOptional is not present");
         }
     }
 

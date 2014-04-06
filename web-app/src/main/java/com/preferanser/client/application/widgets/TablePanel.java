@@ -46,6 +46,8 @@ import static com.preferanser.shared.domain.TableLocation.*;
 
 public class TablePanel extends Composite {
 
+    private Collection<HandCard> centerHandCards;
+
     public interface Binder extends UiBinder<Widget, TablePanel> {}
 
     private static Binder uiBinder = GWT.create(Binder.class);
@@ -137,20 +139,15 @@ public class TablePanel extends Composite {
     }
 
     public void addHandCardsToCenter(Collection<HandCard> handCards) {
-        for (HandCard handCard : handCards)
+        centerHandCards = handCards;
+        for (HandCard handCard : centerHandCards)
             centerCardsPanel.add(handCard.getCardWidget());
-        centerCardLayout.apply(handCards);
+        centerCardLayout.apply(centerHandCards);
     }
 
     public void layoutLocation(final TableLocation location) {
         if (CENTER == location) {
-            centerCardLayout.apply(newArrayList(filter(transform(centerCardsPanel, new Function<IsWidget, HandCard>() {
-                @Nullable
-                @Override
-                public HandCard apply(@Nullable IsWidget widget) {
-                    return widget instanceof HandCard ? (HandCard) widget : null;
-                }
-            }), Predicates.notNull())));
+            centerCardLayout.apply(centerHandCards);
         } else {
             Panel panel = locationPanelMap.get(location);
             assert panel != null : "Panel for " + location + " is null";

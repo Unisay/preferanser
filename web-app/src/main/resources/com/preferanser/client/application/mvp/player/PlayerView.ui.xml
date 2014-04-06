@@ -60,6 +60,7 @@
                 <p:Widgets>
                     <g:FlowPanel debugId="relative-elements-holder" addStyleNames="{style.relativeElementsHolder}">
                         <g:Button ui:field="sluffButton" text="{constants.sluff}" debugId="sluff" addStyleNames="{style.sluffButton}"/>
+                        <p:TurnPointer ui:field="turnPointerWidow" turn="WIDOW"/>
                         <p:TurnPointer ui:field="turnPointerEast" turn="EAST"/>
                         <p:TurnPointer ui:field="turnPointerSouth" turn="SOUTH"/>
                         <p:TurnPointer ui:field="turnPointerWest" turn="WEST"/>

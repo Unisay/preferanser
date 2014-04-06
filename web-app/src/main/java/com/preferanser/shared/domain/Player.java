@@ -182,6 +182,9 @@ public class Player {
         throw new IllegalArgumentException("No hand holds " + card + ": " + handCardMultimap);
     }
 
+    /**
+     * Removes all subsequent turns which might have been left after undo actions
+     */
     private void truncateTrickLog() {
         trickLog.subList(currentTrickIndex + 1, trickLog.size()).clear();
     }
@@ -234,10 +237,14 @@ public class Player {
 
     public Hand getTurn() {
         Trick trick = currentTrick();
-        if (trick.isOpen())
+        if (trick.isOpen()) {
             return trick.getTurn();
-        else
-            return trick.determineTrickWinner(getTrump()).get();
+        } else {
+            Optional<Hand> optionalTrickWinner = trick.determineTrickWinner(getTrump());
+            assert optionalTrickWinner.isPresent() : "Trick is closed but winner is absent";
+            Hand winnerHand = optionalTrickWinner.get();
+            return winnerHand == Hand.WIDOW ? trick.getTurn() : winnerHand;
+        }
     }
 
     public Set<Card> getDisabledCards() {
@@ -322,13 +329,20 @@ public class Player {
         return trickLog.get(currentTrickIndex - 1);
     }
 
-    public void tryWidowTurn() throws GameException {
-        if (players == Players.FOUR && isRaspass() && getTurn() == Hand.WIDOW) {
-            if (currentTrickIndex == 0)
-                makeTurn(widow.card1);
-            else if (currentTrickIndex == 1)
-                makeTurn(widow.card2);
+    public boolean tryWidowTurn() throws GameException {
+        if (players == Players.FOUR && isRaspass()) {
+            Card card = null;
+            if (currentTrickIndex == 0) {
+                card = widow.card1;
+            } else if (currentTrickIndex == 1) {
+                card = widow.card2;
+            }
+            if (card != null) {
+                currentTrick().applyTurn(Hand.WIDOW, card);
+                return true;
+            }
         }
+        return false;
     }
 
     private boolean isRaspass() {

@@ -247,8 +247,15 @@ public class PlayerTest {
     @Test
     public void testGetTurn_Raspass() throws Exception {
         handContractMap = ImmutableMap.of(EAST, Contract.PASS, SOUTH, Contract.PASS, WEST, Contract.PASS);
+        handCardMultimap.put(WIDOW, CLUB_QUEEN);
+        handCardMultimap.put(WIDOW, DIAMOND_ACE);
+        turnRotator = createTurnRotator(WIDOW);
+
         player = new Player(name, description, Players.FOUR, widow, handContractMap, turnRotator, handCardMultimap, centerCardHandMap);
+
         assertThat(player.getTurn(), equalTo(Hand.WIDOW));
+        assertTrue(player.tryWidowTurn());
+        assertThat(player.getTurn(), equalTo(Hand.SOUTH));
         player.makeTurn(CLUB_ACE);
         assertThat(player.getTurn(), equalTo(WEST));
         player.makeTurn(CLUB_9);

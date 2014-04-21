@@ -19,4 +19,21 @@
 
 package com.preferanser.shared.domain.exception;
 
-public abstract class GameException extends Exception {}
+public abstract class GameException extends Exception {
+
+    protected GameException() {
+    }
+
+    protected GameException(String message) {
+        super(message);
+    }
+
+    protected GameException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    protected GameException(Throwable cause) {
+        super(cause);
+    }
+
+}

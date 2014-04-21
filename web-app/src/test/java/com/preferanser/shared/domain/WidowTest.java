@@ -1,11 +1,14 @@
 package com.preferanser.shared.domain;
 
+import com.preferanser.shared.domain.exception.EmptyWidowException;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Sets.newHashSet;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -24,7 +27,7 @@ public class WidowTest {
     @Test
     public void testEquals() throws Exception {
         assertThat(widow, equalTo(new Widow(Card.SPADE_ACE, Card.CLUB_ACE)));
-        assertThat(widow, equalTo(new Widow(Card.CLUB_ACE, Card.SPADE_ACE)));
+        assertThat(widow, not(equalTo(new Widow(Card.CLUB_ACE, Card.SPADE_ACE))));
     }
 
     @Test
@@ -35,26 +38,26 @@ public class WidowTest {
 
     @Test
     public void testAsSet() throws Exception {
-        assertThat(widow.asSet(), equalTo((Set<Card>) newHashSet(Card.SPADE_ACE, Card.CLUB_ACE)));
+        assertThat(widow.asList(), equalTo((List<Card>) newArrayList(Card.SPADE_ACE, Card.CLUB_ACE)));
     }
 
     @Test
     public void testAsSet_OnlyFirstCard() throws Exception {
         widow.setCard2(null);
-        assertThat(widow.asSet(), equalTo((Set<Card>) newHashSet(Card.SPADE_ACE)));
+        assertThat(widow.asList(), equalTo((List<Card>) newArrayList(Card.SPADE_ACE)));
     }
 
     @Test
     public void testAsSet_OnlySecondCard() throws Exception {
         widow.setCard1(null);
-        assertThat(widow.asSet(), equalTo((Set<Card>) newHashSet(Card.CLUB_ACE)));
+        assertThat(widow.asList(), equalTo((List<Card>) newArrayList(Card.CLUB_ACE)));
     }
 
     @Test
     public void testAsSet_NoCards() throws Exception {
         widow.setCard1(null);
         widow.setCard2(null);
-        assertThat(widow.asSet(), empty());
+        assertThat(widow.asList(), empty());
     }
 
     @Test
@@ -131,5 +134,19 @@ public class WidowTest {
         assertFalse(widow.containsCard(Card.DIAMOND_10));
         widow.setCard1(null);
         assertFalse(widow.containsCard(Card.SPADE_ACE));
+    }
+
+    @Test
+    public void testGetFirstCard() throws Exception {
+        assertThat(widow.getFirstCard(), equalTo(Card.SPADE_ACE));
+        assertThat(widow.getFirstCard(), equalTo(Card.SPADE_ACE));
+        widow.remove(Card.SPADE_ACE);
+        assertThat(widow.getFirstCard(), equalTo(Card.CLUB_ACE));
+    }
+
+    @Test(expectedExceptions = EmptyWidowException.class)
+    public void testGetFirstCard_Empty() throws Exception {
+        widow = new Widow();
+        assertThat(widow.getFirstCard(), equalTo(Card.SPADE_ACE));
     }
 }

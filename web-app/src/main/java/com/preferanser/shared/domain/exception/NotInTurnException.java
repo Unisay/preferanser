@@ -19,24 +19,27 @@
 
 package com.preferanser.shared.domain.exception;
 
+import com.preferanser.shared.domain.Card;
 import com.preferanser.shared.domain.Hand;
 
 public class NotInTurnException extends GameException {
 
     private Hand current;
     private Hand fromHand;
+    private Card card;
 
     @SuppressWarnings("unused") // required for serialization
     public NotInTurnException() {
     }
 
-    public NotInTurnException(Hand current, Hand fromHand) {
+    public NotInTurnException(Hand current, Hand fromHand, Card card) {
         this.current = current;
         this.fromHand = fromHand;
+        this.card = card;
     }
 
     @Override public String getMessage() {
-        return fromHand + " attempted to make turn while current turn does " + current;
+        return fromHand + " attempted to make turn (" + card + ") while current turn does " + current;
     }
 
     public Hand getCurrentHand() {
@@ -45,5 +48,9 @@ public class NotInTurnException extends GameException {
 
     public Hand getFromHand() {
         return fromHand;
+    }
+
+    public Card getCard() {
+        return card;
     }
 }

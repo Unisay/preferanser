@@ -22,12 +22,13 @@ package com.preferanser.shared.domain;
 import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
 import com.googlecode.objectify.annotation.Embed;
+import com.preferanser.shared.domain.exception.EmptyWidowException;
 
 import java.io.Serializable;
 import java.util.Iterator;
-import java.util.Set;
+import java.util.List;
 
-import static com.google.common.collect.Sets.newHashSet;
+import static com.google.common.collect.Lists.newArrayList;
 
 @Embed
 public class Widow implements Serializable, Iterable<Card> {
@@ -45,6 +46,18 @@ public class Widow implements Serializable, Iterable<Card> {
 
     public Widow(Widow widow) {
         this(widow.card1, widow.card2);
+    }
+
+    public Card getFirstCard() throws EmptyWidowException {
+        Card result;
+        if (card1 != null) {
+            result = card1;
+        } else if (card2 != null) {
+            result = card2;
+        } else {
+            throw new EmptyWidowException();
+        }
+        return result;
     }
 
     public Card getCard1() {
@@ -70,8 +83,8 @@ public class Widow implements Serializable, Iterable<Card> {
         return new Widow(cards[0], cards[1]);
     }
 
-    public Set<Card> asSet() {
-        Set<Card> cards = newHashSet();
+    public List<Card> asList() {
+        List<Card> cards = newArrayList();
         if (card1 != null)
             cards.add(card1);
         if (card2 != null)
@@ -81,7 +94,7 @@ public class Widow implements Serializable, Iterable<Card> {
 
     @Override
     public Iterator<Card> iterator() {
-        return asSet().iterator();
+        return asList().iterator();
     }
 
     public boolean hasTwoCards() {
@@ -121,13 +134,11 @@ public class Widow implements Serializable, Iterable<Card> {
 
     @Override
     public boolean equals(Object o) {
-        return this == o
-            || !(o == null || getClass() != o.getClass())
-            && this.asSet().equals(((Widow) o).asSet());
+        return this == o || !(o == null || getClass() != o.getClass()) && this.asList().equals(((Widow) o).asList());
     }
 
     @Override
     public int hashCode() {
-        return asSet().hashCode();
+        return asList().hashCode();
     }
 }

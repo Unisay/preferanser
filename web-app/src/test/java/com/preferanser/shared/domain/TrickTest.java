@@ -20,12 +20,11 @@ import static org.testng.Assert.assertTrue;
 public class TrickTest {
 
     private Trick trick;
-    private EnumRotator<Hand> turnRotator;
+    private TurnRotator turnRotator;
 
     @BeforeMethod
     public void setUp() throws Exception {
-        turnRotator = new EnumRotator<Hand>(Hand.values(), SOUTH);
-        turnRotator.setSkipValues(Hand.WIDOW);
+        turnRotator = new EnumTurnRotator(new EnumRotator<Hand>(Hand.values(), SOUTH, WIDOW));
         trick = new Trick(Players.THREE, turnRotator);
     }
 
@@ -52,7 +51,7 @@ public class TrickTest {
     @Test(expectedExceptions = IllegalArgumentException.class,
         expectedExceptionsMessageRegExp = "SOUTH can't make a turn \\(CLUB_KING\\) - already made its turn \\(CLUB_ACE\\)")
     public void testApplyTurn_Duplicate() throws Exception {
-        trick = new Trick(Players.THREE, turnRotator, ImmutableMap.<Card, Hand>of(CLUB_ACE, SOUTH));
+        trick = new Trick(Players.THREE, turnRotator, ImmutableMap.of(CLUB_ACE, SOUTH));
         trick.applyTurn(SOUTH, CLUB_KING);
     }
 
@@ -176,24 +175,13 @@ public class TrickTest {
     }
 
     @Test
-    public void testIsOpen() throws Exception {
-        assertTrue(trick.isOpen());
+    public void testGetTurnCount() throws Exception {
+        assertThat(trick.getTurnCount(), equalTo(0));
         trick.applyTurn(SOUTH, CLUB_7);
-        assertTrue(trick.isOpen());
-        trick.applyTurn(WEST, DIAMOND_10);
-        assertTrue(trick.isOpen());
-        trick.applyTurn(EAST, SPADE_10);
-        assertFalse(trick.isOpen());
-    }
-
-    @Test
-    public void testIsClosed() throws Exception {
-        assertFalse(trick.isClosed());
-        trick.applyTurn(SOUTH, CLUB_7);
-        assertFalse(trick.isClosed());
-        trick.applyTurn(WEST, DIAMOND_10);
-        assertFalse(trick.isClosed());
-        trick.applyTurn(EAST, SPADE_10);
-        assertTrue(trick.isClosed());
+        assertThat(trick.getTurnCount(), equalTo(1));
+        trick.undoTurn();
+        assertThat(trick.getTurnCount(), equalTo(0));
+        trick.redoTurn();
+        assertThat(trick.getTurnCount(), equalTo(1));
     }
 }

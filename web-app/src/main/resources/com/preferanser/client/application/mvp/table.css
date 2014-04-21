@@ -136,6 +136,12 @@
 
 .sluffButton {
     position: relative;
-    top: 45px;
+    top: 360px;
+    left: 190px;
+}
+
+.turnWidowButton {
+    position: relative;
+    top: 40px;
     left: 190px;
 }

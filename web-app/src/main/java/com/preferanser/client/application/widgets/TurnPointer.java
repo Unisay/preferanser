@@ -39,6 +39,9 @@ public class TurnPointer extends Image {
     public void setTurn(Hand turn) {
         this.turn = turn;
         switch (turn) {
+            case WIDOW:
+                addStyleName(style.turnPointerWidow());
+                break;
             case EAST:
                 addStyleName(style.turnPointerEast());
                 break;

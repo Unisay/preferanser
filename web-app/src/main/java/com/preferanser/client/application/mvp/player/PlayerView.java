@@ -59,6 +59,8 @@ public class PlayerView extends BaseTableView<PlayerUiHandlers> implements Playe
     @UiField Anchor redoAnchor;
     @UiField Button sluffButton;
     @UiField Button closeButton;
+    @UiField Button turnWidowButton;
+    @UiField TurnPointer turnPointerWidow;
     @UiField Label dealName;
     @UiField InlineLabel dealDescription;
 
@@ -106,10 +108,14 @@ public class PlayerView extends BaseTableView<PlayerUiHandlers> implements Playe
 
     @Override protected void displayHandTurnPointer(Hand hand, TurnPointer turnPointer, Hand turn) {
         super.displayHandTurnPointer(hand, turnPointer, turn);
-        if (turnPointer.isActive())
+        if (turnPointer.isActive()) {
             turnPointer.removeStyleName(style.notDisplayed());
-        else
+        } else {
             turnPointer.addStyleName(style.notDisplayed());
+        }
+        if (hand == Hand.WIDOW) {
+            turnWidowButton.setVisible(turnPointer.isActive());
+        }
     }
 
     @UiHandler("closeButton") void onCloseClicked(@SuppressWarnings("unused") ClickEvent event) {
@@ -136,11 +142,20 @@ public class PlayerView extends BaseTableView<PlayerUiHandlers> implements Playe
         getUiHandlers().sluff();
     }
 
+    @UiHandler("turnWidowButton") void onTurnFromWidowClicked(@SuppressWarnings("unused") ClickEvent event) {
+        getUiHandlers().turnFromWidow();
+    }
+
     @Override public void onCardDoubleClick(CardWidget cardWidget, DoubleClickEvent event) {
         if (cardWidget.isEnabled() && cardWidget.isDraggable()) {
             getLog().finer("Card location change: " + cardWidget.getCard() + " -> " + TableLocation.CENTER);
             getUiHandlers().changeCardLocation(cardWidget.getCard(), Optional.of(TableLocation.CENTER));
         }
+    }
+
+    @Override protected void populateHandTurnPointers() {
+        super.populateHandTurnPointers();
+        handTurnPointerMap.put(Hand.WIDOW, turnPointerWidow);
     }
 
     @Override public void displayDealInfo(String name, String description) {
@@ -177,7 +192,6 @@ public class PlayerView extends BaseTableView<PlayerUiHandlers> implements Playe
     }
 
     private void populateHandTrickCounts() {
-        //handTricksCountMap.put(Hand.WIDOW, trickCountWidow);
         handTricksCountMap.put(Hand.EAST, trickCountEast);
         handTricksCountMap.put(Hand.SOUTH, trickCountSouth);
         handTricksCountMap.put(Hand.WEST, trickCountWest);

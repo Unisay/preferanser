@@ -4,7 +4,6 @@ import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
-import com.preferanser.shared.util.EnumRotator;
 
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -18,22 +17,22 @@ import static com.google.common.collect.Maps.newLinkedHashMap;
 
 public class Trick implements Iterable<Turn> {
 
-    private final EnumRotator<Hand> turnRotator;
+    private final TurnRotator turnRotator;
     private final LinkedList<Turn> turns = newLinkedList();
     private final Players players;
     private int currentTurnIndex;
 
-    public Trick(Players players, EnumRotator<Hand> turnRotator, Map<Card, Hand> centerCardHandMap) {
+    public Trick(Players players, TurnRotator turnRotator, Map<Card, Hand> centerCardHandMap) {
         this.currentTurnIndex = -1;
         this.players = players;
-        this.turnRotator = new EnumRotator<Hand>(turnRotator);
+        this.turnRotator = turnRotator;
         for (Map.Entry<Card, Hand> cardHandEntry : centerCardHandMap.entrySet()) {
             turns.add(new Turn(cardHandEntry.getKey(), cardHandEntry.getValue()));
             currentTurnIndex++;
         }
     }
 
-    public Trick(Players players, EnumRotator<Hand> handEnumRotator) {
+    public Trick(Players players, TurnRotator handEnumRotator) {
         this(players, handEnumRotator, ImmutableMap.<Card, Hand>of());
     }
 
@@ -79,25 +78,26 @@ public class Trick implements Iterable<Turn> {
     }
 
     public Optional<Hand> determineTrickWinner(Optional<Suit> optionalTrump) {
-        if (isOpen())
-            return Optional.absent();
-
-        Turn winningTurn = null;
+        Optional<Turn> winningTurn = Optional.absent();
         for (Turn turn : turns()) {
-            if (winningTurn == null) {
-                winningTurn = turn;
+            if (!winningTurn.isPresent()) {
+                winningTurn = Optional.of(turn);
             } else {
-                if (optionalTrump.isPresent() && winningTurn.getSuit() != optionalTrump.get() && turn.getSuit() == optionalTrump.get()) {
-                    winningTurn = turn;
-                } else if (winningTurn.getSuit() == turn.getSuit()) {
-                    if (Rank.comparator().compare(winningTurn.getRank(), turn.getRank()) < 0) {
-                        winningTurn = turn;
+                if (optionalTrump.isPresent() && winningTurn.get().getSuit() != optionalTrump.get() && turn.getSuit() == optionalTrump.get()) {
+                    winningTurn = Optional.of(turn);
+                } else if (winningTurn.get().getSuit() == turn.getSuit()) {
+                    if (Rank.comparator().compare(winningTurn.get().getRank(), turn.getRank()) < 0) {
+                        winningTurn = Optional.of(turn);
                     }
                 }
             }
         }
-        assert winningTurn != null;
-        return Optional.of(winningTurn.getHand());
+
+        if (!winningTurn.isPresent()) {
+            return Optional.absent();
+        } else {
+            return Optional.of(winningTurn.get().getHand());
+        }
     }
 
     public Hand getTurn() {
@@ -123,13 +123,6 @@ public class Trick implements Iterable<Turn> {
         return turns().isEmpty();
     }
 
-    public boolean isOpen() {
-        int numTurns = turns().size();
-        int numPlayers = players.getNumPlayers();
-        checkState(numTurns <= numPlayers, "Invalid trick: " + this);
-        return numTurns < numPlayers;
-    }
-
     private List<Turn> turns() {
         if (turns.isEmpty())
             return turns;
@@ -140,11 +133,11 @@ public class Trick implements Iterable<Turn> {
         turns.clear();
     }
 
-    public boolean isClosed() {
-        return !isOpen();
+    public int getTurnCount() {
+        return turns().size();
     }
 
-    public EnumRotator<Hand> getTurnRotator() {
+    public TurnRotator getTurnRotator() {
         return turnRotator;
     }
 

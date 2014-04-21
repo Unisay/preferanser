@@ -56,4 +56,8 @@ public interface PlayerUiHandlers extends TableUiHandlers {
      */
     void close();
 
+    /**
+     * Make turn from widow
+     */
+    void turnFromWidow();
 }

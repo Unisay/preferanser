@@ -83,8 +83,7 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
         addRegisteredHandler(DealEvent.getType(), this);
     }
 
-    @Override
-    public void prepareFromRequest(PlaceRequest request) {
+    @Override public void prepareFromRequest(PlaceRequest request) {
         super.prepareFromRequest(request);
         PlaceRequestHelper helper = new PlaceRequestHelper(request);
         userIdOptional = helper.parseLongParameter("user");
@@ -127,12 +126,20 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
             refreshView();
     }
 
+    @Override public void turnFromWidow() {
+        try {
+            playerOptional.get().makeTurnFromWidow();
+            refreshView();
+        } catch (GameException e) {
+            log.finer(e.getMessage());
+        }
+    }
+
     @Override public void changeCardLocation(Card card, Optional<TableLocation> newLocation) {
         if (newLocation.isPresent() && newLocation.get() == TableLocation.CENTER) {
             try {
                 Player player = playerOptional.get();
                 player.makeTurn(card);
-                player.tryWidowTurn();
             } catch (GameException e) {
                 log.finer(e.getMessage());
             }
@@ -184,12 +191,6 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
     private void refreshView() {
         if (playerOptional.isPresent()) {
             Player player = playerOptional.get();
-            try {
-                log.finest("Checking widow turn...");
-                player.tryWidowTurn();
-            } catch (GameException e) {
-                log.finer(e.getMessage());
-            }
             log.finest("Refreshing view...");
             PlayerView view = getView();
             view.displayDealInfo(player.getName(), player.getDescription());

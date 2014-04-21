@@ -34,21 +34,12 @@ public class EnumRotator<E extends Enum<E>> {
         this.currentOrdinal = values.length - 1;
     }
 
-    public EnumRotator(E[] values, E startValue) {
+    public EnumRotator(E[] values, E startValue, E... valuesToSkip) {
         Preconditions.checkNotNull(values, "EnumRotator: values are null");
         Preconditions.checkNotNull(values, "EnumRotator: current value is null");
         this.values = values;
         currentOrdinal = startValue.ordinal();
-    }
-
-    public EnumRotator(EnumRotator<E> enumRotator) {
-        this(enumRotator.values, enumRotator.current());
-        this.valuesToSkip = enumRotator.valuesToSkip;
-    }
-
-    public EnumRotator(EnumRotator<E> enumRotator, E current) {
-        this(enumRotator.values, current);
-        this.valuesToSkip = enumRotator.valuesToSkip;
+        setSkipValues(valuesToSkip);
     }
 
     public void setCurrent(E value) {
@@ -88,6 +79,10 @@ public class EnumRotator<E extends Enum<E>> {
                     return prev();
 
         return result;
+    }
+
+    public E[] getValuesToSkip() {
+        return valuesToSkip;
     }
 
     @Override

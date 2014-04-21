@@ -194,7 +194,7 @@ public class Editor {
                 return true;
             case WIDOW: // TODO unit-test
                 widow.remove(card);
-                handCardMultimap.replaceValues(Hand.WIDOW, widow.asSet());
+                handCardMultimap.replaceValues(Hand.WIDOW, widow.asList());
                 return true;
             default:
                 Hand oldHand = Hand.valueOf(oldLocation);

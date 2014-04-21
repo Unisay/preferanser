@@ -22,16 +22,14 @@ package com.preferanser.shared.domain;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.LinkedHashMultimap;
 import com.preferanser.shared.domain.exception.DuplicateGameTurnException;
+import com.preferanser.shared.domain.exception.GameException;
 import com.preferanser.shared.domain.exception.IllegalSuitException;
 import com.preferanser.shared.domain.exception.NotInTurnException;
-import com.preferanser.shared.util.EnumRotator;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import java.util.LinkedHashMap;
 import java.util.Map;
 
-import static com.google.common.collect.Maps.newLinkedHashMap;
 import static com.google.common.collect.Sets.newHashSet;
 import static com.preferanser.shared.domain.Card.*;
 import static com.preferanser.shared.domain.Hand.*;
@@ -42,7 +40,7 @@ import static org.unitils.reflectionassert.ReflectionAssert.assertLenientEquals;
 import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
 
 /**
- * Unit test for the Game
+ * Unit test for the Player
  */
 public class PlayerTest {
 
@@ -51,25 +49,21 @@ public class PlayerTest {
     private String name;
     private String description;
     private Map<Hand, Contract> handContractMap;
-    private EnumRotator<Hand> turnRotator;
     private LinkedHashMultimap<Hand, Card> handCardMultimap;
-    private LinkedHashMap<Card, Hand> centerCardHandMap;
 
     @BeforeMethod
     public void setUp() throws Exception {
         name = "name";
         description = "description";
-        widow = new Widow(DIAMOND_ACE, DIAMOND_JACK);
-        handContractMap = createHandContractMap();
-        turnRotator = createTurnRotator(SOUTH, WIDOW);
-        handCardMultimap = createHandCardMultimap();
-        centerCardHandMap = createCenterCardHandMap();
-        player = new Player(name, description, Players.THREE, widow, handContractMap, turnRotator, handCardMultimap, centerCardHandMap);
+        widow = new Widow(DIAMOND_ACE, HEART_ACE);
+        handContractMap = buildHandContractMap();
+        handCardMultimap = buildHandCardMultimap();
+        player = buildPlayer(name, description, Players.THREE, widow, handContractMap, SOUTH, handCardMultimap);
     }
 
-    @Test(expectedExceptions = IllegalArgumentException.class, expectedExceptionsMessageRegExp = "^No hand holds DIAMOND_9.*$")
+    @Test(expectedExceptions = IllegalArgumentException.class, expectedExceptionsMessageRegExp = "^No hand holds CLUB_QUEEN.*$")
     public void testMakeTurn_FromHandWrongCard() throws Exception {
-        player.makeTurn(DIAMOND_9);
+        player.makeTurn(CLUB_QUEEN);
     }
 
     @Test
@@ -80,7 +74,7 @@ public class PlayerTest {
         } catch (NotInTurnException e) {
             assertThat(e.getFromHand(), equalTo(WEST));
             assertThat(e.getCurrentHand(), equalTo(SOUTH));
-            assertThat(e.getMessage(), equalTo("WEST attempted to make turn while current turn does SOUTH"));
+            assertThat(e.getMessage(), equalTo("WEST attempted to make turn (CLUB_JACK) while current turn does SOUTH"));
         }
     }
 
@@ -88,14 +82,14 @@ public class PlayerTest {
     public void testMakeTurn_WrongTrickSuit() throws Exception {
         handCardMultimap.clear();
         handCardMultimap.put(SOUTH, CLUB_ACE);
-        handCardMultimap.put(WEST, HEART_ACE);
+        handCardMultimap.put(WEST, HEART_JACK);
         handCardMultimap.put(WEST, CLUB_KING);
 
-        player = new Player(name, description, Players.THREE, widow, handContractMap, turnRotator, handCardMultimap, centerCardHandMap);
+        player = buildPlayer(name, description, Players.THREE, widow, handContractMap, SOUTH, handCardMultimap);
 
         player.makeTurn(CLUB_ACE);
         try {
-            player.makeTurn(HEART_ACE);
+            player.makeTurn(HEART_JACK);
             fail("IllegalSuitException must have been thrown!");
         } catch (IllegalSuitException e) {
             assertThat(e.getActualSuit(), equalTo(Suit.HEART));
@@ -111,7 +105,7 @@ public class PlayerTest {
         handCardMultimap.put(WEST, HEART_ACE);
         handCardMultimap.put(WEST, SPADE_ACE);
 
-        player = new Player(name, description, Players.THREE, widow, handContractMap, turnRotator, handCardMultimap, centerCardHandMap);
+        player = buildPlayer(name, description, Players.THREE, widow, handContractMap, SOUTH, handCardMultimap);
 
         player.makeTurn(CLUB_ACE);
         try {
@@ -127,14 +121,14 @@ public class PlayerTest {
     public void testMakeTurn_OtherSuitInsteadOfTrump() throws Exception {
         handCardMultimap = LinkedHashMultimap.create();
         handCardMultimap.put(SOUTH, CLUB_ACE);
-        handCardMultimap.put(WEST, HEART_ACE);
+        handCardMultimap.put(WEST, HEART_JACK);
         handCardMultimap.put(WEST, SPADE_ACE);
 
-        player = new Player(name, description, Players.THREE, widow, handContractMap, turnRotator, handCardMultimap, centerCardHandMap);
+        player = buildPlayer(name, description, Players.THREE, widow, handContractMap, SOUTH, handCardMultimap);
 
         player.makeTurn(CLUB_ACE);
         try {
-            player.makeTurn(HEART_ACE);
+            player.makeTurn(HEART_JACK);
             fail("IllegalSuitException must have been thrown!");
         } catch (IllegalSuitException e) {
             assertThat(e.getActualSuit(), equalTo(Suit.HEART));
@@ -146,13 +140,13 @@ public class PlayerTest {
     public void testMakeTurn_OtherSuit() throws Exception {
         handCardMultimap = LinkedHashMultimap.create();
         handCardMultimap.put(SOUTH, CLUB_ACE);
-        handCardMultimap.put(WEST, HEART_ACE);
+        handCardMultimap.put(WEST, HEART_JACK);
         handCardMultimap.put(WEST, DIAMOND_ACE);
 
-        player = new Player(name, description, Players.THREE, widow, handContractMap, turnRotator, handCardMultimap, centerCardHandMap);
+        player = buildPlayer(name, description, Players.THREE, widow, handContractMap, SOUTH, handCardMultimap);
 
         player.makeTurn(CLUB_ACE);
-        player.makeTurn(HEART_ACE);
+        player.makeTurn(HEART_JACK);
     }
 
     @Test
@@ -165,13 +159,13 @@ public class PlayerTest {
 
         handCardMultimap = LinkedHashMultimap.create();
         handCardMultimap.put(SOUTH, CLUB_ACE);
-        handCardMultimap.put(WEST, HEART_ACE);
+        handCardMultimap.put(WEST, HEART_JACK);
         handCardMultimap.put(WEST, SPADE_ACE);
 
-        player = new Player(name, description, Players.THREE, widow, handContractMap, turnRotator, handCardMultimap, centerCardHandMap);
+        player = buildPlayer(name, description, Players.THREE, widow, handContractMap, SOUTH, handCardMultimap);
 
         player.makeTurn(CLUB_ACE);
-        player.makeTurn(HEART_ACE);
+        player.makeTurn(HEART_JACK);
     }
 
     @Test
@@ -189,48 +183,68 @@ public class PlayerTest {
     }
 
     @Test
-    public void testIsTrickComplete_ThreePlayers_Positive() throws Exception {
-        centerCardHandMap.clear();
-        centerCardHandMap.put(DIAMOND_ACE, SOUTH);
-        centerCardHandMap.put(DIAMOND_QUEEN, WEST);
-        centerCardHandMap.put(DIAMOND_KING, EAST);
+    public void testIsTrickClosed_ThreePlayers() throws Exception {
+        player.makeTurn(DIAMOND_9);     // SOUTH
+        assertFalse(player.isTrickClosed());
 
-        player = new Player(name, description, Players.THREE, widow, handContractMap, turnRotator, handCardMultimap, centerCardHandMap);
+        player.makeTurn(DIAMOND_JACK);  // WEST
+        assertFalse(player.isTrickClosed());
 
+        player.makeTurn(DIAMOND_7);     // EAST
         assertTrue(player.isTrickClosed());
     }
 
     @Test
-    public void testIsTrickComplete_ThreePlayers_Negative() throws Exception {
-        player = new Player(name, description, Players.THREE, widow, handContractMap, turnRotator, handCardMultimap, centerCardHandMap);
-
-        assertFalse(player.isTrickClosed());
+    public void testIsTrickClosed_ThreePlayers_Raspass() throws Exception {
+        testIsTrickClosed_Raspass(Players.THREE);
     }
 
     @Test
-    public void testIsTrickComplete_FourPlayers_Positive() throws Exception {
-        centerCardHandMap.clear();
-        centerCardHandMap.put(DIAMOND_ACE, WIDOW);
-        centerCardHandMap.put(DIAMOND_KING, EAST);
-        centerCardHandMap.put(DIAMOND_JACK, SOUTH);
-        centerCardHandMap.put(DIAMOND_QUEEN, WEST);
+    public void testIsTrickClosed_FourPlayers_Raspass() throws Exception {
+        testIsTrickClosed_Raspass(Players.FOUR);
+    }
 
-        turnRotator = createTurnRotator(SOUTH, WIDOW);
-        player = new Player(name, description, Players.FOUR, widow, handContractMap, turnRotator, handCardMultimap, centerCardHandMap);
+    private void testIsTrickClosed_Raspass(Players players) throws GameException {
+        handContractMap = ImmutableMap.of(EAST, Contract.PASS, SOUTH, Contract.PASS, WEST, Contract.PASS);
 
+        player = buildPlayer(name, description, players, widow, handContractMap, SOUTH, handCardMultimap);
+
+        player.makeTurn(DIAMOND_ACE);   // WIDOW
+        assertFalse(player.isTrickClosed());
+
+        player.makeTurn(DIAMOND_9);     // SOUTH
+        assertFalse(player.isTrickClosed());
+
+        player.makeTurn(DIAMOND_JACK);  // WEST
+        assertFalse(player.isTrickClosed());
+
+        player.makeTurn(DIAMOND_7);     // EAST
         assertTrue(player.isTrickClosed());
-    }
 
-    @Test
-    public void testIsTrickComplete_FourPlayers_Negative() throws Exception {
-        centerCardHandMap.clear();
-        centerCardHandMap.put(DIAMOND_KING, EAST);
-        centerCardHandMap.put(DIAMOND_ACE, SOUTH);
-        centerCardHandMap.put(DIAMOND_QUEEN, WEST);
+        player.sluffTrick();
 
-        player = new Player(name, description, Players.FOUR, widow, handContractMap, turnRotator, handCardMultimap, centerCardHandMap);
-
+        player.makeTurn(HEART_ACE);     // WIDOW
         assertFalse(player.isTrickClosed());
+
+        player.makeTurn(CLUB_ACE);      // SOUTH
+        assertFalse(player.isTrickClosed());
+
+        player.makeTurn(HEART_JACK);    // WEST
+        assertFalse(player.isTrickClosed());
+
+        player.makeTurn(CLUB_8);        // EAST
+        assertTrue(player.isTrickClosed());
+
+        player.sluffTrick();
+
+        player.makeTurn(CLUB_KING);     // SOUTH
+        assertFalse(player.isTrickClosed());
+
+        player.makeTurn(CLUB_JACK);     // WEST
+        assertFalse(player.isTrickClosed());
+
+        player.makeTurn(DIAMOND_8);     // EAST
+        assertTrue(player.isTrickClosed());
     }
 
     @Test
@@ -247,21 +261,18 @@ public class PlayerTest {
     @Test
     public void testGetTurn_Raspass() throws Exception {
         handContractMap = ImmutableMap.of(EAST, Contract.PASS, SOUTH, Contract.PASS, WEST, Contract.PASS);
-        handCardMultimap.put(WIDOW, CLUB_QUEEN);
-        handCardMultimap.put(WIDOW, DIAMOND_ACE);
-        turnRotator = createTurnRotator(WIDOW);
 
-        player = new Player(name, description, Players.FOUR, widow, handContractMap, turnRotator, handCardMultimap, centerCardHandMap);
+        player = buildPlayer(name, description, Players.FOUR, widow, handContractMap, SOUTH, handCardMultimap);
 
         assertThat(player.getTurn(), equalTo(Hand.WIDOW));
-        assertTrue(player.tryWidowTurn());
+        player.makeTurn(DIAMOND_ACE);
         assertThat(player.getTurn(), equalTo(Hand.SOUTH));
-        player.makeTurn(CLUB_ACE);
+        player.makeTurn(DIAMOND_9);
         assertThat(player.getTurn(), equalTo(WEST));
-        player.makeTurn(CLUB_9);
+        player.makeTurn(DIAMOND_JACK);
         assertThat(player.getTurn(), equalTo(EAST));
-        player.makeTurn(CLUB_8);
-        assertThat(player.getTurn(), equalTo(SOUTH));
+        player.makeTurn(DIAMOND_7);
+        assertThat(player.getTurn(), equalTo(WIDOW));
     }
 
     @Test
@@ -273,7 +284,7 @@ public class PlayerTest {
     @Test
     public void testGetTrump_NoTrumpPlayingContract() throws Exception {
         handContractMap = ImmutableMap.of(SOUTH, Contract.SIX_NO_TRUMP, EAST, Contract.PASS, WEST, Contract.WHIST);
-        player = new Player(name, description, Players.THREE, widow, handContractMap, turnRotator, handCardMultimap, centerCardHandMap);
+        player = buildPlayer(name, description, Players.THREE, widow, handContractMap, SOUTH, handCardMultimap);
 
         assertFalse(player.getTrump().isPresent());
     }
@@ -281,7 +292,7 @@ public class PlayerTest {
     @Test
     public void testGetTrump_NoTrumpNotPlayingContract() throws Exception {
         handContractMap = ImmutableMap.of(SOUTH, Contract.PASS, EAST, Contract.PASS, WEST, Contract.PASS);
-        player = new Player(name, description, Players.THREE, widow, handContractMap, turnRotator, handCardMultimap, centerCardHandMap);
+        player = buildPlayer(name, description, Players.THREE, widow, handContractMap, SOUTH, handCardMultimap);
 
         assertFalse(player.getTrump().isPresent());
     }
@@ -303,13 +314,21 @@ public class PlayerTest {
 
     @Test
     public void testGetDisabledCards() throws Exception {
-        assertLenientEquals(newHashSet(CLUB_8, SPADE_8, CLUB_JACK, CLUB_9, HEART_JACK), player.getDisabledCards());
+        assertLenientEquals(
+            newHashSet(CLUB_9, CLUB_JACK, SPADE_8, DIAMOND_JACK, DIAMOND_7, DIAMOND_QUEEN, DIAMOND_8, HEART_JACK, CLUB_8),
+            player.getDisabledCards());
         player.makeTurn(CLUB_ACE);
-        assertLenientEquals(newHashSet(CLUB_8, SPADE_8, CLUB_KING, HEART_JACK), player.getDisabledCards());
+        assertLenientEquals(
+            newHashSet(SPADE_8, DIAMOND_9, DIAMOND_10, CLUB_8, DIAMOND_QUEEN, CLUB_KING, DIAMOND_JACK, HEART_JACK, DIAMOND_7, DIAMOND_8),
+            player.getDisabledCards());
         player.makeTurn(CLUB_JACK);
-        assertLenientEquals(newHashSet(SPADE_8, CLUB_KING, HEART_JACK, CLUB_9), player.getDisabledCards());
+        assertLenientEquals(
+            newHashSet(DIAMOND_10, CLUB_KING, DIAMOND_9, DIAMOND_JACK, DIAMOND_8, HEART_JACK, SPADE_8, CLUB_9, DIAMOND_QUEEN, DIAMOND_7),
+            player.getDisabledCards());
         player.makeTurn(CLUB_8);
-        assertLenientEquals(newHashSet(SPADE_8, CLUB_KING, CLUB_9, HEART_JACK), player.getDisabledCards());
+        assertLenientEquals(
+            newHashSet(DIAMOND_9, CLUB_KING, DIAMOND_QUEEN, HEART_JACK, DIAMOND_8, DIAMOND_7, CLUB_9, DIAMOND_10, DIAMOND_JACK, SPADE_8),
+            player.getDisabledCards());
     }
 
     @Test
@@ -327,17 +346,17 @@ public class PlayerTest {
         handCardMultimap.put(WEST, CLUB_9);
         handCardMultimap.put(WEST, HEART_JACK);
 
-        player = new Player(name, description, Players.THREE, widow, handContractMap, turnRotator, handCardMultimap, centerCardHandMap);
+        player = buildPlayer(name, description, Players.THREE, widow, handContractMap, SOUTH, handCardMultimap);
 
-        player.makeTurn(CLUB_7);
-        player.makeTurn(CLUB_JACK);
-        player.makeTurn(CLUB_8);
+        player.makeTurn(CLUB_7);    // SOUTH
+        player.makeTurn(CLUB_JACK); // WEST <-- wins
+        player.makeTurn(CLUB_8);    // EAST
 
         assertTrue(player.sluffTrick(), "Failed to sluff trick");
         assertThat(player.getTurn(), equalTo(WEST));
         assertThat(player.getHandTrickCounts(), equalTo((Map) ImmutableMap.of(SOUTH, 0, WEST, 1, EAST, 0, WIDOW, 0)));
 
-        player.makeTurn(HEART_JACK);
+        player.makeTurn(HEART_JACK); // WEST
         assertThat(player.getTurn(), equalTo(EAST));
         assertThat(player.getCenterCards(), equalTo((Map) ImmutableMap.of(HEART_JACK, WEST)));
         assertThat(player.getHandTrickCounts(), equalTo((Map) ImmutableMap.of(SOUTH, 0, WEST, 1, EAST, 0, WIDOW, 0)));
@@ -473,13 +492,7 @@ public class PlayerTest {
         assertReflectionEquals(player, clonedPlayer);
     }
 
-    private EnumRotator<Hand> createTurnRotator(Hand curValue, Hand... valuesToSkip) {
-        EnumRotator<Hand> turnRotator = new EnumRotator<Hand>(Hand.values(), curValue);
-        turnRotator.setSkipValues(valuesToSkip);
-        return turnRotator;
-    }
-
-    private Map<Hand, Contract> createHandContractMap() {
+    private Map<Hand, Contract> buildHandContractMap() {
         return ImmutableMap.of(
             EAST, Contract.PASS,
             SOUTH, Contract.SIX_SPADE,
@@ -487,20 +500,51 @@ public class PlayerTest {
         );
     }
 
-    private LinkedHashMap<Card, Hand> createCenterCardHandMap() {
-        return newLinkedHashMap();
-    }
-
-    private LinkedHashMultimap<Hand, Card> createHandCardMultimap() {
+    private LinkedHashMultimap<Hand, Card> buildHandCardMultimap() {
         LinkedHashMultimap<Hand, Card> multimap = LinkedHashMultimap.create();
+
         multimap.put(EAST, CLUB_8);
         multimap.put(EAST, SPADE_8);
+        multimap.put(EAST, DIAMOND_7);
+        multimap.put(EAST, DIAMOND_8);
+
         multimap.put(SOUTH, CLUB_ACE);
         multimap.put(SOUTH, CLUB_KING);
+        multimap.put(SOUTH, DIAMOND_9);
+        multimap.put(SOUTH, DIAMOND_10);
+
         multimap.put(WEST, CLUB_JACK);
         multimap.put(WEST, CLUB_9);
         multimap.put(WEST, HEART_JACK);
+        multimap.put(WEST, DIAMOND_JACK);
+        multimap.put(WEST, DIAMOND_QUEEN);
+
         return multimap;
     }
 
+
+    private Player buildPlayer(
+        String name,
+        String description,
+        Players players,
+        Widow widow,
+        Map<Hand, Contract> handContractMap,
+        Hand firstTurn,
+        LinkedHashMultimap<Hand, Card> handCardMultimap
+    ) {
+        Deal deal = new Deal();
+        deal.setName(name);
+        deal.setDescription(description);
+        deal.setPlayers(players);
+        deal.setWidow(widow);
+        deal.setFirstTurn(firstTurn);
+        deal.setSouthCards(handCardMultimap.get(SOUTH));
+        deal.setWestCards(handCardMultimap.get(WEST));
+        deal.setEastCards(handCardMultimap.get(EAST));
+        deal.setSouthContract(handContractMap.get(SOUTH));
+        deal.setWestContract(handContractMap.get(WEST));
+        deal.setEastContract(handContractMap.get(EAST));
+        deal.setCurrentTrickIndex(0);
+        return new Player(deal);
+    }
 }

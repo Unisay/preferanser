@@ -115,6 +115,8 @@ public interface PreferanserConstants extends ConstantsWithLookup {
 
     @DefaultStringValue("To sluff") String sluff();
 
+    @DefaultStringValue("Make turn from widow") String turnWidow();
+
     @DefaultStringValue("Undo") String undo();
 
     @DefaultStringValue("Redo") String redo();

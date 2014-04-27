@@ -1,6 +1,7 @@
 <component name="ProjectDictionaryState">
   <dictionary name="ylazarev">
     <words>
+      <w>asctime</w>
       <w>bootstrapper</w>
       <w>cellview</w>
       <w>datastore</w>
@@ -14,12 +15,14 @@
       <w>gwtplatform</w>
       <w>gwtprojsonserializer</w>
       <w>htmlunit</w>
+      <w>levelname</w>
       <w>multibinder</w>
       <w>raspass</w>
       <w>restygwt</w>
       <w>uibinder</w>
       <w>webapp</w>
       <w>whists</w>
+      <w>ylazarev</w>
     </words>
   </dictionary>
 </component>

@@ -33,6 +33,7 @@
         <module>web-test</module>
         <module>backend-client</module>
         <module>web-app-laf</module>
+        <module>ml</module>
     </modules>
 
     <packaging>pom</packaging>

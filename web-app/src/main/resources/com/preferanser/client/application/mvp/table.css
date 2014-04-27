@@ -141,7 +141,7 @@
 }
 
 .turnWidowButton {
-    position: relative;
+    position: absolute;
     top: 40px;
     left: 190px;
 }

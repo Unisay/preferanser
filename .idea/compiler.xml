@@ -17,16 +17,10 @@
       <profile default="true" name="Default" enabled="false">
         <processorPath useClasspath="true" />
       </profile>
-      <profile default="false" name="Maven default annotation processors profile" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <processorPath useClasspath="true" />
-        <module name="ml" />
-      </profile>
     </annotationProcessing>
     <bytecodeTargetLevel target="1.7">
       <module name="backend-client" target="1.7" />
+      <module name="ml" target="1.7" />
       <module name="web-app" target="1.7" />
       <module name="web-app-laf" target="1.7" />
       <module name="web-test" target="1.7" />

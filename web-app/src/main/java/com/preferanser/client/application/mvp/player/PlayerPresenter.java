@@ -57,7 +57,9 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
         void displayHandTricks(Map<Hand, Integer> handTricks);
         void disableCards(Set<Card> cards);
         void displayTurnNavigation(boolean showPrev, boolean showNext);
+        void displayResetButton(boolean visible);
         void displaySluffButton(boolean visible);
+        void displaySaveDrawingButton(boolean visible);
     }
 
     private final PlaceManager placeManager;
@@ -197,6 +199,8 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
             view.displayTurn(player.getTurn());
             view.displayCards(player.getHandCards(), player.getCenterCards(), player.getWidow());
             view.displaySluffButton(player.isTrickClosed());
+            view.displayResetButton(player.hasUndoTurns() || player.hasRedoTurns());
+            view.displaySaveDrawingButton(player.hasUndoTurns() || player.hasRedoTurns());
             view.displayContracts(player.getHandContracts());
             view.displayHandTricks(player.getHandTrickCounts());
             view.displayTurnNavigation(player.hasUndoTurns(), player.hasRedoTurns());

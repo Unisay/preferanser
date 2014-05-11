@@ -185,6 +185,8 @@ public interface PreferanserConstants extends ConstantsWithLookup {
 
     @DefaultStringValue("Сохранить") String save();
 
+    @DefaultStringValue("Сохранить розыгрыш") String saveDrawing();
+
     @DefaultStringValue("Отменить") String cancel();
 
     @DefaultStringValue("Сохраняется...") String saving();
@@ -198,4 +200,5 @@ public interface PreferanserConstants extends ConstantsWithLookup {
     @DefaultStringValue("Создать расклад") String createDeal();
 
     @DefaultStringValue("Прикуп берёт взятки на распасах") String widowRaspassOption();
+
 }

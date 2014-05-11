@@ -52,6 +52,7 @@ public class PlayerView extends BaseTableView<PlayerUiHandlers> implements Playe
 
     @UiField Button editButton;
     @UiField Button resetButton;
+    @UiField Button saveDrawingButton;
     @UiField Label trickCountEast;
     @UiField Label trickCountSouth;
     @UiField Label trickCountWest;
@@ -102,8 +103,16 @@ public class PlayerView extends BaseTableView<PlayerUiHandlers> implements Playe
         redoAnchor.setVisible(showNext);
     }
 
+    @Override public void displayResetButton(boolean visible) {
+        resetButton.setVisible(visible);
+    }
+
     @Override public void displaySluffButton(boolean visible) {
         sluffButton.setVisible(visible);
+    }
+
+    @Override public void displaySaveDrawingButton(boolean visible) {
+        saveDrawingButton.setVisible(visible);
     }
 
     @Override protected void displayHandTurnPointer(Hand hand, TurnPointer turnPointer, Hand turn) {

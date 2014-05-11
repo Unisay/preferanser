@@ -22,15 +22,8 @@ package com.preferanser.server.dao.objectify;
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyFactory;
 import com.googlecode.objectify.ObjectifyService;
-import com.preferanser.server.entity.DealEntity;
-import com.preferanser.server.entity.UserEntity;
 
 public class OfyService {
-
-    static {
-        factory().register(UserEntity.class);
-        factory().register(DealEntity.class);
-    }
 
     public static Objectify ofy() {
         return ObjectifyService.ofy();

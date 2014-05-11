@@ -34,14 +34,14 @@
     <description>Preferanser</description>
 
     <properties>
-        <objectify.version>4.0b3</objectify.version>
+        <objectify-gwt.version>1.0</objectify-gwt.version>
         <jersey.version>1.18</jersey.version>
         <restygwt.version>1.4</restygwt.version>
         <jackson.version>2.0.0</jackson.version>
         <javax.el.version>3.0.0</javax.el.version>
         <hibernate-validator.version>4.3.1.Final</hibernate-validator.version>
         <juel.version>2.2.6</juel.version>
-        <appengine-api.version>1.8.9</appengine-api.version>
+        <appengine-api.version>1.9.3</appengine-api.version>
         <gwt.logLevel>INFO</gwt.logLevel>
     </properties>
 
@@ -68,8 +68,8 @@
 
         <dependency>
             <groupId>com.googlecode.objectify</groupId>
-            <artifactId>objectify</artifactId>
-            <version>${objectify.version}</version>
+            <artifactId>objectify-gwt</artifactId>
+            <version>${objectify-gwt.version}</version>
         </dependency>
 
         <dependency>

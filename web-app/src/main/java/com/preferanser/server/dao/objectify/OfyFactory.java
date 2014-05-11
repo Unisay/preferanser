@@ -19,17 +19,20 @@
 
 package com.preferanser.server.dao.objectify;
 
-import com.googlecode.objectify.ObjectifyFactory;
+import com.preferanser.server.entity.DealEntity;
+import com.preferanser.server.entity.UserEntity;
 
-import static com.preferanser.server.dao.objectify.OfyService.ofy;
-
-public class OfyFactory extends ObjectifyFactory {
+public class OfyFactory extends com.googlecode.objectify.ObjectifyFactory {
 
     public OfyFactory() {
+        super(false);
+        register(UserEntity.class);
+        register(DealEntity.class);
     }
 
     @Override
     public Ofy begin() {
-        return new Ofy(ofy());
+        return new Ofy(this);
     }
+
 }

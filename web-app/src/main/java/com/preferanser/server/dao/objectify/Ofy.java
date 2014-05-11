@@ -22,14 +22,13 @@ package com.preferanser.server.dao.objectify;
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.googlecode.objectify.Key;
-import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.cmd.LoadType;
-import com.googlecode.objectify.util.cmd.ObjectifyWrapper;
+import com.googlecode.objectify.impl.ObjectifyImpl;
 
-public class Ofy extends ObjectifyWrapper<Ofy, OfyFactory> {
+public class Ofy extends ObjectifyImpl<Ofy> {
 
-    public Ofy(Objectify base) {
-        super(base);
+    public Ofy(OfyFactory ofyFactory) {
+        super(ofyFactory);
     }
 
     public <T> LoadType<T> query(Class<T> clazz) {

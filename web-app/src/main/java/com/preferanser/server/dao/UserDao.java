@@ -36,8 +36,7 @@ public class UserDao extends BaseDao<UserEntity> {
     }
 
     public Optional<UserEntity> findById(Long id) {
-        Key<UserEntity> key = Key.create(UserEntity.class, id);
-        return get(key);
+        return get(Key.create(UserEntity.class, id));
     }
 
     public Optional<UserEntity> findByGoogleId(String googleId) {

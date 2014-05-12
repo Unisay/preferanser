@@ -28,6 +28,7 @@ import com.preferanser.shared.domain.exception.NotInTurnException;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.util.List;
 import java.util.Map;
 
 import static com.google.common.collect.Sets.newHashSet;
@@ -35,7 +36,10 @@ import static com.preferanser.shared.domain.Card.*;
 import static com.preferanser.shared.domain.Hand.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.collection.IsEmptyCollection.empty;
 import static org.testng.Assert.*;
+import static org.testng.collections.Lists.newArrayList;
 import static org.unitils.reflectionassert.ReflectionAssert.assertLenientEquals;
 import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
 
@@ -490,6 +494,25 @@ public class PlayerTest {
         Deal deal = player.toDeal();
         Player clonedPlayer = new Player(deal);
         assertReflectionEquals(player, clonedPlayer);
+    }
+
+    @Test
+    public void testGetTurns_NoTurns() throws Exception {
+        List<Card> turns = player.getTurns();
+        assertThat(turns, is(empty()));
+    }
+
+    @Test
+    public void testGetTurns_HasTurns() throws Exception {
+        player.makeTurn(CLUB_ACE);
+        player.makeTurn(CLUB_JACK);
+        player.makeTurn(CLUB_8);
+        player.sluffTrick();
+        player.makeTurn(CLUB_KING);
+
+        List<Card> turns = player.getTurns();
+
+        assertReflectionEquals(newArrayList(CLUB_ACE, CLUB_JACK, CLUB_8, CLUB_KING), turns);
     }
 
     private Map<Hand, Contract> buildHandContractMap() {

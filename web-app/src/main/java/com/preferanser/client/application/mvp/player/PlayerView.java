@@ -155,6 +155,10 @@ public class PlayerView extends BaseTableView<PlayerUiHandlers> implements Playe
         getUiHandlers().turnFromWidow();
     }
 
+    @UiHandler("saveDrawingButton") void onSaveDrawing(@SuppressWarnings("unused") ClickEvent event) {
+        getUiHandlers().saveDrawing();
+    }
+
     @Override public void onCardDoubleClick(CardWidget cardWidget, DoubleClickEvent event) {
         if (cardWidget.isEnabled() && cardWidget.isDraggable()) {
             getLog().finer("Card location change: " + cardWidget.getCard() + " -> " + TableLocation.CENTER);

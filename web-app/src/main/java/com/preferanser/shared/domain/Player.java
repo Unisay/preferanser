@@ -32,6 +32,7 @@ import com.preferanser.shared.util.GameUtils;
 import java.util.*;
 
 import static com.google.common.base.Preconditions.checkState;
+import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Maps.newHashMap;
 import static com.google.common.collect.Sets.newHashSet;
 
@@ -238,6 +239,16 @@ public class Player {
             Hand winnerHand = optionalTrickWinner.get();
             return winnerHand == Hand.WIDOW ? currentTrick.getTurn() : winnerHand;
         }
+    }
+
+    public List<Card> getTurns() {
+        List<Card> turns = newArrayList();
+        for (Trick trick : trickLog) {
+            for (Turn turn : trick) {
+                turns.add(turn.getCard());
+            }
+        }
+        return turns;
     }
 
     public Set<Card> getDisabledCards() {

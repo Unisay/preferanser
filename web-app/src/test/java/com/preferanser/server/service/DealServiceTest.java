@@ -31,9 +31,6 @@ public class DealServiceTest {
 
     private DealService dealService;
 
-    private UserEntity user;
-    private UserEntity otherUser;
-
     @Mock
     private DealDao dealDao;
 
@@ -42,6 +39,9 @@ public class DealServiceTest {
 
     @Mock
     private AuthenticationService authenticationService;
+
+    private UserEntity user;
+    private UserEntity otherUser;
 
     @BeforeMethod
     public void setUp() throws Exception {

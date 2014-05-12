@@ -1,32 +1,32 @@
 package com.preferanser.server.transformer;
 
+import com.preferanser.testng.ClockTestNGListener;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
+import static com.preferanser.shared.domain.entity.DealTestHelper.buildDeal;
+import static com.preferanser.shared.domain.entity.DealTestHelper.buildDealEntity;
+import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
+
+@Listeners({ClockTestNGListener.class})
 public class DealTransformerTest {
+
+    private DealTransformer transformer;
 
     @BeforeMethod
     public void setUp() throws Exception {
-        // TODO unit-test
+        transformer = new DealTransformer();
     }
 
     @Test
     public void testToEntity() throws Exception {
-        // TODO unit-test
+        assertReflectionEquals(buildDealEntity(), transformer.toEntity(buildDeal()));
     }
 
     @Test
     public void testFromEntity() throws Exception {
-        // TODO unit-test
+        assertReflectionEquals(buildDeal(), transformer.fromEntity(buildDealEntity()));
     }
 
-    @Test
-    public void testFromEntities() throws Exception {
-        // TODO unit-test
-    }
-
-    @Test
-    public void testToEntities() throws Exception {
-        // TODO unit-test
-    }
 }

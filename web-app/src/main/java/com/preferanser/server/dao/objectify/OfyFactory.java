@@ -20,6 +20,7 @@
 package com.preferanser.server.dao.objectify;
 
 import com.preferanser.server.entity.DealEntity;
+import com.preferanser.server.entity.DrawingEntity;
 import com.preferanser.server.entity.UserEntity;
 
 public class OfyFactory extends com.googlecode.objectify.ObjectifyFactory {
@@ -28,6 +29,7 @@ public class OfyFactory extends com.googlecode.objectify.ObjectifyFactory {
         super(false);
         register(UserEntity.class);
         register(DealEntity.class);
+        register(DrawingEntity.class);
     }
 
     @Override

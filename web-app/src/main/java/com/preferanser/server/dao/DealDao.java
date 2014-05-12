@@ -49,10 +49,8 @@ public class DealDao extends BaseDao<DealEntity> {
         return query().ancestor(user).order("-created").list();
     }
 
-    public Optional<DealEntity> get(UserEntity user, Long dealId) {
-        Key<UserEntity> parentKey = Key.create(UserEntity.class, user.getId());
-        Key<DealEntity> entityKey = Key.create(parentKey, DealEntity.class, dealId);
-        return get(entityKey);
+    public Optional<DealEntity> get(UserEntity userEntity, Long dealId) {
+        return get(Key.create(userEntity.getKey(), DealEntity.class, dealId));
     }
 
 }

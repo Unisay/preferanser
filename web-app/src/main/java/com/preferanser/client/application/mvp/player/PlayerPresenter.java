@@ -36,14 +36,19 @@ import com.preferanser.client.application.mvp.TableView;
 import com.preferanser.client.gwtp.NameTokens;
 import com.preferanser.client.gwtp.PlaceRequestHelper;
 import com.preferanser.client.service.DealService;
+import com.preferanser.client.service.DrawingService;
+import com.preferanser.client.service.LogResponse;
 import com.preferanser.client.service.Response;
 import com.preferanser.shared.domain.*;
 import com.preferanser.shared.domain.exception.GameException;
+import com.preferanser.shared.util.Clock;
 import org.fusesource.restygwt.client.Method;
 
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
+
+import static com.google.common.base.Preconditions.checkState;
 
 /**
  * Presenter for the mvp page
@@ -57,11 +62,14 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
         void displayHandTricks(Map<Hand, Integer> handTricks);
         void disableCards(Set<Card> cards);
         void displayTurnNavigation(boolean showPrev, boolean showNext);
+        void displayResetButton(boolean visible);
         void displaySluffButton(boolean visible);
+        void displaySaveDrawingButton(boolean visible);
     }
 
     private final PlaceManager placeManager;
     private final DealService dealService;
+    private final DrawingService drawingService;
     private Optional<Long> userIdOptional = Optional.absent();
     private Optional<Long> dealIdOptional = Optional.absent();
     private Optional<Player> playerOptional = Optional.absent();
@@ -71,10 +79,11 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
     public interface Proxy extends ProxyPlace<PlayerPresenter> {}
 
     @Inject
-    public PlayerPresenter(PlaceManager placeManager, EventBus eventBus, PlayerView view, Proxy proxy, DealService dealService) {
+    public PlayerPresenter(PlaceManager placeManager, EventBus eventBus, PlayerView view, Proxy proxy, DealService dealService, DrawingService drawingService) {
         super(eventBus, view, proxy, ApplicationPresenter.MAIN_SLOT);
         this.placeManager = placeManager;
         this.dealService = dealService;
+        this.drawingService = drawingService;
         getView().setUiHandlers(this);
     }
 
@@ -133,6 +142,15 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
         } catch (GameException e) {
             log.finer(e.getMessage());
         }
+    }
+
+    @Override public void saveDrawing() {
+        checkState(playerOptional.isPresent(), "Player is not present");
+        Player player = playerOptional.get();
+        checkState(player.hasRedoTurns() || player.hasUndoTurns());
+
+        Drawing drawing = new Drawing(null, userIdOptional.get(), dealIdOptional.get(), "Drawing", "Description", player.getTurns(), Clock.getNow());
+        drawingService.save(drawing, new LogResponse<Long>(log, "Drawing saved"));
     }
 
     @Override public void changeCardLocation(Card card, Optional<TableLocation> newLocation) {
@@ -197,6 +215,8 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
             view.displayTurn(player.getTurn());
             view.displayCards(player.getHandCards(), player.getCenterCards(), player.getWidow());
             view.displaySluffButton(player.isTrickClosed());
+            view.displayResetButton(player.hasUndoTurns() || player.hasRedoTurns());
+            view.displaySaveDrawingButton(player.hasUndoTurns() || player.hasRedoTurns());
             view.displayContracts(player.getHandContracts());
             view.displayHandTricks(player.getHandTrickCounts());
             view.displayTurnNavigation(player.hasUndoTurns(), player.hasRedoTurns());

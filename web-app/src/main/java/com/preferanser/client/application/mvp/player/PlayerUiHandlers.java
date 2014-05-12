@@ -60,4 +60,9 @@ public interface PlayerUiHandlers extends TableUiHandlers {
      * Make turn from widow
      */
     void turnFromWidow();
+
+    /**
+     * Save drawing
+     */
+    void saveDrawing();
 }

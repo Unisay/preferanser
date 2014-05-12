@@ -15,17 +15,17 @@ public class DealTest {
 
     @Test
     public void testEquals_Positive() throws Exception {
-        Deal deal1 = buildDeal(1L, "description", "name");
-        Deal deal2 = buildDeal(1L, "description", "name");
+        Deal deal1 = buildDeal(1L, "name", "description");
+        Deal deal2 = buildDeal(1L, "name", "description");
         assertThat(deal1, equalTo(deal2));
     }
 
     @Test
     public void testEquals_Negative() throws Exception {
-        Deal deal1 = buildDeal(1L, "description", "name");
-        Deal deal2 = buildDeal(2L, "description", "name");
-        Deal deal3 = buildDeal(1L, "description", "name_other");
-        Deal deal4 = buildDeal(1L, "description_other", "name");
+        Deal deal1 = buildDeal(1L, "name", "description");
+        Deal deal2 = buildDeal(2L, "name", "description");
+        Deal deal3 = buildDeal(1L, "name_other", "description");
+        Deal deal4 = buildDeal(1L, "name", "description_other");
         assertThat(deal1, not(equalTo(deal2)));
         assertThat(deal1, not(equalTo(deal3)));
         assertThat(deal1, not(equalTo(deal4)));
@@ -33,7 +33,7 @@ public class DealTest {
 
     @Test
     public void testCopyConstructor() throws Exception {
-        Deal deal1 = buildDeal(1L, "description", "name");
+        Deal deal1 = buildDeal(1L, "name", "description");
         Deal deal2 = new Deal(deal1);
         assertThat(deal1, equalTo(deal2));
     }

@@ -113,9 +113,11 @@ public class EditorTest {
 
     @Test
     public void testSetDeal() throws Exception {
-        Deal originalDeal = DealTestHelper.buildDeal(1);
+        Deal originalDeal = DealTestHelper.buildDeal();
+        Deal expectedDeal = originalDeal;
+        expectedDeal.setCurrentTrickIndex(0);
         Deal actualDeal = editor.setDeal(originalDeal).build();
-        assertLenientEquals(originalDeal, actualDeal);
+        assertLenientEquals(expectedDeal, actualDeal);
     }
 
     @Test

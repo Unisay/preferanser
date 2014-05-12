@@ -1,7 +1,6 @@
 package com.preferanser.server.entity;
 
 import com.google.common.base.Objects;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.annotation.Id;
@@ -11,10 +10,8 @@ import com.preferanser.shared.domain.*;
 
 import javax.validation.constraints.Size;
 import java.util.Date;
-import java.util.List;
 import java.util.Set;
 
-import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Sets.newHashSet;
 
 @com.googlecode.objectify.annotation.Entity
@@ -49,7 +46,6 @@ public class DealEntity implements Entity {
     private Set<Card> eastCards;
     private Set<Card> southCards;
     private Set<Card> westCards;
-    private List<Turn> turns;
     private int currentTrickIndex;
 
     public DealEntity() {
@@ -57,7 +53,6 @@ public class DealEntity implements Entity {
         eastCards = newHashSet();
         westCards = newHashSet();
         southCards = newHashSet();
-        turns = newArrayList();
     }
 
     public DealEntity(DealEntity deal) {
@@ -76,8 +71,11 @@ public class DealEntity implements Entity {
         eastCards = deal.eastCards == null ? Sets.<Card>newHashSet() : newHashSet(deal.eastCards);
         southCards = deal.southCards == null ? Sets.<Card>newHashSet() : newHashSet(deal.southCards);
         westCards = deal.westCards == null ? Sets.<Card>newHashSet() : newHashSet(deal.westCards);
-        turns = deal.turns == null ? Lists.<Turn>newArrayList() : newArrayList(deal.turns);
         currentTrickIndex = deal.currentTrickIndex;
+    }
+
+    public Key<DealEntity> getKey() {
+        return Key.create(this);
     }
 
     public Long getId() {
@@ -200,14 +198,6 @@ public class DealEntity implements Entity {
         this.westCards = westCards == null ? Sets.<Card>newHashSet() : westCards;
     }
 
-    public List<Turn> getTurns() {
-        return turns;
-    }
-
-    public void setTurns(List<Turn> turns) {
-        this.turns = turns == null ? Lists.<Turn>newArrayList() : turns;
-    }
-
     public int getCurrentTrickIndex() {
         return currentTrickIndex;
     }
@@ -238,7 +228,6 @@ public class DealEntity implements Entity {
             Objects.equal(this.eastCards, that.eastCards) &&
             Objects.equal(this.southCards, that.southCards) &&
             Objects.equal(this.westCards, that.westCards) &&
-            Objects.equal(this.turns, that.turns) &&
             Objects.equal(this.currentTrickIndex, that.currentTrickIndex);
     }
 
@@ -246,30 +235,27 @@ public class DealEntity implements Entity {
     public int hashCode() {
         return Objects.hashCode(id, name, description, owner, created, shared, firstTurn,
             players, eastContract, southContract, westContract, widow,
-            eastCards, southCards, westCards, turns, currentTrickIndex);
+            eastCards, southCards, westCards, currentTrickIndex);
     }
 
     @Override public String toString() {
-        final StringBuilder sb = new StringBuilder("DealEntity{");
-        sb.append("id='").append(id).append('\'');
-        sb.append(", name='").append(name).append('\'');
-        sb.append(", description='").append(description).append('\'');
-        sb.append(", owner='").append(owner).append('\'');
-        sb.append(", created=").append(created);
-        sb.append(", shared=").append(shared);
-        sb.append(", firstTurn=").append(firstTurn);
-        sb.append(", players=").append(players);
-        sb.append(", eastContract=").append(eastContract);
-        sb.append(", southContract=").append(southContract);
-        sb.append(", westContract=").append(westContract);
-        sb.append(", widow=").append(widow);
-        sb.append(", eastCards=").append(eastCards);
-        sb.append(", southCards=").append(southCards);
-        sb.append(", westCards=").append(westCards);
-        sb.append(", turns=").append(turns);
-        sb.append(", currentTrickIndex=").append(currentTrickIndex);
-        sb.append('}');
-        return sb.toString();
+        return Objects.toStringHelper(this)
+            .add("id", id)
+            .add("owner", owner)
+            .add("name", name)
+            .add("description", description)
+            .add("created", created)
+            .add("shared", shared)
+            .add("firstTurn", firstTurn)
+            .add("players", players)
+            .add("eastContract", eastContract)
+            .add("southContract", southContract)
+            .add("westContract", westContract)
+            .add("widow", widow)
+            .add("eastCards", eastCards)
+            .add("southCards", southCards)
+            .add("westCards", westCards)
+            .add("currentTrickIndex", currentTrickIndex)
+            .toString();
     }
-
 }

@@ -87,7 +87,7 @@ public abstract class BaseDao<T extends Entity> {
         }
     }
 
-    protected Optional<T> get(Key<T> key) {
+    public Optional<T> get(Key<T> key) {
         return ofy().get(key);
     }
 

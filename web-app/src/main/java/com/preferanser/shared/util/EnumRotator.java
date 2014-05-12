@@ -34,6 +34,7 @@ public class EnumRotator<E extends Enum<E>> {
         this.currentOrdinal = values.length - 1;
     }
 
+    @SuppressWarnings("unchecked")
     public EnumRotator(E[] values, E startValue, E... valuesToSkip) {
         Preconditions.checkNotNull(values, "EnumRotator: values are null");
         Preconditions.checkNotNull(values, "EnumRotator: current value is null");

@@ -21,6 +21,7 @@ package com.preferanser.server.entity;
 
 
 import com.google.common.base.Objects;
+import com.googlecode.objectify.Key;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
@@ -30,6 +31,7 @@ public class UserEntity implements com.preferanser.server.entity.Entity {
 
     @Id
     private Long id;
+
     @Index
     private String googleId;
     private String email;
@@ -43,6 +45,10 @@ public class UserEntity implements com.preferanser.server.entity.Entity {
         this.googleId = googleId;
         this.email = email;
         this.admin = admin;
+    }
+
+    public Key<UserEntity> getKey() {
+        return Key.create(this);
     }
 
     public Long getId() {

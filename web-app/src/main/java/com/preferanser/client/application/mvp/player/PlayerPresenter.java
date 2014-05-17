@@ -33,6 +33,8 @@ import com.gwtplatform.mvp.client.proxy.ResetPresentersEvent;
 import com.preferanser.client.application.ApplicationPresenter;
 import com.preferanser.client.application.mvp.DealEvent;
 import com.preferanser.client.application.mvp.TableView;
+import com.preferanser.client.application.mvp.dialog.ApplicationDialogs;
+import com.preferanser.client.application.mvp.dialog.NameDescriptionSetter;
 import com.preferanser.client.gwtp.NameTokens;
 import com.preferanser.client.gwtp.PlaceRequestHelper;
 import com.preferanser.client.service.DealService;
@@ -71,6 +73,7 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
     private final PlaceManager placeManager;
     private final DealService dealService;
     private final DrawingService drawingService;
+    private final ApplicationDialogs applicationDialogs;
     private Optional<Long> userIdOptional = Optional.absent();
     private Optional<Long> dealIdOptional = Optional.absent();
     private Optional<Player> playerOptional = Optional.absent();
@@ -87,13 +90,14 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
         Proxy proxy,
         DealService dealService,
         DrawingService drawingService,
-        User currentUser
-    ) {
+        User currentUser,
+        ApplicationDialogs applicationDialogs) {
         super(eventBus, view, proxy, ApplicationPresenter.MAIN_SLOT);
         this.placeManager = placeManager;
         this.dealService = dealService;
         this.drawingService = drawingService;
         this.currentUser = currentUser;
+        this.applicationDialogs = applicationDialogs;
         getView().setUiHandlers(this);
     }
 
@@ -156,11 +160,15 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
 
     @Override public void saveDrawing() {
         checkState(playerOptional.isPresent(), "Player is not present");
-        Player player = playerOptional.get();
+        final Player player = playerOptional.get();
         checkState(player.hasRedoTurns() || player.hasUndoTurns());
 
-        Drawing drawing = new Drawing(null, userIdOptional.get(), dealIdOptional.get(), "Drawing", "Description", player.getTurns(), Clock.getNow());
-        drawingService.save(drawing, new LogResponse<Long>(log, "Drawing saved"));
+        applicationDialogs.showSaveDrawingDialog(new NameDescriptionSetter() {
+            @Override public void setNameDescription(String name, String description) {
+                Drawing drawing = new Drawing(null, userIdOptional.get(), dealIdOptional.get(), name, description, player.getTurns(), Clock.getNow());
+                drawingService.save(drawing, new LogResponse<Long>(log, "Drawing saved"));
+            }
+        });
     }
 
     @Override public void changeCardLocation(Card card, Optional<TableLocation> newLocation) {

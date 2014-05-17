@@ -17,11 +17,14 @@
  *     along with this program.  If not, see [http://www.gnu.org/licenses/].
  */
 
-package com.preferanser.client.application.mvp.editor.dialog.contract;
+package com.preferanser.client.application.mvp.dialog;
 
-import com.gwtplatform.mvp.client.UiHandlers;
+
 import com.preferanser.shared.domain.Contract;
+import com.preferanser.shared.domain.Hand;
 
-public interface ContractDialogUiHandlers extends UiHandlers {
-    boolean setContract(Contract contract);
+public interface HandContractSetter {
+
+    boolean setHandContract(Hand hand, Contract contract);
+
 }

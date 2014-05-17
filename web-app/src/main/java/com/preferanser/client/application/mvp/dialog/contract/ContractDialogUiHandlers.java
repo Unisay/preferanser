@@ -17,21 +17,11 @@
  *     along with this program.  If not, see [http://www.gnu.org/licenses/].
  */
 
-package com.preferanser.client.application.mvp.player;
+package com.preferanser.client.application.mvp.dialog.contract;
 
-import com.gwtplatform.mvp.client.gin.AbstractPresenterModule;
-import com.preferanser.client.application.mvp.dialog.drawing.save.SaveDrawingDialogPresenter;
-import com.preferanser.client.application.mvp.dialog.drawing.save.SaveDrawingDialogView;
+import com.gwtplatform.mvp.client.UiHandlers;
+import com.preferanser.shared.domain.Contract;
 
-/**
- * Gin module for the mvp page
- */
-public class PlayerModule extends AbstractPresenterModule {
-
-    @Override
-    protected void configure() {
-        bindSingletonPresenterWidget(SaveDrawingDialogPresenter.class, SaveDrawingDialogPresenter.TheView.class, SaveDrawingDialogView.class);
-        bindPresenter(PlayerPresenter.class, PlayerPresenter.PlayerView.class, PlayerView.class, PlayerPresenter.Proxy.class);
-    }
-
+public interface ContractDialogUiHandlers extends UiHandlers {
+    boolean setContract(Contract contract);
 }

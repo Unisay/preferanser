@@ -17,39 +17,37 @@
  *     along with this program.  If not, see [http://www.gnu.org/licenses/].
  */
 
-package com.preferanser.client.application.mvp.editor.dialog.validation;
+package com.preferanser.client.application.mvp.dialog.drawing.save;
 
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.PopupView;
 import com.gwtplatform.mvp.client.PresenterWidget;
+import com.preferanser.client.application.mvp.dialog.NameDescriptionSetter;
 import com.preferanser.shared.domain.exception.validation.EditorValidationError;
 
 import java.util.Collection;
 
-public class ValidationDialogPresenter extends PresenterWidget<ValidationDialogPresenter.TheView> implements ValidationDialogUiHandlers {
+public class SaveDrawingDialogPresenter extends PresenterWidget<SaveDrawingDialogPresenter.TheView> implements SaveDrawingDialogUiHandlers {
 
     private Collection<EditorValidationError> validationErrors;
+    private NameDescriptionSetter nameDescriptionSetter;
 
-    public interface TheView extends PopupView, HasUiHandlers<ValidationDialogUiHandlers> {
-        void displayValidationErrors(Collection<EditorValidationError> validationErrors);
+    public interface TheView extends PopupView, HasUiHandlers<SaveDrawingDialogUiHandlers> {
     }
 
-    @Inject
-    public ValidationDialogPresenter(EventBus eventBus, TheView view) {
+    @Inject public SaveDrawingDialogPresenter(EventBus eventBus, TheView view) {
         super(eventBus, view);
         getView().setUiHandlers(this);
     }
 
-    @Override
-    protected void onReveal() {
-        super.onReveal();
-        getView().displayValidationErrors(this.validationErrors);
+    @Override public void save(String name, String description) {
+        nameDescriptionSetter.setNameDescription(name, description);
     }
 
-    public void setValidationErrors(Collection<EditorValidationError> validationErrors) {
-        this.validationErrors = validationErrors;
+    public void setNameDescriptionSetter(NameDescriptionSetter nameDescriptionSetter) {
+        this.nameDescriptionSetter = nameDescriptionSetter;
     }
 
 }

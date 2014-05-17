@@ -17,21 +17,21 @@
  *     along with this program.  If not, see [http://www.gnu.org/licenses/].
  */
 
-package com.preferanser.client.application.mvp.editor.dialog.contract;
+package com.preferanser.client.application.mvp.dialog.contract;
 
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.PopupView;
 import com.gwtplatform.mvp.client.PresenterWidget;
-import com.preferanser.client.application.mvp.editor.HasHandContracts;
+import com.preferanser.client.application.mvp.dialog.HandContractSetter;
 import com.preferanser.shared.domain.Contract;
 import com.preferanser.shared.domain.Hand;
 
 public class ContractDialogPresenter extends PresenterWidget<ContractDialogPresenter.TheView> implements ContractDialogUiHandlers {
 
     private Hand hand;
-    private HasHandContracts hasHandContracts;
+    private HandContractSetter handContractSetter;
 
     public interface TheView extends PopupView, HasUiHandlers<ContractDialogUiHandlers> {
         void setHand(Hand hand);
@@ -51,11 +51,11 @@ public class ContractDialogPresenter extends PresenterWidget<ContractDialogPrese
 
     @Override
     public boolean setContract(Contract contract) {
-        return hasHandContracts.setHandContract(hand, contract);
+        return handContractSetter.setHandContract(hand, contract);
     }
 
-    public void setHasHandContracts(HasHandContracts hasHandContracts) {
-        this.hasHandContracts = hasHandContracts;
+    public void setHandContractSetter(HandContractSetter handContractSetter) {
+        this.handContractSetter = handContractSetter;
     }
 
     public void setHand(Hand hand) {

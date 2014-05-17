@@ -34,7 +34,8 @@ import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.preferanser.client.application.ApplicationPresenter;
 import com.preferanser.client.application.mvp.DealEvent;
 import com.preferanser.client.application.mvp.TableView;
-import com.preferanser.client.application.mvp.editor.dialog.EditorDialogs;
+import com.preferanser.client.application.mvp.dialog.ApplicationDialogs;
+import com.preferanser.client.application.mvp.dialog.HandContractSetter;
 import com.preferanser.client.gwtp.LoggedInGatekeeper;
 import com.preferanser.client.gwtp.NameTokens;
 import com.preferanser.client.gwtp.PlaceRequestHelper;
@@ -49,7 +50,7 @@ import java.util.Date;
 import java.util.logging.Logger;
 
 
-public class EditorPresenter extends Presenter<EditorPresenter.EditorView, EditorPresenter.Proxy> implements EditorUiHandlers, HasHandContracts {
+public class EditorPresenter extends Presenter<EditorPresenter.EditorView, EditorPresenter.Proxy> implements EditorUiHandlers, HandContractSetter {
 
     private static final Logger log = Logger.getLogger("EditorPresenter");
     private Optional<Long> userIdOptional = Optional.absent();
@@ -60,7 +61,7 @@ public class EditorPresenter extends Presenter<EditorPresenter.EditorView, Edito
     private Editor editor;
     private final PlaceManager placeManager;
     private final DealService dealService;
-    private final EditorDialogs editorDialogs;
+    private final ApplicationDialogs applicationDialogs;
 
     @ProxyStandard
     @NameToken(NameTokens.EDITOR)
@@ -74,12 +75,12 @@ public class EditorPresenter extends Presenter<EditorPresenter.EditorView, Edito
                            Proxy proxy,
                            Editor editor,
                            DealService dealService,
-                           EditorDialogs editorDialogs) {
+                           ApplicationDialogs applicationDialogs) {
         super(eventBus, view, proxy, ApplicationPresenter.MAIN_SLOT);
         this.placeManager = placeManager;
         this.editor = editor;
         this.dealService = dealService;
-        this.editorDialogs = editorDialogs;
+        this.applicationDialogs = applicationDialogs;
         getView().setUiHandlers(this);
         initEditor();
     }
@@ -134,7 +135,7 @@ public class EditorPresenter extends Presenter<EditorPresenter.EditorView, Edito
     }
 
     @Override public void chooseContract(Hand hand) {
-        editorDialogs.showContractDialog(hand);
+        applicationDialogs.showContractDialog(hand, this);
     }
 
     @Override public void chooseTurn(Hand hand) {
@@ -181,7 +182,7 @@ public class EditorPresenter extends Presenter<EditorPresenter.EditorView, Edito
                 });
             }
         } catch (EditorException e) {
-            editorDialogs.showValidationDialog(e.getBuilderErrors());
+            applicationDialogs.showValidationDialog(e.getBuilderErrors());
         }
     }
 

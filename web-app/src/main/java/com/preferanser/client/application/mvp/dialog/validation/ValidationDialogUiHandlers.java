@@ -17,14 +17,9 @@
  *     along with this program.  If not, see [http://www.gnu.org/licenses/].
  */
 
-package com.preferanser.client.application.mvp.editor;
+package com.preferanser.client.application.mvp.dialog.validation;
 
+import com.gwtplatform.mvp.client.UiHandlers;
 
-import com.preferanser.shared.domain.Contract;
-import com.preferanser.shared.domain.Hand;
-
-public interface HasHandContracts {
-
-    boolean setHandContract(Hand hand, Contract contract);
-
+public interface ValidationDialogUiHandlers extends UiHandlers {
 }

@@ -22,7 +22,7 @@ public class DrawingEntity implements Entity {
     private Key<DealEntity> deal;
 
     @Index
-    @Size(min = 2, max = 32)
+    @Size(min = 1, max = 32)
     private String name;
 
     @Size(max = 512)

@@ -17,9 +17,10 @@
  *     along with this program.  If not, see [http://www.gnu.org/licenses/].
  */
 
-package com.preferanser.client.application.mvp.editor.dialog.validation;
+package com.preferanser.client.application.mvp.dialog.drawing.save;
 
 import com.gwtplatform.mvp.client.UiHandlers;
 
-public interface ValidationDialogUiHandlers extends UiHandlers {
+public interface SaveDrawingDialogUiHandlers extends UiHandlers {
+    void save(String nameText, String descriptionText);
 }

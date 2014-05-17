@@ -21,10 +21,11 @@ package com.preferanser.client.application.mvp.editor;
 
 import com.google.inject.Singleton;
 import com.gwtplatform.mvp.client.gin.AbstractPresenterModule;
-import com.preferanser.client.application.mvp.editor.dialog.contract.ContractDialogPresenter;
-import com.preferanser.client.application.mvp.editor.dialog.contract.ContractDialogView;
-import com.preferanser.client.application.mvp.editor.dialog.validation.ValidationDialogPresenter;
-import com.preferanser.client.application.mvp.editor.dialog.validation.ValidationDialogView;
+import com.preferanser.client.application.mvp.dialog.HandContractSetter;
+import com.preferanser.client.application.mvp.dialog.contract.ContractDialogPresenter;
+import com.preferanser.client.application.mvp.dialog.contract.ContractDialogView;
+import com.preferanser.client.application.mvp.dialog.validation.ValidationDialogPresenter;
+import com.preferanser.client.application.mvp.dialog.validation.ValidationDialogView;
 
 /**
  * Gin module for the mvp builder page
@@ -33,7 +34,7 @@ public class EditorModule extends AbstractPresenterModule {
 
     @Override
     protected void configure() {
-        bind(HasHandContracts.class).to(EditorPresenter.class).in(Singleton.class);
+        bind(HandContractSetter.class).to(EditorPresenter.class).in(Singleton.class);
         bindSingletonPresenterWidget(ContractDialogPresenter.class, ContractDialogPresenter.TheView.class, ContractDialogView.class);
         bindSingletonPresenterWidget(ValidationDialogPresenter.class, ValidationDialogPresenter.TheView.class, ValidationDialogView.class);
         bindPresenter(EditorPresenter.class, EditorPresenter.EditorView.class, EditorView.class, EditorPresenter.Proxy.class);

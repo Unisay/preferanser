@@ -67,6 +67,7 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
         void displaySaveDrawingButton(boolean visible);
     }
 
+    private final User currentUser;
     private final PlaceManager placeManager;
     private final DealService dealService;
     private final DrawingService drawingService;
@@ -79,11 +80,20 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
     public interface Proxy extends ProxyPlace<PlayerPresenter> {}
 
     @Inject
-    public PlayerPresenter(PlaceManager placeManager, EventBus eventBus, PlayerView view, Proxy proxy, DealService dealService, DrawingService drawingService) {
+    public PlayerPresenter(
+        PlaceManager placeManager,
+        EventBus eventBus,
+        PlayerView view,
+        Proxy proxy,
+        DealService dealService,
+        DrawingService drawingService,
+        User currentUser
+    ) {
         super(eventBus, view, proxy, ApplicationPresenter.MAIN_SLOT);
         this.placeManager = placeManager;
         this.dealService = dealService;
         this.drawingService = drawingService;
+        this.currentUser = currentUser;
         getView().setUiHandlers(this);
     }
 
@@ -216,7 +226,7 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
             view.displayCards(player.getHandCards(), player.getCenterCards(), player.getWidow());
             view.displaySluffButton(player.isTrickClosed());
             view.displayResetButton(player.hasUndoTurns() || player.hasRedoTurns());
-            view.displaySaveDrawingButton(player.hasUndoTurns() || player.hasRedoTurns());
+            view.displaySaveDrawingButton(currentUser.getLoggedIn() && player.hasTurns());
             view.displayContracts(player.getHandContracts());
             view.displayHandTricks(player.getHandTrickCounts());
             view.displayTurnNavigation(player.hasUndoTurns(), player.hasRedoTurns());

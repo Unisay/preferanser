@@ -393,6 +393,10 @@ public class Player {
         return description;
     }
 
+    public boolean hasTurns() {
+        return hasRedoTurns() || hasUndoTurns();
+    }
+
     public Deal toDeal() {
         Deal deal = new Deal();
         deal.setName(name);

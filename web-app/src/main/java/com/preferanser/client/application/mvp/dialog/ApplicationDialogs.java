@@ -25,13 +25,16 @@ import com.gwtplatform.mvp.client.PopupView;
 import com.gwtplatform.mvp.client.PresenterWidget;
 import com.gwtplatform.mvp.client.proxy.RevealRootPopupContentEvent;
 import com.preferanser.client.application.mvp.dialog.contract.ContractDialogPresenter;
+import com.preferanser.client.application.mvp.dialog.drawing.open.OpenDrawingDialogPresenter;
 import com.preferanser.client.application.mvp.dialog.drawing.save.SaveDrawingDialogPresenter;
 import com.preferanser.client.application.mvp.dialog.validation.ValidationDialogPresenter;
 import com.preferanser.client.application.mvp.main.MainPresenter;
+import com.preferanser.shared.domain.Drawing;
 import com.preferanser.shared.domain.Hand;
 import com.preferanser.shared.domain.exception.validation.EditorValidationError;
 
 import java.util.Collection;
+import java.util.List;
 
 public class ApplicationDialogs {
 
@@ -39,16 +42,21 @@ public class ApplicationDialogs {
     private final ContractDialogPresenter contractDialog;
     private final ValidationDialogPresenter validationDialog;
     private final SaveDrawingDialogPresenter saveDrawingDialog;
+    private final OpenDrawingDialogPresenter openDrawingDialog;
 
     @Inject
-    public ApplicationDialogs(Provider<MainPresenter> mainPresenterProvider,
-                              ContractDialogPresenter contractDialog,
-                              ValidationDialogPresenter validationDialog,
-                              SaveDrawingDialogPresenter saveDrawingDialog) {
+    public ApplicationDialogs(
+        Provider<MainPresenter> mainPresenterProvider,
+        ContractDialogPresenter contractDialog,
+        ValidationDialogPresenter validationDialog,
+        SaveDrawingDialogPresenter saveDrawingDialog,
+        OpenDrawingDialogPresenter openDrawingDialog
+    ) {
         this.mainPresenterProvider = mainPresenterProvider;
         this.contractDialog = contractDialog;
         this.validationDialog = validationDialog;
         this.saveDrawingDialog = saveDrawingDialog;
+        this.openDrawingDialog = openDrawingDialog;
     }
 
     public void showContractDialog(Hand hand, HandContractSetter handContractSetter) {
@@ -65,6 +73,12 @@ public class ApplicationDialogs {
     public void showSaveDrawingDialog(NameDescriptionSetter nameDescriptionSetter) {
         saveDrawingDialog.setNameDescriptionSetter(nameDescriptionSetter);
         showGlobalDialog(saveDrawingDialog);
+    }
+
+    public void showOpenDrawingDialog(List<Drawing> drawingList, DrawingSetter drawingSetter) {
+        openDrawingDialog.setDrawings(drawingList);
+        openDrawingDialog.setDrawingSetter(drawingSetter);
+        showGlobalDialog(openDrawingDialog);
     }
 
     private void showGlobalDialog(PresenterWidget<? extends PopupView> dialog) {

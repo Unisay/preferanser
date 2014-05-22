@@ -17,65 +17,60 @@
  *     along with this program.  If not, see [http://www.gnu.org/licenses/].
  */
 
-package com.preferanser.client.application.mvp.dialog.drawing.save;
+package com.preferanser.client.application.mvp.dialog.drawing.open;
 
-import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.PopupPanel;
-import com.google.gwt.user.client.ui.TextArea;
-import com.google.gwt.user.client.ui.TextBox;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.PopupViewWithUiHandlers;
 import com.preferanser.client.application.i18n.PreferanserConstants;
 import com.preferanser.client.application.widgets.EscapableDialogBox;
+import com.preferanser.shared.domain.Drawing;
 
-public class SaveDrawingDialogView extends PopupViewWithUiHandlers<SaveDrawingDialogUiHandlers> implements SaveDrawingDialogPresenter.TheView {
+import java.util.List;
 
-    interface Binder extends UiBinder<PopupPanel, SaveDrawingDialogView> {}
+public class OpenDrawingDialogView extends PopupViewWithUiHandlers<OpenDrawingDialogUiHandlers> implements OpenDrawingDialogPresenter.TheView {
+
+    public static final DateTimeFormat DATE_TIME_FORMAT = DateTimeFormat.getFormat(DateTimeFormat.PredefinedFormat.DATE_TIME_SHORT);
+
+    interface Binder extends UiBinder<PopupPanel, OpenDrawingDialogView> {}
 
     @UiField PreferanserConstants constants;
     @UiField EscapableDialogBox dialog;
-    @UiField TextBox name;
-    @UiField TextArea description;
-    @UiField Button saveButton;
+    @UiField Button openButton;
+    @UiField Button cancelButton;
+    @UiField ListBox listBox;
 
-    private boolean updateButton = true;
+    private List<Drawing> drawings;
 
     @Inject
-    protected SaveDrawingDialogView(Binder uiBinder, EventBus eventBus) {
+    protected OpenDrawingDialogView(Binder uiBinder, EventBus eventBus) {
         super(eventBus);
         initWidget(uiBinder.createAndBindUi(this));
     }
 
-    @UiHandler("saveButton") void onSaveDrawing(@SuppressWarnings("unused") ClickEvent event) {
-        String nameText = name.getText();
-        if (!nameText.isEmpty()) {
-            String descriptionText = description.getText();
-            getUiHandlers().save(nameText, descriptionText);
-            hide();
+    @Override public void displayDrawings(List<Drawing> drawings) {
+        this.drawings = drawings;
+        listBox.clear();
+        for (Drawing drawing : drawings) {
+            listBox.addItem(drawing.getName() + " (" + DATE_TIME_FORMAT.format(drawing.getCreatedAt()) + ")");
         }
     }
 
-    @Override public void show() {
-        updateButton = true;
-        Scheduler.get().scheduleFixedDelay(new Scheduler.RepeatingCommand() {
-            @Override public boolean execute() {
-                saveButton.setEnabled(name.getText().length() > 0);
-                return updateButton;
-            }
-        }, 100);
-        super.show();
+    @UiHandler("openButton") void onOpen(@SuppressWarnings("unused") ClickEvent event) {
+        getUiHandlers().open(drawings.get(listBox.getSelectedIndex()));
+        hide();
     }
 
-    @Override public void hide() {
-        updateButton = false;
-        name.setText("");
-        description.setText("");
-        super.hide();
+    @UiHandler("cancelButton") void onCancel(@SuppressWarnings("unused") ClickEvent event) {
+        hide();
     }
+
 }

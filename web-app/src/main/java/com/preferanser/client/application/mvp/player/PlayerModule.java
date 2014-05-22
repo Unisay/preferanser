@@ -20,6 +20,8 @@
 package com.preferanser.client.application.mvp.player;
 
 import com.gwtplatform.mvp.client.gin.AbstractPresenterModule;
+import com.preferanser.client.application.mvp.dialog.drawing.open.OpenDrawingDialogPresenter;
+import com.preferanser.client.application.mvp.dialog.drawing.open.OpenDrawingDialogView;
 import com.preferanser.client.application.mvp.dialog.drawing.save.SaveDrawingDialogPresenter;
 import com.preferanser.client.application.mvp.dialog.drawing.save.SaveDrawingDialogView;
 
@@ -31,6 +33,7 @@ public class PlayerModule extends AbstractPresenterModule {
     @Override
     protected void configure() {
         bindSingletonPresenterWidget(SaveDrawingDialogPresenter.class, SaveDrawingDialogPresenter.TheView.class, SaveDrawingDialogView.class);
+        bindSingletonPresenterWidget(OpenDrawingDialogPresenter.class, OpenDrawingDialogPresenter.TheView.class, OpenDrawingDialogView.class);
         bindPresenter(PlayerPresenter.class, PlayerPresenter.PlayerView.class, PlayerView.class, PlayerPresenter.Proxy.class);
     }
 

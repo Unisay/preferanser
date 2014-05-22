@@ -34,6 +34,7 @@ import com.preferanser.client.application.ApplicationPresenter;
 import com.preferanser.client.application.mvp.DealEvent;
 import com.preferanser.client.application.mvp.TableView;
 import com.preferanser.client.application.mvp.dialog.ApplicationDialogs;
+import com.preferanser.client.application.mvp.dialog.DrawingSetter;
 import com.preferanser.client.application.mvp.dialog.NameDescriptionSetter;
 import com.preferanser.client.gwtp.NameTokens;
 import com.preferanser.client.gwtp.PlaceRequestHelper;
@@ -46,6 +47,7 @@ import com.preferanser.shared.domain.exception.GameException;
 import com.preferanser.shared.util.Clock;
 import org.fusesource.restygwt.client.Method;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
@@ -145,13 +147,13 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
     }
 
     @Override public void sluff() {
-        if (playerOptional.get().sluffTrick())
+        if (getPlayerOrThrow().sluffTrick())
             refreshView();
     }
 
     @Override public void turnFromWidow() {
         try {
-            playerOptional.get().makeTurnFromWidow();
+            getPlayerOrThrow().makeTurnFromWidow();
             refreshView();
         } catch (GameException e) {
             log.finer(e.getMessage());
@@ -159,8 +161,7 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
     }
 
     @Override public void saveDrawing() {
-        checkState(playerOptional.isPresent(), "Player is not present");
-        final Player player = playerOptional.get();
+        final Player player = getPlayerOrThrow();
         checkState(player.hasRedoTurns() || player.hasUndoTurns());
 
         applicationDialogs.showSaveDrawingDialog(new NameDescriptionSetter() {
@@ -171,11 +172,22 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
         });
     }
 
+    @Override public void openDrawing() {
+        drawingService.load(dealIdOptional.get(), new Response<List<Drawing>>() {
+            @Override public void onSuccess(Method method, List<Drawing> drawings) {
+                applicationDialogs.showOpenDrawingDialog(drawings, new DrawingSetter() {
+                    @Override public void setDrawing(Drawing drawing) {
+                        log.info("Drawing opened: " + drawing); // TODO
+                    }
+                });
+            }
+        });
+    }
+
     @Override public void changeCardLocation(Card card, Optional<TableLocation> newLocation) {
         if (newLocation.isPresent() && newLocation.get() == TableLocation.CENTER) {
             try {
-                Player player = playerOptional.get();
-                player.makeTurn(card);
+                getPlayerOrThrow().makeTurn(card);
             } catch (GameException e) {
                 log.finer(e.getMessage());
             }
@@ -198,22 +210,27 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
     }
 
     @Override public void undo() {
-        playerOptional.get().undoTurn();
+        getPlayerOrThrow().undoTurn();
         refreshView();
     }
 
     @Override public void redo() {
-        playerOptional.get().redoTurn();
+        getPlayerOrThrow().redoTurn();
         refreshView();
     }
 
     @Override public void reset() {
-        playerOptional.get().reset();
+        getPlayerOrThrow().reset();
         refreshView();
     }
 
     @Override public void close() {
         revealPlace(NameTokens.DEALS);
+    }
+
+    private Player getPlayerOrThrow() {
+        checkState(playerOptional.isPresent(), "Player is not present");
+        return playerOptional.get();
     }
 
     private void revealPlace(String place) {
@@ -226,8 +243,8 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
 
     private void refreshView() {
         if (playerOptional.isPresent()) {
-            Player player = playerOptional.get();
             log.finest("Refreshing view...");
+            Player player = playerOptional.get();
             PlayerView view = getView();
             view.displayDealInfo(player.getName(), player.getDescription());
             view.displayTurn(player.getTurn());
@@ -239,8 +256,6 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
             view.displayHandTricks(player.getHandTrickCounts());
             view.displayTurnNavigation(player.hasUndoTurns(), player.hasRedoTurns());
             view.disableCards(player.getDisabledCards());
-        } else {
-            log.fine("PlayerPresenter.refreshView() skipped as playerOptional is not present");
         }
     }
 

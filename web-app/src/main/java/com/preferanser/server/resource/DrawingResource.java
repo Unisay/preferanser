@@ -26,6 +26,7 @@ import com.preferanser.shared.domain.Drawing;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import java.util.List;
 
 @Path("/drawing")
 @Produces(MediaType.APPLICATION_JSON)
@@ -44,6 +45,12 @@ public class DrawingResource {
     @Path("/{dealId}/{drawingId}")
     public Drawing getById(@PathParam("dealId") Long dealId, @PathParam("drawingId") Long drawingId) {
         return drawingTransformer.fromEntity(drawingService.get(dealId, drawingId));
+    }
+
+    @GET
+    @Path("/{dealId}")
+    public List<Drawing> getByDealId(@PathParam("dealId") Long dealId) {
+        return drawingTransformer.fromEntities(drawingService.getAll(dealId));
     }
 
     @POST

@@ -8,6 +8,7 @@ import com.preferanser.server.entity.DealEntity;
 import com.preferanser.server.entity.DrawingEntity;
 
 import javax.validation.Validator;
+import java.util.List;
 
 public class DrawingDao extends BaseDao<DrawingEntity> {
 
@@ -18,6 +19,10 @@ public class DrawingDao extends BaseDao<DrawingEntity> {
 
     public Optional<DrawingEntity> get(DealEntity dealEntity, Long drawingId) {
         return get(Key.create(dealEntity.getKey(), DrawingEntity.class, drawingId));
+    }
+
+    public List<DrawingEntity> getAll(DealEntity dealEntity) {
+        return ofy().load().type(DrawingEntity.class).ancestor(dealEntity).list();
     }
 
 }

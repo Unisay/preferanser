@@ -52,6 +52,7 @@ public class PlayerView extends BaseTableView<PlayerUiHandlers> implements Playe
 
     @UiField Button editButton;
     @UiField Button resetButton;
+    @UiField Button openDrawingButton;
     @UiField Button saveDrawingButton;
     @UiField Label trickCountEast;
     @UiField Label trickCountSouth;
@@ -157,6 +158,10 @@ public class PlayerView extends BaseTableView<PlayerUiHandlers> implements Playe
 
     @UiHandler("saveDrawingButton") void onSaveDrawing(@SuppressWarnings("unused") ClickEvent event) {
         getUiHandlers().saveDrawing();
+    }
+
+    @UiHandler("openDrawingButton") void onOpenDrawing(@SuppressWarnings("unused") ClickEvent event) {
+        getUiHandlers().openDrawing();
     }
 
     @Override public void onCardDoubleClick(CardWidget cardWidget, DoubleClickEvent event) {

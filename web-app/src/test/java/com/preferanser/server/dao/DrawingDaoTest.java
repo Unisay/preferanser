@@ -9,12 +9,15 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
+import java.util.List;
+
 import static com.preferanser.server.dao.DaoTestHelper.buildDealEntity;
 import static com.preferanser.server.dao.DaoTestHelper.buildDrawingEntity;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
+import static org.testng.collections.Lists.newArrayList;
 import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
 import static org.unitils.reflectionassert.ReflectionComparatorMode.IGNORE_DEFAULTS;
 
@@ -51,5 +54,17 @@ public class DrawingDaoTest {
         assertTrue(drawingDao.get(dealEntity, actualSavedDrawing.getId()).isPresent(), "Saved DrawingEntity is not present in the DB");
         drawingDao.deleteNow(actualSavedDrawing);
         assertFalse(drawingDao.get(dealEntity, actualSavedDrawing.getId()).isPresent(), "Deleted DealEntity is still present in the DB");
+    }
+
+    @Test
+    public void testGetAllByDeal() throws Exception {
+        DealEntity dealEntity = buildDealEntity(100L);
+        DrawingEntity unsavedDrawing1 = buildDrawingEntity(dealEntity);
+        DrawingEntity unsavedDrawing2 = buildDrawingEntity(dealEntity);
+        drawingDao.save(unsavedDrawing1, unsavedDrawing2);
+
+        List<DrawingEntity> actualDrawings = drawingDao.getAll(dealEntity);
+        List<DrawingEntity> expectedDrawings = newArrayList(unsavedDrawing1, unsavedDrawing2);
+        assertReflectionEquals(expectedDrawings, actualDrawings);
     }
 }

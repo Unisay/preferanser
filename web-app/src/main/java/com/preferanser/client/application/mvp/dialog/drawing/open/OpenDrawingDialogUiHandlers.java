@@ -17,57 +17,11 @@
  *     along with this program.  If not, see [http://www.gnu.org/licenses/].
  */
 
-package com.preferanser.client.application.mvp.player;
+package com.preferanser.client.application.mvp.dialog.drawing.open;
 
-import com.preferanser.client.application.mvp.editor.TableUiHandlers;
+import com.gwtplatform.mvp.client.UiHandlers;
+import com.preferanser.shared.domain.Drawing;
 
-/**
- * Game UI handlers
- */
-public interface PlayerUiHandlers extends TableUiHandlers {
-
-    /**
-     * UserEntity moved cards to sluff
-     */
-    void sluff();
-
-    /**
-     * Switch to editor page
-     */
-    void switchToEditor();
-
-    /**
-     * Undo turn
-     */
-    void undo();
-
-    /**
-     * Redo turn
-     */
-    void redo();
-
-    /**
-     * Reset made turns and start from the scratch
-     */
-    void reset();
-
-    /**
-     * Close player
-     */
-    void close();
-
-    /**
-     * Make turn from widow
-     */
-    void turnFromWidow();
-
-    /**
-     * Save drawing
-     */
-    void saveDrawing();
-
-    /**
-     * Open drawing
-     */
-    void openDrawing();
+public interface OpenDrawingDialogUiHandlers extends UiHandlers {
+    void open(Drawing drawing);
 }

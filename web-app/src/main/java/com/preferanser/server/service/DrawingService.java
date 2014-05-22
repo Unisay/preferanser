@@ -12,6 +12,8 @@ import com.preferanser.server.exception.NotFoundException;
 import com.preferanser.server.exception.UnauthorizedException;
 import com.preferanser.shared.util.Clock;
 
+import java.util.List;
+
 public class DrawingService {
 
     private final DrawingDao drawingDao;
@@ -39,6 +41,15 @@ public class DrawingService {
         return drawingEntityOptional.get();
     }
 
+    public List<DrawingEntity> getAll(long dealId) {
+        UserEntity currentUser = authenticationServiceProvider.get().getCurrentUserOrThrow();
+        Optional<DealEntity> dealEntityOptional = dealDao.get(currentUser, dealId);
+        if (!dealEntityOptional.isPresent()) {
+            throw new IllegalArgumentException("Deal is not present");
+        }
+        return drawingDao.getAll(dealEntityOptional.get());
+    }
+
     public DrawingEntity save(DrawingEntity drawingEntity) {
         UserEntity currentUser = authenticationServiceProvider.get().getCurrentUserOrThrow();
         Long currentUserId = currentUser.getId();
@@ -63,5 +74,4 @@ public class DrawingService {
         assert savedDrawing != null : "drawingDao.save(" + drawingEntity + ") returned null";
         return savedDrawing;
     }
-
 }

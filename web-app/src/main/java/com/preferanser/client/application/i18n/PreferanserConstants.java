@@ -185,9 +185,13 @@ public interface PreferanserConstants extends ConstantsWithLookup {
 
     @DefaultStringValue("Сохранить") String save();
 
+    @DefaultStringValue("Открыть розыгрыш") String openDrawing();
+
     @DefaultStringValue("Сохранить розыгрыш") String saveDrawing();
 
-    @DefaultStringValue("Сохранeние розыгрыш") String savingDrawing();
+    @DefaultStringValue("Сохранeние розыгрыша") String savingDrawing();
+
+    @DefaultStringValue("Открытие розыгрыша") String openingDrawing();
 
     @DefaultStringValue("Отменить") String cancel();
 

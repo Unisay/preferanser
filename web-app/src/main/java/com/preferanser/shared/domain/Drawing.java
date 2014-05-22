@@ -2,12 +2,10 @@ package com.preferanser.shared.domain;
 
 import com.google.common.base.Objects;
 
-import java.io.Serializable;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-public class Drawing implements Serializable {
+public class Drawing {
 
     private Long id;
     private long userId;
@@ -17,12 +15,17 @@ public class Drawing implements Serializable {
     private List<Card> turns;
     private Date createdAt;
 
-    @SuppressWarnings("unused") // Needed for serialization
-    public Drawing() {
-        turns = Collections.emptyList();
-    }
-
-    public Drawing(Long id, long userId, long dealId, String name, String description, List<Card> turns, Date createdAt) {
+    @com.fasterxml.jackson.annotation.JsonCreator
+    @org.codehaus.jackson.annotate.JsonCreator
+    public Drawing(
+        @org.codehaus.jackson.annotate.JsonProperty("id") @com.fasterxml.jackson.annotation.JsonProperty("id") Long id,
+        @org.codehaus.jackson.annotate.JsonProperty("userId") @com.fasterxml.jackson.annotation.JsonProperty("userId") long userId,
+        @org.codehaus.jackson.annotate.JsonProperty("dealId") @com.fasterxml.jackson.annotation.JsonProperty("dealId") long dealId,
+        @org.codehaus.jackson.annotate.JsonProperty("name") @com.fasterxml.jackson.annotation.JsonProperty("name") String name,
+        @org.codehaus.jackson.annotate.JsonProperty("description") @com.fasterxml.jackson.annotation.JsonProperty("description") String description,
+        @org.codehaus.jackson.annotate.JsonProperty("turns") @com.fasterxml.jackson.annotation.JsonProperty("turns") List<Card> turns,
+        @org.codehaus.jackson.annotate.JsonProperty("createdAt") @com.fasterxml.jackson.annotation.JsonProperty("createdAt") Date createdAt
+    ) {
         this.id = id;
         this.userId = userId;
         this.dealId = dealId;

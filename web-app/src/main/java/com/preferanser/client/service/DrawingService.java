@@ -45,12 +45,9 @@ public interface DrawingService extends RestService {
     @POST
     @RequestId(SAVE_DRAWING) void save(Drawing drawing, MethodCallback<Long> callback);
 
-    @PUT
-    @Path("/{drawingId}")
-    @RequestId(SAVE_DRAWING) void update(@PathParam("drawingId") Long drawingId, Drawing drawing, MethodCallback<Void> callback);
-
     @GET
-    @RequestId(LOAD_DRAWINGS) void load(MethodCallback<List<Drawing>> callback);
+    @Path("/{dealId}")
+    @RequestId(LOAD_DRAWINGS) void load(@PathParam("dealId") Long dealId, MethodCallback<List<Drawing>> callback);
 
     @GET
     @Path("/{drawingId}")

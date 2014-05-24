@@ -26,6 +26,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 import com.preferanser.shared.domain.exception.*;
+import com.preferanser.shared.util.Clock;
 import com.preferanser.shared.util.EnumRotator;
 import com.preferanser.shared.util.GameUtils;
 
@@ -412,7 +413,7 @@ public class Player {
         Deal deal = new Deal();
         deal.setName(name);
         deal.setDescription(description);
-        deal.setCreated(new Date());
+        deal.setCreated(Clock.getNow());
         deal.setFirstTurn(trickLog.getFirst().getTurn());
         deal.setPlayers(players);
         deal.setWidow(widow);

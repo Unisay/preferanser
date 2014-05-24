@@ -35,16 +35,23 @@
             color: white;
             padding: .5em;
         }
+
+        .deleteButton {
+            color: red;
+        }
     </ui:style>
     <p:EscapableDialogBox ui:field="dialog" debugId="openDrawing-dialog" modal="true" glassEnabled="true" autoHideEnabled="true"
                           glassStyleName="gwt-DialogBoxOverlay" addStyleNames="{style.dialog}" text="{constants.openingDrawing}" width="400px">
         <g:VerticalPanel width="100%" height="100%" spacing="10">
             <g:ListBox ui:field="listBox" addStyleNames="{style.listBox}" visibleItemCount="5"/>
-            <g:HorizontalPanel>
-                <g:cell width="800px" horizontalAlignment="ALIGN_LEFT">
+            <g:HorizontalPanel width="100%">
+                <g:cell horizontalAlignment="ALIGN_LEFT">
                     <g:Button ui:field="openButton" text="{constants.open}"/>
                 </g:cell>
-                <g:cell width="800px" horizontalAlignment="ALIGN_RIGHT">
+                <g:cell horizontalAlignment="ALIGN_RIGHT" width="30px">
+                    <g:Button ui:field="deleteButton" text="{constants.delete}" addStyleNames="{style.deleteButton}"/>
+                </g:cell>
+                <g:cell horizontalAlignment="ALIGN_RIGHT" width="30px">
                     <g:Button ui:field="cancelButton" text="{constants.cancel}"/>
                 </g:cell>
             </g:HorizontalPanel>

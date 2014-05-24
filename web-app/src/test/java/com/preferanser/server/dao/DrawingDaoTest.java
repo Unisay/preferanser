@@ -63,7 +63,7 @@ public class DrawingDaoTest {
         DrawingEntity unsavedDrawing2 = buildDrawingEntity(dealEntity);
         drawingDao.save(unsavedDrawing1, unsavedDrawing2);
 
-        List<DrawingEntity> actualDrawings = drawingDao.getAll(dealEntity);
+        List<DrawingEntity> actualDrawings = drawingDao.getAllDescDateCreated(dealEntity);
         List<DrawingEntity> expectedDrawings = newArrayList(unsavedDrawing1, unsavedDrawing2);
         assertReflectionEquals(expectedDrawings, actualDrawings);
     }

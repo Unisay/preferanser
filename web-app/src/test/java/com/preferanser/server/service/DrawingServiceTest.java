@@ -36,7 +36,6 @@ public class DrawingServiceTest {
     private AuthenticationService authenticationService;
 
     private UserEntity user;
-    private UserEntity otherUser;
 
     @BeforeMethod
     public void setUp() throws Exception {
@@ -48,8 +47,6 @@ public class DrawingServiceTest {
         });
         user = new UserEntity();
         user.setId(123L);
-        otherUser = new UserEntity();
-        otherUser.setId(234L);
     }
 
     @Test

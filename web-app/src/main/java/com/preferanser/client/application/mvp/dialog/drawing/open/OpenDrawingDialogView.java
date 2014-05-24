@@ -24,7 +24,6 @@ import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.inject.Inject;
@@ -44,8 +43,6 @@ public class OpenDrawingDialogView extends PopupViewWithUiHandlers<OpenDrawingDi
 
     @UiField PreferanserConstants constants;
     @UiField EscapableDialogBox dialog;
-    @UiField Button openButton;
-    @UiField Button cancelButton;
     @UiField ListBox listBox;
 
     private List<Drawing> drawings;
@@ -71,6 +68,10 @@ public class OpenDrawingDialogView extends PopupViewWithUiHandlers<OpenDrawingDi
 
     @UiHandler("cancelButton") void onCancel(@SuppressWarnings("unused") ClickEvent event) {
         hide();
+    }
+
+    @UiHandler("deleteButton") void onDelete(@SuppressWarnings("unused") ClickEvent event) {
+        getUiHandlers().delete(drawings.get(listBox.getSelectedIndex()));
     }
 
 }

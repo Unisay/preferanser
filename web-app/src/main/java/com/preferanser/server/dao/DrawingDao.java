@@ -21,8 +21,8 @@ public class DrawingDao extends BaseDao<DrawingEntity> {
         return get(Key.create(dealEntity.getKey(), DrawingEntity.class, drawingId));
     }
 
-    public List<DrawingEntity> getAll(DealEntity dealEntity) {
-        return ofy().load().type(DrawingEntity.class).ancestor(dealEntity).list();
+    public List<DrawingEntity> getAllDescDateCreated(DealEntity dealEntity) {
+        return ofy().load().type(DrawingEntity.class).ancestor(dealEntity).order("-created").list();
     }
 
 }

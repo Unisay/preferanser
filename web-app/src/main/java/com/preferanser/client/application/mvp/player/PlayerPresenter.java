@@ -23,7 +23,6 @@ import com.google.common.base.Optional;
 import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
-import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.Presenter;
 import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.ProxyStandard;
@@ -32,11 +31,11 @@ import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.gwtplatform.mvp.client.proxy.ResetPresentersEvent;
 import com.preferanser.client.application.ApplicationPresenter;
-import com.preferanser.client.application.mvp.DealEvent;
-import com.preferanser.client.application.mvp.TableView;
 import com.preferanser.client.application.mvp.dialog.ApplicationDialogs;
-import com.preferanser.client.application.mvp.dialog.DrawingSetter;
 import com.preferanser.client.application.mvp.dialog.NameDescriptionSetter;
+import com.preferanser.client.application.mvp.event.DealEvent;
+import com.preferanser.client.application.mvp.event.DrawingDeleteEvent;
+import com.preferanser.client.application.mvp.event.DrawingOpenEvent;
 import com.preferanser.client.gwtp.NameTokens;
 import com.preferanser.client.gwtp.PlaceRequestHelper;
 import com.preferanser.client.service.DealService;
@@ -49,8 +48,6 @@ import com.preferanser.shared.util.Clock;
 import org.fusesource.restygwt.client.Method;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.logging.Logger;
 
 import static com.google.common.base.Preconditions.checkState;
@@ -58,20 +55,11 @@ import static com.google.common.base.Preconditions.checkState;
 /**
  * Presenter for the mvp page
  */
-public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, PlayerPresenter.Proxy>
-    implements PlayerUiHandlers, DealEvent.DealCreatedHandler {
+public class PlayerPresenter
+    extends Presenter<PlayerView, PlayerPresenter.Proxy>
+    implements PlayerUiHandlers, DealEvent.DealCreatedHandler, DrawingOpenEvent.DrawingOpenHandler, DrawingDeleteEvent.DrawingDeleteHandler {
 
     private static final Logger log = Logger.getLogger("PlayerPresenter");
-
-    public interface PlayerView extends TableView, HasUiHandlers<PlayerUiHandlers> {
-        void displayHandTricks(Map<Hand, Integer> handTricks);
-        void disableCards(Set<Card> cards);
-        void displayTurnNavigation(boolean showPrev, boolean showNext);
-        void displayResetButton(boolean visible);
-        void displaySluffButton(boolean visible);
-        void displaySaveDrawingButton(boolean visible);
-        void switchTabGame();
-    }
 
     private final User currentUser;
     private final PlaceManager placeManager;
@@ -95,7 +83,8 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
         DealService dealService,
         DrawingService drawingService,
         User currentUser,
-        ApplicationDialogs applicationDialogs) {
+        ApplicationDialogs applicationDialogs
+    ) {
         super(eventBus, view, proxy, ApplicationPresenter.MAIN_SLOT);
         this.placeManager = placeManager;
         this.dealService = dealService;
@@ -108,6 +97,8 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
     @Override protected void onBind() {
         super.onBind();
         addRegisteredHandler(DealEvent.getType(), this);
+        addRegisteredHandler(DrawingOpenEvent.getType(), this);
+        addRegisteredHandler(DrawingDeleteEvent.getType(), this);
     }
 
     @Override public void prepareFromRequest(PlaceRequest request) {
@@ -148,6 +139,22 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
         playerOptional = Optional.of(new Player(deal));
     }
 
+    @Override public void onDrawingOpenEvent(DrawingOpenEvent event) {
+        try {
+            getPlayerOrThrow().loadDrawing(event.getDrawing());
+            getView().switchTabGame();
+            refreshView();
+        } catch (GameException e) {
+            log.severe(e.getMessage());
+            Window.alert(e.getMessage());
+        }
+    }
+
+    @Override public void onDrawingDeleteEvent(DrawingDeleteEvent event) {
+        drawingService.delete(dealIdOptional.get(), event.getDrawing().getId(), new Response<Void>());
+        refreshView();
+    }
+
     @Override public void sluff() {
         if (getPlayerOrThrow().sluffTrick())
             refreshView();
@@ -177,18 +184,7 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
     @Override public void openDrawing() {
         drawingService.load(dealIdOptional.get(), new Response<List<Drawing>>() {
             @Override public void onSuccess(Method method, List<Drawing> drawings) {
-                applicationDialogs.showOpenDrawingDialog(drawings, new DrawingSetter() {
-                    @Override public void setDrawing(Drawing drawing) {
-                        try {
-                            getPlayerOrThrow().loadDrawing(drawing);
-                            getView().switchTabGame();
-                            refreshView();
-                        } catch (GameException e) {
-                            log.severe(e.getMessage());
-                            Window.alert(e.getMessage());
-                        }
-                    }
-                });
+                applicationDialogs.showOpenDrawingDialog(drawings);
             }
         });
     }

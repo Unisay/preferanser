@@ -17,61 +17,56 @@
  *     along with this program.  If not, see [http://www.gnu.org/licenses/].
  */
 
-package com.preferanser.client.application.mvp;
+package com.preferanser.client.application.mvp.event;
 
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HasHandlers;
-import com.google.web.bindery.event.shared.HandlerRegistration;
-import com.preferanser.shared.domain.Deal;
+import com.preferanser.shared.domain.Drawing;
 
-public class DealEvent extends GwtEvent<DealEvent.DealCreatedHandler> {
+public class DrawingOpenEvent extends GwtEvent<DrawingOpenEvent.DrawingOpenHandler> {
 
-    private Deal deal;
+    private Drawing drawing;
 
     @SuppressWarnings("unused")
-    protected DealEvent() {
+    protected DrawingOpenEvent() {
         // Possibly for serialization.
     }
 
-    public DealEvent(Deal deal) {
-        this.deal = deal;
+    public DrawingOpenEvent(Drawing drawing) {
+        this.drawing = drawing;
     }
 
-    public static void fire(HasHandlers source, Deal deal1) {
-        source.fireEvent(new DealEvent(deal1));
+    public static void fire(HasHandlers source, Drawing deal1) {
+        source.fireEvent(new DrawingOpenEvent(deal1));
     }
 
-    public static void fire(HasHandlers source, DealEvent eventInstance) {
+    public static void fire(HasHandlers source, DrawingOpenEvent eventInstance) {
         source.fireEvent(eventInstance);
     }
 
-    public interface HasGameBuiltHandlers extends HasHandlers {
-        HandlerRegistration addGlobalHandler(DealCreatedHandler handler);
+    public interface DrawingOpenHandler extends EventHandler {
+        public void onDrawingOpenEvent(DrawingOpenEvent event);
     }
 
-    public interface DealCreatedHandler extends EventHandler {
-        public void onDealEvent(DealEvent event);
-    }
+    private static final Type<DrawingOpenHandler> TYPE = new Type<DrawingOpenHandler>();
 
-    private static final Type<DealCreatedHandler> TYPE = new Type<DealCreatedHandler>();
-
-    public static Type<DealCreatedHandler> getType() {
+    public static Type<DrawingOpenHandler> getType() {
         return TYPE;
     }
 
     @Override
-    public Type<DealCreatedHandler> getAssociatedType() {
+    public Type<DrawingOpenHandler> getAssociatedType() {
         return TYPE;
     }
 
     @Override
-    protected void dispatch(DealCreatedHandler handler) {
-        handler.onDealEvent(this);
+    protected void dispatch(DrawingOpenHandler handler) {
+        handler.onDrawingOpenEvent(this);
     }
 
-    public Deal getDeal() {
-        return deal;
+    public Drawing getDrawing() {
+        return drawing;
     }
 
 }

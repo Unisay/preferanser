@@ -37,7 +37,7 @@ import static com.preferanser.client.restygwt.RequestIdValue.*;
 public interface DrawingService extends RestService {
 
     /**
-     * Persist drawing on backend
+     * Persist drawing
      *
      * @param drawing  drawing
      * @param callback contains new drawing id as Long
@@ -45,15 +45,24 @@ public interface DrawingService extends RestService {
     @POST
     @RequestId(SAVE_DRAWING) void save(Drawing drawing, MethodCallback<Long> callback);
 
+    /**
+     * Get all drawings for the deal
+     *
+     * @param dealId   deal id
+     * @param callback callback
+     */
     @GET
     @Path("/{dealId}")
     @RequestId(LOAD_DRAWINGS) void load(@PathParam("dealId") Long dealId, MethodCallback<List<Drawing>> callback);
 
-    @GET
-    @Path("/{drawingId}")
-    @RequestId(GET_DRAWING) void getCurrentUserDrawing(@PathParam("drawingId") Long drawingId, MethodCallback<Drawing> callback);
-
+    /**
+     * Delete drawing
+     *
+     * @param dealId    deal id
+     * @param drawingId drawing id
+     * @param callback  callback
+     */
     @DELETE
-    @Path("/{drawingId}")
-    @RequestId(DELETE_DRAWING) void delete(@PathParam("drawingId") Long drawingId, MethodCallback<Void> callback);
+    @Path("/{dealId}/{drawingId}")
+    @RequestId(DELETE_DRAWING) void delete(@PathParam("dealId") Long dealId, @PathParam("drawingId") Long drawingId, MethodCallback<Void> callback);
 }

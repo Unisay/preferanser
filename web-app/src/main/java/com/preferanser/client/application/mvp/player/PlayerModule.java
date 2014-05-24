@@ -34,7 +34,7 @@ public class PlayerModule extends AbstractPresenterModule {
     protected void configure() {
         bindSingletonPresenterWidget(SaveDrawingDialogPresenter.class, SaveDrawingDialogPresenter.TheView.class, SaveDrawingDialogView.class);
         bindSingletonPresenterWidget(OpenDrawingDialogPresenter.class, OpenDrawingDialogPresenter.TheView.class, OpenDrawingDialogView.class);
-        bindPresenter(PlayerPresenter.class, PlayerPresenter.PlayerView.class, PlayerView.class, PlayerPresenter.Proxy.class);
+        bindPresenter(PlayerPresenter.class, PlayerView.class, PlayerViewImpl.class, PlayerPresenter.Proxy.class);
     }
 
 }

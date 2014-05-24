@@ -24,4 +24,5 @@ import com.preferanser.shared.domain.Drawing;
 
 public interface OpenDrawingDialogUiHandlers extends UiHandlers {
     void open(Drawing drawing);
+    void delete(Drawing drawing);
 }

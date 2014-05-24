@@ -28,26 +28,15 @@ public class DrawingService {
     }
 
     public DrawingEntity get(long dealId, long drawingId) {
-        Optional<DealEntity> dealEntityOptional = dealDao.get(dealId);
-        if (!dealEntityOptional.isPresent()) {
-            throw new NotFoundException(DealEntity.class, dealId);
-        }
-
-        Optional<DrawingEntity> drawingEntityOptional = drawingDao.get(dealEntityOptional.get(), drawingId);
-        if (!dealEntityOptional.isPresent()) {
+        Optional<DrawingEntity> drawingEntityOptional = drawingDao.get(getCurrentUserDealById(dealId), drawingId);
+        if (!drawingEntityOptional.isPresent()) {
             throw new NotFoundException(DrawingEntity.class, drawingId);
         }
-
         return drawingEntityOptional.get();
     }
 
     public List<DrawingEntity> getAll(long dealId) {
-        UserEntity currentUser = authenticationServiceProvider.get().getCurrentUserOrThrow();
-        Optional<DealEntity> dealEntityOptional = dealDao.get(currentUser, dealId);
-        if (!dealEntityOptional.isPresent()) {
-            throw new IllegalArgumentException("Deal is not present");
-        }
-        return drawingDao.getAll(dealEntityOptional.get());
+        return drawingDao.getAllDescDateCreated(getCurrentUserDealById(dealId));
     }
 
     public DrawingEntity save(DrawingEntity drawingEntity) {
@@ -56,7 +45,7 @@ public class DrawingService {
 
         Optional<DealEntity> dealEntityOptional = dealDao.get(drawingEntity.getDeal());
         if (!dealEntityOptional.isPresent()) {
-            throw new IllegalArgumentException("Deal is not present");
+            throw new NotFoundException(DealEntity.class, drawingEntity.getDeal().getId());
         }
 
         DealEntity dealEntity = dealEntityOptional.get();
@@ -74,4 +63,23 @@ public class DrawingService {
         assert savedDrawing != null : "drawingDao.save(" + drawingEntity + ") returned null";
         return savedDrawing;
     }
+
+    public void delete(Long dealId, Long drawingId) {
+        Optional<DrawingEntity> drawing = drawingDao.get(getCurrentUserDealById(dealId), drawingId);
+        if (!drawing.isPresent()) {
+            throw new NotFoundException(DrawingEntity.class, drawingId);
+        }
+        drawingDao.deleteAsync(drawing.get());
+    }
+
+    private DealEntity getCurrentUserDealById(long dealId) {
+        UserEntity currentUser = authenticationServiceProvider.get().getCurrentUserOrThrow();
+        Optional<DealEntity> dealEntityOptional = dealDao.get(currentUser, dealId);
+        if (dealEntityOptional.isPresent()) {
+            return dealEntityOptional.get();
+        } else {
+            throw new IllegalArgumentException("Deal is not present");
+        }
+    }
+
 }

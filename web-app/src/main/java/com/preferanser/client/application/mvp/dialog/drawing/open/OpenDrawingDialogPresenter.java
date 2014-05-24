@@ -24,7 +24,8 @@ import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.PopupView;
 import com.gwtplatform.mvp.client.PresenterWidget;
-import com.preferanser.client.application.mvp.dialog.DrawingSetter;
+import com.preferanser.client.application.mvp.event.DrawingDeleteEvent;
+import com.preferanser.client.application.mvp.event.DrawingOpenEvent;
 import com.preferanser.shared.domain.Drawing;
 
 import java.util.List;
@@ -32,7 +33,6 @@ import java.util.List;
 public class OpenDrawingDialogPresenter extends PresenterWidget<OpenDrawingDialogPresenter.TheView> implements OpenDrawingDialogUiHandlers {
 
     private List<Drawing> drawings;
-    private DrawingSetter drawingSetter;
 
     public interface TheView extends PopupView, HasUiHandlers<OpenDrawingDialogUiHandlers> {
         void displayDrawings(List<Drawing> drawings);
@@ -44,15 +44,18 @@ public class OpenDrawingDialogPresenter extends PresenterWidget<OpenDrawingDialo
     }
 
     @Override public void open(Drawing drawing) {
-        drawingSetter.setDrawing(drawing);
+        DrawingOpenEvent.fire(this, drawing);
+    }
+
+    @Override public void delete(Drawing drawing) {
+        assert drawings.contains(drawing);
+        drawings.remove(drawing);
+        getView().displayDrawings(drawings);
+        DrawingDeleteEvent.fire(this, drawing);
     }
 
     public void setDrawings(List<Drawing> drawings) {
         this.drawings = drawings;
-    }
-
-    public void setDrawingSetter(DrawingSetter drawingSetter) {
-        this.drawingSetter = drawingSetter;
     }
 
     @Override protected void onReveal() {

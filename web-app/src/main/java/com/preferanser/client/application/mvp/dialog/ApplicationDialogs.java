@@ -75,9 +75,8 @@ public class ApplicationDialogs {
         showGlobalDialog(saveDrawingDialog);
     }
 
-    public void showOpenDrawingDialog(List<Drawing> drawingList, DrawingSetter drawingSetter) {
+    public void showOpenDrawingDialog(List<Drawing> drawingList) {
         openDrawingDialog.setDrawings(drawingList);
-        openDrawingDialog.setDrawingSetter(drawingSetter);
         showGlobalDialog(openDrawingDialog);
     }
 

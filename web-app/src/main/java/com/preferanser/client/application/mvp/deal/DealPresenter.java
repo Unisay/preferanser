@@ -11,7 +11,7 @@ import com.gwtplatform.mvp.client.annotations.ProxyStandard;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
-import com.preferanser.client.application.mvp.DealEvent;
+import com.preferanser.client.application.mvp.event.DealEvent;
 import com.preferanser.client.application.mvp.main.MainPresenter;
 import com.preferanser.client.gwtp.NameTokens;
 import com.preferanser.client.service.DealService;
@@ -74,7 +74,8 @@ public class DealPresenter extends Presenter<DealPresenter.DealView, DealPresent
                 .nameToken(NameTokens.PLAYER)
                 .with("user", dealInfo.getOwnerId().toString())
                 .with("deal", Long.toString(dealInfo.getId()))
-                .build());
+                .build()
+        );
     }
 
     @Override public void editDeal(DealInfo dealInfo) {
@@ -83,7 +84,8 @@ public class DealPresenter extends Presenter<DealPresenter.DealView, DealPresent
                 .nameToken(NameTokens.EDITOR)
                 .with("user", dealInfo.getOwnerId().toString())
                 .with("deal", Long.toString(dealInfo.getId()))
-                .build());
+                .build()
+        );
     }
 
     @Override public void deleteDeal(final DealInfo deal) {

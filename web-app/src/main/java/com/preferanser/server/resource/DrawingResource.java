@@ -58,20 +58,10 @@ public class DrawingResource {
         return drawingService.save(drawingTransformer.toEntity(drawing)).getId();
     }
 
-    // TODO: consider using @BeanParam
-    @PUT
-    @Path("/{drawingId}")
-    public void update(@PathParam("drawingId") Long drawingId, Drawing drawing) {
-        throw new UnsupportedOperationException("Not implemented");
-//        drawing.setId(drawingId);
-//        drawingService.update(drawingTransformer.toEntity(drawing));
-    }
-
     @DELETE
-    @Path("/{drawingId}")
-    public void delete(@PathParam("drawingId") Long drawingId) {
-        throw new UnsupportedOperationException("Not implemented");
-//        drawingService.delete(drawingId);
+    @Path("/{dealId}/{drawingId}")
+    public void delete(@PathParam("dealId") Long dealId, @PathParam("drawingId") Long drawingId) {
+        drawingService.delete(dealId, drawingId);
     }
 
 }

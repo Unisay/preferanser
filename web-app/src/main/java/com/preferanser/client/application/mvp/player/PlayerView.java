@@ -116,6 +116,10 @@ public class PlayerView extends BaseTableView<PlayerUiHandlers> implements Playe
         saveDrawingButton.setVisible(visible);
     }
 
+    @Override public void switchTabGame() {
+        table.switchToTab(1);
+    }
+
     @Override protected void displayHandTurnPointer(Hand hand, TurnPointer turnPointer, Hand turn) {
         super.displayHandTurnPointer(hand, turnPointer, turn);
         if (turnPointer.isActive()) {
@@ -215,7 +219,7 @@ public class PlayerView extends BaseTableView<PlayerUiHandlers> implements Playe
         handTricksCountMap.put(Hand.WEST, trickCountWest);
     }
 
-    @Override protected Logger getLog() {
+    private Logger getLog() {
         return log;
     }
 }

@@ -48,7 +48,6 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Logger;
 
 import static com.google.common.collect.Iterables.transform;
 import static com.google.common.collect.Lists.newArrayList;
@@ -287,8 +286,6 @@ abstract public class BaseTableView<U extends TableUiHandlers> extends ViewWithU
         handTurnPointerMap.put(Hand.SOUTH, turnPointerSouth);
         handTurnPointerMap.put(Hand.WEST, turnPointerWest);
     }
-
-    abstract protected Logger getLog();
 
     @UiFactory public TurnPointer turnPointer() {
         return new TurnPointer(style, resources.arrowRight());

@@ -20,6 +20,7 @@
 package com.preferanser.client.application.mvp.player;
 
 import com.google.common.base.Optional;
+import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.HasUiHandlers;
@@ -69,6 +70,7 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
         void displayResetButton(boolean visible);
         void displaySluffButton(boolean visible);
         void displaySaveDrawingButton(boolean visible);
+        void switchTabGame();
     }
 
     private final User currentUser;
@@ -177,7 +179,14 @@ public class PlayerPresenter extends Presenter<PlayerPresenter.PlayerView, Playe
             @Override public void onSuccess(Method method, List<Drawing> drawings) {
                 applicationDialogs.showOpenDrawingDialog(drawings, new DrawingSetter() {
                     @Override public void setDrawing(Drawing drawing) {
-                        log.info("Drawing opened: " + drawing); // TODO
+                        try {
+                            getPlayerOrThrow().loadDrawing(drawing);
+                            getView().switchTabGame();
+                            refreshView();
+                        } catch (GameException e) {
+                            log.severe(e.getMessage());
+                            Window.alert(e.getMessage());
+                        }
                     }
                 });
             }

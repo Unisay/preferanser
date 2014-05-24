@@ -381,6 +381,17 @@ public class Player {
         trickLog.add(first);
     }
 
+    public void loadDrawing(Drawing drawing) throws GameException {
+        reset();
+        for (Card card : drawing.getTurns()) {
+            makeTurn(card);
+            sluffTrick();
+        }
+        for (Card ignored : drawing.getTurns()) {
+            undoTurn();
+        }
+    }
+
     public Long getId() {
         return id;
     }
@@ -417,4 +428,5 @@ public class Player {
         deal.setCurrentTrickIndex(currentTrickIndex);
         return deal;
     }
+
 }

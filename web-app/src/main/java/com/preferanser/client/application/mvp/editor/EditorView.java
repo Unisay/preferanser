@@ -130,7 +130,4 @@ public class EditorView extends BaseTableView<EditorUiHandlers> implements Edito
         getUiHandlers().setRaspassOption(widowRaspassOption.getValue());
     }
 
-    @Override protected Logger getLog() {
-        return log;
-    }
 }

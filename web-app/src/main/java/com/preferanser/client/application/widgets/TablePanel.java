@@ -55,6 +55,7 @@ public class TablePanel extends Composite {
     protected PreferanserResources resources = GWT.create(PreferanserResources.class);
 
     @UiField HorizontalPanel eastPanelHeader;
+
     @UiField HorizontalPanel southPanelHeader;
     @UiField HorizontalPanel westPanelHeader;
     @UiField FlowPanel eastCardsPanel;
@@ -63,10 +64,9 @@ public class TablePanel extends Composite {
     @UiField TabPanel centerTabPanel;
     @UiField FlowPanel widowPanel;
     @UiField FlowPanel centerCardsPanel;
-
     private final BiMap<TableLocation, Panel> locationPanelMap = EnumHashBiMap.create(TableLocation.class);
-    private final BiMap<TableLocation, Layout<CardWidget>> locationLayoutMap = EnumHashBiMap.create(TableLocation.class);
 
+    private final BiMap<TableLocation, Layout<CardWidget>> locationLayoutMap = EnumHashBiMap.create(TableLocation.class);
     private CenterLayout centerCardLayout;
 
     public TablePanel() {
@@ -86,7 +86,7 @@ public class TablePanel extends Composite {
         locationLayoutMap.put(WEST, new WestLayout(westCardsPanel, cardWidth, cardHeight));
         locationLayoutMap.put(WIDOW, new WidowLayout(widowPanel, cardWidth, cardHeight));
 
-        centerTabPanel.selectTab(0);
+        switchToTab(0);
         centerTabPanel.addSelectionHandler(new SelectionHandler<Integer>() {
             @Override
             public void onSelection(SelectionEvent<Integer> event) {
@@ -94,6 +94,10 @@ public class TablePanel extends Composite {
                 layoutLocation(TableLocation.WIDOW);
             }
         });
+    }
+
+    public void switchToTab(int index) {
+        centerTabPanel.selectTab(index);
     }
 
     @UiChild

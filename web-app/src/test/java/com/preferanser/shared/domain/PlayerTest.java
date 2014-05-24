@@ -25,6 +25,7 @@ import com.preferanser.shared.domain.exception.DuplicateGameTurnException;
 import com.preferanser.shared.domain.exception.GameException;
 import com.preferanser.shared.domain.exception.IllegalSuitException;
 import com.preferanser.shared.domain.exception.NotInTurnException;
+import com.preferanser.shared.util.Clock;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -515,6 +516,29 @@ public class PlayerTest {
         assertReflectionEquals(newArrayList(CLUB_ACE, CLUB_JACK, CLUB_8, CLUB_KING), turns);
     }
 
+    @Test
+    public void testLoadDrawing() throws Exception {
+        List<Card> turns = newArrayList(
+            CLUB_ACE,     // SOUTH
+            CLUB_JACK,    // WEST
+            CLUB_8,       // EAST
+            DIAMOND_9,    // SOUTH
+            DIAMOND_JACK, // WEST
+            DIAMOND_7,    // EAST
+            HEART_JACK    // WEST
+        );
+
+        player.loadDrawing(new Drawing(1L, 2L, 3L, "Drawing", "Description", turns, Clock.getNow()));
+
+        Map<Hand, Integer> expectedTrickCounts = ImmutableMap.of(SOUTH, 0, WEST, 0, EAST, 0, WIDOW, 0);
+        Map<Card, Hand> expectedCenterCards = ImmutableMap.of();
+
+        assertThat(player.getTurns(), equalTo(turns));
+        assertThat(player.getTurn(), equalTo(SOUTH));
+        assertThat(player.getHandTrickCounts(), equalTo(expectedTrickCounts));
+        assertThat(player.getCenterCards(), equalTo(expectedCenterCards));
+    }
+
     private Map<Hand, Contract> buildHandContractMap() {
         return ImmutableMap.of(
             EAST, Contract.PASS,
@@ -544,7 +568,6 @@ public class PlayerTest {
 
         return multimap;
     }
-
 
     private Player buildPlayer(
         String name,

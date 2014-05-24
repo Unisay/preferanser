@@ -19,7 +19,6 @@
 
 package com.preferanser.client.application.mvp.dialog.drawing.open;
 
-import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.HasUiHandlers;
@@ -45,7 +44,7 @@ public class OpenDrawingDialogPresenter extends PresenterWidget<OpenDrawingDialo
     }
 
     @Override public void open(Drawing drawing) {
-        Window.alert(drawing.toString());
+        drawingSetter.setDrawing(drawing);
     }
 
     public void setDrawings(List<Drawing> drawings) {

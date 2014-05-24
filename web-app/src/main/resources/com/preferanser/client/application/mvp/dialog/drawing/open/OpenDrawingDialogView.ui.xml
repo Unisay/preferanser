@@ -48,11 +48,11 @@
                 <g:cell horizontalAlignment="ALIGN_LEFT">
                     <g:Button ui:field="openButton" text="{constants.open}"/>
                 </g:cell>
-                <g:cell horizontalAlignment="ALIGN_RIGHT" width="30px">
-                    <g:Button ui:field="deleteButton" text="{constants.delete}" addStyleNames="{style.deleteButton}"/>
+                <g:cell horizontalAlignment="ALIGN_RIGHT" width="40px">
+                <g:Button ui:field="deleteButton" text="{constants.delete}" addStyleNames="{style.deleteButton}"/>
                 </g:cell>
-                <g:cell horizontalAlignment="ALIGN_RIGHT" width="30px">
-                    <g:Button ui:field="cancelButton" text="{constants.cancel}"/>
+                <g:cell horizontalAlignment="ALIGN_RIGHT" width="40px">
+                <g:Button ui:field="cancelButton" text="{constants.cancel}"/>
                 </g:cell>
             </g:HorizontalPanel>
         </g:VerticalPanel>

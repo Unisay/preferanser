@@ -1,4 +1,5 @@
-#Preferanser is a program to compose, exchange and calculate [Russian Preferans Card](https://en.wikipedia.org/wiki/Preferans) game deals.
+#Preferanser 
+Compose, exchange and calculate [Russian Preferans Card](https://en.wikipedia.org/wiki/Preferans) game deals.
 
 [![Build Status](https://travis-ci.org/Unisay/preferanser.png?branch=master)](https://travis-ci.org/Unisay/preferanser)
 ![Screenshot Miser](img/Preferanser_miser_laskera.png)

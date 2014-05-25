@@ -1,0 +1,50 @@
+{
+    "name": "Неземной расклад",
+    "description": "Сможет ли играющий сыграть свою игру? http://www.review-pref.ru/school/139/50/",
+    "shared": true,
+    "firstTurn": "WEST",
+    "players": "THREE",
+    "eastContract": "WHIST",
+    "southContract": "WHIST",
+    "westContract": "SIX_SPADE",
+    "widow": {
+        "card1": "DIAMOND_7",
+        "card2": "DIAMOND_8"
+    },
+    "eastCards": [
+        "HEART_9",
+        "SPADE_7",
+        "SPADE_ACE",
+        "CLUB_9",
+        "HEART_ACE",
+        "HEART_8",
+        "SPADE_8",
+        "DIAMOND_QUEEN",
+        "HEART_QUEEN",
+        "HEART_7"
+    ],
+    "southCards": [
+        "CLUB_8",
+        "CLUB_ACE",
+        "HEART_JACK",
+        "HEART_KING",
+        "DIAMOND_JACK",
+        "HEART_10",
+        "DIAMOND_10",
+        "DIAMOND_9",
+        "CLUB_7",
+        "DIAMOND_ACE"
+    ],
+    "westCards": [
+        "SPADE_9",
+        "CLUB_KING",
+        "SPADE_JACK",
+        "CLUB_QUEEN",
+        "SPADE_QUEEN",
+        "SPADE_10",
+        "SPADE_KING",
+        "CLUB_10",
+        "CLUB_JACK",
+        "DIAMOND_KING"
+    ]
+}

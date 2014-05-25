@@ -60,6 +60,7 @@ public class PlayerPresenter
     implements PlayerUiHandlers, DealEvent.DealCreatedHandler, DrawingOpenEvent.DrawingOpenHandler, DrawingDeleteEvent.DrawingDeleteHandler {
 
     private static final Logger log = Logger.getLogger("PlayerPresenter");
+    public static final int SLUFF_DELAY_MS = 800;
 
     private final User currentUser;
     private final PlaceManager placeManager;
@@ -220,7 +221,8 @@ public class PlayerPresenter
     }
 
     @Override public void redo() {
-        getPlayerOrThrow().redoTurn();
+        Player player = getPlayerOrThrow();
+        player.redoTurn();
         refreshView();
     }
 
@@ -248,20 +250,22 @@ public class PlayerPresenter
 
     private void refreshView() {
         if (playerOptional.isPresent()) {
-            log.finest("Refreshing view...");
-            Player player = playerOptional.get();
-            PlayerView view = getView();
-            view.displayDealInfo(player.getName(), player.getDescription());
-            view.displayTurn(player.getTurn());
-            view.displayCards(player.getHandCards(), player.getCenterCards(), player.getWidow());
-            view.displaySluffButton(player.isTrickClosed());
-            view.displayResetButton(player.hasUndoTurns() || player.hasRedoTurns());
-            view.displaySaveDrawingButton(currentUser.getLoggedIn() && player.hasTurns());
-            view.displayContracts(player.getHandContracts());
-            view.displayHandTricks(player.getHandTrickCounts());
-            view.displayTurnNavigation(player.hasUndoTurns(), player.hasRedoTurns());
-            view.disableCards(player.getDisabledCards());
+            refreshView(playerOptional.get(), getView());
         }
+    }
+
+    private void refreshView(Player player, PlayerView view) {
+        log.finest("Refreshing view...");
+        view.displayDealInfo(player.getName(), player.getDescription());
+        view.displayTurn(player.getTurn());
+        view.displayCards(player.getHandCards(), player.getCenterCards(), player.getWidow());
+        view.displaySluffButton(player.isTrickClosed());
+        view.displayResetButton(player.hasUndoTurns() || player.hasRedoTurns());
+        view.displaySaveDrawingButton(currentUser.getLoggedIn() && player.hasTurns());
+        view.displayContracts(player.getHandContracts());
+        view.displayHandTricks(player.getHandTrickCounts());
+        view.displayTurnNavigation(player.hasUndoTurns(), player.hasRedoTurns());
+        view.disableCards(player.getDisabledCards());
     }
 
 }

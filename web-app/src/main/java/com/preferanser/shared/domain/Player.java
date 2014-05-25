@@ -213,6 +213,11 @@ public class Player {
         return false;
     }
 
+    /**
+     * Move trick to sluff if it is closed
+     *
+     * @return true if it was moved, false if not (its open)
+     */
     public boolean sluffTrick() {
         if (isTrickOpen(currentTrickIndex))
             return false;
@@ -318,19 +323,24 @@ public class Player {
     public boolean hasRedoTurns() {
         int lastTrickIndex = trickLog.size() - 1;
         checkState(lastTrickIndex >= currentTrickIndex, "currentTrickIndex == %s, trickLog.size() == %s", currentTrickIndex, trickLog.size());
-
-        if (lastTrickIndex > currentTrickIndex && isTrickClosed(currentTrickIndex))
-            currentTrickIndex++; // TODO unit test
-
-        return currentTrick().hasRedoTurns();
+        return lastTrickIndex > currentTrickIndex && isTrickClosed()
+            ? nextTrick().hasRedoTurns()
+            : currentTrick().hasRedoTurns();
     }
 
+    /**
+     * Undo current turn
+     *
+     * @return true if turn has been undone, false otherwise
+     */
     public boolean undoTurn() {
         if (!hasUndoTurns())
             return false;
 
-        if (currentTrick().isEmpty())
+        if (currentTrick().isEmpty()) {
             currentTrickIndex--;
+            return true;
+        }
 
         Turn undoTurn = currentTrick().undoTurn();
         Hand hand = undoTurn.getHand();
@@ -342,9 +352,17 @@ public class Player {
         return true;
     }
 
+    /**
+     * Apply a redo turn
+     *
+     * @return true if turn has been re-done
+     */
     public boolean redoTurn() {
         if (!hasRedoTurns())
             return false; // TODO unit test
+
+        if (sluffTrick())
+            return true;
 
         Turn redoTurn = currentTrick().redoTurn();
         Hand hand = redoTurn.getHand();
@@ -353,8 +371,42 @@ public class Player {
         } else {
             handCardMultimap.remove(hand, redoTurn.getCard());
         }
-        sluffTrick();
         return true;
+    }
+
+    /**
+     * Clear trick & turn logs, start drawing from the scratch.
+     */
+    public void reset() {
+        unwindTurns();
+        Trick first = trickLog.getFirst();
+        first.clearTurnLog();
+        trickLog.clear();
+        trickLog.add(first);
+    }
+
+    /**
+     * Load new drawing replacing actual turns.
+     * <p/>
+     * After loading drawing is positioned at the very first turn
+     *
+     * @param drawing drawing to load
+     * @throws GameException in case of invalid drawing
+     */
+    public void loadDrawing(Drawing drawing) throws GameException {
+        reset();
+        for (Card card : drawing.getTurns()) {
+            makeTurn(card);
+            sluffTrick();
+        }
+        unwindTurns();
+    }
+
+    private void unwindTurns() {
+        boolean turnUndone;
+        do {
+            turnUndone = undoTurn();
+        } while (turnUndone);
     }
 
     private Trick currentTrick() {
@@ -365,32 +417,14 @@ public class Player {
         return trickLog.get(currentTrickIndex - 1);
     }
 
+    private Trick nextTrick() {
+        return trickLog.get(currentTrickIndex + 1);
+    }
+
     private boolean isRaspass() {
         return handContracts.get(Hand.EAST) == Contract.PASS
             && handContracts.get(Hand.SOUTH) == Contract.PASS
             && handContracts.get(Hand.WEST) == Contract.PASS;
-    }
-
-    public void reset() {
-        boolean turnUndone;
-        do {
-            turnUndone = undoTurn();
-        } while (turnUndone);
-        Trick first = trickLog.getFirst();
-        first.clearTurnLog();
-        trickLog.clear();
-        trickLog.add(first);
-    }
-
-    public void loadDrawing(Drawing drawing) throws GameException {
-        reset();
-        for (Card card : drawing.getTurns()) {
-            makeTurn(card);
-            sluffTrick();
-        }
-        for (Card ignored : drawing.getTurns()) {
-            undoTurn();
-        }
     }
 
     public Long getId() {
@@ -429,5 +463,4 @@ public class Player {
         deal.setCurrentTrickIndex(currentTrickIndex);
         return deal;
     }
-
 }

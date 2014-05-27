@@ -60,7 +60,6 @@ public class PlayerPresenter
     implements PlayerUiHandlers, DealEvent.DealCreatedHandler, DrawingOpenEvent.DrawingOpenHandler, DrawingDeleteEvent.DrawingDeleteHandler {
 
     private static final Logger log = Logger.getLogger("PlayerPresenter");
-    public static final int SLUFF_DELAY_MS = 800;
 
     private final User currentUser;
     private final PlaceManager placeManager;

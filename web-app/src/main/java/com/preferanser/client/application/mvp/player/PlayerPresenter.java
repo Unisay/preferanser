@@ -157,7 +157,7 @@ public class PlayerPresenter
     }
 
     @Override public void sluff() {
-        if (getPlayerOrThrow().sluffTrick())
+        if (getPlayerOrThrow().sluffTrickIfClosed())
             refreshView();
     }
 

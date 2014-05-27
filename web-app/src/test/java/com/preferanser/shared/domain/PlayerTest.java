@@ -226,7 +226,7 @@ public class PlayerTest {
         player.makeTurn(DIAMOND_7);     // EAST
         assertTrue(player.isTrickClosed());
 
-        player.sluffTrick();
+        player.sluffTrickIfClosed();
 
         player.makeTurn(HEART_ACE);     // WIDOW
         assertFalse(player.isTrickClosed());
@@ -240,7 +240,7 @@ public class PlayerTest {
         player.makeTurn(CLUB_8);        // EAST
         assertTrue(player.isTrickClosed());
 
-        player.sluffTrick();
+        player.sluffTrickIfClosed();
 
         player.makeTurn(CLUB_KING);     // SOUTH
         assertFalse(player.isTrickClosed());
@@ -304,13 +304,13 @@ public class PlayerTest {
 
     @Test
     public void testSluffTrick() throws Exception {
-        assertFalse(player.sluffTrick());
+        assertFalse(player.sluffTrickIfClosed());
         player.makeTurn(CLUB_ACE);
-        assertFalse(player.sluffTrick());
+        assertFalse(player.sluffTrickIfClosed());
         player.makeTurn(CLUB_JACK);
-        assertFalse(player.sluffTrick());
+        assertFalse(player.sluffTrickIfClosed());
         player.makeTurn(CLUB_8);
-        assertTrue(player.sluffTrick());
+        assertTrue(player.sluffTrickIfClosed());
 
         assertTrue(player.getCenterCards().isEmpty());
         assertThat(player.getTurn(), equalTo(SOUTH));
@@ -357,7 +357,7 @@ public class PlayerTest {
         player.makeTurn(CLUB_JACK); // WEST <-- wins
         player.makeTurn(CLUB_8);    // EAST
 
-        assertTrue(player.sluffTrick(), "Failed to sluff trick");
+        assertTrue(player.sluffTrickIfClosed(), "Failed to sluff trick");
         assertThat(player.getTurn(), equalTo(WEST));
         assertThat(player.getHandTrickCounts(), equalTo((Map) ImmutableMap.of(SOUTH, 0, WEST, 1, EAST, 0, WIDOW, 0)));
 
@@ -369,6 +369,11 @@ public class PlayerTest {
         assertTrue(player.undoTurn(), "Failed to undo WEST->HEART_JACK");
         assertThat(player.getTurn(), equalTo(WEST));
         assertTrue(player.getCenterCards().isEmpty());
+        assertThat(player.getHandTrickCounts(), equalTo((Map) ImmutableMap.of(SOUTH, 0, WEST, 1, EAST, 0, WIDOW, 0)));
+
+        assertTrue(player.undoTurn(), "Failed to undo sluff trick");
+        assertThat(player.getTurn(), equalTo(WEST));
+        assertThat(player.getCenterCards(), equalTo((Map) ImmutableMap.of(CLUB_7, SOUTH, CLUB_JACK, WEST, CLUB_8, EAST)));
         assertThat(player.getHandTrickCounts(), equalTo((Map) ImmutableMap.of(SOUTH, 0, WEST, 1, EAST, 0, WIDOW, 0)));
 
         assertTrue(player.undoTurn(), "Failed to undo EAST->CLUB_8");
@@ -396,7 +401,7 @@ public class PlayerTest {
 
         assertTrue(player.redoTurn(), "Failed to redo EAST->CLUB_8");
         assertThat(player.getTurn(), equalTo(WEST));
-        assertThat(player.getCenterCards(), equalTo((Map) ImmutableMap.of()));
+        assertThat(player.getCenterCards(), equalTo((Map) ImmutableMap.of(CLUB_7, SOUTH, CLUB_JACK, WEST, CLUB_8, EAST)));
         assertThat(player.getHandTrickCounts(), equalTo((Map) ImmutableMap.of(SOUTH, 0, WEST, 1, EAST, 0, WIDOW, 0)));
 
         assertTrue(player.redoTurn(), "Failed to redo WEST->HEART_JACK");
@@ -410,14 +415,16 @@ public class PlayerTest {
         player.makeTurn(CLUB_ACE);
         player.makeTurn(CLUB_JACK);
         player.makeTurn(CLUB_8);
-        assertTrue(player.sluffTrick(), "Failed to sluff trick");
+        assertTrue(player.sluffTrickIfClosed(), "Failed to sluff trick");
         player.makeTurn(CLUB_KING);
         assertTrue(player.undoTurn(), "Failed to undo SOUTH->CLUB_KING");
         assertThat(player.getCenterCards(), equalTo((Map) ImmutableMap.of()));
+        assertTrue(player.undoTurn(), "Failed to undo sluff trick");
+        assertThat(player.getCenterCards(), equalTo((Map) ImmutableMap.of(CLUB_ACE, SOUTH, CLUB_JACK, WEST, CLUB_8, EAST)));
         assertTrue(player.undoTurn(), "Failed to undo EAST->CLUB_8");
         assertThat(player.getCenterCards(), equalTo((Map) ImmutableMap.of(CLUB_ACE, SOUTH, CLUB_JACK, WEST)));
         assertTrue(player.redoTurn(), "Failed to redo EAST->CLUB_8");
-        assertThat(player.getCenterCards(), equalTo((Map) ImmutableMap.of()));
+        assertThat(player.getCenterCards(), equalTo((Map) ImmutableMap.of(CLUB_ACE, SOUTH, CLUB_JACK, WEST, CLUB_8, EAST)));
     }
 
     @Test
@@ -429,7 +436,9 @@ public class PlayerTest {
         assertTrue(player.hasUndoTurns());
         player.makeTurn(CLUB_8);
         assertTrue(player.hasUndoTurns());
-        player.sluffTrick();
+        player.sluffTrickIfClosed();
+        assertTrue(player.hasUndoTurns());
+        player.undoTurn(); // Undo sluff
         assertTrue(player.hasUndoTurns());
         player.undoTurn(); // Undo SOUTH->CLUB_ACE
         assertTrue(player.hasUndoTurns());
@@ -457,7 +466,9 @@ public class PlayerTest {
         assertFalse(player.hasRedoTurns());
         player.makeTurn(CLUB_8);
         assertFalse(player.hasRedoTurns());
-        player.sluffTrick();
+        player.sluffTrickIfClosed();
+        assertFalse(player.hasRedoTurns());
+        player.undoTurn(); // Undo sluff trick
         assertFalse(player.hasRedoTurns());
         player.undoTurn(); // Undo SOUTH->CLUB_ACE
         assertTrue(player.hasRedoTurns());
@@ -474,7 +485,7 @@ public class PlayerTest {
         player.makeTurn(CLUB_ACE);
         player.makeTurn(CLUB_JACK);
         player.makeTurn(CLUB_8);
-        player.sluffTrick();
+        player.sluffTrickIfClosed();
         player.makeTurn(CLUB_KING);
         player.reset();
         assertFalse(player.hasUndoTurns());
@@ -489,7 +500,7 @@ public class PlayerTest {
         player.makeTurn(CLUB_ACE);
         player.makeTurn(CLUB_JACK);
         player.makeTurn(CLUB_8);
-        player.sluffTrick();
+        player.sluffTrickIfClosed();
         player.makeTurn(CLUB_KING);
 
         Deal deal = player.toDeal();
@@ -508,7 +519,7 @@ public class PlayerTest {
         player.makeTurn(CLUB_ACE);
         player.makeTurn(CLUB_JACK);
         player.makeTurn(CLUB_8);
-        player.sluffTrick();
+        player.sluffTrickIfClosed();
         player.makeTurn(CLUB_KING);
 
         List<Card> turns = player.getTurns();

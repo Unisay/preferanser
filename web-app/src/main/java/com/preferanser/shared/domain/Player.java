@@ -218,7 +218,7 @@ public class Player {
      *
      * @return true if it was moved, false if not (its open)
      */
-    public boolean sluffTrick() {
+    public boolean sluffTrickIfClosed() {
         if (isTrickOpen(currentTrickIndex))
             return false;
 
@@ -358,11 +358,9 @@ public class Player {
      * @return true if turn has been re-done
      */
     public boolean redoTurn() {
+        sluffTrickIfClosed();
         if (!hasRedoTurns())
-            return false; // TODO unit test
-
-        if (sluffTrick())
-            return true;
+            return false;
 
         Turn redoTurn = currentTrick().redoTurn();
         Hand hand = redoTurn.getHand();
@@ -397,7 +395,7 @@ public class Player {
         reset();
         for (Card card : drawing.getTurns()) {
             makeTurn(card);
-            sluffTrick();
+            sluffTrickIfClosed();
         }
         unwindTurns();
     }

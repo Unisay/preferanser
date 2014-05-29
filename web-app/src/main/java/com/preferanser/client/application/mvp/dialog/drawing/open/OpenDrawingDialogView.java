@@ -19,6 +19,8 @@
 
 package com.preferanser.client.application.mvp.dialog.drawing.open;
 
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -26,6 +28,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.PopupPanel;
+import com.google.gwt.user.client.ui.TextBox;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.PopupViewWithUiHandlers;
@@ -44,6 +47,7 @@ public class OpenDrawingDialogView extends PopupViewWithUiHandlers<OpenDrawingDi
     @UiField PreferanserConstants constants;
     @UiField EscapableDialogBox dialog;
     @UiField ListBox listBox;
+    @UiField TextBox linkHolder;
 
     private List<Drawing> drawings;
 
@@ -53,12 +57,38 @@ public class OpenDrawingDialogView extends PopupViewWithUiHandlers<OpenDrawingDi
         initWidget(uiBinder.createAndBindUi(this));
     }
 
+    @Override public void show() {
+        super.show();
+        listBox.addChangeHandler(new ChangeHandler() {
+            @Override public void onChange(ChangeEvent event) {
+                getUiHandlers().select(drawings.get(listBox.getSelectedIndex()));
+            }
+        });
+        linkHolder.getElement().setAttribute("spellCheck", "false");
+    }
+
+    @Override public void hide() {
+        super.hide();
+        linkHolder.setValue("");
+    }
+
     @Override public void displayDrawings(List<Drawing> drawings) {
+        if (drawings == null || drawings.isEmpty()) {
+            return;
+        }
+
         this.drawings = drawings;
         listBox.clear();
         for (Drawing drawing : drawings) {
             listBox.addItem(drawing.getName() + " (" + DATE_TIME_FORMAT.format(drawing.getCreatedAt()) + ")");
         }
+        listBox.setSelectedIndex(0);
+        getUiHandlers().select(drawings.get(0));
+    }
+
+    @Override public void displayLink(String link) {
+        linkHolder.setValue(link);
+        linkHolder.selectAll();
     }
 
     @UiHandler("openButton") void onOpen(@SuppressWarnings("unused") ClickEvent event) {
@@ -66,12 +96,12 @@ public class OpenDrawingDialogView extends PopupViewWithUiHandlers<OpenDrawingDi
         hide();
     }
 
-    @UiHandler("cancelButton") void onCancel(@SuppressWarnings("unused") ClickEvent event) {
-        hide();
-    }
-
     @UiHandler("deleteButton") void onDelete(@SuppressWarnings("unused") ClickEvent event) {
         getUiHandlers().delete(drawings.get(listBox.getSelectedIndex()));
+    }
+
+    @UiHandler("cancelButton") void onCancel(@SuppressWarnings("unused") ClickEvent event) {
+        hide();
     }
 
 }

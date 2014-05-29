@@ -37,8 +37,8 @@ public class DrawingOpenEvent extends GwtEvent<DrawingOpenEvent.DrawingOpenHandl
         this.drawing = drawing;
     }
 
-    public static void fire(HasHandlers source, Drawing deal1) {
-        source.fireEvent(new DrawingOpenEvent(deal1));
+    public static void fire(HasHandlers source, Drawing drawing) {
+        source.fireEvent(new DrawingOpenEvent(drawing));
     }
 
     public static void fire(HasHandlers source, DrawingOpenEvent eventInstance) {

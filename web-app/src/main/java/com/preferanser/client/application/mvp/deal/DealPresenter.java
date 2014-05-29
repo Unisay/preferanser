@@ -68,16 +68,6 @@ public class DealPresenter extends Presenter<DealPresenter.DealView, DealPresent
         loadDeals();
     }
 
-    @Override public void playDeal(DealInfo dealInfo) {
-        placeManager.revealPlace(
-            new PlaceRequest.Builder()
-                .nameToken(NameTokens.PLAYER)
-                .with("user", dealInfo.getOwnerId().toString())
-                .with("deal", Long.toString(dealInfo.getId()))
-                .build()
-        );
-    }
-
     @Override public void editDeal(DealInfo dealInfo) {
         placeManager.revealPlace(
             new PlaceRequest.Builder()

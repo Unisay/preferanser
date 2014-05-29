@@ -25,6 +25,7 @@ import com.google.inject.Inject;
 import com.googlecode.objectify.Key;
 import com.preferanser.server.dao.objectify.OfyFactory;
 import com.preferanser.server.entity.UserEntity;
+import com.preferanser.server.exception.NotFoundException;
 
 import javax.validation.Validator;
 
@@ -36,7 +37,15 @@ public class UserDao extends BaseDao<UserEntity> {
     }
 
     public Optional<UserEntity> findById(Long id) {
-        return get(Key.create(UserEntity.class, id));
+        return find(Key.create(UserEntity.class, id));
+    }
+
+    public UserEntity getById(Long id) {
+        Optional<UserEntity> userEntityOptional = find(Key.create(UserEntity.class, id));
+        if (!userEntityOptional.isPresent()) {
+            throw new NotFoundException(UserEntity.class, id);
+        }
+        return userEntityOptional.get();
     }
 
     public Optional<UserEntity> findByGoogleId(String googleId) {

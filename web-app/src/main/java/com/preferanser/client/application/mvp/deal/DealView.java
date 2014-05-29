@@ -9,7 +9,10 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.*;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
+import com.gwtplatform.mvp.client.proxy.PlaceManager;
+import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.preferanser.client.application.i18n.PreferanserConstants;
+import com.preferanser.client.gwtp.NameTokens;
 import com.preferanser.shared.domain.DealInfo;
 
 import java.util.Date;
@@ -19,15 +22,15 @@ public class DealView extends ViewWithUiHandlers<DealUiHandlers> implements Deal
 
     private static final int COLUMN_NAME = 0;
     private static final int COLUMN_TIME = 1;
-    private static final int COLUMN_PLAY = 2;
-    private static final int COLUMN_EDIT = 3;
-    private static final int COLUMN_DELETE = 4;
+    private static final int COLUMN_EDIT = 2;
+    private static final int COLUMN_DELETE = 3;
 
     public interface Binder extends UiBinder<Widget, DealView> {}
 
     interface DealViewStyle extends CssResource {
         String odd();
         String deals();
+        String link();
     }
 
     private static final DateTimeFormat DATE_TIME_FORMAT = DateTimeFormat.getFormat(DateTimeFormat.PredefinedFormat.DATE_TIME_SHORT);
@@ -36,14 +39,15 @@ public class DealView extends ViewWithUiHandlers<DealUiHandlers> implements Deal
     @UiField DealViewStyle style;
 
     private final PreferanserConstants constants;
+    private final PlaceManager placeManager;
 
     @Inject
-    public DealView(Binder uiBinder, PreferanserConstants constants) {
+    public DealView(Binder uiBinder, PreferanserConstants constants, PlaceManager placeManager) {
         this.constants = constants;
+        this.placeManager = placeManager;
         dealTable = new FlexTable();
         HTMLTable.ColumnFormatter columnFormatter = dealTable.getColumnFormatter();
         columnFormatter.setWidth(COLUMN_TIME, "40px");
-        columnFormatter.setWidth(COLUMN_PLAY, "36px");
         initWidget(uiBinder.createAndBindUi(this));
     }
 
@@ -59,9 +63,8 @@ public class DealView extends ViewWithUiHandlers<DealUiHandlers> implements Deal
             DealInfo deal = deals.get(i);
             if (i % 2 == 0)
                 dealTable.getRowFormatter().addStyleName(i, style.odd());
-            dealTable.setWidget(i, COLUMN_NAME, new Label(deal.getName()));
+            dealTable.setWidget(i, COLUMN_NAME, createDealLink(deal));
             dealTable.setWidget(i, COLUMN_TIME, createDateTimeLabel(deal));
-            dealTable.setWidget(i, COLUMN_PLAY, createPlayButton(deal));
             if (allowModifications) {
                 dealTable.setWidget(i, COLUMN_EDIT, createEditButton(deal));
                 dealTable.setWidget(i, COLUMN_DELETE, createDeleteButton(deal));
@@ -69,21 +72,22 @@ public class DealView extends ViewWithUiHandlers<DealUiHandlers> implements Deal
         }
     }
 
+    private Hyperlink createDealLink(DealInfo dealInfo) {
+        PlaceRequest placeRequest = new PlaceRequest.Builder()
+            .nameToken(NameTokens.PLAYER)
+            .with("user", dealInfo.getOwnerId().toString())
+            .with("deal", Long.toString(dealInfo.getId()))
+            .build();
+        Hyperlink hyperlink = new Hyperlink(dealInfo.getName(), placeManager.buildHistoryToken(placeRequest));
+        hyperlink.addStyleName(style.link());
+        return hyperlink;
+    }
+
     private Label createDateTimeLabel(DealInfo deal) {
         Date created = deal.getCreated();
         Label label = new Label(created == null ? "" : DATE_TIME_FORMAT.format(created));
         label.setWordWrap(false);
         return label;
-    }
-
-    private Button createPlayButton(final DealInfo deal) {
-        Button button = new Button(constants.play());
-        button.addClickHandler(new ClickHandler() {
-            @Override public void onClick(ClickEvent event) {
-                getUiHandlers().playDeal(deal);
-            }
-        });
-        return button;
     }
 
     private Button createEditButton(final DealInfo deal) {

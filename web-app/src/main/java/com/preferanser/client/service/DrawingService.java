@@ -43,7 +43,9 @@ public interface DrawingService extends RestService {
      * @param callback contains new drawing id as Long
      */
     @POST
-    @RequestId(SAVE_DRAWING) void save(Drawing drawing, MethodCallback<Long> callback);
+    @RequestId(SAVE_DRAWING) void save(
+        Drawing drawing,
+        MethodCallback<Long> callback);
 
     /**
      * Get all drawings for the deal
@@ -53,7 +55,24 @@ public interface DrawingService extends RestService {
      */
     @GET
     @Path("/{dealId}")
-    @RequestId(LOAD_DRAWINGS) void load(@PathParam("dealId") Long dealId, MethodCallback<List<Drawing>> callback);
+    @RequestId(LOAD_DRAWINGS) void load(
+        @PathParam("dealId") Long dealId,
+        MethodCallback<List<Drawing>> callback);
+
+    /**
+     * Get drawing
+     *
+     * @param dealId    deal id
+     * @param drawingId drawing id
+     * @param callback  callback
+     */
+    @GET
+    @Path("/{userId}/{dealId}/{drawingId}")
+    @RequestId(LOAD_DRAWING) void load(
+        @PathParam("userId") Long userId,
+        @PathParam("dealId") Long dealId,
+        @PathParam("drawingId") Long drawingId,
+        MethodCallback<Drawing> callback);
 
     /**
      * Delete drawing
@@ -64,5 +83,8 @@ public interface DrawingService extends RestService {
      */
     @DELETE
     @Path("/{dealId}/{drawingId}")
-    @RequestId(DELETE_DRAWING) void delete(@PathParam("dealId") Long dealId, @PathParam("drawingId") Long drawingId, MethodCallback<Void> callback);
+    @RequestId(DELETE_DRAWING) void delete(
+        @PathParam("dealId") Long dealId,
+        @PathParam("drawingId") Long drawingId,
+        MethodCallback<Void> callback);
 }

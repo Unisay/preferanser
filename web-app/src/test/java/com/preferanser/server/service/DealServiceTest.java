@@ -145,7 +145,7 @@ public class DealServiceTest {
         DealEntity deal = buildDealEntity(1, otherUser.getId(), "name1", false);
 
         when(authenticationService.getCurrentUserOrThrow()).thenReturn(user);
-        when(dealDao.get(user, deal.getId())).thenReturn(Optional.of(deal));
+        when(dealDao.find(user, deal.getId())).thenReturn(Optional.of(deal));
 
         dealService.delete(deal.getId());
     }
@@ -155,7 +155,7 @@ public class DealServiceTest {
         DealEntity deal = buildDealEntity(1L, user.getId(), "name1", false);
 
         when(authenticationService.getCurrentUserOrThrow()).thenReturn(user);
-        when(dealDao.get(user, deal.getId())).thenReturn(Optional.of(deal));
+        when(dealDao.find(user, deal.getId())).thenReturn(Optional.of(deal));
 
         dealService.delete(deal.getId());
 
@@ -174,7 +174,7 @@ public class DealServiceTest {
         DealEntity deal = buildDealEntity(1, otherUser.getId(), "name1", false);
 
         when(authenticationService.getCurrentUserOrThrow()).thenReturn(user);
-        when(dealDao.get(user, deal.getId())).thenReturn(Optional.of(deal));
+        when(dealDao.find(user, deal.getId())).thenReturn(Optional.of(deal));
 
         dealService.update(deal);
 
@@ -186,13 +186,13 @@ public class DealServiceTest {
         DealEntity deal = buildDealEntity(1, user.getId(), "name1", false);
 
         when(authenticationService.getCurrentUserOrThrow()).thenReturn(user);
-        when(dealDao.get(user, deal.getId())).thenReturn(Optional.of(deal));
+        when(dealDao.find(user, deal.getId())).thenReturn(Optional.of(deal));
 
         dealService.update(deal);
 
         verify(authenticationService).getCurrentUserOrThrow();
         DealEntity dealToUpdate = buildDealEntity(1, user.getId(), "name1", false);
-        verify(dealDao).get(user, deal.getId());
+        verify(dealDao).find(user, deal.getId());
         verify(dealDao).save(dealToUpdate);
         verifyNoMoreInteractions(dealDao);
     }
@@ -200,12 +200,12 @@ public class DealServiceTest {
     @Test
     public void testGet_CurrentUser() throws Exception {
         DealEntity deal = buildDealEntity(1, 123, "name1", true);
-        when(dealDao.get(user, deal.getId())).thenReturn(Optional.of(deal));
+        when(dealDao.find(user, deal.getId())).thenReturn(Optional.of(deal));
 
         when(authenticationService.getCurrentUserOrThrow()).thenReturn(user);
         DealEntity actualDeal = dealService.get(deal.getId());
 
-        verify(dealDao).get(user, deal.getId());
+        verify(dealDao).find(user, deal.getId());
         verifyNoMoreInteractions(dealDao);
 
         assertReflectionEquals(deal, actualDeal);
@@ -221,12 +221,12 @@ public class DealServiceTest {
         long dealId = 9999999L;
 
         when(authenticationService.getCurrentUserOrThrow()).thenReturn(user);
-        when(dealDao.get(user, dealId)).thenReturn(Optional.<DealEntity>absent());
+        when(dealDao.find(user, dealId)).thenReturn(Optional.<DealEntity>absent());
 
         dealService.get(dealId);
 
         verify(authenticationService).getCurrentUserOrThrow();
-        verify(dealDao).get(user, dealId);
+        verify(dealDao).find(user, dealId);
     }
 
     @Test

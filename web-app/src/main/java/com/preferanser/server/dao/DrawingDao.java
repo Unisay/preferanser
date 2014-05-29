@@ -17,8 +17,8 @@ public class DrawingDao extends BaseDao<DrawingEntity> {
         super(DrawingEntity.class, ofyFactory, validator);
     }
 
-    public Optional<DrawingEntity> get(DealEntity dealEntity, Long drawingId) {
-        return get(Key.create(dealEntity.getKey(), DrawingEntity.class, drawingId));
+    public Optional<DrawingEntity> find(DealEntity dealEntity, Long drawingId) {
+        return find(Key.create(dealEntity.getKey(), DrawingEntity.class, drawingId));
     }
 
     public List<DrawingEntity> getAllDescDateCreated(DealEntity dealEntity) {

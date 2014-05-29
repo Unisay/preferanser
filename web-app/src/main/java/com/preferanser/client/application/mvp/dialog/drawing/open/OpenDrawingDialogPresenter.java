@@ -19,13 +19,18 @@
 
 package com.preferanser.client.application.mvp.dialog.drawing.open;
 
+import com.google.gwt.http.client.UrlBuilder;
+import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.PopupView;
 import com.gwtplatform.mvp.client.PresenterWidget;
+import com.gwtplatform.mvp.client.proxy.PlaceManager;
+import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.preferanser.client.application.mvp.event.DrawingDeleteEvent;
 import com.preferanser.client.application.mvp.event.DrawingOpenEvent;
+import com.preferanser.client.gwtp.NameTokens;
 import com.preferanser.shared.domain.Drawing;
 
 import java.util.List;
@@ -33,13 +38,16 @@ import java.util.List;
 public class OpenDrawingDialogPresenter extends PresenterWidget<OpenDrawingDialogPresenter.TheView> implements OpenDrawingDialogUiHandlers {
 
     private List<Drawing> drawings;
+    private final PlaceManager placeManager;
 
     public interface TheView extends PopupView, HasUiHandlers<OpenDrawingDialogUiHandlers> {
         void displayDrawings(List<Drawing> drawings);
+        void displayLink(String link);
     }
 
-    @Inject public OpenDrawingDialogPresenter(EventBus eventBus, TheView view) {
+    @Inject public OpenDrawingDialogPresenter(EventBus eventBus, TheView view, PlaceManager placeManager) {
         super(eventBus, view);
+        this.placeManager = placeManager;
         getView().setUiHandlers(this);
     }
 
@@ -52,6 +60,23 @@ public class OpenDrawingDialogPresenter extends PresenterWidget<OpenDrawingDialo
         drawings.remove(drawing);
         getView().displayDrawings(drawings);
         DrawingDeleteEvent.fire(this, drawing);
+    }
+
+    @Override public void select(Drawing drawing) {
+        PlaceRequest placeRequest = new PlaceRequest.Builder()
+            .nameToken(NameTokens.PLAYER)
+            .with("user", Long.toString(drawing.getUserId()))
+            .with("deal", Long.toString(drawing.getDealId()))
+            .with("drawing", Long.toString(drawing.getId()))
+            .build();
+        String historyToken = placeManager.buildHistoryToken(placeRequest);
+        UrlBuilder urlBuilder = new UrlBuilder()
+            .setProtocol(Window.Location.getProtocol())
+            .setHost(Window.Location.getHost())
+            .setPort(Integer.parseInt(Window.Location.getPort()))
+            .setPath(Window.Location.getPath())
+            .setHash(historyToken);
+        getView().displayLink(urlBuilder.buildString());
     }
 
     public void setDrawings(List<Drawing> drawings) {

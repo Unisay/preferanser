@@ -210,4 +210,6 @@ public interface PreferanserConstants extends ConstantsWithLookup {
     @DefaultStringValue("Название розыгрыша") String drawingName();
 
     @DefaultStringValue("Описание розыгрыша") String drawingDesc();
+
+    @DefaultStringValue("Ссылка") String link();
 }

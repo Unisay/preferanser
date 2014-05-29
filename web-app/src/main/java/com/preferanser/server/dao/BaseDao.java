@@ -87,11 +87,11 @@ public abstract class BaseDao<T extends Entity> {
         }
     }
 
-    public Optional<T> get(Key<T> key) {
+    public Optional<T> find(Key<T> key) {
         return ofy().get(key);
     }
 
-    public Optional<T> get(Long id) {
+    public Optional<T> find(Long id) {
         // work around for objectify caching and new query not having the latest data
         ofy().clear();
 
@@ -99,11 +99,11 @@ public abstract class BaseDao<T extends Entity> {
     }
 
     public Boolean exists(Key<T> key) {
-        return get(key) != null;
+        return find(key) != null;
     }
 
     public Boolean exists(Long id) {
-        return get(id) != null;
+        return find(id) != null;
     }
 
     public List<T> getSubset(List<Long> ids) {

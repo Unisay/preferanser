@@ -94,9 +94,9 @@ public class DealDaoTest {
     public void testDeleteNow() throws Exception {
         DealEntity deal = buildDealEntity("deal1", new Date(1000), user);
         DealEntity savedDeal = dealDao.save(deal);
-        assertTrue(dealDao.get(user, savedDeal.getId()).isPresent(), "Saved DealEntity is not present in the DB");
+        assertTrue(dealDao.find(user, savedDeal.getId()).isPresent(), "Saved DealEntity is not present in the DB");
         dealDao.deleteNow(savedDeal);
-        assertFalse(dealDao.get(user, savedDeal.getId()).isPresent(), "Deleted DealEntity is still present in the DB");
+        assertFalse(dealDao.find(user, savedDeal.getId()).isPresent(), "Deleted DealEntity is still present in the DB");
     }
 
 }

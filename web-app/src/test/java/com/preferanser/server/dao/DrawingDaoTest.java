@@ -41,7 +41,7 @@ public class DrawingDaoTest {
 
         assertThat(actualSavedDrawing.getId(), is(not(nullValue())));
         assertReflectionEquals(expectedSavedDrawing, actualSavedDrawing, IGNORE_DEFAULTS);
-        assertTrue(drawingDao.get(dealEntity, actualSavedDrawing.getId()).isPresent(), "Saved DrawingEntity is not present in the DB");
+        assertTrue(drawingDao.find(dealEntity, actualSavedDrawing.getId()).isPresent(), "Saved DrawingEntity is not present in the DB");
     }
 
     @Test
@@ -51,9 +51,9 @@ public class DrawingDaoTest {
 
         DrawingEntity actualSavedDrawing = drawingDao.save(unsavedDrawing);
 
-        assertTrue(drawingDao.get(dealEntity, actualSavedDrawing.getId()).isPresent(), "Saved DrawingEntity is not present in the DB");
+        assertTrue(drawingDao.find(dealEntity, actualSavedDrawing.getId()).isPresent(), "Saved DrawingEntity is not present in the DB");
         drawingDao.deleteNow(actualSavedDrawing);
-        assertFalse(drawingDao.get(dealEntity, actualSavedDrawing.getId()).isPresent(), "Deleted DealEntity is still present in the DB");
+        assertFalse(drawingDao.find(dealEntity, actualSavedDrawing.getId()).isPresent(), "Deleted DealEntity is still present in the DB");
     }
 
     @Test

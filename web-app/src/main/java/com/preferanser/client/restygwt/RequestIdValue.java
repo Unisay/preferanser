@@ -10,7 +10,7 @@ public enum RequestIdValue {
     LOAD_DEALS,
 
     SAVE_DRAWING,
+    LOAD_DRAWING,
     LOAD_DRAWINGS,
-    GET_DRAWING,
     DELETE_DRAWING,
 }

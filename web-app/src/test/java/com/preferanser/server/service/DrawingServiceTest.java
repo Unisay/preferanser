@@ -4,6 +4,7 @@ import com.google.common.base.Optional;
 import com.google.inject.Provider;
 import com.preferanser.server.dao.DealDao;
 import com.preferanser.server.dao.DrawingDao;
+import com.preferanser.server.dao.UserDao;
 import com.preferanser.server.entity.DealEntity;
 import com.preferanser.server.entity.DrawingEntity;
 import com.preferanser.server.entity.UserEntity;
@@ -33,6 +34,9 @@ public class DrawingServiceTest {
     private DealDao dealDao;
 
     @Mock
+    private UserDao userDao;
+
+    @Mock
     private AuthenticationService authenticationService;
 
     private UserEntity user;
@@ -40,7 +44,7 @@ public class DrawingServiceTest {
     @BeforeMethod
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
-        drawingService = new DrawingService(drawingDao, dealDao, new Provider<AuthenticationService>() {
+        drawingService = new DrawingService(drawingDao, dealDao, userDao, new Provider<AuthenticationService>() {
             @Override public AuthenticationService get() {
                 return authenticationService;
             }
@@ -56,7 +60,7 @@ public class DrawingServiceTest {
         DrawingEntity expectedSavedDrawing = buildDrawingEntity(1L);
 
         when(authenticationService.getCurrentUserOrThrow()).thenReturn(user);
-        when(dealDao.get(unsavedDrawing.getDeal())).thenReturn(Optional.of(buildDealEntity()));
+        when(dealDao.find(unsavedDrawing.getDeal())).thenReturn(Optional.of(buildDealEntity()));
         when(drawingDao.save(expectedUnsavedDrawing)).thenReturn(expectedSavedDrawing);
 
         DrawingEntity savedDrawing = drawingService.save(unsavedDrawing);
@@ -64,7 +68,7 @@ public class DrawingServiceTest {
         verify(authenticationService).getCurrentUserOrThrow();
         verifyNoMoreInteractions(authenticationService);
 
-        verify(dealDao).get(unsavedDrawing.getDeal());
+        verify(dealDao).find(unsavedDrawing.getDeal());
         verifyNoMoreInteractions(dealDao);
 
         verify(drawingDao).save(expectedUnsavedDrawing);

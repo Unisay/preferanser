@@ -42,6 +42,12 @@ public class DrawingResource {
     }
 
     @GET
+    @Path("/{userId}/{dealId}/{drawingId}")
+    public Drawing getById(@PathParam("userId") Long userId, @PathParam("dealId") Long dealId, @PathParam("drawingId") Long drawingId) {
+        return drawingTransformer.fromEntity(drawingService.get(userId, dealId, drawingId));
+    }
+
+    @GET
     @Path("/{dealId}/{drawingId}")
     public Drawing getById(@PathParam("dealId") Long dealId, @PathParam("drawingId") Long drawingId) {
         return drawingTransformer.fromEntity(drawingService.get(dealId, drawingId));

@@ -62,7 +62,7 @@ public class DealService {
     }
 
     public DealEntity get(Long userId, Long dealId) {
-        Optional<UserEntity> userEntityOptional = userDao.get(userId);
+        Optional<UserEntity> userEntityOptional = userDao.find(userId);
         if (userEntityOptional.isPresent()) {
             return get(userEntityOptional.get(), dealId);
         } else {
@@ -71,7 +71,7 @@ public class DealService {
     }
 
     private DealEntity get(UserEntity owner, Long dealId) {
-        Optional<DealEntity> dealEntityOptional = dealDao.get(owner, dealId);
+        Optional<DealEntity> dealEntityOptional = dealDao.find(owner, dealId);
         if (!dealEntityOptional.isPresent())
             throw new NotFoundException(DealEntity.class, dealId);
         return dealEntityOptional.get();
@@ -95,7 +95,7 @@ public class DealService {
     public void update(DealEntity deal) {
         UserEntity currentUser = authenticationServiceProvider.get().getCurrentUserOrThrow();
 
-        Optional<DealEntity> maybeDeal = dealDao.get(currentUser, deal.getId());
+        Optional<DealEntity> maybeDeal = dealDao.find(currentUser, deal.getId());
         if (!maybeDeal.isPresent())
             throw new NotFoundException(DealEntity.class, deal.getId());
 
@@ -110,7 +110,7 @@ public class DealService {
     public void delete(Long dealId) {
         UserEntity currentUser = authenticationServiceProvider.get().getCurrentUserOrThrow();
 
-        Optional<DealEntity> maybeDeal = dealDao.get(currentUser, dealId);
+        Optional<DealEntity> maybeDeal = dealDao.find(currentUser, dealId);
         if (!maybeDeal.isPresent())
             throw new NotFoundException(DealEntity.class, dealId);
 

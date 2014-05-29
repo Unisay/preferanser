@@ -68,6 +68,7 @@ public class PlayerPresenter
     private final ApplicationDialogs applicationDialogs;
     private Optional<Long> userIdOptional = Optional.absent();
     private Optional<Long> dealIdOptional = Optional.absent();
+    private Optional<Long> drawingIdOptional = Optional.absent();
     private Optional<Player> playerOptional = Optional.absent();
 
     @ProxyStandard
@@ -106,6 +107,7 @@ public class PlayerPresenter
         PlaceRequestHelper helper = new PlaceRequestHelper(request);
         userIdOptional = helper.parseLongParameter("user");
         dealIdOptional = helper.parseLongParameter("deal");
+        drawingIdOptional = helper.parseLongParameter("drawing");
     }
 
     @Override protected void onReveal() {
@@ -118,6 +120,13 @@ public class PlayerPresenter
                     ResetPresentersEvent.fire(PlayerPresenter.this);
                 }
             });
+            if (drawingIdOptional.isPresent()) {
+                drawingService.load(userIdOptional.get(), dealIdOptional.get(), drawingIdOptional.get(), new Response<Drawing>() {
+                    @Override public void onSuccess(Method method, Drawing drawing) {
+                        DrawingOpenEvent.fire(PlayerPresenter.this, drawing);
+                    }
+                });
+            }
         } else {
             dealService.getCurrentUserDeal(dealIdOptional.get(), new Response<Deal>() {
                 @Override public void onSuccess(Method method, Deal deal) {

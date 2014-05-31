@@ -8,9 +8,6 @@
           <element id="module-output" name="web-app" />
         </element>
         <element id="directory" name="lib">
-          <element id="archive" name="web-app-1.0-SNAPSHOT.jar">
-            <element id="module-output" name="web-app" />
-          </element>
           <element id="archive" name="web-app-laf-1.0-SNAPSHOT.jar">
             <element id="module-output" name="web-app-laf" />
           </element>
@@ -23,7 +20,7 @@
           <element id="library" level="project" name="Maven: org.slf4j:jul-to-slf4j:1.7.7" />
           <element id="library" level="project" name="Maven: com.googlecode.objectify:objectify-gwt:1.0" />
           <element id="library" level="project" name="Maven: com.googlecode.objectify:objectify:4.1" />
-          <element id="library" level="project" name="Maven: com.google.appengine:appengine-api-1.0-sdk:1.9.3" />
+          <element id="library" level="project" name="Maven: com.google.appengine:appengine-api-1.0-sdk:1.9.5" />
           <element id="library" level="project" name="Maven: javax.validation:validation-api:1.0.0.GA" />
           <element id="library" level="project" name="Maven: org.json:json:20140107" />
           <element id="library" level="project" name="Maven: com.google.inject:guice:3.0" />

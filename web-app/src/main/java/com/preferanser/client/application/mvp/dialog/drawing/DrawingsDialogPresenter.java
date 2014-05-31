@@ -69,17 +69,20 @@ public class DrawingsDialogPresenter extends PresenterWidget<DrawingsDialogPrese
     @Override public void select(Drawing drawing) {
         PlaceRequest placeRequest = new PlaceRequest.Builder()
             .nameToken(NameTokens.PLAYER)
-            .with("user", Long.toString(drawing.getUserId()))
-            .with("deal", Long.toString(drawing.getDealId()))
-            .with("drawing", Long.toString(drawing.getId()))
+            .with("user", "" + drawing.getUserId())
+            .with("deal", "" + drawing.getDealId())
+            .with("drawing", "" + drawing.getId())
             .build();
         String historyToken = placeManager.buildHistoryToken(placeRequest);
         UrlBuilder urlBuilder = new UrlBuilder()
             .setProtocol(Window.Location.getProtocol())
             .setHost(Window.Location.getHost())
-            .setPort(Integer.parseInt(Window.Location.getPort()))
             .setPath(Window.Location.getPath())
             .setHash(historyToken);
+        String port = Window.Location.getPort();
+        if (port != null && port.length() > 1) {
+            urlBuilder.setPort(Integer.parseInt(port));
+        }
         getView().displayLink(urlBuilder.buildString());
     }
 

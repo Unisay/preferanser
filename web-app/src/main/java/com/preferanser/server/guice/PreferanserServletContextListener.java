@@ -20,7 +20,7 @@
 package com.preferanser.server.guice;
 
 import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
-import com.google.appengine.repackaged.com.google.common.base.Joiner;
+import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableMap;
 import com.google.inject.Guice;
 import com.google.inject.Injector;

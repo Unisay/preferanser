@@ -17,12 +17,12 @@
  *     along with this program.  If not, see [http://www.gnu.org/licenses/].
  */
 
-package com.preferanser.client.application.mvp.dialog.drawing.open;
+package com.preferanser.client.application.mvp.dialog.drawing;
 
 import com.gwtplatform.mvp.client.UiHandlers;
 import com.preferanser.shared.domain.Drawing;
 
-public interface OpenDrawingDialogUiHandlers extends UiHandlers {
+public interface DrawingsDialogUiHandlers extends UiHandlers {
     void open(Drawing drawing);
     void delete(Drawing drawing);
     void select(Drawing drawing);

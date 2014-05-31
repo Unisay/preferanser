@@ -20,10 +20,10 @@
 package com.preferanser.client.application.mvp.player;
 
 import com.gwtplatform.mvp.client.gin.AbstractPresenterModule;
-import com.preferanser.client.application.mvp.dialog.drawing.open.OpenDrawingDialogPresenter;
-import com.preferanser.client.application.mvp.dialog.drawing.open.OpenDrawingDialogView;
-import com.preferanser.client.application.mvp.dialog.drawing.save.SaveDrawingDialogPresenter;
-import com.preferanser.client.application.mvp.dialog.drawing.save.SaveDrawingDialogView;
+import com.preferanser.client.application.mvp.dialog.drawing.DrawingsDialogPresenter;
+import com.preferanser.client.application.mvp.dialog.drawing.DrawingsDialogView;
+import com.preferanser.client.application.mvp.dialog.drawing.SaveDrawingDialogPresenter;
+import com.preferanser.client.application.mvp.dialog.drawing.SaveDrawingDialogView;
 
 /**
  * Gin module for the mvp page
@@ -33,7 +33,7 @@ public class PlayerModule extends AbstractPresenterModule {
     @Override
     protected void configure() {
         bindSingletonPresenterWidget(SaveDrawingDialogPresenter.class, SaveDrawingDialogPresenter.TheView.class, SaveDrawingDialogView.class);
-        bindSingletonPresenterWidget(OpenDrawingDialogPresenter.class, OpenDrawingDialogPresenter.TheView.class, OpenDrawingDialogView.class);
+        bindSingletonPresenterWidget(DrawingsDialogPresenter.class, DrawingsDialogPresenter.TheView.class, DrawingsDialogView.class);
         bindPresenter(PlayerPresenter.class, PlayerView.class, PlayerViewImpl.class, PlayerPresenter.Proxy.class);
     }
 

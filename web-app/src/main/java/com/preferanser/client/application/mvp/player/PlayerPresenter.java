@@ -40,7 +40,6 @@ import com.preferanser.client.gwtp.NameTokens;
 import com.preferanser.client.gwtp.PlaceRequestHelper;
 import com.preferanser.client.service.DealService;
 import com.preferanser.client.service.DrawingService;
-import com.preferanser.client.service.LogResponse;
 import com.preferanser.client.service.Response;
 import com.preferanser.shared.domain.*;
 import com.preferanser.shared.domain.exception.GameException;
@@ -51,6 +50,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import static com.google.common.base.Preconditions.checkState;
+import static com.google.common.collect.Lists.newArrayList;
 
 /**
  * Presenter for the mvp page
@@ -70,6 +70,7 @@ public class PlayerPresenter
     private Optional<Long> dealIdOptional = Optional.absent();
     private Optional<Long> drawingIdOptional = Optional.absent();
     private Optional<Player> playerOptional = Optional.absent();
+    private List<Drawing> drawings = newArrayList();
 
     @ProxyStandard
     @NameToken(NameTokens.PLAYER)
@@ -120,6 +121,7 @@ public class PlayerPresenter
                     ResetPresentersEvent.fire(PlayerPresenter.this);
                 }
             });
+
             if (drawingIdOptional.isPresent()) {
                 drawingService.load(userIdOptional.get(), dealIdOptional.get(), drawingIdOptional.get(), new Response<Drawing>() {
                     @Override public void onSuccess(Method method, Drawing drawing) {
@@ -135,6 +137,17 @@ public class PlayerPresenter
                 }
             });
         }
+
+        if (currentUser.getLoggedIn()) {
+            drawingService.load(dealIdOptional.get(), new Response<List<Drawing>>() {
+                @Override public void onSuccess(Method method, List<Drawing> loadedDrawings) {
+                    drawings.clear();
+                    drawings.addAll(loadedDrawings);
+                    getView().displayDrawingsButton(!loadedDrawings.isEmpty());
+                }
+            });
+        }
+
     }
 
     @Override protected void onReset() {
@@ -184,18 +197,20 @@ public class PlayerPresenter
 
         applicationDialogs.showSaveDrawingDialog(new NameDescriptionSetter() {
             @Override public void setNameDescription(String name, String description) {
-                Drawing drawing = new Drawing(null, userIdOptional.get(), dealIdOptional.get(), name, description, player.getTurns(), Clock.getNow());
-                drawingService.save(drawing, new LogResponse<Long>(log, "Drawing saved"));
+                Drawing unsavedDrawing = new Drawing(null, userIdOptional.get(), dealIdOptional.get(), name, description, player.getTurns(), Clock.getNow());
+                drawingService.save(unsavedDrawing, new Response<Drawing>() {
+                    @Override public void onSuccess(Method method, Drawing savedDrawing) {
+                        drawings.add(savedDrawing);
+                        getView().displayDrawingsButton(true);
+                    }
+                });
             }
         });
     }
 
-    @Override public void openDrawing() {
-        drawingService.load(dealIdOptional.get(), new Response<List<Drawing>>() {
-            @Override public void onSuccess(Method method, List<Drawing> drawings) {
-                applicationDialogs.showOpenDrawingDialog(drawings);
-            }
-        });
+    @Override public void openDrawings() {
+        assert !drawings.isEmpty();
+        applicationDialogs.showOpenDrawingDialog(drawings);
     }
 
     @Override public void changeCardLocation(Card card, Optional<TableLocation> newLocation) {
@@ -269,6 +284,7 @@ public class PlayerPresenter
         view.displayCards(player.getHandCards(), player.getCenterCards(), player.getWidow());
         view.displaySluffButton(player.isTrickClosed());
         view.displayResetButton(player.hasUndoTurns() || player.hasRedoTurns());
+        view.displayDrawingsButton(!drawings.isEmpty());
         view.displaySaveDrawingButton(currentUser.getLoggedIn() && player.hasTurns());
         view.displayContracts(player.getHandContracts());
         view.displayHandTricks(player.getHandTrickCounts());

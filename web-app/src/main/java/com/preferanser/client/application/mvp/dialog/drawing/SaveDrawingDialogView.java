@@ -17,7 +17,7 @@
  *     along with this program.  If not, see [http://www.gnu.org/licenses/].
  */
 
-package com.preferanser.client.application.mvp.dialog.drawing.save;
+package com.preferanser.client.application.mvp.dialog.drawing;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.event.dom.client.ClickEvent;

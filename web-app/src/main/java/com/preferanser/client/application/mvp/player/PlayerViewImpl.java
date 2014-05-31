@@ -52,7 +52,7 @@ public class PlayerViewImpl extends BaseTableView<PlayerUiHandlers> implements P
 
     @UiField Button editButton;
     @UiField Button resetButton;
-    @UiField Button openDrawingButton;
+    @UiField Button drawingsButton;
     @UiField Button saveDrawingButton;
     @UiField Label trickCountEast;
     @UiField Label trickCountSouth;
@@ -112,6 +112,10 @@ public class PlayerViewImpl extends BaseTableView<PlayerUiHandlers> implements P
         sluffButton.setVisible(visible);
     }
 
+    @Override public void displayDrawingsButton(boolean visible) {
+        drawingsButton.setVisible(visible);
+    }
+
     @Override public void displaySaveDrawingButton(boolean visible) {
         saveDrawingButton.setVisible(visible);
     }
@@ -164,8 +168,8 @@ public class PlayerViewImpl extends BaseTableView<PlayerUiHandlers> implements P
         getUiHandlers().saveDrawing();
     }
 
-    @UiHandler("openDrawingButton") void onOpenDrawing(@SuppressWarnings("unused") ClickEvent event) {
-        getUiHandlers().openDrawing();
+    @UiHandler("drawingsButton") void onDrawings(@SuppressWarnings("unused") ClickEvent event) {
+        getUiHandlers().openDrawings();
     }
 
     @Override public void onCardDoubleClick(CardWidget cardWidget, DoubleClickEvent event) {

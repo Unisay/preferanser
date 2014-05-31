@@ -45,7 +45,7 @@ public interface DrawingService extends RestService {
     @POST
     @RequestId(SAVE_DRAWING) void save(
         Drawing drawing,
-        MethodCallback<Long> callback);
+        MethodCallback<Drawing> callback);
 
     /**
      * Get all drawings for the deal

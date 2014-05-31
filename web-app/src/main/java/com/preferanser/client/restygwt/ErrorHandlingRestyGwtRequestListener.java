@@ -23,6 +23,8 @@ public class ErrorHandlingRestyGwtRequestListener extends RestyGwtRequestListene
     @Override public void afterClientErrorHandled(Method method, Request request, Response response) {
         String errorMessage;
         switch (response.getStatusCode()) {
+            case 0:
+                return; // Ignore
             case 401: // Unauthorized
                 placeManager.revealDefaultPlace();
                 errorMessage = "Для просмотра данной страницы необходимо войти в систему.";

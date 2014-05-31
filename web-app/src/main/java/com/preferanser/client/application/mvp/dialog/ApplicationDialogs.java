@@ -25,8 +25,8 @@ import com.gwtplatform.mvp.client.PopupView;
 import com.gwtplatform.mvp.client.PresenterWidget;
 import com.gwtplatform.mvp.client.proxy.RevealRootPopupContentEvent;
 import com.preferanser.client.application.mvp.dialog.contract.ContractDialogPresenter;
-import com.preferanser.client.application.mvp.dialog.drawing.open.OpenDrawingDialogPresenter;
-import com.preferanser.client.application.mvp.dialog.drawing.save.SaveDrawingDialogPresenter;
+import com.preferanser.client.application.mvp.dialog.drawing.DrawingsDialogPresenter;
+import com.preferanser.client.application.mvp.dialog.drawing.SaveDrawingDialogPresenter;
 import com.preferanser.client.application.mvp.dialog.validation.ValidationDialogPresenter;
 import com.preferanser.client.application.mvp.main.MainPresenter;
 import com.preferanser.shared.domain.Drawing;
@@ -42,7 +42,7 @@ public class ApplicationDialogs {
     private final ContractDialogPresenter contractDialog;
     private final ValidationDialogPresenter validationDialog;
     private final SaveDrawingDialogPresenter saveDrawingDialog;
-    private final OpenDrawingDialogPresenter openDrawingDialog;
+    private final DrawingsDialogPresenter openDrawingDialog;
 
     @Inject
     public ApplicationDialogs(
@@ -50,7 +50,7 @@ public class ApplicationDialogs {
         ContractDialogPresenter contractDialog,
         ValidationDialogPresenter validationDialog,
         SaveDrawingDialogPresenter saveDrawingDialog,
-        OpenDrawingDialogPresenter openDrawingDialog
+        DrawingsDialogPresenter openDrawingDialog
     ) {
         this.mainPresenterProvider = mainPresenterProvider;
         this.contractDialog = contractDialog;

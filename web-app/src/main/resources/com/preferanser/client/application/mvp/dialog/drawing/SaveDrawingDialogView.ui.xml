@@ -42,8 +42,8 @@
         <g:VerticalPanel width="100%" height="100%" spacing="10">
             <g:Label text="{constants.drawingName} (*)"/>
             <g:TextBox ui:field="name"/>
-            <g:Label text="{constants.drawingDesc}"/>
-            <g:TextArea ui:field="description" visibleLines="10"/>
+            <g:Label text="{constants.drawingDesc}" visible="false"/>
+            <g:TextArea ui:field="description" visibleLines="10" visible="false"/>
             <g:Button ui:field="saveButton" text="{constants.save}" enabled="false"/>
         </g:VerticalPanel>
     </p:EscapableDialogBox>

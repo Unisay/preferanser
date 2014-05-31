@@ -30,7 +30,7 @@
             <g:Button ui:field="closeButton" text="{constants.close}" debugId="close"/>
             <g:Button ui:field="editButton" text="{constants.edit}" debugId="edit"/>
             <g:Button ui:field="resetButton" text="{constants.reset}" debugId="reset" visible="false"/>
-            <g:Button ui:field="openDrawingButton" text="{constants.openDrawing}" debugId="open-drawing"/>
+            <g:Button ui:field="drawingsButton" text="{constants.drawings}" debugId="drawings" visible="false"/>
             <g:Button ui:field="saveDrawingButton" text="{constants.saveDrawing}" debugId="save-drawing" visible="false"/>
             <g:Label debugId="deal-name" ui:field="dealName" addStyleNames="{style.dealName}"/>
         </g:FlowPanel>

@@ -20,6 +20,7 @@
 package com.preferanser.server.resource;
 
 import com.google.inject.Inject;
+import com.preferanser.server.entity.DrawingEntity;
 import com.preferanser.server.service.DrawingService;
 import com.preferanser.server.transformer.DrawingTransformer;
 import com.preferanser.shared.domain.Drawing;
@@ -60,8 +61,10 @@ public class DrawingResource {
     }
 
     @POST
-    public Long save(Drawing drawing) {
-        return drawingService.save(drawingTransformer.toEntity(drawing)).getId();
+    public Drawing save(Drawing drawing) {
+        DrawingEntity unsavedDrawingEntity = drawingTransformer.toEntity(drawing);
+        DrawingEntity savedDrawingEntity = drawingService.save(unsavedDrawingEntity);
+        return drawingTransformer.fromEntity(savedDrawingEntity);
     }
 
     @DELETE

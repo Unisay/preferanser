@@ -17,7 +17,7 @@
  *     along with this program.  If not, see [http://www.gnu.org/licenses/].
  */
 
-package com.preferanser.client.application.mvp.dialog.drawing.open;
+package com.preferanser.client.application.mvp.dialog.drawing;
 
 import com.google.gwt.http.client.UrlBuilder;
 import com.google.gwt.user.client.Window;
@@ -35,17 +35,17 @@ import com.preferanser.shared.domain.Drawing;
 
 import java.util.List;
 
-public class OpenDrawingDialogPresenter extends PresenterWidget<OpenDrawingDialogPresenter.TheView> implements OpenDrawingDialogUiHandlers {
+public class DrawingsDialogPresenter extends PresenterWidget<DrawingsDialogPresenter.TheView> implements DrawingsDialogUiHandlers {
 
     private List<Drawing> drawings;
     private final PlaceManager placeManager;
 
-    public interface TheView extends PopupView, HasUiHandlers<OpenDrawingDialogUiHandlers> {
+    public interface TheView extends PopupView, HasUiHandlers<DrawingsDialogUiHandlers> {
         void displayDrawings(List<Drawing> drawings);
         void displayLink(String link);
     }
 
-    @Inject public OpenDrawingDialogPresenter(EventBus eventBus, TheView view, PlaceManager placeManager) {
+    @Inject public DrawingsDialogPresenter(EventBus eventBus, TheView view, PlaceManager placeManager) {
         super(eventBus, view);
         this.placeManager = placeManager;
         getView().setUiHandlers(this);
@@ -58,7 +58,11 @@ public class OpenDrawingDialogPresenter extends PresenterWidget<OpenDrawingDialo
     @Override public void delete(Drawing drawing) {
         assert drawings.contains(drawing);
         drawings.remove(drawing);
-        getView().displayDrawings(drawings);
+        if (drawings.isEmpty()) {
+            getView().hide();
+        } else {
+            getView().displayDrawings(drawings);
+        }
         DrawingDeleteEvent.fire(this, drawing);
     }
 

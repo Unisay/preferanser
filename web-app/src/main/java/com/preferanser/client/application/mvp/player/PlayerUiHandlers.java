@@ -67,7 +67,7 @@ public interface PlayerUiHandlers extends TableUiHandlers {
     void saveDrawing();
 
     /**
-     * Open drawing
+     * Open drawings dialog
      */
-    void openDrawing();
+    void openDrawings();
 }

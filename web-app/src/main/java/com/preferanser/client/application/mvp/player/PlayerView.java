@@ -20,6 +20,8 @@ public interface PlayerView extends TableView, HasUiHandlers<PlayerUiHandlers> {
 
     void displaySluffButton(boolean visible);
 
+    void displayDrawingsButton(boolean visible);
+
     void displaySaveDrawingButton(boolean visible);
 
     void switchTabGame();

@@ -17,7 +17,7 @@
  *     along with this program.  If not, see [http://www.gnu.org/licenses/].
  */
 
-package com.preferanser.client.application.mvp.dialog.drawing.open;
+package com.preferanser.client.application.mvp.dialog.drawing;
 
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
@@ -32,27 +32,23 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.PopupViewWithUiHandlers;
-import com.preferanser.client.application.i18n.PreferanserConstants;
-import com.preferanser.client.application.widgets.EscapableDialogBox;
 import com.preferanser.shared.domain.Drawing;
 
 import java.util.List;
 
-public class OpenDrawingDialogView extends PopupViewWithUiHandlers<OpenDrawingDialogUiHandlers> implements OpenDrawingDialogPresenter.TheView {
+public class DrawingsDialogView extends PopupViewWithUiHandlers<DrawingsDialogUiHandlers> implements DrawingsDialogPresenter.TheView {
 
     public static final DateTimeFormat DATE_TIME_FORMAT = DateTimeFormat.getFormat(DateTimeFormat.PredefinedFormat.DATE_TIME_SHORT);
 
-    interface Binder extends UiBinder<PopupPanel, OpenDrawingDialogView> {}
+    interface Binder extends UiBinder<PopupPanel, DrawingsDialogView> {}
 
-    @UiField PreferanserConstants constants;
-    @UiField EscapableDialogBox dialog;
     @UiField ListBox listBox;
     @UiField TextBox linkHolder;
 
     private List<Drawing> drawings;
 
     @Inject
-    protected OpenDrawingDialogView(Binder uiBinder, EventBus eventBus) {
+    protected DrawingsDialogView(Binder uiBinder, EventBus eventBus) {
         super(eventBus);
         initWidget(uiBinder.createAndBindUi(this));
     }
@@ -97,7 +93,8 @@ public class OpenDrawingDialogView extends PopupViewWithUiHandlers<OpenDrawingDi
     }
 
     @UiHandler("deleteButton") void onDelete(@SuppressWarnings("unused") ClickEvent event) {
-        getUiHandlers().delete(drawings.get(listBox.getSelectedIndex()));
+        if (listBox.getItemCount() > 0)
+            getUiHandlers().delete(drawings.get(listBox.getSelectedIndex()));
     }
 
     @UiHandler("cancelButton") void onCancel(@SuppressWarnings("unused") ClickEvent event) {

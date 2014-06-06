@@ -114,40 +114,16 @@ public class PlayerPresenter
     @Override protected void onReveal() {
         super.onReveal();
         playerOptional = Optional.absent();
-        if (userIdOptional.isPresent()) {
-            dealService.getUserDeal(userIdOptional.get(), dealIdOptional.get(), new Response<Deal>() {
-                @Override public void onSuccess(Method method, Deal deal) {
-                    playerOptional = Optional.of(new Player(deal));
-                    ResetPresentersEvent.fire(PlayerPresenter.this);
-                }
-            });
-
-            if (drawingIdOptional.isPresent()) {
-                drawingService.load(userIdOptional.get(), dealIdOptional.get(), drawingIdOptional.get(), new Response<Drawing>() {
-                    @Override public void onSuccess(Method method, Drawing drawing) {
-                        DrawingOpenEvent.fire(PlayerPresenter.this, drawing);
-                    }
-                });
+        Response<Deal> dealResponse = new Response<Deal>() {
+            @Override public void onSuccess(Method method, Deal deal) {
+                DealEvent.fire(PlayerPresenter.this, deal);
             }
+        };
+        if (userIdOptional.isPresent()) {
+            dealService.getUserDeal(userIdOptional.get(), dealIdOptional.get(), dealResponse);
         } else {
-            dealService.getCurrentUserDeal(dealIdOptional.get(), new Response<Deal>() {
-                @Override public void onSuccess(Method method, Deal deal) {
-                    playerOptional = Optional.of(new Player(deal));
-                    ResetPresentersEvent.fire(PlayerPresenter.this);
-                }
-            });
+            dealService.getCurrentUserDeal(dealIdOptional.get(), dealResponse);
         }
-
-        if (currentUser.getLoggedIn()) {
-            drawingService.load(dealIdOptional.get(), new Response<List<Drawing>>() {
-                @Override public void onSuccess(Method method, List<Drawing> loadedDrawings) {
-                    drawings.clear();
-                    drawings.addAll(loadedDrawings);
-                    getView().displayDrawingsButton(!loadedDrawings.isEmpty());
-                }
-            });
-        }
-
     }
 
     @Override protected void onReset() {
@@ -159,6 +135,32 @@ public class PlayerPresenter
     @Override public void onDealEvent(DealEvent dealEvent) {
         Deal deal = dealEvent.getDeal();
         playerOptional = Optional.of(new Player(deal));
+        if (currentUser.getLoggedIn()) {
+            drawingService.load(dealIdOptional.get(), new Response<List<Drawing>>() {
+                @Override public void onSuccess(Method method, List<Drawing> loadedDrawings) {
+                    drawings.clear();
+                    drawings.addAll(loadedDrawings);
+                    if (drawingIdOptional.isPresent()) {
+                        long drawingId = drawingIdOptional.get();
+                        for (Drawing drawing : drawings) {
+                            if (drawingId == drawing.getId()) {
+                                DrawingOpenEvent.fire(PlayerPresenter.this, drawing);
+                            }
+                        }
+                    }
+                    getView().displayDrawingsButton(!loadedDrawings.isEmpty());
+                }
+            });
+        } else {
+            if (drawingIdOptional.isPresent()) {
+                drawingService.load(userIdOptional.get(), dealIdOptional.get(), drawingIdOptional.get(), new Response<Drawing>() {
+                    @Override public void onSuccess(Method method, Drawing drawing) {
+                        DrawingOpenEvent.fire(PlayerPresenter.this, drawing);
+                    }
+                });
+            }
+        }
+        ResetPresentersEvent.fire(PlayerPresenter.this);
     }
 
     @Override public void onDrawingOpenEvent(DrawingOpenEvent event) {

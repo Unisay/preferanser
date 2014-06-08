@@ -41,7 +41,7 @@
         <javax.el.version>3.0.0</javax.el.version>
         <hibernate-validator.version>4.3.1.Final</hibernate-validator.version>
         <juel.version>2.2.6</juel.version>
-        <appengine-api.version>1.9.5</appengine-api.version>
+        <appengine-api.version>1.9.6</appengine-api.version>
         <gwt.logLevel>INFO</gwt.logLevel>
     </properties>
 
@@ -162,6 +162,11 @@
         <dependency>
             <groupId>commons-collections</groupId>
             <artifactId>commons-collections</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
         </dependency>
 
         <dependency>
@@ -305,7 +310,7 @@
 
                     <runTarget>Preferanser.html</runTarget>
                     <modules>
-                        <module>com.preferanser.laf.Green</module>
+                        <!--<module>com.preferanser.laf.Green</module>-->
                         <module>com.preferanser.Preferanser</module>
                     </modules>
                 </configuration>

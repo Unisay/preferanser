@@ -1,8 +1,8 @@
 package com.preferanser.client.application.widgets;
 
 import com.google.gwt.animation.client.Animation;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
-import com.google.gwt.user.client.Element;
 
 import static com.google.gwt.dom.client.Style.Unit.PX;
 

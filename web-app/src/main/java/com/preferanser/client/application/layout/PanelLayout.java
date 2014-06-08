@@ -19,7 +19,7 @@
 
 package com.preferanser.client.application.layout;
 
-import com.google.gwt.user.client.Element;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Panel;
 import com.preferanser.client.application.widgets.CardAnimation;

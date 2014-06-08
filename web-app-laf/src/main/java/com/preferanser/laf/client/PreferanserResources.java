@@ -103,99 +103,99 @@ public interface PreferanserResources extends ClientBundle {
     @ImageResource.ImageOptions(repeatStyle = ImageResource.RepeatStyle.Both) ImageResource woodBackground();
 
     @Source("images/cards/c7.png")
-    @ImageResource.ImageOptions(width = 109, height = 144) ImageResource c7();
+    @ImageResource.ImageOptions(width = 218, height = 288) ImageResource c7();
 
     @Source("images/cards/s7.png")
-    @ImageResource.ImageOptions(width = 109, height = 144) ImageResource s7();
+    @ImageResource.ImageOptions(width = 218, height = 288) ImageResource s7();
 
     @Source("images/cards/d7.png")
-    @ImageResource.ImageOptions(width = 109, height = 144) ImageResource d7();
+    @ImageResource.ImageOptions(width = 218, height = 288) ImageResource d7();
 
     @Source("images/cards/h7.png")
-    @ImageResource.ImageOptions(width = 109, height = 144) ImageResource h7();
+    @ImageResource.ImageOptions(width = 218, height = 288) ImageResource h7();
 
     @Source("images/cards/c8.png")
-    @ImageResource.ImageOptions(width = 109, height = 144) ImageResource c8();
+    @ImageResource.ImageOptions(width = 218, height = 288) ImageResource c8();
 
     @Source("images/cards/s8.png")
-    @ImageResource.ImageOptions(width = 109, height = 144) ImageResource s8();
+    @ImageResource.ImageOptions(width = 218, height = 288) ImageResource s8();
 
     @Source("images/cards/d8.png")
-    @ImageResource.ImageOptions(width = 109, height = 144) ImageResource d8();
+    @ImageResource.ImageOptions(width = 218, height = 288) ImageResource d8();
 
     @Source("images/cards/h8.png")
-    @ImageResource.ImageOptions(width = 109, height = 144) ImageResource h8();
+    @ImageResource.ImageOptions(width = 218, height = 288) ImageResource h8();
 
     @Source("images/cards/c9.png")
-    @ImageResource.ImageOptions(width = 109, height = 144) ImageResource c9();
+    @ImageResource.ImageOptions(width = 218, height = 288) ImageResource c9();
 
     @Source("images/cards/s9.png")
-    @ImageResource.ImageOptions(width = 109, height = 144) ImageResource s9();
+    @ImageResource.ImageOptions(width = 218, height = 288) ImageResource s9();
 
     @Source("images/cards/d9.png")
-    @ImageResource.ImageOptions(width = 109, height = 144) ImageResource d9();
+    @ImageResource.ImageOptions(width = 218, height = 288) ImageResource d9();
 
     @Source("images/cards/h9.png")
-    @ImageResource.ImageOptions(width = 109, height = 144) ImageResource h9();
+    @ImageResource.ImageOptions(width = 218, height = 288) ImageResource h9();
 
     @Source("images/cards/c10.png")
-    @ImageResource.ImageOptions(width = 109, height = 144) ImageResource c10();
+    @ImageResource.ImageOptions(width = 218, height = 288) ImageResource c10();
 
     @Source("images/cards/s10.png")
-    @ImageResource.ImageOptions(width = 109, height = 144) ImageResource s10();
+    @ImageResource.ImageOptions(width = 218, height = 288) ImageResource s10();
 
     @Source("images/cards/d10.png")
-    @ImageResource.ImageOptions(width = 109, height = 144) ImageResource d10();
+    @ImageResource.ImageOptions(width = 218, height = 288) ImageResource d10();
 
     @Source("images/cards/h10.png")
-    @ImageResource.ImageOptions(width = 109, height = 144) ImageResource h10();
+    @ImageResource.ImageOptions(width = 218, height = 288) ImageResource h10();
 
     @Source("images/cards/cj.png")
-    @ImageResource.ImageOptions(width = 109, height = 144) ImageResource cj();
+    @ImageResource.ImageOptions(width = 218, height = 288) ImageResource cj();
 
     @Source("images/cards/sj.png")
-    @ImageResource.ImageOptions(width = 109, height = 144) ImageResource sj();
+    @ImageResource.ImageOptions(width = 218, height = 288) ImageResource sj();
 
     @Source("images/cards/dj.png")
-    @ImageResource.ImageOptions(width = 109, height = 144) ImageResource dj();
+    @ImageResource.ImageOptions(width = 218, height = 288) ImageResource dj();
 
     @Source("images/cards/hj.png")
-    @ImageResource.ImageOptions(width = 109, height = 144) ImageResource hj();
+    @ImageResource.ImageOptions(width = 218, height = 288) ImageResource hj();
 
     @Source("images/cards/cq.png")
-    @ImageResource.ImageOptions(width = 109, height = 144) ImageResource cq();
+    @ImageResource.ImageOptions(width = 218, height = 288) ImageResource cq();
 
     @Source("images/cards/sq.png")
-    @ImageResource.ImageOptions(width = 109, height = 144) ImageResource sq();
+    @ImageResource.ImageOptions(width = 218, height = 288) ImageResource sq();
 
     @Source("images/cards/dq.png")
-    @ImageResource.ImageOptions(width = 109, height = 144) ImageResource dq();
+    @ImageResource.ImageOptions(width = 218, height = 288) ImageResource dq();
 
     @Source("images/cards/hq.png")
-    @ImageResource.ImageOptions(width = 109, height = 144) ImageResource hq();
+    @ImageResource.ImageOptions(width = 218, height = 288) ImageResource hq();
 
     @Source("images/cards/ck.png")
-    @ImageResource.ImageOptions(width = 109, height = 144) ImageResource ck();
+    @ImageResource.ImageOptions(width = 218, height = 288) ImageResource ck();
 
     @Source("images/cards/sk.png")
-    @ImageResource.ImageOptions(width = 109, height = 144) ImageResource sk();
+    @ImageResource.ImageOptions(width = 218, height = 288) ImageResource sk();
 
     @Source("images/cards/dk.png")
-    @ImageResource.ImageOptions(width = 109, height = 144) ImageResource dk();
+    @ImageResource.ImageOptions(width = 218, height = 288) ImageResource dk();
 
     @Source("images/cards/hk.png")
-    @ImageResource.ImageOptions(width = 109, height = 144) ImageResource hk();
+    @ImageResource.ImageOptions(width = 218, height = 288) ImageResource hk();
 
     @Source("images/cards/ca.png")
-    @ImageResource.ImageOptions(width = 109, height = 144) ImageResource ca();
+    @ImageResource.ImageOptions(width = 218, height = 288) ImageResource ca();
 
     @Source("images/cards/sa.png")
-    @ImageResource.ImageOptions(width = 109, height = 144) ImageResource sa();
+    @ImageResource.ImageOptions(width = 218, height = 288) ImageResource sa();
 
     @Source("images/cards/da.png")
-    @ImageResource.ImageOptions(width = 109, height = 144) ImageResource da();
+    @ImageResource.ImageOptions(width = 218, height = 288) ImageResource da();
 
     @Source("images/cards/ha.png")
-    @ImageResource.ImageOptions(width = 109, height = 144) ImageResource ha();
+    @ImageResource.ImageOptions(width = 218, height = 288) ImageResource ha();
 
 }

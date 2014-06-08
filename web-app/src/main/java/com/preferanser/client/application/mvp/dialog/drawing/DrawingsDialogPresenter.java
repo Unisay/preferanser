@@ -27,7 +27,7 @@ import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.PopupView;
 import com.gwtplatform.mvp.client.PresenterWidget;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
-import com.gwtplatform.mvp.client.proxy.PlaceRequest;
+import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 import com.preferanser.client.application.mvp.event.DrawingDeleteEvent;
 import com.preferanser.client.application.mvp.event.DrawingOpenEvent;
 import com.preferanser.client.gwtp.NameTokens;

@@ -1,7 +1,7 @@
 package com.preferanser.client.gwtp;
 
 import com.google.common.base.Optional;
-import com.gwtplatform.mvp.client.proxy.PlaceRequest;
+import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 
 import java.util.logging.Logger;
 
@@ -27,19 +27,4 @@ public class PlaceRequestHelper {
         return Optional.absent();
     }
 
-    public Optional<Double> parseDoubleParameter(String parameter) {
-        String value = request.getParameter(parameter, "");
-        if (!value.isEmpty()) {
-            try {
-                return Optional.of(Double.parseDouble(value));
-            } catch (NumberFormatException e) {
-                log.warning("Failed to parse parameter '" + parameter + "' as Double");
-            }
-        }
-        return Optional.absent();
-    }
-
-    public Optional<String> getStringParameter(String parameter) {
-        return Optional.fromNullable(request.getParameter(parameter, null));
-    }
 }

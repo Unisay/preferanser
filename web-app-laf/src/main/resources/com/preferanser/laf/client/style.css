@@ -9,6 +9,7 @@ html, body {
 
 @sprite body {
     gwt-image: 'greenClothBackground';
+    background-repeat: repeat;
 }
 
 body {
@@ -145,6 +146,11 @@ body {
     opacity: 1;
 }
 
+.card .gwt-Image {
+    width: 109px;
+    height: 144px;
+}
+
 .card-draggable {
     cursor: url("img/cursor/open-hand.cur") 4 4, move;
 }
@@ -174,9 +180,7 @@ body {
     margin: 0 auto;
 }
 
-.requestLoader {
-
-}
+.requestLoader {}
 
 .loadingImage {
     margin: 1em auto;

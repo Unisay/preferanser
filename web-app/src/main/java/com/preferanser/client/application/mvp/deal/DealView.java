@@ -10,7 +10,7 @@ import com.google.gwt.user.client.ui.*;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
-import com.gwtplatform.mvp.client.proxy.PlaceRequest;
+import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 import com.preferanser.client.application.i18n.PreferanserConstants;
 import com.preferanser.client.gwtp.NameTokens;
 import com.preferanser.shared.domain.DealInfo;

@@ -55,7 +55,6 @@ public class TablePanel extends Composite {
     protected PreferanserResources resources = GWT.create(PreferanserResources.class);
 
     @UiField HorizontalPanel eastPanelHeader;
-
     @UiField HorizontalPanel southPanelHeader;
     @UiField HorizontalPanel westPanelHeader;
     @UiField FlowPanel eastCardsPanel;
@@ -78,8 +77,8 @@ public class TablePanel extends Composite {
         locationPanelMap.put(CENTER, centerCardsPanel);
         locationPanelMap.put(WIDOW, widowPanel);
 
-        int cardWidth = resources.c7().getWidth();
-        int cardHeight = resources.c7().getHeight();
+        int cardWidth = resources.c7().getWidth() / 2;
+        int cardHeight = resources.c7().getHeight() / 2;
         centerCardLayout = new CenterLayout(centerCardsPanel, cardWidth, cardHeight);
         locationLayoutMap.put(EAST, new EastLayout(eastCardsPanel, cardWidth, cardHeight));
         locationLayoutMap.put(SOUTH, new HorizontalLayout(southCardsPanel, cardWidth));

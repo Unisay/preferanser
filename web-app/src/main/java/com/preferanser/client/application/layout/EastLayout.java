@@ -29,7 +29,6 @@ public class EastLayout extends VerticalPanelLayout<CardWidget> {
     public EastLayout(Panel panel, int imageWidth, int imageHeight) {
         super(panel, imageWidth, imageHeight);
         this.maxSameSuitOffsetX = imageWidth - minSameSuitOffsetX;
-        this.minDiffSuitOffsetY = 85;
         this.maxDiffSuitOffsetY = imageHeight;
     }
 

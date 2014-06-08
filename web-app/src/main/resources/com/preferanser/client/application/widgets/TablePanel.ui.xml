@@ -23,6 +23,7 @@
     <ui:style>
 
         @def gap 10px;
+        @def sideHeight 390px;
 
         .west {
             float: left;
@@ -34,7 +35,7 @@
             background-color: rgba(0, 0, 0, 0.1);
             border-radius: 7px;
             width: 550px;
-            height: 440px;
+            height: sideHeight;
             margin: 0;
         }
 
@@ -54,7 +55,7 @@
         }
 
         .west, .east, {
-            height: 440px;
+            height: sideHeight;
         }
 
         .south {
@@ -93,7 +94,7 @@
         }
 
         .eastCards, .westCards {
-            height: 420px;
+            height: 370px;
             width: 100%;
         }
 

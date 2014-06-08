@@ -30,7 +30,7 @@ public class ResourceLoader {
     @Inject
     public ResourceLoader(PreferanserResources resources) {
         // Load and inject CSS resources
-        resources.css().ensureInjected();
+        resources.style().ensureInjected();
     }
 
 }

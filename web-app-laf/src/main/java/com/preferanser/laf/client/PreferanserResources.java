@@ -29,56 +29,75 @@ import com.google.gwt.user.cellview.client.DataGrid;
  * <p/>
  * <a href="http://www.gwtproject.org/doc/latest/DevGuideClientBundle.html">ClientBundle</a>
  */
-@SuppressWarnings("unused")
 public interface PreferanserResources extends ClientBundle {
 
-    @SuppressWarnings("unused")
     interface Style extends CssResource {
 
+        public static final int CENTER_WIDTH = 550;
+        public static final int CENTER_HEIGHT = 370;
+
         @ClassName("gwt-DialogBox") String gwtDialogBox();
-
         @ClassName("gwt-DialogBoxOverlay") String gwtDialogBoxOverlay();
-
         @ClassName("gwt-Button") String gwtButton();
-
         @ClassName("gwt-TabBarFirst") String gwtTabBarFirst();
-
         @ClassName("gwt-TabBarRest") String gwtTabBarRest();
-
         @ClassName("gwt-Label") String gwtLabel();
-
         @ClassName("gwt-TabBarItem") String gwtTabBarItem();
-
         @ClassName("gwt-TabBar") String gwtTabBar();
-
         @ClassName("gwt-TabPanelBottom") String gwtTabPanelBottom();
-
         @ClassName("gwt-TabBarItem-selected") String gwtTabBarItemSelected();
-
-        String title();
-
-        String beta();
+        @ClassName("gwt-Image") String gwtImage();
+        @ClassName("gwt-PopupPanelGlass") String gwtPopupPanelGlass();
 
         @ClassName("title-smaller") String titleSmaller();
-
-        String dialogTop();
-
-        String Caption();
-
-        String layoutCenter();
-
-        String requestLoader();
+        @ClassName("card-disabled") String cardDisabled();
+        @ClassName("card-draggable") String cardDraggable();
+        @ClassName("card-dragging") String cardDragging();
+        @ClassName("not-visible") String notVisible();
+        @ClassName("not-displayed") String notDisplayed();
 
         String card();
-
-        @ClassName("card-disabled") String cardDisabled();
-
-        @ClassName("card-draggable") String cardDraggable();
-
-        @ClassName("card-dragging") String cardDragging();
-
+        String title();
+        String beta();
+        String dialogTop();
+        String Caption();
+        String layoutCenter();
+        String requestLoader();
         String loadingImage();
+        String trickCountWidow();
+        String trickCountWest();
+        String titleEast();
+        String trickCountEast();
+        String trickCountSouth();
+        String contractTricks();
+        String contractSuit();
+        String noTrump();
+        String contractLabel();
+        String contractLink();
+        String titleWest();
+        String dealName();
+        String handHeaderLeftPanel();
+        String undoLink();
+        String redoLink();
+        String relativeElementsHolder();
+        String turnWidowButton();
+        String sluffButton();
+        String titleSouth();
+        String dealDescription();
+        String buttonsPanel();
+        String turnPointerWidow();
+        String turnPointerWest();
+        String turnPointerSouth();
+        String turnPointerActive();
+        String turnPointer();
+        String turnPointerEast();
+        String propertiesPanel();
+        String raspassOption();
+        String formInput();
+        String raspassOptionLabel();
     }
+
+    @Source("style.css") Style style();
 
     interface DataGridResources extends DataGrid.Resources {
 
@@ -88,18 +107,16 @@ public interface PreferanserResources extends ClientBundle {
         @Source({DataGrid.Style.DEFAULT_CSS, "DataGrid.css"}) DataGridStyle dataGridStyle();
     }
 
-    @Source("style.css") Style css();
-
     DataGridResources dataGrid();
-
-    @Source("images/sand_clock.png")
-    @ImageResource.ImageOptions(height = 128, width = 128) ImageResource sandClock();
 
     @Source("images/arrow_right.png")
     @ImageResource.ImageOptions(height = 32, width = 32) ImageResource arrowRight();
 
+    @Source("images/sand_clock.png")
+    @ImageResource.ImageOptions(height = 128, width = 128) ImageResource sandClock();
+
     @Source("images/green_cloth_back.jpg")
-    @ImageResource.ImageOptions(repeatStyle = ImageResource.RepeatStyle.Horizontal) ImageResource greenClothBackground();
+    @ImageResource.ImageOptions(repeatStyle = ImageResource.RepeatStyle.Both) ImageResource greenClothBackground();
 
     @Source("images/wood_back.png")
     @ImageResource.ImageOptions(repeatStyle = ImageResource.RepeatStyle.Both) ImageResource woodBackground();

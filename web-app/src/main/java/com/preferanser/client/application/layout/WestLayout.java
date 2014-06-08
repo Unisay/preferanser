@@ -27,7 +27,6 @@ public class WestLayout extends VerticalPanelLayout<CardWidget> {
     public WestLayout(Panel panel, int imageWidth, int imageHeight) {
         super(panel, imageWidth, imageHeight);
         this.maxSameSuitOffsetX = imageWidth - minSameSuitOffsetX;
-        this.minDiffSuitOffsetY = 85;
         this.maxDiffSuitOffsetY = imageHeight;
     }
 

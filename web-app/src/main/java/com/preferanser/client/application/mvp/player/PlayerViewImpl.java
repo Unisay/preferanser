@@ -127,9 +127,9 @@ public class PlayerViewImpl extends BaseTableView<PlayerUiHandlers> implements P
     @Override protected void displayHandTurnPointer(Hand hand, TurnPointer turnPointer, Hand turn) {
         super.displayHandTurnPointer(hand, turnPointer, turn);
         if (turnPointer.isActive()) {
-            turnPointer.removeStyleName(style.notDisplayed());
+            turnPointer.removeStyleName(res.style().notDisplayed());
         } else {
-            turnPointer.addStyleName(style.notDisplayed());
+            turnPointer.addStyleName(res.style().notDisplayed());
         }
         if (hand == Hand.WIDOW) {
             turnWidowButton.setVisible(turnPointer.isActive());

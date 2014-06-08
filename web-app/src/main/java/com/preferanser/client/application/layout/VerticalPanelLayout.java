@@ -42,6 +42,7 @@ public class VerticalPanelLayout<T extends CardWidget> extends SortingPanelLayou
     public VerticalPanelLayout(Panel panel, int imageWidth, int imageHeight) {
         super(panel);
         this.minSameSuitOffsetX = 24;
+        this.minDiffSuitOffsetY = 45;
         this.imageWidth = imageWidth;
         this.imageHeight = imageHeight;
     }

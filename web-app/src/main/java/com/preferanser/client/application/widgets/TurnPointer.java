@@ -19,18 +19,19 @@
 
 package com.preferanser.client.application.widgets;
 
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.Image;
-import com.preferanser.client.application.mvp.editor.style.TurnPointerStyle;
+import com.preferanser.laf.client.PreferanserResources;
 import com.preferanser.shared.domain.Hand;
 
 public class TurnPointer extends Image {
 
-    private final TurnPointerStyle style;
+    private final PreferanserResources.Style style;
     private Hand turn;
     private boolean active;
 
-    public TurnPointer(TurnPointerStyle style, ImageResource imageResource) {
+    public TurnPointer(PreferanserResources.Style style, ImageResource imageResource) {
         this.style = style;
         setResource(imageResource);
         setStylePrimaryName(style.turnPointer());
@@ -53,6 +54,14 @@ public class TurnPointer extends Image {
                 break;
         }
         ensureDebugId("turn-pointer-" + turn.name());
+    }
+
+    public void setLeft(double left) {
+        getElement().getStyle().setLeft(left, Style.Unit.PX);
+    }
+
+    public void setTop(double top) {
+        getElement().getStyle().setTop(top, Style.Unit.PX);
     }
 
     public Hand getTurn() {

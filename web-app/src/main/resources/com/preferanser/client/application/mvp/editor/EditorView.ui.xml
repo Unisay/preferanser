@@ -21,56 +21,10 @@
              xmlns:g="urn:import:com.google.gwt.user.client.ui"
              xmlns:p="urn:import:com.preferanser.client.application.widgets">
     <ui:with field="constants" type="com.preferanser.client.application.i18n.PreferanserConstants"/>
-    <ui:with field="resources" type="com.preferanser.laf.client.PreferanserResources"/>
-    <ui:style src="../table.css" type="com.preferanser.client.application.mvp.editor.style.TableStyle"/>
+    <ui:with field="res" type="com.preferanser.laf.client.PreferanserResources"/>
+    <g:FlowPanel addStyleNames="{res.style.layoutCenter}">
 
-    <ui:style field="editorStyle">
-        .propertiesPanel {
-            width: 100%;
-            padding: 1em;
-        }
-
-        .formInput {
-            margin-bottom: 1em;
-        }
-
-        @external .gwt-Label;
-        .formInput .gwt-Label {
-            margin-bottom: .5em;
-            font-weight: 400;
-        }
-
-        .formInput input, .formInput textarea {
-            width: 500px;
-            border: none;
-            border-radius: 5px;
-            background-color: rgba(0, 0, 0, .1);
-            color: white;
-            font-size: 14pt;
-            resize: none;
-        }
-
-        .formInput input {
-            padding: 5px 10px;
-        }
-
-        .formInput textarea {
-            padding: 10px;
-            height: 265px;
-        }
-
-        .raspassOption {
-            margin: 1em auto;
-        }
-
-        .raspassOptionLabel {
-            font-size: 90%;
-        }
-
-    </ui:style>
-    <g:FlowPanel addStyleNames="{resources.css.layoutCenter}">
-
-        <g:FlowPanel debugId="buttons-panel" addStyleNames="{style.buttonsPanel}">
+        <g:FlowPanel debugId="buttons-panel" addStyleNames="{res.style.buttonsPanel}">
             <g:Button ui:field="saveButton" text="{constants.save}" debugId="save"/>
             <g:Button ui:field="cancelButton" text="{constants.cancel}" debugId="cancel"/>
             <g:Button ui:field="resetButton" text="{constants.reset}" debugId="reset"/>
@@ -80,40 +34,40 @@
 
             <p:westheader>
                 <p:Widgets>
-                    <g:FlowPanel addStyleNames="{style.handHeaderLeftPanel}">
-                        <g:Label ui:field="titleWest" text="{constants.WEST}" addStyleNames="{style.titleWest}"/>
+                    <g:FlowPanel addStyleNames="{res.style.handHeaderLeftPanel}">
+                        <g:Label ui:field="titleWest" text="{constants.WEST}" addStyleNames="{res.style.titleWest}"/>
                         <g:Anchor ui:field="westContractAnchor" debugId="contract-link-WEST"
-                                  addStyleNames="{style.contractLink}"/>
+                                  addStyleNames="{res.style.contractLink}"/>
                     </g:FlowPanel>
-                    <g:Label ui:field="trickCountWest" addStyleNames="{style.trickCountWest}"/>
+                    <g:Label ui:field="trickCountWest" addStyleNames="{res.style.trickCountWest}"/>
                 </p:Widgets>
             </p:westheader>
 
             <p:southheader>
                 <p:Widgets>
-                    <g:FlowPanel addStyleNames="{style.handHeaderLeftPanel}">
-                        <g:Label ui:field="titleSouth" text="{constants.SOUTH}" addStyleNames="{style.titleSouth}"/>
+                    <g:FlowPanel addStyleNames="{res.style.handHeaderLeftPanel}">
+                        <g:Label ui:field="titleSouth" text="{constants.SOUTH}" addStyleNames="{res.style.titleSouth}"/>
                         <g:Anchor ui:field="southContractAnchor" debugId="contract-link-SOUTH"
-                                  addStyleNames="{style.contractLink}"/>
+                                  addStyleNames="{res.style.contractLink}"/>
                     </g:FlowPanel>
-                    <g:Label ui:field="trickCountSouth" addStyleNames="{style.trickCountSouth}"/>
+                    <g:Label ui:field="trickCountSouth" addStyleNames="{res.style.trickCountSouth}"/>
                 </p:Widgets>
             </p:southheader>
 
             <p:eastheader>
                 <p:Widgets>
-                    <g:FlowPanel addStyleNames="{style.handHeaderLeftPanel}">
-                        <g:Label ui:field="titleEast" text="{constants.EAST}" addStyleNames="{style.titleEast}"/>
+                    <g:FlowPanel addStyleNames="{res.style.handHeaderLeftPanel}">
+                        <g:Label ui:field="titleEast" text="{constants.EAST}" addStyleNames="{res.style.titleEast}"/>
                         <g:Anchor ui:field="eastContractAnchor" debugId="contract-link-EAST"
-                                  addStyleNames="{style.contractLink}"/>
+                                  addStyleNames="{res.style.contractLink}"/>
                     </g:FlowPanel>
-                    <g:Label ui:field="trickCountEast" addStyleNames="{style.trickCountEast}"/>
+                    <g:Label ui:field="trickCountEast" addStyleNames="{res.style.trickCountEast}"/>
                 </p:Widgets>
             </p:eastheader>
 
             <p:center>
                 <p:Widgets>
-                    <g:FlowPanel debugId="turn-pointer-holder" addStyleNames="{style.relativeElementsHolder}">
+                    <g:FlowPanel debugId="turn-pointer-holder" addStyleNames="{res.style.relativeElementsHolder}">
                         <p:TurnPointer ui:field="turnPointerEast" turn="EAST"/>
                         <p:TurnPointer ui:field="turnPointerSouth" turn="SOUTH"/>
                         <p:TurnPointer ui:field="turnPointerWest" turn="WEST"/>
@@ -122,12 +76,12 @@
             </p:center>
 
             <p:tab title="{constants.properties}" index="0">
-                <g:FlowPanel addStyleNames="{editorStyle.propertiesPanel}">
-                    <g:FlowPanel width="100%" addStyleNames="{editorStyle.formInput}">
+                <g:FlowPanel addStyleNames="{res.style.propertiesPanel}">
+                    <g:FlowPanel width="100%" addStyleNames="{res.style.formInput}">
                         <g:Label text="{constants.dealName}"/>
                         <g:TextBox ui:field="dealName"/>
                     </g:FlowPanel>
-                    <g:FlowPanel width="100%" addStyleNames="{editorStyle.formInput}">
+                    <g:FlowPanel width="100%" addStyleNames="{res.style.formInput}">
                         <g:Label text="{constants.dealDescription}"/>
                         <g:TextArea ui:field="dealDescription"/>
                     </g:FlowPanel>
@@ -135,9 +89,9 @@
             </p:tab>
 
             <p:widowchild>
-                <g:HorizontalPanel addStyleNames="{editorStyle.raspassOption}">
+                <g:HorizontalPanel addStyleNames="{res.style.raspassOption}">
                     <g:CheckBox ui:field="widowRaspassOption"/>
-                    <g:InlineLabel text="{constants.widowRaspassOption}" addStyleNames="{editorStyle.raspassOptionLabel}"/>
+                    <g:InlineLabel text="{constants.widowRaspassOption}" addStyleNames="{res.style.raspassOptionLabel}"/>
                 </g:HorizontalPanel>
             </p:widowchild>
 

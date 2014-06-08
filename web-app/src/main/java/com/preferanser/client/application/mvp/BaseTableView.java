@@ -34,7 +34,6 @@ import com.gwtplatform.mvp.client.ViewWithUiHandlers;
 import com.preferanser.client.application.i18n.I18nHelper;
 import com.preferanser.client.application.i18n.PreferanserConstants;
 import com.preferanser.client.application.mvp.editor.TableUiHandlers;
-import com.preferanser.client.application.mvp.editor.style.TableStyle;
 import com.preferanser.client.application.widgets.CardWidget;
 import com.preferanser.client.application.widgets.HandCard;
 import com.preferanser.client.application.widgets.TablePanel;
@@ -66,9 +65,8 @@ abstract public class BaseTableView<U extends TableUiHandlers> extends ViewWithU
     protected final CardImageResourceRetriever cardImageResourceRetriever;
 
     @UiField(provided = true) public PreferanserConstants constants;
-    @UiField(provided = true) public PreferanserResources resources;
+    @UiField(provided = true) public PreferanserResources res;
 
-    @UiField public TableStyle style;
     @UiField public TablePanel table;
 
     @UiField public TurnPointer turnPointerEast;
@@ -79,12 +77,12 @@ abstract public class BaseTableView<U extends TableUiHandlers> extends ViewWithU
     @UiField public Label titleSouth;
     @UiField public Label titleWest;
 
-    public BaseTableView(PreferanserConstants constants, PreferanserResources resources, I18nHelper i18nHelper) {
+    public BaseTableView(PreferanserConstants constants, PreferanserResources res, I18nHelper i18nHelper) {
         this.constants = constants;
         this.i18nHelper = i18nHelper;
-        this.resources = resources;
-        cardImageResourceRetriever = new CardImageResourceRetriever(resources);
-        imageDragController = new ImageDragController(Document.get(), resources.css().cardDragging());
+        this.res = res;
+        cardImageResourceRetriever = new CardImageResourceRetriever(res);
+        imageDragController = new ImageDragController(Document.get(), res.style().cardDragging());
     }
 
     protected void init() {
@@ -267,10 +265,10 @@ abstract public class BaseTableView<U extends TableUiHandlers> extends ViewWithU
     }
 
     protected CardWidget createCardWidget(Card card) {
-        CardWidget cardWidget = new CardWidget(card, resources.css().cardDisabled(), resources.css().cardDraggable());
+        CardWidget cardWidget = new CardWidget(card, res.style().cardDisabled(), res.style().cardDraggable());
         cardWidget.setResource(cardImageResourceRetriever.getByCard(card));
         cardWidget.setHandlers(this);
-        cardWidget.addStyleName(resources.css().card());
+        cardWidget.addStyleName(res.style().card());
         cardWidget.ensureDebugId(card.name());
         return cardWidget;
     }
@@ -288,7 +286,7 @@ abstract public class BaseTableView<U extends TableUiHandlers> extends ViewWithU
     }
 
     @UiFactory public TurnPointer turnPointer() {
-        return new TurnPointer(style, resources.arrowRight());
+        return new TurnPointer(res.style(), res.arrowRight());
     }
 
     @UiFactory public TablePanel tablePanel() {

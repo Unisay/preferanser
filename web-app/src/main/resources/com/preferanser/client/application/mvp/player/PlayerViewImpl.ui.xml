@@ -21,60 +21,59 @@
              xmlns:g="urn:import:com.google.gwt.user.client.ui"
              xmlns:p="urn:import:com.preferanser.client.application.widgets">
     <ui:with field="constants" type="com.preferanser.client.application.i18n.PreferanserConstants"/>
-    <ui:style src="../table.css" type="com.preferanser.client.application.mvp.editor.style.TableStyle"/>
-    <ui:with field="resources" type="com.preferanser.laf.client.PreferanserResources"/>
+    <ui:with field="res" type="com.preferanser.laf.client.PreferanserResources"/>
 
-    <g:FlowPanel addStyleNames="{resources.css.layoutCenter}">
+    <g:FlowPanel addStyleNames="{res.style.layoutCenter}">
 
-        <g:FlowPanel debugId="buttons-panel" addStyleNames="{style.buttonsPanel}">
+        <g:FlowPanel debugId="buttons-panel" addStyleNames="{res.style.buttonsPanel}">
             <g:Button ui:field="closeButton" text="{constants.close}" debugId="close"/>
             <g:Button ui:field="editButton" text="{constants.edit}" debugId="edit"/>
             <g:Button ui:field="resetButton" text="{constants.reset}" debugId="reset" visible="false"/>
             <g:Button ui:field="drawingsButton" text="{constants.drawings}" debugId="drawings" visible="false"/>
             <g:Button ui:field="saveDrawingButton" text="{constants.saveDrawing}" debugId="save-drawing" visible="false"/>
-            <g:Label debugId="deal-name" ui:field="dealName" addStyleNames="{style.dealName}"/>
+            <g:Label debugId="deal-name" ui:field="dealName" addStyleNames="{res.style.dealName}"/>
         </g:FlowPanel>
 
         <p:TablePanel ui:field="table">
 
             <p:westheader>
                 <p:Widgets>
-                    <g:Label ui:field="titleWest" text="{constants.WEST}" addStyleNames="{style.titleWest}"/>
-                    <g:Label ui:field="trickCountWest" addStyleNames="{style.trickCountWest}"/>
+                    <g:Label ui:field="titleWest" text="{constants.WEST}" addStyleNames="{res.style.titleWest}"/>
+                    <g:Label ui:field="trickCountWest" addStyleNames="{res.style.trickCountWest}"/>
                 </p:Widgets>
             </p:westheader>
 
             <p:southheader>
                 <p:Widgets>
-                    <g:Label ui:field="titleSouth" text="{constants.SOUTH}" addStyleNames="{style.titleSouth}"/>
-                    <g:Label ui:field="trickCountSouth" addStyleNames="{style.trickCountSouth}"/>
+                    <g:Label ui:field="titleSouth" text="{constants.SOUTH}" addStyleNames="{res.style.titleSouth}"/>
+                    <g:Label ui:field="trickCountSouth" addStyleNames="{res.style.trickCountSouth}"/>
                 </p:Widgets>
             </p:southheader>
 
             <p:eastheader>
                 <p:Widgets>
-                    <g:Label ui:field="titleEast" text="{constants.EAST}" addStyleNames="{style.titleEast}"/>
-                    <g:Label ui:field="trickCountEast" addStyleNames="{style.trickCountEast}"/>
+                    <g:Label ui:field="titleEast" text="{constants.EAST}" addStyleNames="{res.style.titleEast}"/>
+                    <g:Label ui:field="trickCountEast" addStyleNames="{res.style.trickCountEast}"/>
                 </p:Widgets>
             </p:eastheader>
 
             <p:center>
                 <p:Widgets>
-                    <g:FlowPanel debugId="relative-elements-holder" addStyleNames="{style.relativeElementsHolder}">
-                        <g:Button ui:field="turnWidowButton" text="{constants.turnWidow}" debugId="widow" addStyleNames="{style.turnWidowButton}"/>
-                        <g:Button ui:field="sluffButton" text="{constants.sluff}" debugId="sluff" addStyleNames="{style.sluffButton}"/>
+                    <g:FlowPanel debugId="relative-elements-holder" addStyleNames="{res.style.relativeElementsHolder}">
+                        <g:Button ui:field="turnWidowButton" text="{constants.turnWidow}" debugId="widow" addStyleNames="{res.style.turnWidowButton}"/>
+                        <g:Button ui:field="sluffButton" text="{constants.sluff}" debugId="sluff" addStyleNames="{res.style.sluffButton}"/>
                         <p:TurnPointer ui:field="turnPointerWidow" turn="WIDOW"/>
                         <p:TurnPointer ui:field="turnPointerEast" turn="EAST"/>
                         <p:TurnPointer ui:field="turnPointerSouth" turn="SOUTH"/>
                         <p:TurnPointer ui:field="turnPointerWest" turn="WEST"/>
-                        <g:Anchor ui:field="undoAnchor" title="{constants.undo}" debugId="undo" addStyleNames="{style.undoLink} fa fa-arrow-left"/>
-                        <g:Anchor ui:field="redoAnchor" title="{constants.redo}" debugId="redo" addStyleNames="{style.redoLink} fa fa-arrow-right"/>
+                        <g:Anchor ui:field="undoAnchor" title="{constants.undo}" debugId="undo" addStyleNames="{res.style.undoLink} fa fa-arrow-left"/>
+                        <g:Anchor ui:field="redoAnchor" title="{constants.redo}" debugId="redo" addStyleNames="{res.style.redoLink} fa fa-arrow-right"/>
                     </g:FlowPanel>
                 </p:Widgets>
             </p:center>
 
             <p:tab title="{constants.dealDescription}" index="0">
-                <g:SimplePanel addStyleNames="{style.dealDescription}">
+                <g:SimplePanel addStyleNames="{res.style.dealDescription}">
                     <g:InlineLabel ui:field="dealDescription"/>
                 </g:SimplePanel>
             </p:tab>

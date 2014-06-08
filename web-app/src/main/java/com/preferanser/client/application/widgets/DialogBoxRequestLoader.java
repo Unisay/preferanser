@@ -16,9 +16,9 @@ public class DialogBoxRequestLoader extends DialogBox implements RequestLoader {
         setText(constants.waiting());
         setAnimationEnabled(false);
         setGlassEnabled(true);
-        addStyleName(resources.css().requestLoader());
+        addStyleName(resources.style().requestLoader());
         Image image = new Image(resources.sandClock());
-        image.addStyleName(resources.css().loadingImage());
+        image.addStyleName(resources.style().loadingImage());
         add(image);
     }
 

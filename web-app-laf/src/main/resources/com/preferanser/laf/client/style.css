@@ -9,7 +9,6 @@ html, body {
 
 @sprite body {
     gwt-image: 'greenClothBackground';
-    background-repeat: repeat;
 }
 
 body {
@@ -190,4 +189,198 @@ body {
 .loadingImage {
     margin: 1em auto;
     display: block;
+}
+
+@external .not-displayed;
+.not-displayed {
+    display: none;
+}
+
+@external .not-visible;
+.not-visible {
+    visibility: hidden;
+}
+
+.buttonsPanel {
+    height: 34px;
+}
+
+.buttonsPanel .gwt-Button {
+    margin-right: 8px;
+}
+
+.dealName {
+    line-height: 34px;
+    display: inline;
+    float: right;
+}
+
+.dealDescription {
+    padding: 1em;
+}
+
+.titleEast, .titleSouth, .titleWest, .handHeaderLeftPanel {
+    float: left;
+}
+
+.trickCountWidow, .trickCountEast, .trickCountSouth, .trickCountWest {
+    float: right;
+}
+
+.gwt-Label, .contractLabel {
+    color: white;
+}
+
+.contractLink {
+    text-transform: lowercase;
+    display: inline;
+    color: #ffa200;
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 3px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    padding: .1em .5em;
+    margin-left: .5em;
+    font-size: 88%;
+}
+
+.contractTricks {
+}
+
+.contractSuit {
+    font-size: 140%;
+}
+
+.noTrump {
+}
+
+.relativeElementsHolder {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    top: 0;
+    left: 0;
+}
+
+@external .turnPointer;
+.turnPointer {
+    position: absolute;
+    opacity: 0.2;
+}
+
+@external .turnPointerActive;
+.turnPointerActive, .turnPointer:hover {
+    opacity: 1;
+    cursor: pointer;
+}
+
+@external .turnPointerEast;
+.turnPointerEast {
+    right: 10px;
+    top: 50%;
+    top: literal('calc(50% - 16px)');
+}
+
+@external .turnPointerSouth;
+.turnPointerSouth {
+    bottom: 10px;
+    left: 50%;
+    left: literal('calc(50% - 16px)');
+    transform: rotate(90deg);
+    -ms-transform: rotate(90deg);
+    -webkit-transform: rotate(90deg);
+}
+
+@external .turnPointerWest;
+.turnPointerWest {
+    left: 10px;
+    top: 50%;
+    top: literal('calc(50% - 16px)');
+    transform: rotate(180deg);
+    -ms-transform: rotate(180deg);
+    -webkit-transform: rotate(180deg);
+}
+
+@external .turnPointerWidow;
+.turnPointerWidow {
+    top: 10px;
+    left: 50%;
+    left: literal('calc(50% - 16px)');
+    transform: rotate(270deg);
+    -ms-transform: rotate(270deg);
+    -webkit-transform: rotate(270deg);
+}
+
+.undoLink, .redoLink {
+    color: #ededed;
+    cursor: pointer;
+}
+
+.undoLink {
+    position: absolute;
+    left: 10px;
+    bottom: 10px;
+}
+
+.redoLink {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+}
+
+.sluffButton {
+    position: absolute;
+    top: 30%;
+    top: literal('calc(50% - 115px)');
+    left: 49%;
+    left: literal('calc(50% - 35px)');
+}
+
+.turnWidowButton {
+    position: absolute;
+    top: 10px;
+    left: 49%;
+    left: literal('calc(50% - 85px)');
+}
+
+.propertiesPanel {
+    width: 100%;
+    padding: 1em;
+}
+
+.formInput {
+    margin-bottom: 1em;
+}
+
+@external .gwt-Label;
+.formInput .gwt-Label {
+    margin-bottom: .5em;
+    font-weight: 400;
+}
+
+.formInput input, .formInput textarea {
+    width: 500px;
+    border: none;
+    border-radius: 5px;
+    background-color: rgba(0, 0, 0, .1);
+    color: white;
+    font-size: 14pt;
+    resize: none;
+}
+
+.formInput input {
+    padding: 5px 10px;
+}
+
+.formInput textarea {
+    padding: 10px;
+    height: 265px;
+}
+
+.raspassOption {
+    margin: 1em auto;
+}
+
+.raspassOptionLabel {
+    font-size: 90%;
 }

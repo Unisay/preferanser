@@ -57,6 +57,8 @@ public interface PreferanserResources extends ClientBundle {
 
         String title();
 
+        String beta();
+
         @ClassName("title-smaller") String titleSmaller();
 
         String dialogTop();

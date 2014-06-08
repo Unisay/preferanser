@@ -44,7 +44,8 @@
     <g:FlowPanel addStyleNames="{resources.css.layoutCenter}">
         <g:FlowPanel addStyleNames="{style.header}">
             <g:FlowPanel addStyleNames="{style.titlePanel}">
-                <g:Label text="{constants.preferanser}" addStyleNames="{resources.css.title}"/>
+                <g:InlineLabel text="{constants.preferanser}" addStyleNames="{resources.css.title}"/>
+                <g:InlineLabel text="β" addStyleNames="{resources.css.beta}"/>
             </g:FlowPanel>
             <g:SimplePanel ui:field="auth" addStyleNames="{style.authPanel}"/>
         </g:FlowPanel>

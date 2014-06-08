@@ -175,6 +175,11 @@ body {
     font-size: 28pt;
 }
 
+.beta {
+    font-size: x-small;
+    font-style: italic;
+}
+
 .layoutCenter {
     width: 1164px;
     margin: 0 auto;
